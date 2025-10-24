@@ -94,18 +94,6 @@ Must justify presence/absence of:
 * AI / sistem recomandare
 * Mod rețea (play online)
 
-### The Game (Informatică Teoretică)
-
-* Arhitectură client-server (HTTP + Crow) cu minim 2 clienți + 1 server
-* Login/Register (username unic) — email/parolă opțional
-* DB: SQLite folosind SQLite ORM
-* Consolă pentru joc; opțional GUI
-
-**Opțional/Avansat (2p total)**
-
-* Multigaming (matching + timeout 30s)
-* GUI personalizată
-
 ---
 
 ## Structură recomandată a repository-ului
@@ -124,12 +112,7 @@ Must justify presence/absence of:
 │  │  ├─ models/
 │  │  └─ ai/
 │  ├─ assets/
-│  └─ tests/
-├─ TheGame/                  # dacă alegeți varianta teoretică
-│  ├─ server/
-│  ├─ client/
-│  ├─ db/
-│  └─ tests/
+│  └─ tests/              
 └─ scripts/
    ├─ commit_counter_check.sh
    └─ build_all.sh

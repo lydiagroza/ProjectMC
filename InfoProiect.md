@@ -94,18 +94,6 @@ Must justify presence/absence of:
 * AI / sistem recomandare
 * Mod rețea (play online)
 
-### The Game (Informatică Teoretică)
-
-* Arhitectură client-server (HTTP + Crow) cu minim 2 clienți + 1 server
-* Login/Register (username unic) — email/parolă opțional
-* DB: SQLite folosind SQLite ORM
-* Consolă pentru joc; opțional GUI
-
-**Opțional/Avansat (2p total)**
-
-* Multigaming (matching + timeout 30s)
-* GUI personalizată
-
 ---
 
 ## Structură recomandată a repository-ului
@@ -124,12 +112,7 @@ Must justify presence/absence of:
 │  │  ├─ models/
 │  │  └─ ai/
 │  ├─ assets/
-│  └─ tests/
-├─ TheGame/                  # dacă alegeți varianta teoretică
-│  ├─ server/
-│  ├─ client/
-│  ├─ db/
-│  └─ tests/
+│  └─ tests/              
 └─ scripts/
    ├─ commit_counter_check.sh
    └─ build_all.sh
@@ -224,19 +207,3 @@ cmake --build . --config Release
 * Documentați deciziile tehnice în `docs/ARCHITECTURE.md`
 
 ---
-
-## Contribuție și responsabilități
-
-* Stabiliți un `leader` responsabil de integrare și versiunea de release
-* Distribuiți task-urile clar (engine, UI, AI, DB, network, tests)
-* Respectați cerințele de commit și păstrați repo-ul curat
-
----
-
-## Licență
-
-Alegeți o licență (de ex. MIT) și adăugați fișierul `LICENSE`.
-
----
-
-> Dacă doriți, pot genera și fișiere adiționale automat: `CONTRIBUTING.md`, `PULL_REQUEST_TEMPLATE.md`, `.gitignore` (complet), `ISSUE_TEMPLATE.md`, sau un exemplu minimal de `main.cpp` pentru început. Spuneți-mi care doriți să fie create acum.

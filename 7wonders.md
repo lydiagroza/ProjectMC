@@ -232,11 +232,3 @@ cmake --build . --config Release
 * Respectați cerințele de commit și păstrați repo-ul curat
 
 ---
-
-## Licență
-
-Alegeți o licență (de ex. MIT) și adăugați fișierul `LICENSE`.
-
----
-
-> Dacă doriți, pot genera și fișiere adiționale automat: `CONTRIBUTING.md`, `PULL_REQUEST_TEMPLATE.md`, `.gitignore` (complet), `ISSUE_TEMPLATE.md`, sau un exemplu minimal de `main.cpp` pentru început. Spuneți-mi care doriți să fie create acum.

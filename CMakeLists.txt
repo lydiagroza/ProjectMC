@@ -4,4 +4,8 @@ project(ProjectMC_)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(ProjectMC_
-        test.cpp)
+
+        testpebranch.cpp
+        testpebranch.cpp
+        testpebranch.cpp
+        testpebranch.cpp)

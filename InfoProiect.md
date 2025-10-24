@@ -207,11 +207,3 @@ cmake --build . --config Release
 * Documentați deciziile tehnice în `docs/ARCHITECTURE.md`
 
 ---
-
-## Contribuție și responsabilități
-
-* Stabiliți un `leader` responsabil de integrare și versiunea de release
-* Distribuiți task-urile clar (engine, UI, AI, DB, network, tests)
-* Respectați cerințele de commit și păstrați repo-ul curat
-
----

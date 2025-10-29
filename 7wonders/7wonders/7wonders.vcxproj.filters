@@ -18,5 +18,11 @@
     <ClCompile Include="..\..\testpebranch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AgeCards.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AgeCards.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -123,7 +123,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Resource.h" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Wonder.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Cost.h" />
+    <ClInclude Include="Effect.h" />
+    <ClInclude Include="Wonder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

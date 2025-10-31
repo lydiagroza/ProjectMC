@@ -131,6 +131,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Downloads\CardBase.cpp" />
+    <ClCompile Include="..\..\..\..\..\Downloads\HardcodareCarti.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="CardNode.cpp" />
   </ItemGroup>

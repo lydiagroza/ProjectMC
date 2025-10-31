@@ -15,28 +15,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Cards.cpp">
+    <ClCompile Include="CardBase.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Hardcodare_carti.cpp">
+    <ClCompile Include="HardcodareCarti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ProductionCards.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Resources.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Cards.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ProductionCards.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Resources.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

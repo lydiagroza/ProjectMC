@@ -11,7 +11,7 @@ bool Wonder::canBuild(Player& player) const {
 }
 
 bool Wonder::isBuilt(Player& player, Game& game) {
-	if (built) {
+	if (built) {	
 		std::cout << "Wonder " << name << " is already built!" << std::endl;
 		return true;
 	}

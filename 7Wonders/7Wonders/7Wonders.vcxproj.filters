@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Wonder">
+      <UniqueIdentifier>{9235c6ef-a7b1-4cb9-b755-61f01d35d34d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Wonders.h">
+      <UniqueIdentifier>{8f858b89-efb2-4824-b1fa-dfb58e8e1811}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardBase.cppm">
@@ -24,5 +30,22 @@
     <ClCompile Include="CardBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Wonder.cpp">
+      <Filter>Source Files\Wonder</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.h">
+      <Filter>Header Files\Wonders.h</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Cost.h">
+      <Filter>Header Files\Wonders.h</Filter>
+    </ClInclude>
+    <ClInclude Include="Wonder.h">
+      <Filter>Header Files\Wonders.h</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>Header Files\Wonders.h</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

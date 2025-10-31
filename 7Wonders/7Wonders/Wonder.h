@@ -19,7 +19,7 @@ public:
 
 	bool canBuild(Player& player) const; // verifica daca player are resurse ca sa contruiasca the wonder
 
-	bool Build(Player& player, Game& game) const;
+	bool isBuilt(Player& player, Game& game); 
 
 	const std::string& getName() const { return name; };
 	const Cost& getCost() const {return constructionCost;}

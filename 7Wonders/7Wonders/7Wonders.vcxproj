@@ -123,7 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Resource.h" />
+    <ClCompile Include="ResourceWonders.h" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Wonder.cpp" />
   </ItemGroup>

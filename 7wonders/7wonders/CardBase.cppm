@@ -8,10 +8,7 @@ import <cstdint>;
 
 namespace wonders7
 {
-    // -----------------------------
-    // ENUMURI DE BAZĂ
-    // -----------------------------
-
+  
     export enum class Resource : std::uint8_t {
         Wood, Clay, Stone, Glass, Papyrus, Gold
     };
@@ -25,9 +22,7 @@ namespace wonders7
         Horse, Helmet, Mask, Sun, Moon, Balance
     };
 
-    // -----------------------------
-    // CLASA DE BAZĂ PENTRU CĂRȚI
-    // -----------------------------
+
 
     export class CardBase {
     public:
@@ -37,8 +32,14 @@ namespace wonders7
         std::optional<Symbol> m_symbol;
         std::optional<std::vector<Symbol>> m_unlocks;
         std::map<Resource, std::uint8_t> m_cost;
-
-        // ---- Getteri ----
+        CardBase();
+        CardBase(std:: string name, std:: uint16_t id, Color color,
+                 const std:: map<Resource, std:: uint8_t>& cost,
+                 const std:: optional<Symbol>& symbol = std:: nullopt,
+                 const std:: optional<std:: vector<Symbol>>& unlocks = std:: nullopt)
+            : m_name(std:: move(name)), m_id(id), m_color(color),
+			m_cost(cost), m_symbol(symbol), m_unlocks(unlocks) {
+		}   
         const std::string& get_name() const;
         std::uint16_t get_id() const;
         Color get_color() const;
@@ -47,9 +48,16 @@ namespace wonders7
         const std::optional<std::vector<Symbol>>& get_unlocks() const;
     };
 
-    // -----------------------------
-    // OPERATOR <<
-    // -----------------------------
+
     std::ostream& operator<<(std::ostream& os, const CardBase& card);
+
+        std::ostream& operator<<(std::ostream& os, const CardBase* cardPtr) {
+            if (cardPtr) os << *cardPtr;
+            else os << "nullptr";
+            return os;
+        }
+
+
+
 
 } // namespace wonders7

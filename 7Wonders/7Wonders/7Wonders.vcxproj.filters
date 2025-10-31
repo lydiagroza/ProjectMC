@@ -21,5 +21,8 @@
     <ClCompile Include="HardcodareCarti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CardBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

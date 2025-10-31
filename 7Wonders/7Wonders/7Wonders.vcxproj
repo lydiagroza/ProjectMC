@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CardBase.cpp" />
     <ClCompile Include="CardBase.cppm" />
     <ClCompile Include="HardcodareCarti.cpp" />
   </ItemGroup>

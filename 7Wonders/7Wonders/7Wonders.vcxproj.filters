@@ -21,10 +21,10 @@
     <ClCompile Include="CardNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Downloads\HardcodareCarti.cpp">
+    <ClCompile Include="CardBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Downloads\CardBase.cpp">
+    <ClCompile Include="HardcodareCarti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

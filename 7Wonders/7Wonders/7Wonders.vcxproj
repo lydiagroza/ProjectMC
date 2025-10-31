@@ -131,10 +131,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Downloads\CardBase.cpp" />
-    <ClCompile Include="..\..\..\..\..\Downloads\HardcodareCarti.cpp" />
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="CardBase.cpp" />
     <ClCompile Include="CardNode.cpp" />
+    <ClCompile Include="HardcodareCarti.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />

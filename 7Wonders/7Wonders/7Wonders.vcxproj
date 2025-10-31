@@ -136,7 +136,6 @@
     <ClCompile Include="CardBase.cppm" />
     <ClCompile Include="CardNode.cpp" />
     <ClCompile Include="HardcodareCarti.cpp" />
-    <ClCompile Include="Source.cpp" />
     <ClCompile Include="Wonder.cpp" />
   </ItemGroup>
   <ItemGroup>

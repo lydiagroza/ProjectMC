@@ -21,6 +21,8 @@ public:
 	void updatePlayedStatus(bool playedStatus);
 	void setFace(Face face);
 	void addChild(CardNode* child);
+	Face getFace() const;
+	const std::vector<CardNode*>& getChildren() const; 
 
 	~CardNode();
 

@@ -33,6 +33,16 @@ void CardNode::addChild(CardNode* child) {
     m_children.push_back(child);
 }
 
+Face CardNode::getFace() const
+{
+	return m_face;
+}
+
+const std::vector<CardNode*>& CardNode::getChildren() const
+{
+	return m_children;
+}
+
 
 CardNode::~CardNode() {
 	for (auto child : m_children)

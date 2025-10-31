@@ -1,5 +1,7 @@
-﻿module  CardBase;
-
+﻿ module CardBase;
+import<iostream>;
+import <format>; 
+import <vector>;
 
 namespace wonders7
 {

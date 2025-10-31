@@ -49,15 +49,8 @@ namespace wonders7
     };
 
 
-    std::ostream& operator<<(std::ostream& os, const CardBase& card);
-
-        std::ostream& operator<<(std::ostream& os, const CardBase* cardPtr) {
-            if (cardPtr) os << *cardPtr;
-            else os << "nullptr";
-            return os;
-        }
+  std::ostream& operator<<(std::ostream& os, const CardBase& card);
 
 
 
-
-} // namespace wonders7
+} 

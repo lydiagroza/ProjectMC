@@ -132,12 +132,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="CardBase.cpp" />
+    <ClCompile Include="CardBase.cppm" />
     <ClCompile Include="CardNode.cpp" />
+    <ClCompile Include="HardcodareCarti.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Wonder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="CardNode.h" />
+    <ClInclude Include="Cost.h" />
+    <ClInclude Include="Effect.h" />
+    <ClInclude Include="Wonder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

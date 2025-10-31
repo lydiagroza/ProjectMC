@@ -9,13 +9,20 @@ enum class Face {
 class CardNode
 {
 private:
-	std::string m_nume;
-	std::vector	<CardNode> m_children;
+	std::string m_name;
+	std::vector	<CardNode*> m_children;
 	bool m_played;
-	bool m_face;
+	Face m_face;
 public:
 	CardNode(const std::string& nume);
 	
+	bool isPlayable() const;
+	std::string getName()const;
+	void updatePlayedStatus(bool playedStatus);
+	void setFace(Face face);
+	void addChild(CardNode* child);
+
+	~CardNode();
 
 };
 

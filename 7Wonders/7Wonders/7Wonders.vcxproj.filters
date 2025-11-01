@@ -27,7 +27,7 @@
     <ClCompile Include="HardcodareCarti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="verificare.cpp">
+    <ClCompile Include="CardBase.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -24,6 +24,7 @@ public:
 	//std::vector<CardNode*>& getActiveCards();
 
 	void printBoard() const;
+	void printChildrenList() const;
 
 };
 

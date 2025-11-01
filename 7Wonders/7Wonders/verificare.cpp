@@ -12,8 +12,9 @@ int main() {
     Board board;
    
     // Construiește piramida pentru era 3
-    board.setupCards(3, cards);
+    board.setupCards(1, cards);
     board.printBoard();
+	board.printChildrenList();
 
     // curățare
     for (auto* c : cards)

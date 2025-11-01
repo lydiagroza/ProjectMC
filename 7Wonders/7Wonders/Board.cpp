@@ -3,9 +3,12 @@
 void Board::setupCards(int era, std::vector<CardNode*>& eraCards)
 {
     activeCards.clear();
-    const std::vector<int>& layout = eraLayouts[era - 1]; //layout pt epoca curenta
+
+    const std::vector<int>& layout = eraLayouts[era - 1];
     int index = 0;
     int rowNumber = 0;
+
+    // 1. Așezarea Cărților (Vârf -> Bază)
     for (int rowSize : layout) {
         std::vector<CardNode*> row;
         row.reserve(rowSize);
@@ -17,13 +20,10 @@ void Board::setupCards(int era, std::vector<CardNode*>& eraCards)
         activeCards.push_back(std::move(row));
     }
 
-    // NOUA LOGICĂ: Legăm Blocata la Blocant (care devine Copil)
-    // Parcurgem rândurile de la penultimul în sus (de jos în sus)
     for (int r = static_cast<int>(activeCards.size()) - 2; r >= 0; --r)
     {
-        // parentRow este rândul superior (Blocantul)
+
         std::vector<CardNode*>& blockerRow = activeCards[r];
-        // childRow este rândul inferior (Blocatul)
         std::vector<CardNode*>& blockedRow = activeCards[r + 1];
 
         const size_t pSize = blockerRow.size();
@@ -31,19 +31,24 @@ void Board::setupCards(int era, std::vector<CardNode*>& eraCards)
 
         for (size_t i = 0; i < pSize; ++i) {
 
-            // Cartea Blocată este în rândul inferior (r+1), la poziția i
-            // Cartea Blocantă este în rândul superior (r), la poziția i
+            // Cartea blocantă curentă: blockerCard
+            CardNode* blockerCard = blockerRow[i];
+
+            // Cazul 1: Blocantul acoperă cartea de pe poziția i din rândul de jos
             if (i < cSize) {
-                // Legătura inversă: Blocata adaugă Blocantul ca "Copil"
-                // childRow[i] (Blocata) este jucabilă doar când acest "Copil" (Blocantul) e eliminat.
-                blockedRow[i]->addChild(blockerRow[i]);
+                CardNode* blockedCard = blockedRow[i];
+
+                // Relația INVERSATĂ (Blocatul adaugă Blocantul ca "Child"):
+                // Acum, blockedCard (Baza/Blocatul) va avea blockerCard (Vârful/Blocantul) ca "copil"
+                blockedCard->addChild(blockerCard);
             }
 
-            // Cartea Blocată este în rândul inferior (r+1), la poziția i+1
-            // Cartea Blocantă este în rândul superior (r), la poziția i
+            // Cazul 2: Blocantul acoperă cartea de pe poziția i+1 din rândul de jos
             if (i + 1 < cSize) {
-                // Legătura inversă: Blocata adaugă Blocantul ca "Copil"
-                blockedRow[i + 1]->addChild(blockerRow[i]);
+                CardNode* blockedCard = blockedRow[i + 1];
+
+                // Relația INVERSATĂ (Blocatul adaugă Blocantul ca "Child"):
+                blockedCard->addChild(blockerCard);
             }
         }
     }
@@ -86,4 +91,35 @@ void Board::printBoard() const {
     }
 
     std::cout << "===============================\n";
+}
+
+void Board::printChildrenList() const {
+    std::cout << "\n===== VERIFICARE RELAȚII BLOCARE (BLOCAT -> BLOCANT) =====\n";
+    std::cout << " (Copiii sunt cărțile care blochează)\n\n";
+
+    // activeCards conține rândurile de cărți de la vârf (r=0) la bază.
+    for (const auto& row : activeCards) {
+        for (const auto* card : row) {
+
+            // Afișăm cartea curentă
+            std::cout << "-> " << card->getName()
+                << " (Față: " << (card->getFace() == Face::Up ? "U" : "D") << ")";
+
+            // Afișăm "copiii" (adică blocanții)
+            const auto& children = card->getChildren(); // Presupunem că ai o metodă getChildren() care returnează lista de CardNode*
+
+            if (children.empty()) {
+                std::cout << " | COPII (BLOCANȚI): NICIUNUL [ACCESIBIL]\n";
+            }
+            else {
+                std::cout << " | COPII (BLOCANȚI): ";
+                for (const auto* blocker : children) {
+                    std::cout << blocker->getName() << " ";
+                }
+                std::cout << "\n";
+            }
+        }
+    }
+
+    std::cout << "\n=======================================================\n";
 }

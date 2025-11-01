@@ -1,9 +1,9 @@
-import CardBase;
+//import CardBase;
 import<iostream>;
 import <format>; 
 import <vector>;
 
-using namespace wonders7;
+//using namespace wonders7;
 using namespace std;
 
 //std::vector<CardBase> createBrownCards() {
@@ -117,9 +117,9 @@ using namespace std;
 //}
 
 
-int main() {
+/*int main() {
 
-	CardBase test("Lumberyard", 1, Color::Brown, {}, {}, {});
-	std::cout << test.get_id() << " " << test.get_name() << "\n";
+	//CardBase test("Lumberyard", 1, Color::Brown, {}, {}, {});
+	//std::cout << test.get_id() << " " << test.get_name() << "\n";
 	return 0;
-}
+}*/

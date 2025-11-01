@@ -135,12 +135,12 @@
     <ClCompile Include="CardBase.cpp" />
     <ClCompile Include="CardNode.cpp" />
     <ClCompile Include="HardcodareCarti.cpp" />
+    <ClCompile Include="verificare.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="CardNode.h" />
     <ClInclude Include="Effect.h" />
-    <ClInclude Include="ResourceWonders.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -42,11 +42,3 @@ const std::vector<CardNode*>& CardNode::getChildren() const
 {
 	return m_children;
 }
-
-
-CardNode::~CardNode() {
-	for (auto child : m_children)
-		delete child;
-	m_children.clear();
-}
-

@@ -38,9 +38,6 @@
     <ClInclude Include="CardNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceWonders.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Effect.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -33,7 +33,7 @@
     <ClCompile Include="verificare.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player1.cpp">
+    <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,7 +47,7 @@
     <ClInclude Include="Effect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Player1.h">
+    <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

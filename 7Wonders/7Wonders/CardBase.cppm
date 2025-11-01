@@ -20,6 +20,9 @@ namespace wonders7
         Barrel, Gear, Lamp, Scroll, Sword, Wall,
         Horse, Helmet, Mask, Sun, Moon, Balance
     };
+    export enum class Points : std::uint8_t {
+        Victory, War
+	};
 
 
     export class CardBase {

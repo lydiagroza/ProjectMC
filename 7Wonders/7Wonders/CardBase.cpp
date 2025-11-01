@@ -1,4 +1,4 @@
-/*module CardBase;
+module CardBase;
 import<iostream>;
 import <format>; 
 import <vector>;
@@ -28,4 +28,4 @@ namespace wonders7
 		os << "Card ID: " << card.get_id() << ", Name: " << card.get_name();
 		return os;
 	}
-}*/
+}

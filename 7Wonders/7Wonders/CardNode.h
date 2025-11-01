@@ -24,7 +24,7 @@ public:
 	Face getFace() const;
 	const std::vector<CardNode*>& getChildren() const; 
 
-	~CardNode();
+	~CardNode()=default;
 
 };
 

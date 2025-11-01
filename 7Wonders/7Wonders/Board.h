@@ -18,10 +18,10 @@ private:
 
 public:
 	Board()=default;
-	~Board();
+	//~Board();
 
 	void setupCards(int era, std::vector<CardNode*>& eraCards);
-	std::vector<CardNode*>& getActiveCards();
+	//std::vector<CardNode*>& getActiveCards();
 
 	void printBoard() const;
 

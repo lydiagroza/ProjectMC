@@ -136,6 +136,7 @@
     <ClCompile Include="CardBase.cppm" />
     <ClCompile Include="CardNode.cpp" />
     <ClCompile Include="HardcodareCarti.cpp" />
+    <ClCompile Include="verificare.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />

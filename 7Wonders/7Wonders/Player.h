@@ -19,7 +19,8 @@ public:
 	Player(const std::string& playerName);
 	void addCoins(int amount);
 	bool decreaseCoins(int amount);
-	void moveMilitaryScore(int shields,Player& opponent);
+	//void moveMilitaryScore(int shields,Player& opponent);
+	//void addCards(const Card& card, Players& opponent, GameState& board);
 
 
 

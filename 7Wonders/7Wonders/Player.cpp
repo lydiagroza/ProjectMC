@@ -12,15 +12,18 @@ bool Player::decreaseCoins(int amount) {
 	}
 	return false;
 }
-void Player::moveMilitaryScore(int shields,Player&opponent) {
-	militaryScore += shields;
-	if (militaryScore > 9) {
-		militaryScore = 9;
-	}
-	if (militaryScore == 9) {
-		return;
-	}
+//void Player::moveMilitaryScore(int shields,Player&opponent) {
+//	militaryScore += shields;
+//	if (militaryScore > 9) {
+//		militaryScore = 9;
+//	}
+//	if (militaryScore == 9) {
+//		return;
+//	}
+//}
 
+//Player::addCards(const Card& card, Players& opponent, GameState& board) {
+//	cityBuildings[card.color].pushback(card);
+//}
 
-}
 

@@ -1,9 +1,9 @@
-//import CardBase;
+import CardBase;
 import<iostream>;
 import <format>; 
 import <vector>;
 
-//using namespace wonders7;
+using namespace wonders7;
 using namespace std;
 
 //std::vector<CardBase> createBrownCards() {
@@ -116,10 +116,24 @@ using namespace std;
 //    return cards;
 //}
 
+import CardBase;
+import <iostream>;
 
-/*int main() {
+using namespace wonders7;
 
-	//CardBase test("Lumberyard", 1, Color::Brown, {}, {}, {});
-	//std::cout << test.get_id() << " " << test.get_name() << "\n";
-	return 0;
-}*/
+int main() {
+    CardBase c1("Baths", 1, Color::Blue,
+        { {Resource::Stone, 1} },
+        Symbol::Lamp);
+
+    CardBase c2("Guard Tower", 2, Color::Red,
+        { {Resource::Clay, 1} },
+        Symbol::Sword);
+
+    CardBase c3("Marketplace", 3, Color::Yellow,
+        { {Resource::Gold, 2} },
+        std::nullopt,
+        std::vector<Symbol>{Symbol::Gear, Symbol::Scroll});
+
+    std::cout << c1 << c2 << c3;
+}

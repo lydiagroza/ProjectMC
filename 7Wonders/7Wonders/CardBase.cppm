@@ -1,4 +1,4 @@
-export module CardBase;
+﻿export module CardBase;
 import <iostream>;
 import <map>;
 import <string>;
@@ -8,7 +8,6 @@ import <cstdint>;
 
 namespace wonders7
 {
-
     export enum class Resource : std::uint8_t {
         Wood, Clay, Stone, Glass, Papyrus, Gold
     };
@@ -21,7 +20,6 @@ namespace wonders7
         Barrel, Gear, Lamp, Scroll, Sword, Wall,
         Horse, Helmet, Mask, Sun, Moon, Balance
     };
-
 
 
     export class CardBase {
@@ -50,7 +48,91 @@ namespace wonders7
 
 
     std::ostream& operator<<(std::ostream& os, const CardBase& card);
+   export  inline std::string to_string(Resource r) {
+        switch (r) {
+        case Resource::Wood: return "Wood";
+        case Resource::Clay: return "Clay";
+        case Resource::Stone: return "Stone";
+        case Resource::Glass: return "Glass";
+        case Resource::Papyrus: return "Papyrus";
+        case Resource::Gold: return "Gold";
+        }
+        return "Unknown";
+    }
 
+    export inline  std::string to_string(Color c) {
+        switch (c) {
+        case Color::Brown: return "Brown";
+        case Color::Gray: return "Gray";
+        case Color::Yellow: return "Yellow";
+        case Color::Red: return "Red";
+        case Color::Blue: return "Blue";
+        case Color::Green: return "Green";
+        case Color::Purple: return "Purple";
+        }
+        return "Unknown";
+    }
 
+  export inline std::string to_string(Symbol s) {
+        switch (s) {
+        case Symbol::Barrel: return "Barrel";
+        case Symbol::Gear: return "Gear";
+        case Symbol::Lamp: return "Lamp";
+        case Symbol::Scroll: return "Scroll";
+        case Symbol::Sword: return "Sword";
+        case Symbol::Wall: return "Wall";
+        case Symbol::Horse: return "Horse";
+        case Symbol::Helmet: return "Helmet";
+        case Symbol::Mask: return "Mask";
+        case Symbol::Sun: return "Sun";
+        case Symbol::Moon: return "Moon";
+        case Symbol::Balance: return "Balance";
+        }
+        return "Unknown";
+    }
+    export inline std::ostream& operator<<(std::ostream& os, const CardBase& card) {
+        os << "Card Name: " << card.m_name << "\n";
+        os << "ID: " << card.m_id << "\n";
+        os << "Color: " << to_string(card.m_color) << "\n";
 
+        // Cost
+        if (card.m_cost.empty()) {
+            os << "Cost: None\n";
+        }
+        else {
+            os << "Cost: ";
+            bool first = true;
+            for (const auto& [res, val] : card.m_cost) {
+                if (!first) os << ", ";
+                os << (int)val << "x " << to_string(res);
+                first = false;
+            }
+            os << "\n";
+        }
+
+        // Symbol
+        if (card.m_symbol)
+            os << "Symbol: " << to_string(*card.m_symbol) << "\n";
+        else
+            os << "Symbol: None\n";
+
+        // Unlocks
+        if (card.m_unlocks && !card.m_unlocks->empty()) {
+            os << "Unlocks: ";
+            bool first = true;
+            for (auto sym : *card.m_unlocks) {
+                if (!first) os << ", ";
+                os << to_string(sym);
+                first = false;
+            }
+            os << "\n";
+        }
+        else {
+            os << "Unlocks: None\n";
+        }
+
+        os << "-----------------------------\n";
+        return os;
+    }
 }
+

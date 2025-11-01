@@ -141,7 +141,6 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="CardNode.h" />
     <ClInclude Include="Effect.h" />
-    <ClInclude Include="ResourceWonders.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

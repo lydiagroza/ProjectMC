@@ -38,7 +38,7 @@ namespace wonders7
             const std::map<Resource, std::uint8_t>& cost,
             const std::optional<Symbol>& symbol = std::nullopt,
             const std::optional<std::vector<Symbol>>& unlocks = std::nullopt)
-            : m_name(std::move(name)), m_id(id), m_color(color),
+            : m_name(std::mo    ve(name)), m_id(id), m_color(color),
             m_cost(cost), m_symbol(symbol), m_unlocks(unlocks) {
         }
         const std::string& get_name() const;

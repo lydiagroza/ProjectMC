@@ -22,7 +22,7 @@
 	const std::optional<std::vector<Symbol>>& CardBase::get_unlocks() const {
 		return m_unlocks;
 	}
-	std::ostream& operator<<(std::ostream& os, const wonders7::CardBase& card)
+	std::ostream& operator<<(std::ostream& os, const CardBase& card)
 	{
 		os << "Card ID: " << card.get_id() << ", Name: " << card.get_name();
 		return os;

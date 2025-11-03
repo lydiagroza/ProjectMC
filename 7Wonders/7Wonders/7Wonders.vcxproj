@@ -138,6 +138,7 @@
     <ClCompile Include="HardcodareCarti.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="verificare.cpp" />
+    <ClCompile Include="Wonders.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />

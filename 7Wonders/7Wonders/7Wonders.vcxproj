@@ -136,6 +136,7 @@
     <ClCompile Include="CardBase.h" />
     <ClCompile Include="CardNode.cpp" />
     <ClCompile Include="HardcodareCarti.cpp" />
+    <ClCompile Include="HardcodingWonders.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="verificare.cpp" />
     <ClCompile Include="Wonders.cpp" />

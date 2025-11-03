@@ -19,40 +19,46 @@ void Board::setupCards(int era, std::vector<CardNode*>& eraCards)
         rowNumber++;
         activeCards.push_back(std::move(row));
     }
+    linkCards(era);
+}
 
-    for (int r = static_cast<int>(activeCards.size()) - 2; r >= 0; --r)
-    {
+void Board::linkCards(int eraIndex) {
+    const auto& eraIndexes =
+        (eraIndex == 1 ? eraChildIndexes1 :
+            eraIndex == 2 ? eraChildIndexes2 :
+            eraChildIndexes3);
 
-        std::vector<CardNode*>& blockerRow = activeCards[r];
-        std::vector<CardNode*>& blockedRow = activeCards[r + 1];
+    for (size_t r = 0; r + 1 < activeCards.size(); ++r) {
+        const auto& row = activeCards[r];
+        const auto& nextRow = activeCards[r + 1];
 
-        const size_t pSize = blockerRow.size();
-        const size_t cSize = blockedRow.size();
+        for (size_t i = 0; i < row.size(); ++i) {
+            CardNode* parent = row[i];
 
-        for (size_t i = 0; i < pSize; ++i) {
+            // Verificăm că există definiție de copii pentru această carte
+            if (i >= eraIndexes[r].size()) continue;
 
-            // Cartea blocantă curentă: blockerCard
-            CardNode* blockerCard = blockerRow[i];
-
-            // Cazul 1: Blocantul acoperă cartea de pe poziția i din rândul de jos
-            if (i < cSize) {
-                CardNode* blockedCard = blockedRow[i];
-
-                // Relația INVERSATĂ (Blocatul adaugă Blocantul ca "Child"):
-                // Acum, blockedCard (Baza/Blocatul) va avea blockerCard (Vârful/Blocantul) ca "copil"
-                blockedCard->addChild(blockerCard);
-            }
-
-            // Cazul 2: Blocantul acoperă cartea de pe poziția i+1 din rândul de jos
-            if (i + 1 < cSize) {
-                CardNode* blockedCard = blockedRow[i + 1];
-
-                // Relația INVERSATĂ (Blocatul adaugă Blocantul ca "Child"):
-                blockedCard->addChild(blockerCard);
+            // Adăugăm fiecare copil definit în vector
+            for (int childIndex : eraIndexes[r][i]) {
+                if (childIndex >= 0 && childIndex < static_cast<int>(nextRow.size())) {
+                    parent->addChild(nextRow[childIndex]);
+                }
+                else {
+                    // Optional: mesaj de warning dacă indexul e invalid
+                    std::cerr << "WARN: Invalid child index " << childIndex
+                        << " for parent at row " << r << " card " << i << "\n";
+                }
             }
         }
     }
 }
+
+
+
+
+
+
+
 void Board::printBoard() const {
     int totalRows = static_cast<int>(activeCards.size());
 

@@ -21,9 +21,11 @@
         Horse, Helmet, Mask, Sun, Moon, Balance
     };
   enum  Points : std::uint8_t {
-        Victory, War
+        Victory, Military
 	};
-
+  enum Scientific_Symbol : std::uint8_t {
+        Compass, Tablet, Cog, Wheel
+  };
 
   class CardBase {
   public:
@@ -61,7 +63,6 @@ std::string to_string(Resource r) {
         case Resource::Stone: return "Stone";
         case Resource::Glass: return "Glass";
         case Resource::Papyrus: return "Papyrus";
-        case Resource::Gold: return "Gold";
         }
         return "Unknown";
     }
@@ -96,49 +97,12 @@ std::string to_string(Color c) {
         }
         return "Unknown";
     }
-std::ostream& operator<<(std::ostream& os, const CardBase& card) {
-        os << "Card Name: " << card.m_name << "\n";
-        os << "ID: " << card.m_id << "\n";
-        os << "Color: " << to_string(card.m_color) << "\n";
+ std::ostream& operator<<(std::ostream& os, const CardBase& card) {
+     os << "Card Name: " << card.m_name << "\n";
+     os << "ID: " << card.m_id << "\n";
+     os << "Color: " << to_string(card.m_color) << "\n";
 
-        // Cost
-        if (card.m_cost.empty()) {
-            os << "Cost: None\n";
-        }
-        else {
-            os << "Cost: ";
-            bool first = true;
-            for (const auto& [res, val] : card.m_cost) {
-                if (!first) os << ", ";
-                os << (int)val << "x " << to_string(res);
-                first = false;
-            }
-            os << "\n";
-        }
-
-        // Symbol
-        if (card.m_symbol)
-            os << "Symbol: " << to_string(*card.m_symbol) << "\n";
-        else
-            os << "Symbol: None\n";
-
-        // Unlocks
-        if (card.m_unlocks && !card.m_unlocks->empty()) {
-            os << "Unlocks: ";
-            bool first = true;
-            for (auto sym : *card.m_unlocks) {
-                if (!first) os << ", ";
-                os << to_string(sym);
-                first = false;
-            }
-            os << "\n";
-        }
-        else {
-            os << "Unlocks: None\n";
-        }
-
-        os << "-----------------------------\n";
-        return os;
-    }
+ }
+ 
 
 

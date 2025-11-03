@@ -133,7 +133,7 @@
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="CardBase.cpp" />
-    <ClCompile Include="CardBase.cppm" />
+    <ClCompile Include="CardBase.h" />
     <ClCompile Include="CardNode.cpp" />
     <ClCompile Include="HardcodareCarti.cpp" />
     <ClCompile Include="Player.cpp" />

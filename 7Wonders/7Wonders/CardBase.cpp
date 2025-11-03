@@ -1,11 +1,10 @@
-module CardBase;
-import<iostream>;
-import <format>; 
-import <vector>;
+#include "CardBase.h";
+#include<iostream>;
+#include <format>; 
+#include <vector>;
 
-namespace wonders7
-{
-	const std::string& CardBase::get_name() const {
+
+	const std::string&CardBase::get_name() const {
 		return m_name;
 	}
 	std::uint16_t CardBase::get_id() const {
@@ -28,4 +27,3 @@ namespace wonders7
 		os << "Card ID: " << card.get_id() << ", Name: " << card.get_name();
 		return os;
 	}
-}

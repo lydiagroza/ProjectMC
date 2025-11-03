@@ -27,14 +27,14 @@
     <ClCompile Include="HardcodareCarti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CardBase.cppm">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="verificare.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CardBase.h">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

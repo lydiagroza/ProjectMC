@@ -1,31 +1,31 @@
-﻿export module CardBase;
-import <iostream>;
-import <map>;
-import <string>;
-import <vector>;
-import <optional>;
-import <cstdint>;
+﻿#include <iostream>;
+#include <map>;
+#include <string>;
+#include<vector>;
+#include <optional>;
+#include<functional>;
+#include "Player.h"; 
+#include <cstdint>;
 
-namespace wonders7
-{
-    export enum class Resource : std::uint8_t {
+
+  enum  Resource : std::uint8_t {
         Wood, Clay, Stone, Glass, Papyrus, Gold
     };
 
-    export enum class Color : std::uint8_t {
+  enum Color : std::uint8_t {
         Brown, Gray, Yellow, Red, Blue, Green, Purple
     };
 
-    export enum class Symbol : std::uint8_t {
+  enum  Symbol : std::uint8_t {
         Barrel, Gear, Lamp, Scroll, Sword, Wall,
         Horse, Helmet, Mask, Sun, Moon, Balance
     };
-    export enum class Points : std::uint8_t {
+  enum  Points : std::uint8_t {
         Victory, War
 	};
 
 
-    export class CardBase {
+ class CardBase {
     public:
         std::string m_name;
         std::uint16_t m_id : 16;
@@ -47,11 +47,13 @@ namespace wonders7
         const std::map<Resource, std::uint8_t>& get_cost() const;
         const std::optional<Symbol>& get_symbol() const;
         const std::optional<std::vector<Symbol>>& get_unlocks() const;
+        void addEffect(std::function<void(Player&)> e) { efects.push_back(e); }
+        void applyEffects(Player& p) { for (auto& e : efects) e(p); }
     };
 
 
     std::ostream& operator<<(std::ostream& os, const CardBase& card);
-   export  inline std::string to_string(Resource r) {
+std::string to_string(Resource r) {
         switch (r) {
         case Resource::Wood: return "Wood";
         case Resource::Clay: return "Clay";
@@ -63,7 +65,7 @@ namespace wonders7
         return "Unknown";
     }
 
-    export inline  std::string to_string(Color c) {
+std::string to_string(Color c) {
         switch (c) {
         case Color::Brown: return "Brown";
         case Color::Gray: return "Gray";
@@ -76,7 +78,7 @@ namespace wonders7
         return "Unknown";
     }
 
-  export inline std::string to_string(Symbol s) {
+ std::string to_string(Symbol s) {
         switch (s) {
         case Symbol::Barrel: return "Barrel";
         case Symbol::Gear: return "Gear";
@@ -93,7 +95,7 @@ namespace wonders7
         }
         return "Unknown";
     }
-    export inline std::ostream& operator<<(std::ostream& os, const CardBase& card) {
+std::ostream& operator<<(std::ostream& os, const CardBase& card) {
         os << "Card Name: " << card.m_name << "\n";
         os << "ID: " << card.m_id << "\n";
         os << "Color: " << to_string(card.m_color) << "\n";
@@ -137,5 +139,5 @@ namespace wonders7
         os << "-----------------------------\n";
         return os;
     }
-}
+
 

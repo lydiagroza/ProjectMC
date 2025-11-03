@@ -1,7 +1,7 @@
-#include "CardBase.h";
-#include<iostream>;
-#include <format>; 
-#include <vector>;
+#include "CardBase.h"
+#include<iostream>
+#include <format> 
+#include <vector>
 
 
 	const std::string&CardBase::get_name() const {
@@ -21,6 +21,16 @@
 	}
 	const std::optional<std::vector<Symbol>>& CardBase::get_unlocks() const {
 		return m_unlocks;
+	}
+	void CardBase::applyEffect(Player& p)
+	{
+		for (const auto& effect : effects) {
+			effect(p);
+		}
+	}
+	void CardBase::addEffect(std::function<void(Player&)> e)
+	{
+		effects.push_back(e);
 	}
 	std::ostream& operator<<(std::ostream& os, const CardBase& card)
 	{

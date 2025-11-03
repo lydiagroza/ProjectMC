@@ -24,8 +24,17 @@ struct ProgressToken {
 	int immediateVictoryPoints;
 	int immediateCoins;
 	int endGameVictoryPoints;
+	
+	enum class EndGameEffect {
+		PerWonder,
+		PerBlueCard,
+		PerGreenCard,
+		PerYellowCard,
+		PerRedCard,
+		PerRedCard,
+		PerCoinSet,
 
-	ProgressToken(ProgressTokenType t, const std::string& n, const std::string& d, int vp = 0, int coins = 0, int multiplier = 0);
+	};
 };
 
 

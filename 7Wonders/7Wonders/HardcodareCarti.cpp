@@ -1,134 +1,170 @@
-#include "CardBase.h"
-using namespace std;
+#include "Player.h"
+#include  "CardBase.h"
+#include <memory>
+#include <map>
+#include <vector>
 
-//std::vector<CardBase> createBrownCards() {
-//    std::vector<CardBase> cards;
+namespace wonders7 {
 
-//    // Age I - Brown Cards
-//    {
-//        CardBase c;
-//        c.m_id = 1;
-//        c.m_name = "Lumber Yard";
-//        c.m_color = Color::Brown;
-//        c.m_cost = {};
-//        c.m_symbol = std::nullopt;
-//        c.m_unlocks = std::nullopt;
-//        cards.push_back(c);
-//    }
-//    {
-//        CardBase c;
-//        c.m_id = 2;
-//        c.m_name = "Logging Camp";
-//        c.m_color = Color::Brown;
-//        c.m_cost = { {Resource::Wood, 1} };
-//        c.m_symbol = std::nullopt;
-//        c.m_unlocks = std::nullopt;
-//        cards.push_back(c);
-//    }
-//    {
-//        CardBase c;
-//        c.m_id = 3;
-//        c.m_name = "Clay Pool";
-//        c.m_color = Color::Brown;
-//        c.m_cost = {};
-//        c.m_symbol = std::nullopt;
-//        c.m_unlocks = std::nullopt;
-//        cards.push_back(c);
-//    }
-//    {
-//        CardBase c;
-//        c.m_id = 4;
-//        c.m_name = "Clay Pit";
-//        c.m_color = Color::Brown;
-//        c.m_cost = { {Resource::Clay, 1} };
-//        c.m_symbol = std::nullopt;
-//        c.m_unlocks = std::nullopt;
-//        cards.push_back(c);
-//    }
-//    {
-//        CardBase c;
-//        c.m_id = 5;
-//        c.m_name = "Quarry";
-//        c.m_color = Color::Brown;
-//        c.m_cost = {};
-//        c.m_symbol = std::nullopt;
-//        c.m_unlocks = std::nullopt;
-//        cards.push_back(c);
-//    }
-//    {
-//        CardBase c;
-//        c.m_id = 6;
-//        c.m_name = "Stone Pit";
-//        c.m_color = Color::Brown;
-//        c.m_cost = { {Resource::Stone, 1} };
-//        c.m_symbol = std::nullopt;
-//        c.m_unlocks = std::nullopt;
-//        cards.push_back(c);
-//    }
-//
-//    // Age II - Brown Cards
-//    {
-//        CardBase c;
-//        c.m_id = 7;
-//        c.m_name = "Sawmill";
-//        c.m_color = Color::Brown;
-//        c.m_cost = { {Resource::Wood, 2} };
-//        c.m_symbol = std::nullopt;
-//        c.m_unlocks = std::nullopt;
-//        cards.push_back(c);
-//    }
-//    {
-//        CardBase c;
-//        c.m_id = 8;
-//        c.m_name = "Brickyard";
-//        c.m_color = Color::Brown;
-//        c.m_cost = { {Resource::Clay, 2} };
-//        c.m_symbol = std::nullopt;
-//        c.m_unlocks = std::nullopt;
-//        cards.push_back(c);
-//    }
-//    {
-//        CardBase c;
-//        c.m_id = 9;
-//        c.m_name = "Shelf Quarry";
-//        c.m_color = Color::Brown;
-//        c.m_cost = { {Resource::Stone, 2} };
-//        c.m_symbol = std::nullopt;
-//        c.m_unlocks = std::nullopt;
-//        cards.push_back(c);
-//    }
-//    {
-//        CardBase c;
-//        c.m_id = 10;
-//        c.m_name = "Glass Blower";
-//        c.m_color = Color::Brown; // technically Gray, but in image appears as refined resource
-//        c.m_cost = {};
-//        c.m_symbol = std::nullopt;
-//        c.m_unlocks = std::nullopt;
-//        cards.push_back(c);
-//    }
-//
-//    return cards;
-//}
+    std::vector<std::unique_ptr<CardBase>> createBrownCards() {
+        std::vector<std::unique_ptr<CardBase>> cards;
+      
+        // LUMBERYARD  
+        auto c = std::make_unique<CardBase>(
+            "Lumber Yard",
+            1,
+            Color::Brown,
+            std::map<Resource, std::uint8_t>{}, // cost 
+            std::nullopt, // fara simbol 
+            std::nullopt  // fara unlock 
+        );
+        c->addEffect([](Player& p) {
+            p.addResource(Resource::Wood, 1);
+            });
 
-import CardBase;
-import <iostream>;
+        cards.push_back(std::move(c));
 
-using namespace wonders7;
 
-int main() {
-    CardBase c1("Baths", 1, Color::Blue,
-        { {Resource::Stone, 1} },
-        Symbol::Lamp);
 
-    CardBase c2("Guard Tower", 2, Color::Red,
-        { {Resource::Clay, 1} },
-        Symbol::Sword);
+		// LOGGING CAMP
+        auto c = std::make_unique<CardBase>(
+            "Logging Camp",
+            2,
+            Color::Brown,
+            std::map<Resource, std::uint8_t>{{Resource::Coin, 1}}, // cost 
+            std::nullopt, // fara simbol 
+            std::nullopt  // fara unlock 
+        );
+        c->addEffect([](Player& p) {
+            p.addResource(Resource::Wood, 1);
+            });
+        cards.push_back(std::move(c));
 
-    CardBase c3("Marketplace", 3, Color::Yellow,
-        { {Resource::Gold, 2} },
-        std::nullopt,
-        std::vector<Symbol>{Symbol::Gear, Symbol::Scroll});
 
-    std::cout << c1 << c2 << c3;
+
+		// CLAY PIT
+        auto c = std::make_unique<CardBase>(
+            "Clay Pit", 3,
+            Color::Brown,
+            std::map<Resource, std::uint8_t>{}, // cost 
+            std::nullopt, // fara simbol 
+            std::nullopt  // fara unlock 
+        );
+        c->addEffect([](Player& p) {
+            p.addResource(Resource::Clay, 1);
+            });
+        cards.push_back(std::move(c));
+
+
+
+		// CLAY POOL
+        auto c = std::make_unique<CardBase>(
+            "Clay Pool", 4,
+            Color::Brown,
+            std::map<Resource, std::uint8_t>{{Resource::Coin, 1}}, // cost 
+            std::nullopt, // fara simbol 
+            std::nullopt  // fara unlock 
+        );
+        c->addEffect([](Player& p) {
+            p.addResource(Resource::Clay, 1);
+            });
+        cards.push_back(std::move(c));
+
+
+
+
+		// STONE PIT
+        auto c = std::make_unique<CardBase>(
+            "Stone Pit", 5,
+            Color::Brown,
+            std::map<Resource, std::uint8_t>{{Resource::Coin, 1}}, // cost 
+            std::nullopt, // fara simbol 
+            std::nullopt  // fara unlock 
+        );
+        c->addEffect([](Player& p) {
+            p.addResource(Resource::Stone, 1);
+            });
+        cards.push_back(std::move(c));
+
+
+
+		// GLASS WORKS
+        auto c = std::make_unique<CardBase>(
+            "Glass Works", 6,
+            Color::Gray,
+            std::map<Resource, std::uint8_t>{{Resource::Coin, 1}}, // cost 
+            std::nullopt, // fara simbol 
+            std::nullopt  // fara unlock 
+        );
+        c->addEffect([](Player& p) {
+            p.addResource(Resource::Glass, 1);
+            });
+        cards.push_back(std::move(c));
+
+
+
+		// PRESS
+        auto c = std::make_unique<CardBase>(
+            "Press", 7,
+            Color::Gray,
+            std::map<Resource, std::uint8_t>{{Resource::Coin, 1}}, // cost 
+            std::nullopt, // fara simbol 
+            std::nullopt  // fara unlock 
+        );
+        c->addEffect([](Player& p) {
+            p.addResource(Resource::Papyrus, 1);
+            });
+        cards.push_back(std::move(c));
+
+
+
+		// GUARD TOWER
+        auto c = std::make_unique<CardBase>(
+            "Guard Tower", 8,
+            Color::Red,
+            std::map<Resource, std::uint8_t>{}, // cost 
+            std::nullopt, // fara simbol 
+            std::nullopt  // fara unlock 
+        );
+        c->addEffect([](Player& p) {
+            p.add_Points(Points::Military, 1);
+            });
+        cards.push_back(std::move(c));
+
+
+
+		// WORKSHOP
+        auto c = std::make_unique<CardBase>(
+            "Workshop", 9,
+            Color::Green,
+            std::map<Resource, std::uint8_t>{{Resource::Papyrus, 1}}, // cost 
+            std::nullopt,// fara simbol 
+            std::nullopt  // fara unlock 
+        );
+        c->addEffect([](Player& p) {
+            p.add_ScientificSymbol(Scientific_Symbol::Cog);
+			p.add_Points(Points::Victory, 1);
+            });
+        cards.push_back(std::move(c));
+
+
+
+		// APOTHECARY
+        auto c = std::make_unique<CardBase>(
+            "Apothecary", 10,
+            Color::Green,
+            std::map<Resource, std::uint8_t>{}, // cost 
+            std::nullopt,// fara simbol 
+            std::nullopt  // fara unlock 
+        );
+        c->addEffect([](Player& p) {
+            p.add_ScientificSymbol(Scientific_Symbol::Wheel);
+            p.add_Points(Points::Victory, 1);
+            });
+        cards.push_back(std::move(c));
+
+
+
+	return cards;
+
 }

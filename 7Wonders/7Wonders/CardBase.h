@@ -1,15 +1,15 @@
-﻿#include <iostream>;
-#include <map>;
-#include <string>;
-#include<vector>;
-#include <optional>;
-#include<functional>;
-#include "Player.h"; 
-#include <cstdint>;
+﻿#include <iostream>
+#include <map>
+#include <string>
+#include<vector>
+#include <optional>
+#include<functional>
+#include "Player.h" 
+#include <cstdint>
 
 
   enum  Resource : std::uint8_t {
-        Wood, Clay, Stone, Glass, Papyrus, Gold
+        Wood, Clay, Stone, Glass, Papyrus, Coin
     };
 
   enum Color : std::uint8_t {
@@ -21,34 +21,37 @@
         Horse, Helmet, Mask, Sun, Moon, Balance
     };
   enum  Points : std::uint8_t {
-        Victory, War
+        Victory, Military
 	};
+  enum Scientific_Symbol : std::uint8_t {
+        Compass, Tablet, Cog, Wheel
+  };
 
-
- class CardBase {
-    public:
-        std::string m_name;
-        std::uint16_t m_id : 16;
-        Color m_color : 3;
-        std::optional<Symbol> m_symbol;
-        std::optional<std::vector<Symbol>> m_unlocks;
-        std::map<Resource, std::uint8_t> m_cost;
-        CardBase();
-        CardBase(std::string name, std::uint16_t id, Color color,
-            const std::map<Resource, std::uint8_t>& cost,
-            const std::optional<Symbol>& symbol = std::nullopt,
-            const std::optional<std::vector<Symbol>>& unlocks = std::nullopt)
-            : m_name(std::move(name)), m_id(id), m_color(color),
-            m_cost(cost), m_symbol(symbol), m_unlocks(unlocks) {
-        }
-        const std::string& get_name() const;
-        std::uint16_t get_id() const;
-        Color get_color() const;
-        const std::map<Resource, std::uint8_t>& get_cost() const;
-        const std::optional<Symbol>& get_symbol() const;
-        const std::optional<std::vector<Symbol>>& get_unlocks() const;
-        void addEffect(std::function<void(Player&)> e) { efects.push_back(e); }
-        void applyEffects(Player& p) { for (auto& e : efects) e(p); }
+  class CardBase {
+  public:
+      std::string m_name;
+      std::uint16_t m_id : 16;
+      Color m_color : 3;
+      std::optional<Symbol> m_symbol;
+      std::optional<std::vector<Symbol>> m_unlocks;
+      std::map<Resource, std::uint8_t> m_cost;
+      std::vector<std::function<void(Player&)>> effects;
+      CardBase();
+      CardBase(std::string name, std::uint16_t id, Color color,
+          const std::map<Resource, std::uint8_t>& cost,
+          const std::optional<Symbol>& symbol = std::nullopt,
+          const std::optional<std::vector<Symbol>>& unlocks = std::nullopt)
+          : m_name(std::move(name)), m_id(id), m_color(color),
+          m_cost(cost), m_symbol(symbol), m_unlocks(unlocks) {
+      }
+      const std::string& get_name() const;
+      std::uint16_t get_id() const;
+      Color get_color() const;
+      const std::map<Resource, std::uint8_t>& get_cost() const;
+      const std::optional<Symbol>& get_symbol() const;
+      const std::optional<std::vector<Symbol>>& get_unlocks() const;
+      void applyEffect(Player& p);
+      void addEffect(std::function<void(Player&)> e);
     };
 
 
@@ -60,7 +63,6 @@ std::string to_string(Resource r) {
         case Resource::Stone: return "Stone";
         case Resource::Glass: return "Glass";
         case Resource::Papyrus: return "Papyrus";
-        case Resource::Gold: return "Gold";
         }
         return "Unknown";
     }
@@ -95,49 +97,12 @@ std::string to_string(Color c) {
         }
         return "Unknown";
     }
-std::ostream& operator<<(std::ostream& os, const CardBase& card) {
-        os << "Card Name: " << card.m_name << "\n";
-        os << "ID: " << card.m_id << "\n";
-        os << "Color: " << to_string(card.m_color) << "\n";
+ std::ostream& operator<<(std::ostream& os, const CardBase& card) {
+     os << "Card Name: " << card.m_name << "\n";
+     os << "ID: " << card.m_id << "\n";
+     os << "Color: " << to_string(card.m_color) << "\n";
 
-        // Cost
-        if (card.m_cost.empty()) {
-            os << "Cost: None\n";
-        }
-        else {
-            os << "Cost: ";
-            bool first = true;
-            for (const auto& [res, val] : card.m_cost) {
-                if (!first) os << ", ";
-                os << (int)val << "x " << to_string(res);
-                first = false;
-            }
-            os << "\n";
-        }
-
-        // Symbol
-        if (card.m_symbol)
-            os << "Symbol: " << to_string(*card.m_symbol) << "\n";
-        else
-            os << "Symbol: None\n";
-
-        // Unlocks
-        if (card.m_unlocks && !card.m_unlocks->empty()) {
-            os << "Unlocks: ";
-            bool first = true;
-            for (auto sym : *card.m_unlocks) {
-                if (!first) os << ", ";
-                os << to_string(sym);
-                first = false;
-            }
-            os << "\n";
-        }
-        else {
-            os << "Unlocks: None\n";
-        }
-
-        os << "-----------------------------\n";
-        return os;
-    }
+ }
+ 
 
 

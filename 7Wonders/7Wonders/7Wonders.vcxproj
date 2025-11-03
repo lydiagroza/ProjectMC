@@ -146,6 +146,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="verificare.cpp" />
+    <ClCompile Include="Wonders.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />

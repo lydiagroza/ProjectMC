@@ -19,7 +19,7 @@ namespace wonders7 {
             std::nullopt  // fara unlock 
         );
         c->addEffect([](Player& p) {
-            p.addResource(Resource::Wood, 1);
+            p.add_Resource(Resource::Wood, 1);
             });
 
         cards.push_back(std::move(c));
@@ -36,7 +36,7 @@ namespace wonders7 {
             std::nullopt  // fara unlock 
         );
         c->addEffect([](Player& p) {
-            p.addResource(Resource::Wood, 1);
+            p.add_Resource(Resource::Wood, 1);
             });
         cards.push_back(std::move(c));
 
@@ -51,7 +51,7 @@ namespace wonders7 {
             std::nullopt  // fara unlock 
         );
         c->addEffect([](Player& p) {
-            p.addResource(Resource::Clay, 1);
+            p.add_Resource(Resource::Clay, 1);
             });
         cards.push_back(std::move(c));
 
@@ -66,7 +66,7 @@ namespace wonders7 {
             std::nullopt  // fara unlock 
         );
         c->addEffect([](Player& p) {
-            p.addResource(Resource::Clay, 1);
+            p.add_Resource(Resource::Clay, 1);
             });
         cards.push_back(std::move(c));
 
@@ -82,7 +82,7 @@ namespace wonders7 {
             std::nullopt  // fara unlock 
         );
         c->addEffect([](Player& p) {
-            p.addResource(Resource::Stone, 1);
+            p.add_Resource(Resource::Stone, 1);
             });
         cards.push_back(std::move(c));
 
@@ -97,7 +97,7 @@ namespace wonders7 {
             std::nullopt  // fara unlock 
         );
         c->addEffect([](Player& p) {
-            p.addResource(Resource::Glass, 1);
+            p.add_Resource(Resource::Glass, 1);
             });
         cards.push_back(std::move(c));
 
@@ -112,7 +112,7 @@ namespace wonders7 {
             std::nullopt  // fara unlock 
         );
         c->addEffect([](Player& p) {
-            p.addResource(Resource::Papyrus, 1);
+            p.add_Resource(Resource::Papyrus, 1);
             });
         cards.push_back(std::move(c));
 

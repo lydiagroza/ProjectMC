@@ -1,9 +1,4 @@
-import CardBase;
-import<iostream>;
-import <format>; 
-import <vector>;
-
-using namespace wonders7;
+#include "CardBase.h"
 using namespace std;
 
 //std::vector<CardBase> createBrownCards() {

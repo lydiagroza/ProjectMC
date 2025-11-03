@@ -19,10 +19,9 @@ public:
 	Player(const std::string& playerName);
 	void addCoins(int amount);
 	bool decreaseCoins(int amount);
+	int calculateTradeCost(const std::unordered_map<std::string, int>& requiredResurces, const Player& opponent)const;//calculeaza monezile necesare pentru a cumpara resursele necesare pentru a folosi o carte 
+	bool canAffordConstruction(int fixedCoinCost, const std::unordered_map<std::string, int>& requiredResources, const Player& opponent);
 	//void moveMilitaryScore(int shields,Player& opponent);
 	//void addCards(const Card& card, Players& opponent, GameState& board);
-
-
-
 
 };

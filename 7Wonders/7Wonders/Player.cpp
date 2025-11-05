@@ -55,6 +55,7 @@ bool Player::canAffordConstruction(const CardBase &c , const Player& opponent) {
 		return false;
 	}
  }
+//other functions
 
 //void Player::moveMilitaryScore(int shields,Player&opponent) {
 //	militaryScore += shields;

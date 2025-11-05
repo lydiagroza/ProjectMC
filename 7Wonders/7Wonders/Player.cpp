@@ -1,11 +1,11 @@
 #include "Player.h"
 #include<unordered_map>
-Player::Player(const std::string& playerName) :name(playerName), nrCoins(7), militaryScore(0), baseProduction{}, m_pointsScore{}, fixedCost {}, bonusProduction{}, cityBuildings{}, availableWonders{}, builtWonders{}, scientificSymbols{}, chainSymbols{} {
+Player::Player(const std::string& playerName) :m_name(playerName), m_nrCoins(7), m_militaryScore(0), m_baseResources{}, m_pointsScore{}, m_discountedResource {}, m_chosenResource{}, cityBuildings{}, m_availableWonders{}, m_builtWonders{}, m_scientificSymbols{}, m_chainSymbols{} {
 }
 
 bool Player::decreaseCoins(int amount) {
-	if (nrCoins >= amount) {
-		nrCoins -= amount;
+	if (m_nrCoins >= amount) {
+		m_nrCoins -= amount;
 		return true;
 	}
 	return false;
@@ -13,8 +13,8 @@ bool Player::decreaseCoins(int amount) {
 
 
 bool Player::hasSufficientResources(const CardBase& card) const {
-	std::unordered_map<Resource, int> availableResources = baseProduction;
-	for (const auto& pair : bonusProduction) {
+	std::unordered_map<Resource, std::uint8_t> availableResources = m_baseResources;
+	for (const auto& pair : m_chosenResource) {
 		availableResources[pair.first] += pair.second;
 	}
 
@@ -42,8 +42,8 @@ int Player::calculateTradeCost(const CardBase& card, const Player& opponent) con
 	}
 	const auto& requiredResources = card.get_cost();
 	int totalTradeCost = 0;
-	std::unordered_map<Resource, int> availableResources = baseProduction;
-	for (const auto& pair : bonusProduction) {
+	std::unordered_map<Resource, std::uint8_t> availableResources = m_baseResources;
+	for (const auto& pair : m_chosenResource) {
 		availableResources[pair.first] += pair.second;
 	}
 
@@ -56,13 +56,13 @@ int Player::calculateTradeCost(const CardBase& card, const Player& opponent) con
 		int missingAmount = requiredAmount - availableResources[resource];
 
 		if (missingAmount > 0) {
-			if (fixedCost.count(resource)) {
-				totalTradeCost += missingAmount * fixedCost.at(resource);
+			if (m_discountedResource.count(resource)) {
+				totalTradeCost += missingAmount * m_discountedResource.at(resource);
 			}
 			else {
 				int opponentProduction = 0;
-				if (opponent.baseProduction.count(resource)) {
-					opponentProduction += opponent.baseProduction.at(resource);
+				if (opponent.m_baseResources.count(resource)) {
+					opponentProduction += opponent.m_baseResources.at(resource);
 				}
 
 				int costPerUnit = 2 + opponentProduction;
@@ -92,7 +92,7 @@ bool Player::canAffordConstruction(const CardBase& c, const Player& opponent) {
 
 void Player:: add_Resource(Resource r, int amount)
 {
-	baseProduction[r] += amount;
+	m_baseResources[r] += amount;
 }
 void Player:: add_Points(Points p, int amount)
 {
@@ -100,11 +100,11 @@ void Player:: add_Points(Points p, int amount)
 }
 void Player:: add_ScientificSymbol(Scientific_Symbol symbol)
 {
-	scientificSymbols.insert(symbol);
+	m_scientificSymbols.insert(symbol);
 }
 void Player:: add_ChainSymbol(Symbol symbol)
 {
-	chainSymbols.insert(symbol);
+	m_chainSymbols.insert(symbol);
 }
 
 

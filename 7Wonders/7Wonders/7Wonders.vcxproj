@@ -135,11 +135,14 @@
     <ClCompile Include="CardBase.cpp" />
     <ClCompile Include="CardBase.h" />
     <ClCompile Include="CardNode.cpp" />
-    <ClCompile Include="Functii_Player-Card.cpp" />
     <ClCompile Include="HardcodareCarti.cpp" />
+    <ClCompile Include="HardcodingWonders.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ProgresTokens.cpp" />
     <ClCompile Include="verificare.cpp" />
-    <ClCompile Include="Wonders.cpp" />
+    <ClCompile Include="Wonders.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />

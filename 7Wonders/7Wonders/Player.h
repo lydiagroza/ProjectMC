@@ -1,27 +1,27 @@
 #include<string>
 #include<unordered_map>
 #include<unordered_set>
+#include "CardBase.h"
+
 class Player {
 private:
 	std::string name;
 	int nrCoins;
 	int militaryScore;
-	std::unordered_map<std::string, int> rawMaterials;
-	std::unordered_map<std::string, int>manufacturedGoods;
-	std::unordered_map<std::string, int>fixedCost; // stocheaza resursele primare care pot fi cumparate cu discount
-	std::unordered_map<std::string, int>bonusProduction;//stocheaza resursele obtinute din cartile galbene sau minuni
-	std::unordered_map<std::string, std::vector<Card>>cityBuildings;
+	std::unordered_map<Resource,int> baseProduction;
+	std::unordered_map<Resource, int>fixedCost; // stocheaza resursele primare care pot fi cumparate cu discount
+	std::unordered_map<Resource, int>bonusProduction;//stocheaza resursele obtinute din cartile galbene sau minuni care nu trebuie sa afecteze costul de cumparare
+	std::unordered_map<Color, std::vector<CardBase>>cityBuildings;
 	std::vector<Wonder>availableWonders;
 	std::vector<Wonder>builtWonders;
-	std::unordered_set<std::string>scientificSymbols;
-	std::unordered_set<std::string>chainSymbols;
+	std::unordered_set<Scientific_Symbol>scientificSymbols;
+	std::unordered_set<Symbol>chainSymbols;
 public:
 	Player(const std::string& playerName);
-	void addCoins(int amount);
 	bool decreaseCoins(int amount);
-	int calculateTradeCost(const std::unordered_map<std::string, int>& requiredResurces, const Player& opponent)const;//calculeaza monezile necesare pentru a cumpara resursele necesare pentru a folosi o carte 
-	bool canAffordConstruction(int fixedCoinCost, const std::unordered_map<std::string, int>& requiredResources, const Player& opponent);
-	//void moveMilitaryScore(int shields,Player& opponent);
-	//void addCards(const Card& card, Players& opponent, GameState& board);
+	bool hasSufficientResources(const CardBase& c)const;
+	int calculateTradeCost(const CardBase &c, const Player& opponent)const;//calculeaza monezile necesare pentru a cumpara resursele necesare pentru a folosi o carte 
+	bool canAffordConstruction(const CardBase& c, const Player& opponent);
+	
 
 };

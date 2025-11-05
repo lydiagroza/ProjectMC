@@ -37,3 +37,50 @@
 		os << "Card ID: " << card.get_id() << ", Name: " << card.get_name();
 		return os;
 	}
+
+	std::string to_string(Resource r)
+		{
+			switch (r) {
+			case Resource::Wood: return "Wood";
+			case Resource::Clay: return "Clay";
+			case Resource::Stone: return "Stone";
+			case Resource::Glass: return "Glass";
+			case Resource::Papyrus: return "Papyrus";
+			}
+			return "Unknown";
+		}
+
+
+	std::string to_string(Color c)
+	{
+		switch (c) {
+		case Color::Brown: return "Brown";
+		case Color::Gray: return "Gray";
+		case Color::Yellow: return "Yellow";
+		case Color::Red: return "Red";
+		case Color::Blue: return "Blue";
+		case Color::Green: return "Green";
+		case Color::Purple: return "Purple";
+		}
+		return "Unknown";
+	}
+
+	std::string to_string(Symbol s)
+		{
+			switch (s) {
+			case Symbol::Barrel: return "Barrel";
+			case Symbol::Gear: return "Gear";
+			case Symbol::Lamp: return "Lamp";
+			case Symbol::Scroll: return "Scroll";
+			case Symbol::Sword: return "Sword";
+			case Symbol::Wall: return "Wall";
+			case Symbol::Horse: return "Horse";
+			case Symbol::Helmet: return "Helmet";
+			case Symbol::Mask: return "Mask";
+			case Symbol::Sun: return "Sun";
+			case Symbol::Moon: return "Moon";
+			case Symbol::Balance: return "Balance";
+			}
+			return "Unknown";
+		}
+	

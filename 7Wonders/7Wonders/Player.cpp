@@ -88,6 +88,7 @@ bool Player::canAffordConstruction(const Card& c,const Player& opponent) {
 	return false;
 	
  }
+//other functions
 
 
 

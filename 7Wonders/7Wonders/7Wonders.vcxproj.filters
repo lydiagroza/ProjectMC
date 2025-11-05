@@ -27,9 +27,6 @@
     <ClCompile Include="HardcodareCarti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CardBase.cppm">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="verificare.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -38,6 +35,9 @@
     </ClCompile>
     <ClCompile Include="Wonders.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CardBase.h">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,5 +56,10 @@
     <ClInclude Include="ProgressTokens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CardBase.csv">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,0 +1,5 @@
+name,id,color,cost,symbol,unlocks,effects
+Lumber Yard,1,Brown,"",,,"add_resource_wood"
+Apothecary,2,Green,"Papyrus:1","Gear","Lamp;Scroll","add_symbol_gear"
+Barracks,3,Red,"Clay:1",,,"military_advance_1"
+Temple,4,Blue,"Stone:1","Scroll","Gear","add_points_3"

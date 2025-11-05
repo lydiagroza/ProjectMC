@@ -135,7 +135,6 @@
     <ClCompile Include="CardBase.cpp" />
     <ClCompile Include="CardBase.h" />
     <ClCompile Include="CardNode.cpp" />
-    <ClCompile Include="Functii_Player-Card.cpp" />
     <ClCompile Include="HardcodareCarti.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="verificare.cpp" />
@@ -147,6 +146,9 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ProgressTokens.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CardBase.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

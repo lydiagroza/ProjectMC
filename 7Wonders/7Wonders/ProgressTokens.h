@@ -19,17 +19,23 @@ enum class ProgressTokenType {
 };
 
 struct ProgressToken {
-	ProgressTokenType type;
 	std::string name;
 	std::string description;
 	int immediateVictoryPoints;
 	int immediateCoins;
 	int endGameVictoryPoints;
 	
-	ProgressToken(ProgressTokenType t, const std::string& n, const std::string& d,
-		int vp = 0, int coins = 0, int multiplier = 0);
-};
+	enum class EndGameEffect {
+		PerWonder,
+		PerBlueCard,
+		PerGreenCard,
+		PerYellowCard,
+		PerRedCard,
+		PerRedCard,
+		PerCoinSet,
 
+	};
+};
 
 
 // takes tokens and current stats
@@ -38,9 +44,9 @@ struct ProgressToken {
 // auto [newCoins, newVP] = calculateAllTokenEffects(player.getTokens(), player.getCoins(), player.getVP());
 // player.setCoins(newCoins);
 // player.setVP(newVP);
-//std::tuple<int, int> calculateAllTokenEffects(
-//	const std::vector<ProgressToken>& playerTokens, 
-//	int currentTokens, 
-//	int currentVitoryPoints, 
-//	const std::map<ProgressTokenType, 
-//	ProgressToken>& allTokens);
+std::tuple<int, int> calculateAllTokenEffects(
+	const std::vector<ProgressToken>& playerTokens, 
+	int currentTokens, 
+	int currentVitoryPoints, 
+	const std::map<ProgressTokenType, 
+	ProgressToken>& allTokens);

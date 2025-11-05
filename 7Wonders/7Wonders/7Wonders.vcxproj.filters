@@ -27,6 +27,9 @@
     <ClCompile Include="HardcodareCarti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CardBase.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="verificare.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -34,15 +37,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Wonders.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CardBase.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HardcodingWonders.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ProgresTokens.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

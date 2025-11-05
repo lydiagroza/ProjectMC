@@ -37,7 +37,7 @@ int Player::calculateTradeCost( const CardBase & c,  const Player& opponent)cons
 			
 		}
 	}
-	return totalTradeCost;
+	return totalTradeCost;dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcwssssssssssssssssssssssssssssssssssssss             vvvvvvvvvvvvv                                                                                                                                                                                                                                               
 }
 bool Player::canAffordConstruction(const CardBase &c , const Player& opponent) {
 	if (check_resources(c)) return true; 

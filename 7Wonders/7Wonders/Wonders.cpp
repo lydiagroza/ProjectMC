@@ -1,9 +1,8 @@
-module CardBase;
-import <iostream>;
-import <format>; 
-import <vector>;
+#include "CardBase.h";
+#include<iostream>;
+#include <format>; 
+#include <vector>;
 
-namespace wonders7 {
 
 	const std::string& CardBase::get_name() const {
 		return m_name;
@@ -16,5 +15,5 @@ namespace wonders7 {
 	Points Cardbase::getPoints() const {
 		return m_points;
 	}
-}
+
 

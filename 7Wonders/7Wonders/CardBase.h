@@ -94,8 +94,7 @@ std::string to_string(Color c) {
         case Symbol::Sun: return "Sun";
         case Symbol::Moon: return "Moon";
         case Symbol::Balance: return "Balance";
-        }
-        return "Unknown";
+        }       return "Unknown";
     }
  std::ostream& operator<<(std::ostream& os, const CardBase& card) {
      os << "Card Name: " << card.m_name << "\n";

@@ -1,6 +1,6 @@
 #include "Player.h"
 #include<unordered_map>
-Player::Player(const std::string& playerName) :name(playerName), nrCoins(7), militaryScore(0), rawMaterials{}, manufacturedGoods{}, fixedCost{}, bonusProduction{}, cityBuildings{}, availableWonders{}, builtWonders{}, scientificSymbols{}, chainSymbols{} {
+Player::Player(const std::string& playerName) :name(playerName), nrCoins(7), militaryScore(0), baseProduction{}, m_pointsScore{}, fixedCost {}, bonusProduction{}, cityBuildings{}, availableWonders{}, builtWonders{}, scientificSymbols{}, chainSymbols{} {
 }
 
 bool Player::decreaseCoins(int amount) {
@@ -74,7 +74,7 @@ int Player::calculateTradeCost(const CardBase& card, const Player& opponent) con
 	return totalTradeCost;
 }
 
-bool Player::canAffordConstruction(const Card& c, const Player& opponent) {
+bool Player::canAffordConstruction(const CardBase& c, const Player& opponent) {
 	int CardCoinCost = 0;
 	const auto& cardCost = c.get_cost();
 	if (cardCost.count(Resource::Coin)) {
@@ -92,7 +92,7 @@ bool Player::canAffordConstruction(const Card& c, const Player& opponent) {
 
 void Player:: add_Resource(Resource r, int amount)
 {
-	m_inventory[r] += amount;
+	baseProduction[r] += amount;
 }
 void Player:: add_Points(Points p, int amount)
 {
@@ -100,11 +100,11 @@ void Player:: add_Points(Points p, int amount)
 }
 void Player:: add_ScientificSymbol(Scientific_Symbol symbol)
 {
-	m_scientificSymbols.insert(symbol);
+	scientificSymbols.insert(symbol);
 }
 void Player:: add_ChainSymbol(Symbol symbol)
 {
-	m_chainSymbols.insert(symbol);
+	chainSymbols.insert(symbol);
 }
 
 

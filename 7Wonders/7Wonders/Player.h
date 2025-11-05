@@ -9,6 +9,7 @@ private:
 	int nrCoins;
 	int militaryScore;
 	std::unordered_map<Resource, int> baseProduction;
+	std::unordered_map<Points, int>m_pointsScore;
 	std::unordered_map<Resource, int>fixedCost; // stocheaza resursele primare care pot fi cumparate cu discount
 	std::unordered_map<Resource, int>bonusProduction;//stocheaza resursele obtinute din cartile galbene sau minuni care nu trebuie sa afecteze costul de cumparare
 	std::unordered_map<Color, std::vector<CardBase>>cityBuildings;

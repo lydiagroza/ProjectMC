@@ -1,10 +1,11 @@
 ﻿#include "Board.h"
+#include <iomanip>   // pentru std::setw
 
 void Board::setupCards(int era, std::vector<CardNode*>& eraCards)
 {
-    activeCards.clear();
+    m_activeCards.clear();
 
-    const std::vector<int>& layout = eraLayouts[era - 1];
+    const std::vector<int>& layout = m_eraLayouts[era - 1];
     int index = 0;
     int rowNumber = 0;
 
@@ -17,34 +18,32 @@ void Board::setupCards(int era, std::vector<CardNode*>& eraCards)
             row.back()->setFace(rowNumber % 2 == 0 ? Face::Up : Face::Down);
         }
         rowNumber++;
-        activeCards.push_back(std::move(row));
+        m_activeCards.push_back(std::move(row));
     }
     linkCards(era);
 }
 
-void Board::linkCards(int eraIndex) {
+void Board::linkCards(int eraIndex)
+{
     const auto& eraIndexes =
-        (eraIndex == 1 ? eraChildIndexes1 :
-            eraIndex == 2 ? eraChildIndexes2 :
-            eraChildIndexes3);
+        (eraIndex == 1 ? m_eraChildIndexes1 :
+            eraIndex == 2 ? m_eraChildIndexes2 :
+            m_eraChildIndexes3);
 
-    for (size_t r = 0; r + 1 < activeCards.size(); ++r) {
-        const auto& row = activeCards[r];
-        const auto& nextRow = activeCards[r + 1];
+    for (size_t r = 0; r + 1 < m_activeCards.size(); ++r) {
+        const auto& row = m_activeCards[r];
+        const auto& nextRow = m_activeCards[r + 1];
 
         for (size_t i = 0; i < row.size(); ++i) {
             CardNode* parent = row[i];
 
-            // Verificăm că există definiție de copii pentru această carte
             if (i >= eraIndexes[r].size()) continue;
 
-            // Adăugăm fiecare copil definit în vector
             for (int childIndex : eraIndexes[r][i]) {
                 if (childIndex >= 0 && childIndex < static_cast<int>(nextRow.size())) {
                     parent->addChild(nextRow[childIndex]);
                 }
                 else {
-                    // Optional: mesaj de warning dacă indexul e invalid
                     std::cerr << "WARN: Invalid child index " << childIndex
                         << " for parent at row " << r << " card " << i << "\n";
                 }
@@ -53,9 +52,9 @@ void Board::linkCards(int eraIndex) {
     }
 }
 
-std::vector<ProgressToken> Board::setAvailableProgressTokens(const std::vector<ProgressToken>& tokens) const
+void Board::setAvailableProgressTokens(const std::vector<ProgressToken>& tokens)
 {
-    return m_availableProgressTokens=tokens;
+    m_availableProgressTokens = tokens;
 }
 
 std::vector<ProgressToken> Board::getAvailableProgressTokens() const
@@ -63,55 +62,42 @@ std::vector<ProgressToken> Board::getAvailableProgressTokens() const
     return m_availableProgressTokens;
 }
 
-void Board::printAvailableProgressTokens(std::ostream& fout) const
+void Board::printTokens(std::ostream& fout) const
 {
-    if (visibleTokens.empty()) {
+    if (m_availableProgressTokens.empty()) {
         fout << "Nu exista tokeni vizibili pe tabla.\n";
         return;
     }
 
-    fout << "=== Progress Tokens vizibile (" << visibleTokens.size() << ") ===\n";
-    for (size_t i = 0; i < visibleTokens.size(); ++i) {
-        const auto& t = visibleTokens[i];
+    fout << "=== Progress Tokens Vizibile ===\n";
+
+    for (size_t i = 0; i < m_availableProgressTokens.size(); ++i) {
+        const auto& t = m_availableProgressTokens[i];
         fout << std::setw(2) << (i + 1) << ") "
-            << t.name << " — " << t.description;
-        four << "\n";
+            << t.name << " — " << t.description << "\n";
+    }
 }
 
+void Board::printCardsTree() const
+{
+    int totalRows = static_cast<int>(m_activeCards.size());
 
-
-
-void Board::printCardsTree() const {
-    int totalRows = static_cast<int>(activeCards.size());
-
-    // 1. Găsim rândul cel mai lat pentru o centrare corectă
     size_t maxRowSize = 0;
-    for (const auto& row : activeCards) {
-        if (row.size() > maxRowSize) {
+    for (const auto& row : m_activeCards)
+        if (row.size() > maxRowSize)
             maxRowSize = row.size();
-        }
-    }
 
     std::cout << "\n===== STRUCTURA PIRAMIDEI =====\n\n";
 
-    // Iterăm de la rândul 0 (vârful) la ultimul rând (baza), conform output-ului tău
     for (int r = 0; r < totalRows; ++r) {
-        const auto& row = activeCards[r];
+        const auto& row = m_activeCards[r];
 
-        // 2. Calculul spațiilor pentru centrare
-        // Diferența în număr de cărți * Lățimea unei cărți / 2
-        // Presupunând că o carte ocupă 6 caractere ("[:U]  ")
-        // O unitate de shift e 3 (jumătate din lățimea vizuală a unei cărți)
         int spaces = (maxRowSize - row.size()) * 3;
 
-        // indentare
         for (int s = 0; s < spaces; ++s)
             std::cout << ' ';
 
-        // afișăm toate cărțile de pe rând
         for (const auto* card : row) {
-            // Poți adăuga aici logica de afișare a statusului de jucabilitate
-            // (dacă lista de copii/blocanți e goală), ca în sugestia anterioară.
             std::cout << "[" << card->getName()
                 << ":" << (card->getFace() == Face::Up ? "U" : "D") << "]  ";
         }
@@ -121,29 +107,28 @@ void Board::printCardsTree() const {
     std::cout << "===============================\n";
 }
 
-void Board::printChildrenList() const {
+void Board::printChildrenList() const
+{
     std::cout << "\n===== VERIFICARE RELAȚII BLOCARE (BLOCAT -> BLOCANT) =====\n";
     std::cout << " (Copiii sunt cărțile care blochează)\n\n";
 
-    // activeCards conține rândurile de cărți de la vârf (r=0) la bază.
-    for (const auto& row : activeCards) {
+    for (const auto& row : m_activeCards) {
         for (const auto* card : row) {
 
-            // Afișăm cartea curentă
             std::cout << "-> " << card->getName()
-                << " (Față: " << (card->getFace() == Face::Up ? "U" : "D") << ")";
+                << " (Față: "
+                << (card->getFace() == Face::Up ? "U" : "D")
+                << ")";
 
-            // Afișăm "copiii" (adică blocanții)
-            const auto& children = card->getChildren(); // Presupunem că ai o metodă getChildren() care returnează lista de CardNode*
+            const auto& children = card->getChildren();
 
             if (children.empty()) {
                 std::cout << " | COPII (BLOCANȚI): NICIUNUL [ACCESIBIL]\n";
             }
             else {
                 std::cout << " | COPII (BLOCANȚI): ";
-                for (const auto* blocker : children) {
+                for (const auto* blocker : children)
                     std::cout << blocker->getName() << " ";
-                }
                 std::cout << "\n";
             }
         }

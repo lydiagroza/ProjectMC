@@ -55,9 +55,9 @@ public:
 	void printChildrenList() const;
 	void linkCards(int);
 
-	void setAvailableProgressTokens(const std::vector<ProgressToken>& tokens) const;
+	void setAvailableProgressTokens(const std::vector<ProgressToken>& tokens);
 	std::vector<ProgressToken> getAvailableProgressTokens() const;
-	void printAvailableProgressTokens(std::ostream& fout = std::cout) const;
+	void printTokens(std::ostream& fout = std::cout) const;
 
 };
 

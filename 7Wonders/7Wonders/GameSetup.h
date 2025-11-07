@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Board.h"
 
 class GameSetup
@@ -9,7 +9,7 @@ private:
 /// <summary>
 /// /tokeni hardcodati temporar pana sunt gata ceilalti
 /// </summary>
-    std::vector<ProgressToken> allTokens = {
+    std::vector<ProgressToken> m_allTokens = {
        {"Agriculture", "Gain 6 coins and 4 victory points.", 4, 6, 0},
        {"Architecture", "Wonders cost 2 fewer stone/brick/wood.", 0, 0, 0},
        {"Economy", "Gain coins whenever your opponent gains coins.", 0, 0, 0},
@@ -21,14 +21,18 @@ private:
        {"Theology", "Your wonders activate their effects immediately.", 0, 0, 0},
        {"Urbanism", "Gain 6 coins immediately.", 0, 6, 0}
     };
-};
+
+    std::vector<CardNode*> m_cards;
 
 
 public:
-	GameSetup();
+    GameSetup();
+
     std::vector<ProgressToken> selectProgressTokens();
-    
+	std::vector<CardNode*> SelectRandomCards();
     Board& getBoard();
+
+
 
 };
 

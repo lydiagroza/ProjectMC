@@ -1,0 +1,28 @@
+name,id,color,cost,symbol,unlocks,effects
+LUMBER YARD,1,Brown,"",,,"add_resource_wood"
+QUARRY,5,Brown,"",,,"add_resource_stone"
+STONE PIT,6,Brown,"coin1",,,"add_resource_stone"
+LOGGING CAMP,7,Brown,"coin1",,,"add_resource_wood"
+CLAY POOL,8,Brown,"",,,"add_resource_clay"
+CLAY PIT, 9,Brown,"coin1",,,"add_resource_clay"
+PRESS,10,Gray,"coin1",,,"add_resource_papyrus"
+GLASS WORKS,11,Gray,"coin1",,,"add_resource_glass"
+APOTHECARY,12,Green,"glass1",,,"add_scientific_symbol_wheel"; "add_VictoryPoint1"
+WORKSHOP,13,Green,"papyrus1",,,"add_scientific_symbol_scales"; "add_VictoryPoint1"
+SCRIPTORIUM,14,Green,"coin2",,"book","add_scientific_symbol_ink";
+PHARMACIST,15,Green,"coin2",,Gear,"add_Mortar"
+THEATER,16,Blue,"",,mask,"add_VictoryPoint3"
+BATHS,17,Blue,"stone1",,droplet,"add_VictoryPoint3"
+ALTAR,18,Blue,"",,moon,"add_VictoryPoint3"
+TARVERN,19,Yellow,"",,vase,"add_coin4"
+STONE RESERVE,20,Yellow,"coin3",,,"sale_stone1"
+CLAY RESERVE,21,Yellow,"coin3",,,"sale_clay1"
+WOOD RESERVE,22,Yellow,"coin3",,,"sale_wood1"
+STABLE,23,Red,"wood1",,horse, "add_MilitaryPoin1"
+GUARD TOWER,24,Red,"",,,"add_MilitaryPoint1"
+GARRISON,25,Red,"clay1",,sword,"add_MilitaryPoint1"
+PALISADE,26,Red,"coin2",,castle,"add_MilitaryPoint1"
+
+
+
+

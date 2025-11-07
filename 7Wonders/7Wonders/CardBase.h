@@ -17,14 +17,13 @@
     };
 
   enum  Symbol : std::uint8_t {
-        Barrel, Gear, Lamp, Scroll, Sword, Wall,
-        Horse, Helmet, Mask, Sun, Moon, Balance
+      Barrel, Gear, Book, Temple, Target, Lyre, Castle, Droplet, Vase, Column, Sword, Pot, Horse, Helmet, Mask, Sun, Moon
     };
   enum  Points : std::uint8_t {
         Victory, Military
 	};
   enum Scientific_Symbol : std::uint8_t {
-        Compass, Tablet, Cog, Wheel
+	  Sun_Dial, Wheel, Ink, Mortar,Gyroscope,Scales
   };
 
   class CardBase {
@@ -37,7 +36,7 @@
       std::optional<Symbol> m_symbol;
       std::optional<std::vector<Symbol>> m_unlocks;
       std::map<Resource, std::uint8_t> m_cost;
-      std::vector<std::function<void(Player&)>> effects;
+      std::vector<std::function<void(Player&)>> effects
 
       //Constructori 
       CardBase();

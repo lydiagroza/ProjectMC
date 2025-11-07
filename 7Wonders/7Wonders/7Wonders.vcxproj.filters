@@ -24,9 +24,6 @@
     <ClCompile Include="CardBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HardcodareCarti.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="verificare.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -38,6 +35,9 @@
     </ClCompile>
     <ClCompile Include="CardBase.h">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CardLoader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,9 +56,18 @@
     <ClInclude Include="ProgressTokens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CardLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="CardBase.csv">
+    <None Include="AgeI.csv">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="AgeII.csv">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="AgeIII.csv">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

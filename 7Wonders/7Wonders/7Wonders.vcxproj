@@ -134,21 +134,24 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="CardBase.cpp" />
     <ClCompile Include="CardBase.h" />
+    <ClCompile Include="CardLoader.cpp" />
     <ClCompile Include="CardNode.cpp" />
-    <ClCompile Include="HardcodareCarti.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="verificare.cpp" />
     <ClCompile Include="Wonders.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
+    <ClInclude Include="CardLoader.h" />
     <ClInclude Include="CardNode.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ProgressTokens.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CardBase.csv" />
+    <None Include="AgeI.csv" />
+    <None Include="AgeII.csv" />
+    <None Include="AgeIII.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

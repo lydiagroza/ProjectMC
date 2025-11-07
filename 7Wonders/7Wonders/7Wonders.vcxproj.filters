@@ -27,16 +27,19 @@
     <ClCompile Include="HardcodareCarti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CardBase.cppm">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="verificare.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Wonders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CardBase.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSetup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="temporaryGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ProgressTokens.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSetup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

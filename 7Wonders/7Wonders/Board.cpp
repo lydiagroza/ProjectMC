@@ -53,13 +53,35 @@ void Board::linkCards(int eraIndex) {
     }
 }
 
+std::vector<ProgressToken> Board::setAvailableProgressTokens(const std::vector<ProgressToken>& tokens) const
+{
+    return m_availableProgressTokens=tokens;
+}
+
+std::vector<ProgressToken> Board::getAvailableProgressTokens() const
+{
+    return m_availableProgressTokens;
+}
+
+void Board::printAvailableProgressTokens(std::ostream& fout) const
+{
+    if (visibleTokens.empty()) {
+        fout << "Nu exista tokeni vizibili pe tabla.\n";
+        return;
+    }
+
+    fout << "=== Progress Tokens vizibile (" << visibleTokens.size() << ") ===\n";
+    for (size_t i = 0; i < visibleTokens.size(); ++i) {
+        const auto& t = visibleTokens[i];
+        fout << std::setw(2) << (i + 1) << ") "
+            << t.name << " — " << t.description;
+        four << "\n";
+}
 
 
 
 
-
-
-void Board::printBoard() const {
+void Board::printCardsTree() const {
     int totalRows = static_cast<int>(activeCards.size());
 
     // 1. Găsim rândul cel mai lat pentru o centrare corectă

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <vector>
 #include "CardNode.h"
+#include "ProgressTokens.h"
 #include <iostream>
 
 
@@ -8,15 +9,16 @@ class Board
 {
 private: 
 	int Age;
-	std::vector<std::vector<CardNode*>> activeCards;
-	std::vector<std::vector<int>> eraLayouts = {
+	std::vector<ProgressToken> m_availableProgressTokens;
+	std::vector<std::vector<CardNode*>> m_activeCards;
+	std::vector<std::vector<int>> m_eraLayouts = {
 	   {2,3,4,5,6},  // Epoca I
 	   {6,5,4,3,2},  // Epoca II
 	   {2,3,4,2,4,3,2}   // Epoca III
 	};
 
 	//legaturile parinti-copii pt era 1
-	std::vector<std::vector<std::vector<int>>> eraChildIndexes1 = {
+	std::vector<std::vector<std::vector<int>>> m_eraChildIndexes1 = {
 	{ {0,1}, {1,2} },                // Row 0 -> Row 1 (2 cărți)
 	{ {0,1}, {1,2}, {2,3} },         // Row 1 -> Row 2 (3 cărți)
 	{ {0,1}, {1,2}, {2,3}, {3,4} },  // Row 2 -> Row 3 (4 cărți)
@@ -25,7 +27,7 @@ private:
 	};
 
 	//legaturile parinti-copii pt era 2
-	std::vector<std::vector<std::vector<int>>> eraChildIndexes2 = {
+	std::vector<std::vector<std::vector<int>>> m_eraChildIndexes2 = {
 	{ {0}, {0,1} , {1,2}, {2,3}, {3,4}, {4}},
 	{ {0}, {0,1} , {1,2}, {2,3}, {3}},
 	{ {0}, {0,1} , {1,2}, {2}},
@@ -33,7 +35,7 @@ private:
 	};
 
 	//legaturile parinti-copii pt era 3
-	std::vector<std::vector<std::vector<int>>> eraChildIndexes3 = {
+	std::vector<std::vector<std::vector<int>>> m_eraChildIndexes3 = {
 	{ {0,1}, {1,2} },
 	{ {0,1}, {1,2}, {2,3} },
 	{ {0},{0},{1},{1}},
@@ -49,9 +51,13 @@ public:
 	void setupCards(int era, std::vector<CardNode*>& eraCards);
 	//std::vector<CardNode*>& getActiveCards();
 
-	void printBoard() const;
+	void printCardsTree() const;
 	void printChildrenList() const;
 	void linkCards(int);
+
+	void setAvailableProgressTokens(const std::vector<ProgressToken>& tokens) const;
+	std::vector<ProgressToken> getAvailableProgressTokens() const;
+	void printAvailableProgressTokens(std::ostream& fout = std::cout) const;
 
 };
 

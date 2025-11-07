@@ -11,7 +11,6 @@ enum class ProgressTokenType {
 	Law,
 	Mathematics,
 	Masonry,
-	Mathematics,
 	Philosophy,
 	Strategy,
 	Theology,
@@ -30,7 +29,6 @@ struct ProgressToken {
 		PerBlueCard,
 		PerGreenCard,
 		PerYellowCard,
-		PerRedCard,
 		PerRedCard,
 		PerCoinSet,
 

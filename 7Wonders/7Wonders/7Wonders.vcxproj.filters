@@ -54,7 +54,7 @@
 		    <ClCompile Include="CardLoader.cpp">
 			      <Filter>Source Files</Filter>
 			   
-		</ClCompile>
+		</ClCompile><ClCompile Include="WonderLoader.cpp"><Filter>Source Files</Filter></ClCompile>
 		 
 	</ItemGroup>
 	  <ItemGroup>
@@ -85,7 +85,7 @@
 		    <ClInclude Include="CardLoader.h">
 			      <Filter>Header Files</Filter>
 			   
-		</ClInclude>
+		</ClInclude><ClInclude Include="WonderLoader.h"><Filter>Header Files</Filter></ClInclude>
 		 
 	</ItemGroup>
 	  <ItemGroup>
@@ -100,7 +100,6 @@
 		    <None Include="AgeIII.csv">
 			      <Filter>Source Files</Filter>
 			   
-		</None>
+		</None><None Include="Wonders.csv"><Filter>Source Files</Filter></None>
 		 
-	</ItemGroup>
-</Project>
+	</ItemGroup></Project>

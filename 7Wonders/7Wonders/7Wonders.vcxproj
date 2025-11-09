@@ -164,7 +164,7 @@
 		    <ClCompile Include="CardBase.cpp" />
 		    <ClCompile Include="CardBase.h" />
 		    <ClCompile Include="CardNode.cpp" />
-		    <ClCompile Include="Player.cpp" />
+		    <ClCompile Include="Player.cpp" /><ClCompile Include="WonderLoader.cpp" />
 		    <ClCompile Include="Wonders.cpp" />
 		    <ClCompile Include="temporaryGame.cpp" />
 		    <ClCompile Include="GameSetup.cpp" />
@@ -187,17 +187,16 @@
 		    <ClInclude Include="ProgressTokens.h">
 			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
 			   
-		</ClInclude>
+		</ClInclude><ClInclude Include="WonderLoader.h" />
 		 
 	</ItemGroup>
 	  <ItemGroup>
 		    <None Include="AgeI.csv" />
 		    <None Include="AgeII.csv" />
-		    <None Include="AgeIII.csv" />
+		    <None Include="AgeIII.csv" /><None Include="Wonders.csv" />
 		 
 	</ItemGroup>
 	  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 	  <ImportGroup Label="ExtensionTargets">
 		 
-	</ImportGroup>
-</Project>
+	</ImportGroup></Project>

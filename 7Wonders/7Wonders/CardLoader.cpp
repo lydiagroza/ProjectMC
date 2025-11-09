@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CardLoader.h"
+#include "Player.h"
 
 
     static std::vector<std::shared_ptr<CardBase>> loadFromCSV(const std::string& filename) {
@@ -77,7 +78,7 @@
             {"gear", Symbol::Gear},
             {"barrel", Symbol::Barrel}, 
 			{"helmet", Symbol::Helmet}, {"sun", Symbol::Sun},{"target", Symbol::Target}, {"pot", Symbol:: Pot},
-            {"column", Symbol:: Column}, {"temple", Symbol :: Temple}
+            {"column", Symbol:: Column}, {"temple", Symbol :: Temple},
             {"castle", Symbol::Castle}, {"droplet", Symbol::Droplet}, {"moon", Symbol::Moon},
             {"vase", Symbol::Vase}, {"sword", Symbol::Sword}
         };
@@ -115,15 +116,15 @@
         string token;
         while (getline(ss, token, ';')) {
             token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
-            if (token == "add_resource_wood") effs.push_back([](Player& p) { /*p.addResource(Resource::Wood,1);*/ });
-            else if (token == "add_resource_stone") effs.push_back([](Player& p) { /*p.addResource(Resource::Stone,1);*/ });
-            else if (token == "add_resource_clay") effs.push_back([](Player& p) { /*p.addResource(Resource::Clay,1);*/ });
-            else if (token == "add_resource_glass") effs.push_back([](Player& p) { /*p.addResource(Resource::Glass,1);*/ });
-            else if (token == "add_resource_papyrus") effs.push_back([](Player& p) { /*p.addResource(Resource::Papyrus,1);*/ });
-            else if (token == "add_VictoryPoint1") effs.push_back([](Player& p) { /*p.addPoints(Points::Victory,1);*/ });
-            else if (token == "add_VictoryPoint3") effs.push_back([](Player& p) { /*p.addPoints(Points::Victory,3);*/ });
-            else if (token == "add_MilitaryPoint1") effs.push_back([](Player& p) { /*p.addPoints(Points::Military,1);*/ });
-            else if (token == "add_coin4") effs.push_back([](Player& p) { /*p.addCoins(4);*/ });
+            if (token == "add_resource_wood") effs.push_back([](Player& p) {p.add_Resource(Resource::Wood,1); });
+            else if (token == "add_resource_stone") effs.push_back([](Player& p) { p.add_Resource(Resource::Stone,1); });
+            else if (token == "add_resource_clay") effs.push_back([](Player& p) { p.add_Resource(Resource::Clay,1); });
+            else if (token == "add_resource_glass") effs.push_back([](Player& p) { p.add_Resource(Resource::Glass,1); });
+            else if (token == "add_resource_papyrus") effs.push_back([](Player& p) { p.add_Resource(Resource::Papyrus,1); });
+            else if (token == "add_VictoryPoint1") effs.push_back([](Player& p) { p.add_Points(Points::Victory,1);});
+            else if (token == "add_VictoryPoint3") effs.push_back([](Player& p) { p.add_Points(Points::Victory,3);});
+            else if (token == "add_MilitaryPoint1") effs.push_back([](Player& p) { p.add_Points(Points::Military,1); });
+            else if (token == "add_coin4") effs.push_back([](Player& p) { p.add_Coins(4); });
         }
         return effs;
     }

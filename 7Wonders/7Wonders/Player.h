@@ -30,4 +30,5 @@ public:
 	void add_Points(Points p, int amount);
 	void add_ScientificSymbol(Scientific_Symbol symbol);
 	void add_ChainSymbol(Symbol symbol);
+	t
 };

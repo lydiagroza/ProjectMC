@@ -36,7 +36,7 @@
       std::optional<Symbol> m_symbol;
       std::optional<std::vector<Symbol>> m_unlocks;
       std::map<Resource, std::uint8_t> m_cost;
-      std::vector<std::function<void(Player&)>> effects
+      std::vector<std::function<void(Player&)>> m_effects;
 
       //Constructori 
       CardBase();

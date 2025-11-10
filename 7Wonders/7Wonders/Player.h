@@ -22,7 +22,8 @@ private:
 	std::unordered_set<Symbol>m_chainSymbols;
 public:
 	Player(const std::string& playerName);
-	bool decreaseCoins(int amount);
+	bool decreaseCoins(std::uint8_t amount);
+	void addCoins(std::uint8_t amount);
 	bool hasSufficientResources(const CardBase& c)const;
 	int calculateTradeCost(const CardBase& c, const Player& opponent)const;//calculeaza monezile necesare pentru a cumpara resursele necesare pentru a folosi o carte 
 	bool canAffordConstruction(const CardBase& c, const Player& opponent);
@@ -30,5 +31,5 @@ public:
 	void add_Points(Points p, int amount);
 	void add_ScientificSymbol(Scientific_Symbol symbol);
 	void add_ChainSymbol(Symbol symbol);
-	t
+	
 };

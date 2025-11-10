@@ -178,7 +178,7 @@
 		    <ClInclude Include="Effect.h">
 			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
 			   
-		</ClInclude>
+		</ClInclude><ClInclude Include="GameConstants.h" />
 		    <ClInclude Include="GameSetup.h" />
 		    <ClInclude Include="Player.h">
 			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

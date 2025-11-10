@@ -193,7 +193,7 @@
 	  <ItemGroup>
 		    <None Include="AgeI.csv" />
 		    <None Include="AgeII.csv" />
-		    <None Include="AgeIII.csv" /><None Include="Wonders.csv" />
+		    <None Include="AgeIII.csv" /><None Include="ProgressTokens.csv" /><None Include="Wonders.csv" />
 		 
 	</ItemGroup>
 	  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

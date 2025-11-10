@@ -15,7 +15,7 @@ private:
 	std::unordered_map<Points, std::uint8_t>m_pointsScore;
 	std::unordered_map<Resource, std::uint8_t>m_discountedResource; // stocheaza resursele primare care pot fi cumparate cu discount
 	std::unordered_map<Resource, std::uint8_t>m_chosenResource;//stocheaza resursele obtinute din cartile galbene sau minuni care nu trebuie sa afecteze costul de cumparare
-	std::map<Color, std::vector<CardBase>>cityBuildings;
+	std::map<Color, std::vector<CardBase>>m_Inventory;
 	std::vector<Wonder>m_availableWonders;
 	std::vector<Wonder>m_builtWonders;
 	std::unordered_set<Scientific_Symbol>m_scientificSymbols;

@@ -12,6 +12,9 @@ private:
 	int Age;
 	std::vector<ProgressToken> m_availableProgressTokens;
 	std::vector<std::vector<CardNode*>> m_activeCards;
+	std::vector<CardNode*> m_discardPile;
+
+
 	std::vector<std::vector<int>> m_eraLayouts = {
 	   {2,3,4,5,6},  // Epoca I
 	   {6,5,4,3,2},  // Epoca II
@@ -63,5 +66,10 @@ public:
 	void printTokens(std::ostream& fout = std::cout) const;
 	void printMilitaryTrack(std::ostream& fout = std::cout) const;
 
+
+	//carti "arse"
+	void addCardToDiscardPile(CardNode* card);
+	const std::vector<CardNode*>& getDiscardPile() const;
+	void printDiscardPile(std::ostream& fout = std::cout) const;
 };
 

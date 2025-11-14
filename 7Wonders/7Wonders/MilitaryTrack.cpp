@@ -67,3 +67,25 @@ bool MilitaryTrack::isTokenVisible(int tokenIndex) const
 	   return false;
    return !m_removedTokens[tokenIndex];
 }
+
+int MilitaryTrack::getVictoryPointsForPlayer(int playerId) const
+{
+	int pos = static_cast<int>(m_pawnPosition);
+	int distance = std::abs(pos);
+	bool isScoring = (playerId == 1 && pos > 0) || (playerId == 2 && pos < 0);
+	if(isScoring)
+	{
+        if (distance >= TIER_3_START) {
+            return TIER_3_REWARD;
+        }
+        
+        else if (distance >= TIER_2_START && distance <= TIER_2_END) {
+            return TIER_2_REWARD;
+        }
+       
+        else if (distance == TIER_1_POS) {
+            return TIER_1_REWARD;
+        }
+	}
+	return 0;
+}

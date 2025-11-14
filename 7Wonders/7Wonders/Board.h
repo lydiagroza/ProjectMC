@@ -2,6 +2,7 @@
 #include <vector>
 #include "CardNode.h"
 #include "ProgressTokens.h"
+#include "MilitaryTrack.h"
 #include <iostream>
 
 
@@ -44,6 +45,8 @@ private:
 	{ {0}, { 0,1 },{1} },
 	};
 
+	MilitaryTrack m_militaryTrack; 
+
 public:
 	Board()=default;
 	//~Board();
@@ -58,6 +61,7 @@ public:
 	void setAvailableProgressTokens(const std::vector<ProgressToken>& tokens);
 	std::vector<ProgressToken> getAvailableProgressTokens() const;
 	void printTokens(std::ostream& fout = std::cout) const;
+	void printMilitaryTrack(std::ostream& fout = std::cout) const;
 
 };
 

@@ -60,3 +60,10 @@ MilitaryResult MilitaryTrack::applyShields(int playerId, int shields)
 	return result;
 
 }
+
+bool MilitaryTrack::isTokenVisible(int tokenIndex) const
+{
+   if(tokenIndex < 0 || tokenIndex >= 4)
+	   return false;
+   return !m_removedTokens[tokenIndex];
+}

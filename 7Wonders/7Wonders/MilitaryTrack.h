@@ -25,5 +25,7 @@ public:
 	int getPawnPosition() const;
 
 	MilitaryResult applyShields(int platerId, int shields);
+
+    bool isTokenVisible(int tokenIndex) const;
 };
 

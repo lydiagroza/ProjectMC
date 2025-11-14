@@ -163,7 +163,7 @@
 		    <ClCompile Include="Board.cpp" />
 		    <ClCompile Include="CardBase.cpp" />
 		    <ClCompile Include="CardBase.h" />
-		    <ClCompile Include="CardNode.cpp" />
+		    <ClCompile Include="CardNode.cpp" /><ClCompile Include="MilitaryTrack.cpp" />
 		    <ClCompile Include="Player.cpp" /><ClCompile Include="WonderLoader.cpp" />
 		    <ClCompile Include="Wonders.cpp" />
 		    <ClCompile Include="temporaryGame.cpp" />
@@ -179,7 +179,7 @@
 			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
 			   
 		</ClInclude><ClInclude Include="GameConstants.h" />
-		    <ClInclude Include="GameSetup.h" />
+		    <ClInclude Include="GameSetup.h" /><ClInclude Include="MilitaryTrack.h" />
 		    <ClInclude Include="Player.h">
 			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
 			   

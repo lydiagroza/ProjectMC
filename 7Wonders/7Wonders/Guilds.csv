@@ -1,0 +1,5 @@
+name, id, cost,symbol, unlocks, effects
+TRADERS_GUILD,61,"glass1";"papyrus1";"coin3",bag,,"add_Coin3_per_trade_good_sold_to_neighbors"; "add_VictoryPoint2"
+CRAFTSMENS_GUILD,62,"wood1";"stone1";"coin3",hammer,,"add_Coin3_per_manufactured_good_sold_to_neighbors"; "add_VictoryPoint2"
+PHILOSOPHERS_GUILD,63,"papyrus2";"coin3",owl,,"add_scientific_symbol_any"; "add_VictoryPoint3"
+SPIES_GUILD,64,"clay2";"coin3",dagger,,"steal_random_card_from_opponent_hand"; "add_VictoryPoint2"

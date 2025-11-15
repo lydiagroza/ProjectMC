@@ -54,7 +54,7 @@
             // atașează efecte în funcție de text
             auto effects = parseEffects(effectsStr);
             for (auto& ef : effects)
-                card->addEffect(ef);
+                card->addEparsffect(ef);
 
             cards.push_back(card);
         }

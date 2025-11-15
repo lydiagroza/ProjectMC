@@ -28,4 +28,6 @@ public:
     }
 
     const std::string& getName() const { return name; }
+    uint16_t getId() const { return id; }
+    const std::map < Resource, uint8_t>& getCost() const { return cost;  }
 };

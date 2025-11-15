@@ -31,5 +31,9 @@ public:
 	void add_Points(Points p, int amount);
 	void add_ScientificSymbol(Scientific_Symbol symbol);
 	void add_ChainSymbol(Symbol symbol);
+	void add_Coins();
+	void add_Coin3_per_trade_good_sold_to_neighbors();
+	void add_DiscountedResource(Resource r, int discount);
+	
 	
 };

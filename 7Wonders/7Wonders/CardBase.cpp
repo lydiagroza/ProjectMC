@@ -19,7 +19,7 @@
 	const std::optional<Symbol>& CardBase::get_symbol() const {
 		return m_symbol;
 	}
-	const std::optional<std::vector<Symbol>>& CardBase::get_unlocks() const {
+	const std::optional<Symbol>& CardBase::get_unlocks() const {
 		return m_unlocks;
 	}
 	void CardBase::applyEffect(Player& p)

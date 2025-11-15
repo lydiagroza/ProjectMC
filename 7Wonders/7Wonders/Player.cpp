@@ -106,7 +106,7 @@ void Player:: add_ScientificSymbol(Scientific_Symbol symbol)
 void Player:: add_ChainSymbol(Symbol symbol)
 {
 	m_chainSymbols.insert(symbol);
-}
+} 
 
 
 

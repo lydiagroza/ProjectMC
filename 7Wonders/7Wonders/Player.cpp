@@ -94,8 +94,9 @@ void Player:: add_Resource(Resource r, int amount)
 {
 	m_baseResources[r] += amount;
 }
-void Player:: add_Points(Points p, int amount)
+void Player:: add_Coin(int amount)
 {
+	m_nrCoins += amount;
 	m_pointsScore[p] += amount;
 }
 void Player:: add_ScientificSymbol(Scientific_Symbol symbol)

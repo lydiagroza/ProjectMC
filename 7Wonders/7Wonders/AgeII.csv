@@ -18,4 +18,8 @@ ARCHERY RANGE,42,Red,"wood1";"papyrus1"; "stone1",,target,"add_MilitaryPoint2"
 PARADE GROUND,43,Red,"clay2";"glass1",,helmet,"add_MilitaryPoint2"
 BARRACKS,44,Red,"coin3",sword,,"add_MilitaryPoint1"
 HORSE BREEDERS,45,Red,"clay1"; "wood1",horse,,"add_MilitaryPoint1"
+BREWERY,61,Yellow,"",,barrel,"add_coin6"
+CUSTOMS HOUSE,62,Yellow,"coin4",,,"add_resource_papyrus1";"add_resource_glass1"
+FORUM ,63,Yellow,"coin3";"clay1",,,"add_resource_glass/papyrus"
+CARAVANSERY,64,Yellow,"coin2";"glass1";"papyrus1",,,"add_resource_wood/clay/stone"
 

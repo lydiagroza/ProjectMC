@@ -68,7 +68,7 @@
             {"Red", Color::Red}, {"Blue", Color::Blue}, {"Green", Color::Green}, {"Purple", Color::Purple}
         };
         auto it = map.find(s);
-        return it != map.end() ? it->second : Color::Brown;
+        return  it->second;
     }
 
     static std::optional<Symbol> parseSymbol(const std::string& s) {
@@ -87,12 +87,28 @@
         return std::nullopt;
     }
 
-    static std::optional<std::vector<Symbol>> parseUnlocks(const std::string& s) {
-        if (s.empty()) return std::nullopt;
-        std::vector<Symbol> unlocks;
-        // aici ai putea face split dacă vrei mai multe unlocks
-        return unlocks;
-    }
+        static std::optional<Symbol> parseUnlocks(const std::string & s) {
+            if (s.empty()) return std::nullopt;
+
+            if (s == "mask") return Symbol::Mask;
+            if (s == "sword") return Symbol::Sword;
+            if (s == "gear") return Symbol::Gear;
+            if (s == "moon") return Symbol::Moon;
+            if (s == "vase") return Symbol::Vase;
+			if (s == "barrel") return Symbol::Barrel;
+			if (s == "book") return Symbol::Book;
+			if (s == "temple") return Symbol::Temple;
+			if (s == "target") return Symbol::Target;
+			if (s == "lyre") return Symbol::Lyre;
+			if (s == "castle") return Symbol::Castle;
+			if (s == "droplet") return Symbol::Droplet;
+			if (s == "column") return Symbol::Column;
+			if (s == "pot") return Symbol::Pot;
+			if (s == "horse") return Symbol::Horse;
+			if (s == "helmet") return Symbol::Helmet;
+			if (s == "sun") return Symbol::Sun;
+            return std::nullopt; // fallback dacă nu recunoaște simbolul
+        }
 
     static std::map<Resource, uint8_t> parseCost(const std::string& s) {
         std::map<Resource, uint8_t> cost;

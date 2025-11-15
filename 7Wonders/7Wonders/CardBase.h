@@ -34,7 +34,7 @@
       std::uint16_t m_id : 16;
       Color m_color : 3;
       std::optional<Symbol> m_symbol;
-      std::optional<std::vector<Symbol>> m_unlocks;
+      std::optional<Symbol> m_unlocks;
       std::map<Resource, std::uint8_t> m_cost;
       std::vector<std::function<void(Player&)>> m_effects;
 
@@ -43,7 +43,7 @@
       CardBase(std::string name, std::uint16_t id, Color color,
           const std::map<Resource, std::uint8_t>& cost,
           const std::optional<Symbol>& symbol = std::nullopt,
-          const std::optional<std::vector<Symbol>>& unlocks = std::nullopt)
+          const std::optional<Symbol>& unlocks = std::nullopt)
           : m_name(std::move(name)), m_id(id), m_color(color),
           m_cost(cost), m_symbol(symbol), m_unlocks(unlocks) {
       }
@@ -54,7 +54,7 @@
       Color get_color() const;
       const std::map<Resource, std::uint8_t>& get_cost() const;
       const std::optional<Symbol>& get_symbol() const;
-      const std::optional<std::vector<Symbol>>& get_unlocks() const;
+      const std::optional<Symbol>& get_unlocks() const;
 
 
       //Fct pt efecte 

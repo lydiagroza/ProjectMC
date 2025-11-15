@@ -140,7 +140,7 @@
             else if (token == "add_VictoryPoint1") effs.push_back([](Player& p) { p.add_Points(Points::Victory,1);});
             else if (token == "add_VictoryPoint3") effs.push_back([](Player& p) { p.add_Points(Points::Victory,3);});
             else if (token == "add_MilitaryPoint1") effs.push_back([](Player& p) { p.add_Points(Points::Military,1); });
-            else if (token == "add_coin4") effs.push_back([](Player& p) { p.add_Coins(4); });
+            else if (token == "add_coin4") effs.push_back([](Player& p) { p.addCoins(4); });
         }
         return effs;
     }

@@ -22,7 +22,7 @@
 	const std::optional<Symbol>& CardBase::get_unlocks() const {
 		return m_unlocks;
 	}
-	void CardBase::applyEffect(Player& p)
+	void CardBase::applyEffect(Player& player,Player& opponent,Board& board) const
 	{
 		for (const auto& effect : effects) {
 			effect(p);

@@ -112,7 +112,7 @@ bool Player::canAffordConstruction(const CardBase& c, const Player& opponent) {
 
 
 
-void Player::ProcessDiscardCard(const CardBase& c) {
+void Player::processDiscardCard(const CardBase& c) {
 	std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
 std::string yellowKey = to_string(Color::Yellow);
 	if (m_Inventory.count(yellowKey)) {
@@ -120,4 +120,21 @@ std::string yellowKey = to_string(Color::Yellow);
 		gainedCoins += yellowCardsCount * GameConstants::DISCARD_YELLOW_BONUS;
 	}
 	addCoins(gainedCoins);
+}
+
+// Player.cpp
+
+void Player::processConstruction(const CardBase& c, Player& opponent, Board& board) {
+
+	m_Inventory[to_string(c.get_color())].push_back(c);
+
+	if (c.get_unlocks().has_value()) {
+		add_ChainSymbol(*c.get_unlocks());
+		}
+
+	c.applyEffect(*this, opponent, board);
+
+	if (m_scientificSymbols.size() >= GameConstants::SCIENTIFIC_SYMBOLS_FOR_WIN) {
+		// Logica pentru încheierea jocului
+	}
 }

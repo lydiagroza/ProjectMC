@@ -4,6 +4,7 @@
 #include<vector>
 #include<unordered_set>
 #include "CardBase.h"
+#include "Board.h"
 #include<cstdint>
 
 class Player {
@@ -32,7 +33,9 @@ public:
 	bool hasSufficientResources(const CardBase& c)const;
 	int calculateTradeCost(const CardBase& c, const Player& opponent)const;//calculeaza monezile necesare pentru a cumpara resursele necesare pentru a folosi o carte 
 	bool canAffordConstruction(const CardBase& c, const Player& opponent);
-	void ProcessDiscardCard(const CardBase& c);
+	void processDiscardCard(const CardBase& c);
+	void processConstruction(const CardBase& c, Player& opponent, Board& board);
+
 	
 	
 	

@@ -6,6 +6,7 @@
 #pragma once
 #include <cstdint>
 #include <functional>
+#include "Board.h"
 
 // Enumuri 
   enum  Resource : std::uint8_t {
@@ -58,7 +59,7 @@
 
 
       //Fct pt efecte 
-      void applyEffect(Player& p);
+      void applyEffect(Player& player,Player& opponenent,Board& board)const;
       void addEffect(std::function<void(Player&)> e);
     };
 

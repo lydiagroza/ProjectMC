@@ -1,9 +1,9 @@
 #include "Player.h"
-#include<unordered_map>
-Player::Player(const std::string& playerName) :m_name(playerName), m_nrCoins(7), m_militaryScore(0), m_baseResources{}, m_pointsScore{}, m_discountedResource {}, m_chosenResource{}, cityBuildings{}, m_availableWonders{}, m_builtWonders{}, m_scientificSymbols{}, m_chainSymbols{} {
+#include "GameConstants.h"
+Player::Player(const std::string& playerName) :m_name(playerName), m_nrCoins(GameConstants::STARTING_COINS), m_militaryScore(0), m_baseResources{}, m_pointsScore{}, m_discountedResource{}, m_chosenResource{}, cityBuildings{}, m_availableWonders{}, m_builtWonders{}, m_scientificSymbols{}, m_chainSymbols{} {
 }
 
-bool Player::decreaseCoins(int amount) {
+bool Player::decreaseCoins(std::uint8_t amount) {
 	if (m_nrCoins >= amount) {
 		m_nrCoins -= amount;
 		return true;
@@ -11,6 +11,27 @@ bool Player::decreaseCoins(int amount) {
 	return false;
 }
 
+void Player::addCoins(std::uint8_t amount) {
+	m_nrCoins += amount;
+
+}
+
+void Player::add_Resource(Resource r, int amount)
+{
+	m_baseResources[r] += amount;
+}
+void Player::add_Points(Points p, int amount)
+{
+	m_pointsScore[p] += amount;
+}
+void Player::add_ScientificSymbol(Scientific_Symbol symbol)
+{
+	m_scientificSymbols.insert(symbol);
+}
+void Player::add_ChainSymbol(Symbol symbol)
+{
+	m_chainSymbols.insert(symbol);
+}
 
 bool Player::hasSufficientResources(const CardBase& card) const {
 	std::unordered_map<Resource, std::uint8_t> availableResources = m_baseResources;
@@ -65,7 +86,7 @@ int Player::calculateTradeCost(const CardBase& card, const Player& opponent) con
 					opponentProduction += opponent.m_baseResources.at(resource);
 				}
 
-				int costPerUnit = 2 + opponentProduction;
+				int costPerUnit = (GameConstants::TRADE_BASE_COST)+opponentProduction;
 				totalTradeCost += missingAmount * costPerUnit;
 			}
 
@@ -90,23 +111,13 @@ bool Player::canAffordConstruction(const CardBase& c, const Player& opponent) {
 }
 
 
-void Player:: add_Resource(Resource r, int amount)
-{
-	m_baseResources[r] += amount;
-}
-void Player:: add_Coin(int amount)
-{
-	m_nrCoins += amount;
-	m_pointsScore[p] += amount;
-}
-void Player:: add_ScientificSymbol(Scientific_Symbol symbol)
-{
-	m_scientificSymbols.insert(symbol);
-}
-void Player:: add_ChainSymbol(Symbol symbol)
-{
-	m_chainSymbols.insert(symbol);
-} 
 
-
-
+void Player::ProcessDiscardCard(const CardBase& c) {
+	std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
+std::string yellowKey = to_string(Color::Yellow);
+	if (m_Inventory.count(yellowKey)) {
+		std::uint8_t yellowCardsCount = m_Inventory.at(yellowKey).size();
+		gainedCoins += yellowCardsCount * GameConstants::DISCARD_YELLOW_BONUS;
+	}
+	addCoins(gainedCoins);
+}

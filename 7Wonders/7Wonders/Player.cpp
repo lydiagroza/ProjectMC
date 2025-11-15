@@ -122,7 +122,6 @@ std::string yellowKey = to_string(Color::Yellow);
 	addCoins(gainedCoins);
 }
 
-// Player.cpp
 
 void Player::processConstruction(const CardBase& c, Player& opponent, Board& board) {
 
@@ -138,3 +137,16 @@ void Player::processConstruction(const CardBase& c, Player& opponent, Board& boa
 		// Logica pentru încheierea jocului
 	}
 }
+
+void Player::processWonderConstruction(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board) {
+	board.incrementWondersBuilt();
+	if (board.getTotalWondersBuilt() == GameConstants::WONDER_LIMIT) {
+
+		// Logica: Cea de-a 8-a Minune r?mas? neconstruit? este scoas? din joc.
+		//Aceste  functii legate de Wonder trebuie implementate ori in Board ori in starea curenta a jocului
+		board.discardLastAvailableWonder();
+	}
+	m_builtWonders.push_back(wonderToBuild);
+	wonderToBuild.applyEffect(*this, opponent, board);
+}
+

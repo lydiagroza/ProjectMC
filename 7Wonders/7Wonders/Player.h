@@ -5,6 +5,7 @@
 #include<unordered_set>
 #include "CardBase.h"
 #include "Board.h"
+
 #include<cstdint>
 
 class Player {
@@ -35,7 +36,7 @@ public:
 	bool canAffordConstruction(const CardBase& c, const Player& opponent);
 	void processDiscardCard(const CardBase& c);
 	void processConstruction(const CardBase& c, Player& opponent, Board& board);
-
+	void processWonderConstruction(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board);
 	
 	
 	

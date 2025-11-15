@@ -2,6 +2,7 @@
 #include <vector>
 #include "CardNode.h"
 #include "ProgressTokens.h"
+#include "MilitaryTrack.h"
 #include <iostream>
 
 
@@ -11,6 +12,9 @@ private:
 	int Age;
 	std::vector<ProgressToken> m_availableProgressTokens;
 	std::vector<std::vector<CardNode*>> m_activeCards;
+	std::vector<CardNode*> m_discardPile;
+
+
 	std::vector<std::vector<int>> m_eraLayouts = {
 	   {2,3,4,5,6},  // Epoca I
 	   {6,5,4,3,2},  // Epoca II
@@ -44,6 +48,8 @@ private:
 	{ {0}, { 0,1 },{1} },
 	};
 
+	MilitaryTrack m_militaryTrack; 
+
 public:
 	Board()=default;
 	//~Board();
@@ -58,6 +64,12 @@ public:
 	void setAvailableProgressTokens(const std::vector<ProgressToken>& tokens);
 	std::vector<ProgressToken> getAvailableProgressTokens() const;
 	void printTokens(std::ostream& fout = std::cout) const;
+	void printMilitaryTrack(std::ostream& fout = std::cout) const;
 
+
+	//carti "arse"
+	void addCardToDiscardPile(CardNode* card);
+	const std::vector<CardNode*>& getDiscardPile() const;
+	void printDiscardPile(std::ostream& fout = std::cout) const;
 };
 

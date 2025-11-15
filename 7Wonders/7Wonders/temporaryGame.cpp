@@ -9,6 +9,7 @@ int main()
     board.printTokens();        // token-urile vizibile
     board.printCardsTree();     // piramida de cărți
     board.printChildrenList();
+	board.printMilitaryTrack(); // tabla militară
 
     return 0;
 }

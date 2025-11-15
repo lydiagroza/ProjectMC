@@ -62,6 +62,8 @@ std::vector<ProgressToken> Board::getAvailableProgressTokens() const
     return m_availableProgressTokens;
 }
 
+
+//tokenii aia verzi
 void Board::printTokens(std::ostream& fout) const
 {
     if (m_availableProgressTokens.empty()) {
@@ -77,6 +79,78 @@ void Board::printTokens(std::ostream& fout) const
             << t.name << " — " << t.description << "\n";
     }
 }
+
+//tabla militara
+
+void Board::printMilitaryTrack(std::ostream& fout) const
+{
+
+	int currentPos = m_militaryTrack.getPawnPosition();
+    std::cout << "\n[Military]: P2 ";
+
+    for (int i = -9; i <= 9; ++i)
+    {
+    
+        if (i == currentPos) {
+            std::cout << "(X)";
+        }
+        else if (i == -6) {
+            if (m_militaryTrack.isTokenVisible(0)) std::cout << "[5]";
+            else std::cout << " . "; // Tokenul a fost luat
+        }
+        else if (i == -3) {
+            if (m_militaryTrack.isTokenVisible(1)) std::cout << "[2]";
+            else std::cout << " . ";
+        }
+        else if (i == 3) {
+            if (m_militaryTrack.isTokenVisible(2)) std::cout << "[2]";
+            else std::cout << " . ";
+        }
+        else if (i == 6) {
+            if (m_militaryTrack.isTokenVisible(3)) std::cout << "[5]";
+            else std::cout << " . ";
+        }
+        else if (i == 0) {
+            std::cout << " | ";
+        }
+        else {
+            std::cout << " . ";
+        }
+    }
+
+    std::cout << " P1\n";
+
+}
+//carti "arse"
+void Board::addCardToDiscardPile(CardNode* card)
+{
+    if(card)
+		m_discardPile.push_back(card);
+}
+
+
+const std::vector<CardNode*>& Board::getDiscardPile() const
+{
+    return m_discardPile;
+}
+
+void Board::printDiscardPile(std::ostream& fout) const
+{
+	fout << "\n=== Discard Pile ===\n";
+    if(m_discardPile.empty()) {
+        fout << "Nu exista carti in discard pile.\n";
+        return;
+    }
+    std::cout << "[ ";
+    for (const auto* card : m_discardPile) {
+        // Presupunem că CardNode are metoda getName()
+        std::cout << card->getName() << ", ";
+    }
+    std::cout << "]\n";
+}
+
+
+//arbore de carti
 
 void Board::printCardsTree() const
 {

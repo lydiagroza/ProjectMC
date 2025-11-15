@@ -1,0 +1,11 @@
+name,id,effects
+AGRICULTURE,	73,"add_coins6";"add_VictoryPoint4"
+ARCHITECTURE,	74,"WondersDiscount"
+ECONOMY,		75,"gainOpponentTradeCost"
+LAW,			76,"add_scientific_symbol_law""
+MATHEMATICS,	77,"victoryPointsPerProgress"
+MASONRY,		78,"BlueCardDiscount"
+PHILOSOPHY,		79,"add_VictoryPoint7"
+STRATEGY,		80,"add_MilitaryPoint1PerRedCard"
+THEOLOGY,		81,"WondersGetReplayTurn"
+URBANISM,		82,"add_coins4PerFreeCard";"add_coins6"

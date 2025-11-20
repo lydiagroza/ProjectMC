@@ -29,4 +29,7 @@ public:
     void addEffect(std::function<void(Player&, Player&)> e) {
         effects.push_back(e);
     }
+
+	bool getIsBuilt() const { return isBuilt; }
+	void setIsBuilt() { isBuilt = true; }
 };

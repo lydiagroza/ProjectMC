@@ -1,14 +1,23 @@
 #include "Player.h"
 #include "GameConstants.h"
-Player::Player(const std::string& playerName) :m_name(playerName), m_nrCoins(GameConstants::STARTING_COINS), m_militaryScore(0), m_baseResources{}, m_pointsScore{}, m_discountedResource{}, m_chosenResource{}, cityBuildings{}, m_availableWonders{}, m_builtWonders{}, m_scientificSymbols{}, m_chainSymbols{} {
+Player::Player(const std::string& playerName)
+	:m_name(playerName),
+	m_Resources{},
+	m_pointsScore{},
+	m_discountedResource{},
+	m_Wonders{},
+	m_scientificSymbols{},
+	m_chainSymbols{} {
 }
+// in game cand se incepe jocul se adauca banii la jucatori 
 
-void Player::decreaseCoins(std::uint8_t amount) {
+bool Player::decreaseCoins(std::uint8_t amount) { // o sa il lasam bool ca sa verificam daca am reusit sa extragem banii
 	if (m_Resources[Coin] >= amount) {
 		m_Resources[Coin] -= amount;
-		return; 
+		return true ; 
 	}
-	std::cout << "insuficient coins"; 
+	std::cout << "insuficient coins";
+	return false; 
 }
 
 void Player::addCoins(std::uint8_t amount) {
@@ -32,14 +41,39 @@ void Player::add_ChainSymbol(Symbol symbol)
 {
 	m_chainSymbols.insert(symbol);
 }
-//comparator custom pentru resurse suprascriere operator Resurse 
 
-bool Player::hasSufficientResources(const CardBase& card) const { // comparator custom si return true si false 
-	std::unordered_map<Resource, std::uint8_t> availableResources = m_Resources;
+bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,	 //nu merge comparator intre 2 chestii din stl ex : map functia asta e comparatorul
+	const std::map<Resource, uint8_t>& b)
+{
+	for (const auto& [res, valueA] : a) {
+		if (valueA < b.at(res)) return false;
+	}
+	return true;
+}
+
+bool Player::buyCard(const CardBase& card) { // functia care cumpara cartea : daca are suficiente resurse cumpara cartea, daca nu, verif cu carti galbene &trade cost , daca nu, nu se poate cumpara 
+	if (hasSufficientResources(m_Resources, card.get_cost())) {
+		m_Resources[Coin] -= card.getCostForResource(Coin);
+		std::cout << "Card " << card.get_name() << " bought" << std::endl;
+		return true; 
+	}
+	else {  // implementare cu cartile galbene , verifici daca ai adauga orice resursa din cartile galbene daca se modifica cv
+
+		// daca nu intra pe urmatoarea ramura pt ca aici vom avea un return: 
+		// aici bagi si trade cost 
+		return;
+	}
+
+			std::cout << "Card can't be bought"; 
+			return false;
+
+	}
+
+}
 	/*for (const auto& pair : m_chosenResource) {
 		availableResources[pair.first] += pair.second;
 	}*/
-	//verif daca are carti galbene 
+	
 	/*const auto& requiredResources = card.get_cost();*/
 	/*for (const auto& pair : requiredResources) {
 		const Resource resource = pair.first;
@@ -54,28 +88,28 @@ bool Player::hasSufficientResources(const CardBase& card) const { // comparator 
 	//	}
 	//}
 	//return true;
-}
 
 
 int Player::calculateTradeCost(const CardBase& card, const Player& opponent) const {
 
-	if (hasSufficientResources(card) == true) {
-		return 0;
-	}
-	const auto& requiredResources = card.get_cost();
+	const auto& requiredResources = card.get_cost(); // nu mai trb inca o variabila sa retii costul aici 
 	int totalTradeCost = 0;
-	std::unordered_map<Resource, std::uint8_t> availableResources = m_baseResources;
-	for (const auto& pair : m_chosenResource) {
+	std::unordered_map<Resource, std::uint8_t> availableResources = m_Resources; // ai m_Resources pt asta legit nu trb alta variabila
+	//astea vor fi parcurse in alta fct mai sus inainte sa se apeleze fct asta 
+	/*for (const auto& pair : m_chosenResource) {
 		availableResources[pair.first] += pair.second;
-	}
+	}*
 
-	for (const auto& pair : requiredResources) {
+
+	/*for (const auto& pair : requiredResources) {
 		const Resource resource = pair.first;
 		int requiredAmount = pair.second;
 		if (resource == Resource::Coin) {
 			continue;
-		}
-		int missingAmount = requiredAmount - availableResources[resource];
+		}*/
+
+	// ---------------> alta fct care face de cate resurse mai avem nevoie 
+	// 	int missingAmount = requiredAmount - availableResources[resource];
 
 		if (missingAmount > 0) {
 			if (m_discountedResource.count(resource)) {
@@ -134,13 +168,13 @@ void Player::processConstruction(const CardBase& c, Player& opponent, Board& boa
 
 	c.applyEffect(*this, opponent, board);
 
-	if (m_scientificSymbols.size() >= GameConstants::SCIENTIFIC_SYMBOLS_FOR_WIN) {
-		// Logica pentru încheierea jocului
+	//if (m_scientificSymbols.size() >= GameConstants::SCIENTIFIC_SYMBOLS_FOR_WIN) {  --->  asta face game ul nu playerul retine cand se castiga jocul
+	//	// Logica pentru încheierea jocului
 	}
 }
 
 void Player::processWonderConstruction(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board) {
-	board.incrementWondersBuilt();
+	/*board.incrementWondersBuilt();*/ // ---> avem un bool la wonders. daca e sau nu built ca sa nu avem 2 mapuri de wonders 
 	if (board.getTotalWondersBuilt() == GameConstants::WONDER_LIMIT) {
 		
 		// Logica: Cea de-a 8-a Minune r?mas? neconstruit? este scoas? din joc.

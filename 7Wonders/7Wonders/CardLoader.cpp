@@ -54,7 +54,7 @@
             // atașează efecte în funcție de text
             auto effects = parseEffects(effectsStr);
             for (auto& ef : effects)
-                card->addEparsffect(ef);
+                card->addEffect(ef);
 
             cards.push_back(card);
         }
@@ -107,7 +107,6 @@
 			if (s == "horse") return Symbol::Horse;
 			if (s == "helmet") return Symbol::Helmet;
 			if (s == "sun") return Symbol::Sun;
-            return std::nullopt; // fallback dacă nu recunoaște simbolul
         }
 
     static std::map<Resource, uint8_t> parseCost(const std::string& s) {

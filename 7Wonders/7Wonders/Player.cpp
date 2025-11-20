@@ -3,22 +3,22 @@
 Player::Player(const std::string& playerName) :m_name(playerName), m_nrCoins(GameConstants::STARTING_COINS), m_militaryScore(0), m_baseResources{}, m_pointsScore{}, m_discountedResource{}, m_chosenResource{}, cityBuildings{}, m_availableWonders{}, m_builtWonders{}, m_scientificSymbols{}, m_chainSymbols{} {
 }
 
-bool Player::decreaseCoins(std::uint8_t amount) {
-	if (m_nrCoins >= amount) {
-		m_nrCoins -= amount;
-		return true;
+void Player::decreaseCoins(std::uint8_t amount) {
+	if (m_Resources[Coin] >= amount) {
+		m_Resources[Coin] -= amount;
+		return; 
 	}
-	return false;
+	std::cout << "insuficient coins"; 
 }
 
 void Player::addCoins(std::uint8_t amount) {
-	m_nrCoins += amount;
+	m_Resources[Coin] += amount;
 
 }
 
 void Player::add_Resource(Resource r, int amount)
 {
-	m_baseResources[r] += amount;
+	m_Resources[r] += amount;
 }
 void Player::add_Points(Points p, int amount)
 {
@@ -32,27 +32,28 @@ void Player::add_ChainSymbol(Symbol symbol)
 {
 	m_chainSymbols.insert(symbol);
 }
+//comparator custom pentru resurse suprascriere operator Resurse 
 
-bool Player::hasSufficientResources(const CardBase& card) const {
-	std::unordered_map<Resource, std::uint8_t> availableResources = m_baseResources;
-	for (const auto& pair : m_chosenResource) {
+bool Player::hasSufficientResources(const CardBase& card) const { // comparator custom si return true si false 
+	std::unordered_map<Resource, std::uint8_t> availableResources = m_Resources;
+	/*for (const auto& pair : m_chosenResource) {
 		availableResources[pair.first] += pair.second;
-	}
-
-	const auto& requiredResources = card.get_cost();
-	for (const auto& pair : requiredResources) {
+	}*/
+	//verif daca are carti galbene 
+	/*const auto& requiredResources = card.get_cost();*/
+	/*for (const auto& pair : requiredResources) {
 		const Resource resource = pair.first;
 		int requiredAmount = pair.second;
 		if (resource == Resource::Coin) {
 			continue;
-		}
+		}*/
 
-		int possessedAmount = availableResources.count(resource) ? availableResources.at(resource) : 0;
-		if (possessedAmount < requiredAmount) {
-			return false;
-		}
-	}
-	return true;
+	//	int possessedAmount = availableResources.count(resource) ? availableResources.at(resource) : 0;
+	//	if (possessedAmount < requiredAmount) {
+	//		return false;
+	//	}
+	//}
+	//return true;
 }
 
 
@@ -141,7 +142,7 @@ void Player::processConstruction(const CardBase& c, Player& opponent, Board& boa
 void Player::processWonderConstruction(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board) {
 	board.incrementWondersBuilt();
 	if (board.getTotalWondersBuilt() == GameConstants::WONDER_LIMIT) {
-
+		
 		// Logica: Cea de-a 8-a Minune r?mas? neconstruit? este scoas? din joc.
 		//Aceste  functii legate de Wonder trebuie implementate ori in Board ori in starea curenta a jocului
 		board.discardLastAvailableWonder();

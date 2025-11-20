@@ -1,50 +1,26 @@
 #pragma once
+#include <string>
+#include <vector>
+#include <functional>
+#include <memory>
+#include "Player.h"
 
-#include<string>
-#include<vector>
-#include<map>
+class ProgressToken {
+    std::string name;
+    uint16_t id;
+    std::vector<std::function<void(Player&, Player&)>> effects;
 
-enum class ProgressTokenType {
-	Agriculture,
-	Architecture,
-	Economy,
-	Law,
-	Mathematics,
-	Masonry,
-	Philosophy,
-	Strategy,
-	Theology,
-	Urbanism
+public:
+    ProgressToken(const std::string& name, uint16_t id)
+        : name(name), id(id) {}
+
+    static std::vector<std::function<void(Player&, Player&)>> parseEffects(const std::string& s);
+
+    const std::string& getName() const { return name; }
+    uint16_t getId() const { return id; }
+    const std::vector<std::function<void(Player&, Player&)>>& getEffects() const { return effects; }
+
+    void addEffect(std::function<void(Player&, Player&)> e) {
+        effects.push_back(e);
+    }
 };
-
-struct ProgressToken {
-	std::string name;
-	std::string description;
-	int immediateVictoryPoints;
-	int immediateCoins;
-	int endGameVictoryPoints;
-	
-	enum class EndGameEffect {
-		PerWonder,
-		PerBlueCard,
-		PerGreenCard,
-		PerYellowCard,
-		PerRedCard,
-		PerCoinSet,
-
-	};
-};
-
-
-// takes tokens and current stats
-// returneaza tuple cu updated (coins, VP).
-// daca vrei sa aplici efectele token-urilor unui jucator:
-// auto [newCoins, newVP] = calculateAllTokenEffects(player.getTokens(), player.getCoins(), player.getVP());
-// player.setCoins(newCoins);
-// player.setVP(newVP);
-std::tuple<int, int> calculateAllTokenEffects(
-	const std::vector<ProgressToken>& playerTokens, 
-	int currentTokens, 
-	int currentVitoryPoints, 
-	const std::map<ProgressTokenType, 
-	ProgressToken>& allTokens);

@@ -40,22 +40,22 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
     static const std::unordered_map<std::string, std::function<void(Player&, Player&)>> effectMap = {
         {"add_coins3", [](Player& p, Player& o) { p.addCoins(3); }},
         {"decreaseCoins3", [](Player& p, Player& o) { o.decreaseCoins(3); }},
-        {"replayTurn", [](Player& p, Player& o) { /* replayturn */ std::cout << "Replay turn effect not implemented." << std::endl; }},
+        {"replayTurn", [](Player& p, Player& o) { /* replayTurn */ std::cout << "Replay turn effect not implemented." << std::endl; }},
         {"add_VictoryPoint3", [](Player& p, Player& o) { p.add_Points(Points::Victory, 3); }},
         {"wood/stone/clay", [](Player& p, Player& o) { p.add_Resource(Resource::Wood, 1); p.add_Resource(Resource::Stone, 1); p.add_Resource(Resource::Clay, 1); }},
         {"add_VictoryPoints4", [](Player& p, Player& o) { p.add_Points(Points::Victory, 4); }},
         {"add_coins12", [](Player& p, Player& o) { p.addCoins(12); }},
-        {"discardOpponentGrayCard", [](Player& p, Player& o) { /* discardgraycard */ std::cout << "Discard opponent gray card not implemented." << std::endl; }},
+        {"discardOpponentGrayCard", [](Player& p, Player& o) { /* discardOpponentGrayCard */ std::cout << "Discard opponent gray card not implemented." << std::endl; }},
         {"add_MilitaryPoint1", [](Player& p, Player& o) { p.add_Points(Points::Military, 1); }},
-        {"buildDiscardedCard", [](Player& p, Player& o) { /* BuilDiscardedCard */ std::cout << "Build discarded card not implemented." << std::endl; }},
+        {"buildDiscardedCard", [](Player& p, Player& o) { /* builDiscardedCard */ std::cout << "Build discarded card not implemented." << std::endl; }},
         {"add_VictoryPoint2", [](Player& p, Player& o) { p.add_Points(Points::Victory, 2); }},
         {"papyrus/glass", [](Player& p, Player& o) { p.add_Resource(Resource::Papyrus, 1); p.add_Resource(Resource::Glass, 1); }},
         {"add_VictoryPoints9", [](Player& p, Player& o) { p.add_Points(Points::Victory, 9); }},
-        {"chooseProgressToken", [](Player& p, Player& o) {/*ChooseProgressToken */ std::cout << "Choose progress token not implemented." << std::endl; }},
+        {"chooseProgressToken", [](Player& p, Player& o) {/*chooseProgressToken */ std::cout << "Choose progress token not implemented." << std::endl; }},
         {"add_coins6", [](Player& p, Player& o) { p.addCoins(6); }},
         {"add_VictoryPoints", [](Player& p, Player& o) { p.add_Points(Points::Victory, 1); }},
         {"add_MilitaryPoints2", [](Player& p, Player& o) { p.add_Points(Points::Military, 2); }},
-        {"discardOpponentBrownCard", [](Player& p, Player& o) { /* DiscardOpponentBrownCard */ std::cout << "Discard opponent brown card not implemented." << std::endl; }}
+        {"discardOpponentBrownCard", [](Player& p, Player& o) { /* discardOpponentBrownCard */ std::cout << "Discard opponent brown card not implemented." << std::endl; }}
     };
 
     while (std::getline(ss, effectStr, ';')) {

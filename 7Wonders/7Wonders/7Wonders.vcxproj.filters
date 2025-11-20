@@ -55,7 +55,14 @@
 			      <Filter>Source Files</Filter>
 			   
 		</ClCompile><ClCompile Include="WonderLoader.cpp"><Filter>Source Files</Filter></ClCompile><ClCompile Include="MilitaryTrack.cpp"><Filter>Source Files</Filter></ClCompile>
-		 
+		    <ClCompile Include="ProgressTokenLoader.cpp">
+			      <Filter>Source Files</Filter>
+			   
+		</ClCompile>
+		    <ClCompile Include="ProgressTokens.cpp">
+			      <Filter>Source Files</Filter>
+			   
+		</ClCompile>
 	</ItemGroup>
 	  <ItemGroup>
 		    <ClInclude Include="Board.h">
@@ -86,7 +93,10 @@
 			      <Filter>Header Files</Filter>
 			   
 		</ClInclude><ClInclude Include="Wonder.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="GameConstants.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="MilitaryTrack.h"><Filter>Header Files</Filter></ClInclude>
-		 
+		    <ClInclude Include="ProgressTokenLoader.h">
+			      <Filter>Header Files</Filter>
+			   
+		</ClInclude>
 	</ItemGroup>
 	  <ItemGroup>
 		    <None Include="AgeI.csv">

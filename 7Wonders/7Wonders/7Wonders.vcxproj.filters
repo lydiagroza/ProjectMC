@@ -85,7 +85,7 @@
 		    <ClInclude Include="CardLoader.h">
 			      <Filter>Header Files</Filter>
 			   
-		</ClInclude><ClInclude Include="WonderLoader.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="GameConstants.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="MilitaryTrack.h"><Filter>Header Files</Filter></ClInclude>
+		</ClInclude><ClInclude Include="Wonder.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="GameConstants.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="MilitaryTrack.h"><Filter>Header Files</Filter></ClInclude>
 		 
 	</ItemGroup>
 	  <ItemGroup>
@@ -100,6 +100,6 @@
 		    <None Include="AgeIII.csv">
 			      <Filter>Source Files</Filter>
 			   
-		</None><None Include="Wonders.csv"><Filter>Source Files</Filter></None><None Include="ProgressTokens.csv"><Filter>Source Files</Filter></None>
+		</None><None Include="Wonders.csv"><Filter>Source Files</Filter></None><None Include="ProgressTokens.csv"><Filter>Source Files</Filter></None><None Include="Guilds.csv" />
 		 
 	</ItemGroup></Project>

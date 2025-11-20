@@ -59,7 +59,7 @@
 
 
       //Fct pt efecte 
-      void applyEffect(Player& player,Player& opponenent,Board& board)const;
+      void applyEffect(Player& player,Player& opponenent)const;
       void addEffect(std::function<void(Player&)> e);
     };
 

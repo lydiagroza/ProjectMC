@@ -22,15 +22,15 @@
 	const std::optional<Symbol>& CardBase::get_unlocks() const {
 		return m_unlocks;
 	}
-	void CardBase::applyEffect(Player& player,Player& opponent,Board& board) const
+	void CardBase::applyEffect(Player& player,Player& opponent) const
 	{
-		for (const auto& effect : effects) {
-			effect(p);
+		for (const auto& effect :m_effects) {
+			effect(player);
 		}
 	}
 	void CardBase::addEffect(std::function<void(Player&)> e)
 	{
-		effects.push_back(e);
+		m_effects.push_back(e);
 	}
 	std::ostream& operator<<(std::ostream& os, const CardBase& card)
 	{
@@ -70,16 +70,13 @@
 			switch (s) {
 			case Symbol::Barrel: return "Barrel";
 			case Symbol::Gear: return "Gear";
-			case Symbol::Lamp: return "Lamp";
-			case Symbol::Scroll: return "Scroll";
 			case Symbol::Sword: return "Sword";
-			case Symbol::Wall: return "Wall";
 			case Symbol::Horse: return "Horse";
 			case Symbol::Helmet: return "Helmet";
 			case Symbol::Mask: return "Mask";
 			case Symbol::Sun: return "Sun";
 			case Symbol::Moon: return "Moon";
-			case Symbol::Balance: return "Balance";
+	
 			}
 			return "Unknown";
 		}

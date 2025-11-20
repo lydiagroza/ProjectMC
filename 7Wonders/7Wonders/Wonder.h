@@ -12,6 +12,7 @@ class Wonder {
     uint16_t id;
     std::map<Resource, uint8_t> cost;
     std::vector<std::function<void(Player&, Player&)>> effects;
+	bool isBuilt = false;
 
 public:
     Wonder(const std::string& name, uint16_t id, const std::map<Resource, uint8_t>& cost)

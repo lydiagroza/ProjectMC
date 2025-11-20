@@ -22,7 +22,7 @@ private:
 	std::unordered_set<Symbol>m_chainSymbols;
 public:
 	Player(const std::string& playerName);
-	bool decreaseCoins(std::uint8_t amount);
+	void decreaseCoins(std::uint8_t amount);
 	void addCoins(std::uint8_t amount);
 	void add_Resource(Resource r, int amount);
 	void add_Points(Points p, int amount);

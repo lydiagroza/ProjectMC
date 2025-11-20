@@ -1,4 +1,4 @@
-#include "Player.h"
+﻿#include "Player.h"
 #include "GameConstants.h"
 Player::Player(const std::string& playerName)
 	:m_name(playerName),
@@ -42,7 +42,8 @@ void Player::add_ChainSymbol(Symbol symbol)
 	m_chainSymbols.insert(symbol);
 }
 
-bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,	 //nu merge comparator intre 2 chestii din stl ex : map functia asta e comparatorul
+bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,	 //nu merge comparator intre 2 chestii din stl ex : map
+	//functia asta e comparatorul
 	const std::map<Resource, uint8_t>& b)
 {
 	for (const auto& [res, valueA] : a) {
@@ -51,10 +52,12 @@ bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,	 //nu mer
 	return true;
 }
 
-bool Player::buyCard(const CardBase& card) { // functia care cumpara cartea : daca are suficiente resurse cumpara cartea, daca nu, verif cu carti galbene &trade cost , daca nu, nu se poate cumpara 
+bool Player::buyCard(const CardBase& card, const Player& opponent, const Board &board) { // functia care cumpara cartea : daca are suficiente resurse cumpara cartea, daca nu, verif cu carti galbene &trade cost , daca nu, nu se poate cumpara 
 	if (hasSufficientResources(m_Resources, card.get_cost())) {
 		m_Resources[Coin] -= card.getCostForResource(Coin);
-		std::cout << "Card " << card.get_name() << " bought" << std::endl;
+		m_Inventory[card.get_color()].push_back(card);
+		card.applyEffect(*this, opponent, board);
+		std::cout << "Card " << card.get_name() << " bought" << std::endl; // + se "construieste" cartea 
 		return true; 
 	}
 	else {  // implementare cu cartile galbene , verifici daca ai adauga orice resursa din cartile galbene daca se modifica cv
@@ -63,13 +66,12 @@ bool Player::buyCard(const CardBase& card) { // functia care cumpara cartea : da
 		// aici bagi si trade cost 
 		return;
 	}
-
+	
 			std::cout << "Card can't be bought"; 
 			return false;
 
 	}
 
-}
 	/*for (const auto& pair : m_chosenResource) {
 		availableResources[pair.first] += pair.second;
 	}*/
@@ -94,13 +96,11 @@ int Player::calculateTradeCost(const CardBase& card, const Player& opponent) con
 
 	const auto& requiredResources = card.get_cost(); // nu mai trb inca o variabila sa retii costul aici 
 	int totalTradeCost = 0;
-	std::unordered_map<Resource, std::uint8_t> availableResources = m_Resources; // ai m_Resources pt asta legit nu trb alta variabila
+	std::map<Resource, std::uint8_t> availableResources = m_Resources; // avem m_Resources pt asta, nu trb alta variabila
 	//astea vor fi parcurse in alta fct mai sus inainte sa se apeleze fct asta 
 	/*for (const auto& pair : m_chosenResource) {
 		availableResources[pair.first] += pair.second;
 	}*
-
-
 	/*for (const auto& pair : requiredResources) {
 		const Resource resource = pair.first;
 		int requiredAmount = pair.second;
@@ -108,28 +108,29 @@ int Player::calculateTradeCost(const CardBase& card, const Player& opponent) con
 			continue;
 		}*/
 
-	// ---------------> alta fct care face de cate resurse mai avem nevoie 
-	// 	int missingAmount = requiredAmount - availableResources[resource];
+		// ---------------> alta fct care face de cate resurse mai avem nevoie 
+		// 	int missingAmount = requiredAmount - availableResources[resource];
 
-		if (missingAmount > 0) {
-			if (m_discountedResource.count(resource)) {
-				totalTradeCost += missingAmount * m_discountedResource.at(resource);
-			}
-			else {
-				int opponentProduction = 0;
-				if (opponent.m_baseResources.count(resource)) {
-					opponentProduction += opponent.m_baseResources.at(resource);
+		/*	if (missingAmount > 0) {
+				if (m_discountedResource.count(resource)) {
+					totalTradeCost += missingAmount * m_discountedResource.at(resource);
+				}
+				else {
+					int opponentProduction = 0;
+					if (opponent.m_baseResources.count(resource)) {
+						opponentProduction += opponent.m_baseResources.at(resource);
+					}
+
+					int costPerUnit = (GameConstants::TRADE_BASE_COST)+opponentProduction;
+					totalTradeCost += missingAmount * costPerUnit;
+				}
 				}
 
-				int costPerUnit = (GameConstants::TRADE_BASE_COST)+opponentProduction;
-				totalTradeCost += missingAmount * costPerUnit;
-			}
-
-		}
-	}
-	return totalTradeCost;
+		return totalTradeCost;
+	}*/
 }
 
+// asta nu mai trb e fcta in teorie in buy card 
 bool Player::canAffordConstruction(const CardBase& c, const Player& opponent) {
 	int CardCoinCost = 0;
 	const auto& cardCost = c.get_cost();
@@ -146,34 +147,33 @@ bool Player::canAffordConstruction(const CardBase& c, const Player& opponent) {
 }
 
 
-
-void Player::processDiscardCard(const CardBase& c) {
+void Player::discardCard(const CardBase& c) {
 	std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
-std::string yellowKey = to_string(Color::Yellow);
-	if (m_Inventory.count(yellowKey)) {
-		std::uint8_t yellowCardsCount = m_Inventory.at(yellowKey).size();
-		gainedCoins += yellowCardsCount * GameConstants::DISCARD_YELLOW_BONUS;
-	}
+
+	// Dacă nu există Yellow, vectorul se creează automat și este gol (size = 0)
+	gainedCoins += m_Inventory[Color::Yellow].size() * GameConstants::DISCARD_YELLOW_BONUS;
 	addCoins(gainedCoins);
 }
 
 
-void Player::processConstruction(const CardBase& c, Player& opponent, Board& board) {
 
-	m_Inventory[to_string(c.get_color())].push_back(c);
 
-	if (c.get_unlocks().has_value()) {
-		add_ChainSymbol(*c.get_unlocks());
-		}
+void Player::processConstruction(const CardBase& c, Player& opponent, Board& board) {  //nu mai avem neovie de functia asta, se face tot cand facem buy card 
+	m_Inventory[c.get_color()].push_back(c);
+
+	//if (c.get_unlocks().has_value()) {   -----------> asta face cartea in apply effect
+	//	add_ChainSymbol(*c.get_unlocks());
+	//	}
 
 	c.applyEffect(*this, opponent, board);
 
 	//if (m_scientificSymbols.size() >= GameConstants::SCIENTIFIC_SYMBOLS_FOR_WIN) {  --->  asta face game ul nu playerul retine cand se castiga jocul
-	//	// Logica pentru �ncheierea jocului
+	//	// Logica pentru încheierea jocului
 	}
-}
 
-void Player::processWonderConstruction(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board) {
+
+//aici nu ma bag ca nush wonders :((((
+void Player::constructWonder(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board) {
 	/*board.incrementWondersBuilt();*/ // ---> avem un bool la wonders. daca e sau nu built ca sa nu avem 2 mapuri de wonders 
 	if (board.getTotalWondersBuilt() == GameConstants::WONDER_LIMIT) {
 		

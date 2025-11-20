@@ -21,20 +21,20 @@ private:
 public:
 	Player(const std::string& playerName); // constructor 
 	
-
+	// astea cu // sunt rezolvate 
 	bool decreaseCoins(std::uint8_t amount);
 	void addCoins(std::uint8_t amount); //
 	void add_Resource(Resource r, int amount);//
 	void add_Points(Points p, int amount);//
 	void add_ScientificSymbol(Scientific_Symbol symbol);//
 	void add_ChainSymbol(Symbol symbol);//
-	bool buyCard(const CardBase& card);
+	bool buyCard(const CardBase& card, const Player & opponent, const Board &board);
 	void add_DiscountedResource(Resource r, int discount);
 	bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,
-		const std::map<Resource, uint8_t>& b);
+		const std::map<Resource, uint8_t>& b);//
 	int calculateTradeCost(const CardBase& c, const Player& opponent)const;//calculeaza monezile necesare pentru a cumpara resursele necesare pentru a folosi o carte 
 	bool canAffordConstruction(const CardBase& c, const Player& opponent);
-	void processDiscardCard(const CardBase& c);
-	void processConstruction(const CardBase& c, Player& opponent, Board& board);
-	void processWonderConstruction(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board);
+	void discardCard(const CardBase& c);//
+	void processConstruction(const CardBase& c, Player& opponent, Board& board);// trb sa nu mai fie 
+	void constructWonder(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board);
 };

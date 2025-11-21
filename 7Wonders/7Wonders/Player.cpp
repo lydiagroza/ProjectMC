@@ -1,5 +1,7 @@
 ﻿#include "Player.h"
 #include "GameConstants.h"
+
+//Constructor
 Player::Player(const std::string& playerName)
 	:m_name(playerName),
 	m_Resources{},
@@ -9,14 +11,14 @@ Player::Player(const std::string& playerName)
 	m_scientificSymbols{},
 	m_chainSymbols{} {
 }
-// in game cand se incepe jocul se adauca banii la jucatori 
-
-bool Player::decreaseCoins(std::uint8_t amount) { // o sa il lasam bool ca sa verificam daca am reusit sa extragem banii
+ 
+//FUNCTII PENTRU MONEDE
+bool Player::decreaseCoins(std::uint8_t amount) { 
 	if (m_Resources[Coin] >= amount) {
 		m_Resources[Coin] -= amount;
 		return true ; 
 	}
-	std::cout << "insuficient coins";
+	std::cout << "Insufficient coins";
 	return false; 
 }
 
@@ -25,11 +27,19 @@ void Player::addCoins(std::uint8_t amount) {
 
 }
 
-void Player::add_Resource(Resource r, int amount)
+
+//FUNCTII PENTRU RESURSE
+void Player::add_Resource(Resource r, std::uint8_t amount)
 {
 	m_Resources[r] += amount;
 }
-void Player::add_Points(Points p, int amount)
+
+void Player::add_DiscountedResource(Resource r, std::uint8_t discount) {
+	m_discountedResource[r] = discount;
+}
+
+//FUNCTII PENTRU PUNCTE SI SIMBOLURI
+void Player::add_Points(Points p, std::uint8_t amount)
 {
 	m_pointsScore[p] += amount;
 }
@@ -42,17 +52,41 @@ void Player::add_ChainSymbol(Symbol symbol)
 	m_chainSymbols.insert(symbol);
 }
 
-bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,	 //nu merge comparator intre 2 chestii din stl ex : map
-	//functia asta e comparatorul
-	const std::map<Resource, uint8_t>& b)
-{
+//Functie care imi da resursele de baza,exludem coins ca sa nu incurce
+std::map<Resource, std::uint8_t> Player::getBaseProduction() const {
+	std::map<Resource, std::uint8_t> fixedProduction;
+	for (const auto& [res, amount] : m_Resources) {
+		if (res != Resource::Coin) {
+			fixedProduction[res] = amount;
+		}
+	}
+	
+	return fixedProduction;
+}
+
+//Functie pentru a afla costul unei singure resurse
+std::uint8_t Player::getUnitTradeCost(Resource r, const Player& opponent) const {
+	
+	if (m_discountedResource.count(r)) {
+		return 1;
+	}
+
+	const auto opponentBaseProduction = opponent.getBaseProduction();
+	int opponentResourceProduction = opponentBaseProduction.count(r) ? opponentBaseProduction.at(r) : 0;
+
+	return GameConstants::TRADE_BASE_COST + opponentResourceProduction;
+}
+
+
+bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,const std::map<Resource, uint8_t>& b){
+
 	for (const auto& [res, valueA] : a) {
 		if (valueA < b.at(res)) return false;
 	}
 	return true;
 }
 
-bool Player::buyCard(const CardBase& card, const Player& opponent, const Board &board) { // functia care cumpara cartea : daca are suficiente resurse cumpara cartea, daca nu, verif cu carti galbene &trade cost , daca nu, nu se poate cumpara 
+bool Player::buyCard(const CardBase& card, const Player& opponent, const Board &board) {  
 	if (hasSufficientResources(m_Resources, card.get_cost())) {
 		m_Resources[Coin] -= card.getCostForResource(Coin);
 		m_Inventory[card.get_color()].push_back(card);
@@ -148,9 +182,8 @@ bool Player::canAffordConstruction(const CardBase& c, const Player& opponent) {
 
 
 void Player::discardCard(const CardBase& c) {
-	std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
 
-	// Dacă nu există Yellow, vectorul se creează automat și este gol (size = 0)
+	std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
 	gainedCoins += m_Inventory[Color::Yellow].size() * GameConstants::DISCARD_YELLOW_BONUS;
 	addCoins(gainedCoins);
 }
@@ -158,18 +191,7 @@ void Player::discardCard(const CardBase& c) {
 
 
 
-void Player::processConstruction(const CardBase& c, Player& opponent, Board& board) {  //nu mai avem neovie de functia asta, se face tot cand facem buy card 
-	m_Inventory[c.get_color()].push_back(c);
 
-	//if (c.get_unlocks().has_value()) {   -----------> asta face cartea in apply effect
-	//	add_ChainSymbol(*c.get_unlocks());
-	//	}
-
-	c.applyEffect(*this, opponent, board);
-
-	//if (m_scientificSymbols.size() >= GameConstants::SCIENTIFIC_SYMBOLS_FOR_WIN) {  --->  asta face game ul nu playerul retine cand se castiga jocul
-	//	// Logica pentru încheierea jocului
-	}
 
 
 //aici nu ma bag ca nush wonders :((((

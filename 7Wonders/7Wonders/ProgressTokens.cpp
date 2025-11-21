@@ -8,9 +8,13 @@
 class Player;
 
 std::vector<std::function<void(Player&, Player&)>> ProgressToken::parseEffects(const std::string& s) {
+   
+    return{};
+#if 0
     std::vector<std::function<void(Player&, Player&)>> effects;
     std::stringstream ss(s);
     std::string effectStr;
+ 
 
     static const std::unordered_map<std::string, std::function<void(Player&, Player&)>> effectMap = {
         {"add_coins6", [](Player& p, Player& o) { p.addCoins(6); }},
@@ -38,5 +42,7 @@ std::vector<std::function<void(Player&, Player&)>> ProgressToken::parseEffects(c
             std::cerr << "Unknown progress token effect: " << effectStr << std::endl;
         }
     }
+
     return effects;
+#endif
 }

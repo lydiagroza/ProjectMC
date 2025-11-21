@@ -14,10 +14,10 @@ Player::Player(const std::string& playerName)
 bool Player::decreaseCoins(std::uint8_t amount) { // o sa il lasam bool ca sa verificam daca am reusit sa extragem banii
 	if (m_Resources[Coin] >= amount) {
 		m_Resources[Coin] -= amount;
-		return true ; 
+		return true;
 	}
 	std::cout << "insuficient coins";
-	return false; 
+	return false;
 }
 
 void Player::addCoins(std::uint8_t amount) {
@@ -52,13 +52,13 @@ bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,	 //nu mer
 	return true;
 }
 
-bool Player::buyCard(const CardBase& card, const Player& opponent, const Board &board) { // functia care cumpara cartea : daca are suficiente resurse cumpara cartea, daca nu, verif cu carti galbene &trade cost , daca nu, nu se poate cumpara 
+bool Player::buyCard(const CardBase& card, const Player& opponent, const Board& board) { // functia care cumpara cartea : daca are suficiente resurse cumpara cartea, daca nu, verif cu carti galbene &trade cost , daca nu, nu se poate cumpara 
 	if (hasSufficientResources(m_Resources, card.get_cost())) {
 		m_Resources[Coin] -= card.getCostForResource(Coin);
 		m_Inventory[card.get_color()].push_back(card);
 		card.applyEffect(*this, opponent, board);
 		std::cout << "Card " << card.get_name() << " bought" << std::endl; // + se "construieste" cartea 
-		return true; 
+		return true;
 	}
 	else {  // implementare cu cartile galbene , verifici daca ai adauga orice resursa din cartile galbene daca se modifica cv
 
@@ -66,23 +66,23 @@ bool Player::buyCard(const CardBase& card, const Player& opponent, const Board &
 		// aici bagi si trade cost 
 		return;
 	}
-	
-			std::cout << "Card can't be bought"; 
-			return false;
 
-	}
+	std::cout << "Card can't be bought";
+	return false;
 
-	/*for (const auto& pair : m_chosenResource) {
-		availableResources[pair.first] += pair.second;
+}
+
+/*for (const auto& pair : m_chosenResource) {
+	availableResources[pair.first] += pair.second;
+}*/
+
+/*const auto& requiredResources = card.get_cost();*/
+/*for (const auto& pair : requiredResources) {
+	const Resource resource = pair.first;
+	int requiredAmount = pair.second;
+	if (resource == Resource::Coin) {
+		continue;
 	}*/
-	
-	/*const auto& requiredResources = card.get_cost();*/
-	/*for (const auto& pair : requiredResources) {
-		const Resource resource = pair.first;
-		int requiredAmount = pair.second;
-		if (resource == Resource::Coin) {
-			continue;
-		}*/
 
 	//	int possessedAmount = availableResources.count(resource) ? availableResources.at(resource) : 0;
 	//	if (possessedAmount < requiredAmount) {
@@ -169,14 +169,14 @@ void Player::processConstruction(const CardBase& c, Player& opponent, Board& boa
 
 	//if (m_scientificSymbols.size() >= GameConstants::SCIENTIFIC_SYMBOLS_FOR_WIN) {  --->  asta face game ul nu playerul retine cand se castiga jocul
 	//	// Logica pentru încheierea jocului
-	}
+}
 
 
 //aici nu ma bag ca nush wonders :((((
 void Player::constructWonder(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board) {
 	/*board.incrementWondersBuilt();*/ // ---> avem un bool la wonders. daca e sau nu built ca sa nu avem 2 mapuri de wonders 
 	if (board.getTotalWondersBuilt() == GameConstants::WONDER_LIMIT) {
-		
+
 		// Logica: Cea de-a 8-a Minune r?mas? neconstruit? este scoas? din joc.
 		//Aceste  functii legate de Wonder trebuie implementate ori in Board ori in starea curenta a jocului
 		board.discardLastAvailableWonder();
@@ -184,4 +184,3 @@ void Player::constructWonder(const CardBase& cardUsed, const Wonder& wonderToBui
 	m_builtWonders.push_back(wonderToBuild);
 	wonderToBuild.applyEffect(*this, opponent, board);
 }
-

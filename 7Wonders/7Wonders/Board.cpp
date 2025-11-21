@@ -141,14 +141,14 @@ void Board::printMilitaryTrack(std::ostream& fout) const
 
 }
 //carti "arse"
-void Board::addCardToDiscardPile(CardNode* card)
+void Board::addCardToDiscardPile(CardBase* card)
 {
-    if(card)
-		m_discardPile.push_back(card);
+    if (card) {
+        m_discardPile.push_back(card);
+    }
 }
 
-
-const std::vector<CardNode*>& Board::getDiscardPile() const
+const std::vector<CardBase*>& Board::getDiscardPile() const
 {
     return m_discardPile;
 }
@@ -161,10 +161,9 @@ void Board::printDiscardPile(std::ostream& fout) const
         return;
     }
     std::cout << "[ ";
-    for (const auto* card : m_discardPile) {
-        // Presupunem că CardNode are metoda getName()
-        std::cout << card->getName() << ", ";
-    }
+    for (const auto* card : m_discardPile)
+        std::cout << card->get_name() << ", ";
+
     std::cout << "]\n";
 }
 

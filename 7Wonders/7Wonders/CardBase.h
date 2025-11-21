@@ -8,6 +8,7 @@
 #include <functional>
 #include "Board.h"
 
+
 // Enumuri 
   enum  Resource : std::uint8_t {
         Wood, Clay, Stone, Glass, Papyrus, Coin

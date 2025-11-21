@@ -13,7 +13,7 @@ private:
 	int Age;
 	std::vector<std::shared_ptr<ProgressToken>> m_availableProgressTokens;
 	std::vector<std::vector<CardNode*>> m_activeCards;
-	std::vector<CardNode*> m_discardPile;
+	std::vector<CardBase*> m_discardPile;
 
 
 	std::vector<std::vector<int>> m_eraLayouts = {
@@ -68,7 +68,7 @@ public:
 
 
 	//carti "arse"
-	void addCardToDiscardPile(CardNode* card);
-	const std::vector<CardNode*>& getDiscardPile() const;
-	void printDiscardPile(std::ostream& fout = std::cout) const;
+	void addCardToDiscardPile(CardBase* card);
+	const std::vector<CardBase*>& getDiscardPile() const;
+	void printDiscardPile(std::ostream& fout) const;
 };

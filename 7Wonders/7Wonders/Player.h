@@ -20,7 +20,7 @@ private:
 	std::unordered_set<Symbol>m_chainSymbols; // all chain symbols accumulated
 public:
 	Player(const std::string& playerName); // constructor 
-	
+
 	// astea cu // sunt rezolvate 
 	bool decreaseCoins(std::uint8_t amount);
 	void addCoins(std::uint8_t amount); //
@@ -28,7 +28,7 @@ public:
 	void add_Points(Points p, int amount);//
 	void add_ScientificSymbol(Scientific_Symbol symbol);//
 	void add_ChainSymbol(Symbol symbol);//
-	bool buyCard(const CardBase& card, const Player & opponent, const Board &board);
+	bool buyCard(const CardBase& card, const Player& opponent, const Board& board);
 	void add_DiscountedResource(Resource r, int discount);
 	bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,
 		const std::map<Resource, uint8_t>& b);//

@@ -15,7 +15,7 @@
 			      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
 			      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
 			   
-		</Filter>
+		</Filter><Filter Include="Header Files\ProgressToken"><UniqueIdentifier>{ca643dcb-0ab6-4c6d-bf29-f0df128787b5}</UniqueIdentifier></Filter>
 		 
 	</ItemGroup>
 	  <ItemGroup>
@@ -62,8 +62,7 @@
 		    <ClCompile Include="ProgressTokens.cpp">
 			      <Filter>Source Files</Filter>
 			   
-		</ClCompile>
-	</ItemGroup>
+		</ClCompile></ItemGroup>
 	  <ItemGroup>
 		    <ClInclude Include="Board.h">
 			      <Filter>Header Files</Filter>
@@ -81,10 +80,7 @@
 			      <Filter>Header Files</Filter>
 			   
 		</ClInclude>
-		    <ClInclude Include="ProgressTokens.h">
-			      <Filter>Header Files</Filter>
-			   
-		</ClInclude>
+		    
 		    <ClInclude Include="GameSetup.h">
 			      <Filter>Header Files</Filter>
 			   
@@ -92,12 +88,8 @@
 		    <ClInclude Include="CardLoader.h">
 			      <Filter>Header Files</Filter>
 			   
-		</ClInclude><ClInclude Include="Wonder.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="GameConstants.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="MilitaryTrack.h"><Filter>Header Files</Filter></ClInclude>
-		    <ClInclude Include="ProgressTokenLoader.h">
-			      <Filter>Header Files</Filter>
-			   
-		</ClInclude>
-	</ItemGroup>
+		</ClInclude><ClInclude Include="Wonder.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="GameConstants.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="MilitaryTrack.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="ProgressTokenLoader.h"><Filter>Header Files\ProgressToken</Filter></ClInclude><ClInclude Include="ProgressTokens.h"><Filter>Header Files\ProgressToken</Filter></ClInclude>
+		    </ItemGroup>
 	  <ItemGroup>
 		    <None Include="AgeI.csv">
 			      <Filter>Source Files</Filter>

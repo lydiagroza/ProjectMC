@@ -4,8 +4,7 @@
 
 GameSetup::GameSetup()
 {
-    for (int i = 1; i <= 23; ++i)
-        m_cards.push_back(new CardNode("C" + std::to_string(i)));
+    
     // Selectăm 5 token-uri random
     auto selected = this->selectProgressTokens();
     // Le dăm Board-ului

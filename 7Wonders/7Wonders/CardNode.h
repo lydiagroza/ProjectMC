@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <memory>
+#include "CardBase.h"
 
 enum class Face {
 	Up,
@@ -9,13 +11,15 @@ enum class Face {
 class CardNode
 {
 private:
-	std::string m_name;
+	CardBase* m_card;
 	std::vector	<CardNode*> m_children;
 	bool m_played;
 	Face m_face;
+
 public:
-	CardNode(const std::string& nume);
-	
+	CardNode();
+	void setCard(CardBase* card);
+	CardBase* getCard() const;
 	bool isPlayable() const;
 	std::string getName()const;
 	void updatePlayedStatus(bool playedStatus);

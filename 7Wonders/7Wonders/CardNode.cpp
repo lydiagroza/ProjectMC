@@ -1,22 +1,41 @@
 #include "CardNode.h"
-#include <string>
 
-CardNode::CardNode(const std::string& nume) : m_name(nume), m_played(false), m_face(Face::Down)
+
+CardNode::CardNode() : m_card(nullptr), m_played(false), m_face(Face::Down)
 {
+}
+
+void CardNode::setCard(CardBase* card)
+{
+	m_card = card;
+}
+
+CardBase* CardNode::getCard() const
+{
+	return m_card;
 }
 
 bool CardNode::isPlayable() const
 {
-	if(Face::Up == m_face && !m_played && m_children.empty())
-	{
-		return true;
-	}
-	return false;
+    if (m_played) 
+        return false;
+    if (m_face != Face::Up)
+        return false;
+
+    for (const auto* child : m_children) {
+        if (child->m_played == false)
+            return false;
+    }
+
+    return true;
 }
 
 std::string CardNode::getName() const
 {
-	return m_name;
+	if (m_card != nullptr) {
+		return m_card->get_name();
+	}
+	return "Empty Node";
 }
 
 void CardNode::updatePlayedStatus(bool playedStatus)

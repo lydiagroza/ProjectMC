@@ -4,32 +4,26 @@
 class GameSetup
 {
 private:
-	Board board;
+	Board m_board;
+    std::vector<std::shared_ptr<CardBase>> m_deckAge1;
+    std::vector<std::shared_ptr<CardBase>> m_deckAge2;
+    std::vector<std::shared_ptr<CardBase>> m_deckAge3;
+    std::vector<std::shared_ptr<CardBase>> m_deckGuilds;
 
-/// <summary>
-/// /tokeni hardcodati temporar pana sunt gata ceilalti
-/// </summary>
-    std::vector<ProgressToken> m_allTokens = {
-       {"Agriculture", "Gain 6 coins and 4 victory points.", 4, 6, 0},
-       {"Architecture", "Wonders cost 2 fewer stone/brick/wood.", 0, 0, 0},
-       {"Economy", "Gain coins whenever your opponent gains coins.", 0, 0, 0},
-       {"Law", "Counts as a science symbol.", 0, 0, 0},
-       {"Mathematics", "Gain 3 victory points per progress token at end of game.", 0, 0, 3},
-       {"Masonry", "Wonders cost 2 fewer stone/brick.", 0, 0, 0},
-       {"Philosophy", "Gain 7 victory points.", 7, 0, 0},
-       {"Strategy", "Your shields gain +1 strength.", 0, 0, 0},
-       {"Theology", "Your wonders activate their effects immediately.", 0, 0, 0},
-       {"Urbanism", "Gain 6 coins immediately.", 0, 6, 0}
-    };
+    std::vector<std::shared_ptr<ProgressToken>> m_allTokens;
 
-    std::vector<CardNode*> m_cards;
+    void loadAllResources();
+    void prepareDecks();  
+    void prepareTokens();
+
+    std::vector<CardBase*> toRawPointerVector(const std::vector<std::shared_ptr<CardBase>>& sharedDeck);
+
 
 
 public:
     GameSetup();
 
-    std::vector<ProgressToken> selectProgressTokens();
-	std::vector<CardNode*> SelectRandomCards();
+    void startAge(int age);
     Board& getBoard();
 
 

@@ -1,24 +1,43 @@
 ﻿#include "Board.h"
 #include <iomanip>   // pentru std::setw
 
-void Board::setupCards(int era, std::vector<CardNode*>& eraCards)
+void Board::setupCards(int era, std::vector<CardBase*>& deck)
 {
+    // Curatam tabla veche (daca exista)
+    // NOTA: Aici ar trebui stersi pointerii vechi daca nu folosesti smart pointers, 
+    // pentru a evita memory leaks. Dar ne focusam pe logica acum.
     m_activeCards.clear();
 
+    // Verificam sa nu accesam un layout inexistent
+    if (era < 1 || era > 3) return;
+
     const std::vector<int>& layout = m_eraLayouts[era - 1];
-    int index = 0;
+    int deckIndex = 0;
     int rowNumber = 0;
 
-    // 1. Așezarea Cărților (Vârf -> Bază)
+    // 1. Așezarea Cărților
     for (int rowSize : layout) {
         std::vector<CardNode*> row;
         row.reserve(rowSize);
+
         for (int i = 0; i < rowSize; ++i) {
-            row.push_back(eraCards[index++]);
-            row.back()->setFace(rowNumber % 2 == 0 ? Face::Up : Face::Down);
+            if (deckIndex >= deck.size())
+                break;
+            CardNode* newNode = new CardNode();
+            newNode->setCard(deck[deckIndex]);
+            bool isFaceUp = false;
+            if (era == 1 || era == 3) 
+                isFaceUp = (rowNumber % 2 == 0);
+            else if (era == 2)
+                isFaceUp = (rowNumber % 2 != 0);
+
+            newNode->setFace(isFaceUp ? Face::Up : Face::Down);
+
+            row.push_back(newNode);
+            deckIndex++;
         }
-        rowNumber++;
         m_activeCards.push_back(std::move(row));
+        rowNumber++;
     }
     linkCards(era);
 }
@@ -52,12 +71,12 @@ void Board::linkCards(int eraIndex)
     }
 }
 
-void Board::setAvailableProgressTokens(const std::vector<ProgressToken>& tokens)
+void Board::setAvailableProgressTokens(const std::vector<std::shared_ptr<ProgressToken>>& tokens)
 {
     m_availableProgressTokens = tokens;
 }
 
-std::vector<ProgressToken> Board::getAvailableProgressTokens() const
+std::vector<std::shared_ptr<ProgressToken>> Board::getAvailableProgressTokens() const
 {
     return m_availableProgressTokens;
 }
@@ -76,7 +95,7 @@ void Board::printTokens(std::ostream& fout) const
     for (size_t i = 0; i < m_availableProgressTokens.size(); ++i) {
         const auto& t = m_availableProgressTokens[i];
         fout << std::setw(2) << (i + 1) << ") "
-            << t.name << " — " << t.description << "\n";
+            << t->getName() << "\n";
     }
 }
 
@@ -122,14 +141,14 @@ void Board::printMilitaryTrack(std::ostream& fout) const
 
 }
 //carti "arse"
-void Board::addCardToDiscardPile(CardNode* card)
+void Board::addCardToDiscardPile(CardBase* card)
 {
-    if(card)
-		m_discardPile.push_back(card);
+    if (card) {
+        m_discardPile.push_back(card);
+    }
 }
 
-
-const std::vector<CardNode*>& Board::getDiscardPile() const
+const std::vector<CardBase*>& Board::getDiscardPile() const
 {
     return m_discardPile;
 }
@@ -142,10 +161,9 @@ void Board::printDiscardPile(std::ostream& fout) const
         return;
     }
     std::cout << "[ ";
-    for (const auto* card : m_discardPile) {
-        // Presupunem că CardNode are metoda getName()
-        std::cout << card->getName() << ", ";
-    }
+    for (const auto* card : m_discardPile)
+        std::cout << card->get_name() << ", ";
+
     std::cout << "]\n";
 }
 

@@ -4,15 +4,16 @@
 #include "ProgressTokens.h"
 #include "MilitaryTrack.h"
 #include <iostream>
+#include <memory>
 
 
 class Board
 {
-private: 
+private:
 	int Age;
-	std::vector<ProgressToken> m_availableProgressTokens;
+	std::vector<std::shared_ptr<ProgressToken>> m_availableProgressTokens;
 	std::vector<std::vector<CardNode*>> m_activeCards;
-	std::vector<CardNode*> m_discardPile;
+	std::vector<CardBase*> m_discardPile;
 
 
 	std::vector<std::vector<int>> m_eraLayouts = {
@@ -48,28 +49,26 @@ private:
 	{ {0}, { 0,1 },{1} },
 	};
 
-	MilitaryTrack m_militaryTrack; 
+	MilitaryTrack m_militaryTrack;
 
 public:
-	Board()=default;
+	Board() = default;
 	//~Board();
-
-	void setupCards(int era, std::vector<CardNode*>& eraCards);
+	void setupCards(int era, std::vector<CardBase*>& deck);
 	//std::vector<CardNode*>& getActiveCards();
 
 	void printCardsTree() const;
 	void printChildrenList() const;
 	void linkCards(int);
 
-	void setAvailableProgressTokens(const std::vector<ProgressToken>& tokens);
-	std::vector<ProgressToken> getAvailableProgressTokens() const;
+	void setAvailableProgressTokens(const std::vector<std::shared_ptr<ProgressToken>>& tokens);
+	std::vector<std::shared_ptr<ProgressToken>> getAvailableProgressTokens() const;
 	void printTokens(std::ostream& fout = std::cout) const;
 	void printMilitaryTrack(std::ostream& fout = std::cout) const;
 
 
 	//carti "arse"
-	void addCardToDiscardPile(CardNode* card);
-	const std::vector<CardNode*>& getDiscardPile() const;
-	void printDiscardPile(std::ostream& fout = std::cout) const;
+	void addCardToDiscardPile(CardBase* card);
+	const std::vector<CardBase*>& getDiscardPile() const;
+	void printDiscardPile(std::ostream& fout) const;
 };
-

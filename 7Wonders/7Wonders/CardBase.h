@@ -38,6 +38,7 @@
       std::optional<Symbol> m_unlocks;
       std::map<Resource, std::uint8_t> m_cost;
       std::vector<std::function<void(Player&)>> m_effects;
+      bool m_isAvailable; 
 
       //Constructori 
       CardBase();
@@ -46,7 +47,7 @@
           const std::optional<Symbol>& symbol = std::nullopt,
           const std::optional<Symbol>& unlocks = std::nullopt)
           : m_name(std::move(name)), m_id(id), m_color(color),
-          m_cost(cost), m_symbol(symbol), m_unlocks(unlocks) {
+          m_cost(cost), m_symbol(symbol), m_unlocks(unlocks),m_isAvailable(false) {
       }
 
       // Getteri 
@@ -56,10 +57,16 @@
       const std::map<Resource, std::uint8_t>& get_cost() const;
       const std::optional<Symbol>& get_symbol() const;
       const std::optional<Symbol>& get_unlocks() const;
-
+      std::uint8_t getCostForResource(Resource r) const {
+          auto it = m_cost.find(r);
+          if (it != m_cost.end()) {
+              return it->second;
+          }
+          return 0;
+      }
 
       //Fct pt efecte 
-      void applyEffect(Player& player,Player& opponenent,Board& board)const;
+      void applyEffect(const Player& player,const Player& opponenent, const Board &board)const;
       void addEffect(std::function<void(Player&)> e);
     };
 

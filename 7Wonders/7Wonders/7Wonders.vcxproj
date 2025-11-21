@@ -169,7 +169,8 @@
 		    <ClCompile Include="temporaryGame.cpp" />
 		    <ClCompile Include="GameSetup.cpp" />
 		    <ClCompile Include="CardLoader.cpp"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild></ClCompile>
-		 
+		    <ClCompile Include="ProgressTokenLoader.cpp" />
+		    <ClCompile Include="ProgressTokens.cpp" />
 	</ItemGroup>
 	  <ItemGroup>
 		    <ClInclude Include="Board.h" />
@@ -180,15 +181,13 @@
 			   
 		</ClInclude><ClInclude Include="GameConstants.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild></ClInclude>
 		    <ClInclude Include="GameSetup.h" /><ClInclude Include="MilitaryTrack.h" />
-		    <ClInclude Include="Player.h">
-			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-			   
-		</ClInclude>
-		    <ClInclude Include="ProgressTokens.h">
-			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-			   
-		</ClInclude><ClInclude Include="WonderLoader.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild></ClInclude>
-		 
+		    		<ClInclude Include="Player.h">
+		    			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+		    			   
+		    		</ClInclude>
+		    		    <ClInclude Include="ProgressTokens.h" />
+		    		    <ClInclude Include="ProgressTokenLoader.h" />
+		    		<ClInclude Include="Wonder.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild></ClInclude>		 
 	</ItemGroup>
 	  <ItemGroup>
 		    <None Include="AgeI.csv" />

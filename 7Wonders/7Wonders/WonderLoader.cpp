@@ -1,52 +1,50 @@
-#include "WonderLoader.h";
-
+#include "WonderLoader.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <algorithm>
 #include <cctype>
-#include "CardLoader.h"
 
-static std::vector<std::shared_ptr<Wonder>> loadFromCSV(const std::string& filename) {
-	using namespace std;
-	vector<shared_ptr<Wonder>> wonders;
-	ifstream file(filename);
-	if (!file.is_open()) {
-		cerr << "Eroare, nu s-a putut deschide fisierul " << filename << endl;
-		return wonders;
-	}
+std::vector<std::shared_ptr<Wonder>> WonderLoader::loadWonders(const std::string& filename) {
+    std::vector<std::shared_ptr<Wonder>> wonders;
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Eroare, nu s-a putut deschide fisierul " << filename << std::endl;
+        return wonders;
+    }
 
-	string line;
-	getline(file, line);
+    std::string line;
+    getline(file, line); // Skip header
 
-	while (getline(file, line)) {
-		stringstream ss(line);
-		string name, idStr, costStr, effectsStr;
+    auto trim = [](std::string s) {
+        s.erase(remove_if(s.begin(), s.end(), ::isspace), s.end());
+        s.erase(remove(s.begin(), s.end(), '"'), s.end());
+        return s;
+    };
 
-		getline(ss, name, ',');
-		getline(ss, idStr, ',');
-		getline(ss, costStr, ',');
-		getline(ss, effectsStr, '\n');
+    while (getline(file, line)) {
+        std::stringstream ss(line);
+        std::string name, idStr, costStr, effectsStr;
 
-		auto trim = [](string s) {
-			s.erase(remove_if(s.begin(), s.end(), ::isspace), s.end());
-			s.erase(remove(s.begin(), s.end(), '"'), s.end());
-			return s;
-			};
+        std::getline(ss, name, ',');
+        std::getline(ss, idStr, ',');
+        std::getline(ss, costStr, ',');
+        std::getline(ss, effectsStr, '\n');
 
-		name = trim(name);
-		idStr = trim(idStr);
-		costStr = trim(costStr);
-		effectsStr = trim(effectsStr);
+        name = trim(name);
+        idStr = trim(idStr);
+        costStr = trim(costStr);
+        effectsStr = trim(effectsStr);
 
-		uint16_t id = static_cast<uint16_t>(stoi(idStr));
-		map<Resource, uint8_t> cost = Wonder::parseCost(costStr);
+        uint16_t id = static_cast<uint16_t>(stoi(idStr));
+        std::map<Resource, uint8_t> cost = Wonder::parseCost(costStr);
 
-		auto wonder = make_shared<Wonder>(name, id, cost);
+        auto wonder = make_shared<Wonder>(name, id, cost);
 
-		auto effects = Wonder::ParseEffects(effectsStr);
-		for (auto& ef : effects)
-			wonder->addEffect(ef);
-		wonders.push_back(wonder)
-	}
+        auto effects = Wonder::parseEffects(effectsStr);
+        for (auto& ef : effects)
+            wonder->addEffect(ef);
+        wonders.push_back(wonder);
+    }
+    return wonders;
 }

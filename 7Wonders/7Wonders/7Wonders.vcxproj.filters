@@ -55,7 +55,14 @@
 			      <Filter>Source Files</Filter>
 			   
 		</ClCompile><ClCompile Include="WonderLoader.cpp"><Filter>Source Files</Filter></ClCompile><ClCompile Include="MilitaryTrack.cpp"><Filter>Source Files</Filter></ClCompile>
-		 
+		    <ClCompile Include="ProgressTokenLoader.cpp">
+			      <Filter>Source Files</Filter>
+			   
+		</ClCompile>
+		    <ClCompile Include="ProgressTokens.cpp">
+			      <Filter>Source Files</Filter>
+			   
+		</ClCompile>
 	</ItemGroup>
 	  <ItemGroup>
 		    <ClInclude Include="Board.h">
@@ -85,8 +92,11 @@
 		    <ClInclude Include="CardLoader.h">
 			      <Filter>Header Files</Filter>
 			   
-		</ClInclude><ClInclude Include="WonderLoader.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="GameConstants.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="MilitaryTrack.h"><Filter>Header Files</Filter></ClInclude>
-		 
+		</ClInclude><ClInclude Include="Wonder.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="GameConstants.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="MilitaryTrack.h"><Filter>Header Files</Filter></ClInclude>
+		    <ClInclude Include="ProgressTokenLoader.h">
+			      <Filter>Header Files</Filter>
+			   
+		</ClInclude>
 	</ItemGroup>
 	  <ItemGroup>
 		    <None Include="AgeI.csv">
@@ -100,6 +110,6 @@
 		    <None Include="AgeIII.csv">
 			      <Filter>Source Files</Filter>
 			   
-		</None><None Include="Wonders.csv"><Filter>Source Files</Filter></None><None Include="ProgressTokens.csv"><Filter>Source Files</Filter></None>
+		</None><None Include="Wonders.csv"><Filter>Source Files</Filter></None><None Include="ProgressTokens.csv"><Filter>Source Files</Filter></None><None Include="Guilds.csv" />
 		 
 	</ItemGroup></Project>

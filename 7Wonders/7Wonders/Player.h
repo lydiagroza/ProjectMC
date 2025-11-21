@@ -42,8 +42,16 @@ public:
 
 	//Functie ca sa vad cat ma costa o singura resursa
 	std::uint8_t getUnitTradeCost(Resource res, const Player& opponent) const;
-	
-	
+
+	//Functie pentru a afla toate alegerile de resurse 
+	std::vector<std::vector<Resource>> getFlexibleChoices() const;
+
+	//Functie pentru a afla ce resurse ne lipsesc pentru o cumpara o carte
+	std::map<Resource, std::uint8_t> getMissingResources(const CardBase& card, const Player& opponent) const;
+
+
+
+
 	bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,
 		const std::map<Resource, uint8_t>& b);//
 	int calculateTradeCost(const CardBase& c, const Player& opponent)const;//calculeaza monezile necesare pentru a cumpara resursele necesare pentru a folosi o carte 

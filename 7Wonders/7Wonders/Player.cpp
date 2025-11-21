@@ -52,6 +52,17 @@ void Player::add_ChainSymbol(Symbol symbol)
 	m_chainSymbols.insert(symbol);
 }
 
+
+
+bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a, const std::map<Resource, uint8_t>& b) {
+
+	for (const auto& [res, valueA] : a) {
+		if (valueA < b.at(res)) return false;
+	}
+	return true;
+}
+
+
 //Functie care imi da resursele de baza,exludem coins ca sa nu incurce
 std::map<Resource, std::uint8_t> Player::getBaseProduction() const {
 	std::map<Resource, std::uint8_t> fixedProduction;
@@ -78,13 +89,87 @@ std::uint8_t Player::getUnitTradeCost(Resource r, const Player& opponent) const 
 }
 
 
-bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,const std::map<Resource, uint8_t>& b){
+std::vector<std::vector<Resource>> Player::getFlexibleChoices() const {
 
-	for (const auto& [res, valueA] : a) {
-		if (valueA < b.at(res)) return false;
+	std::vector<std::vector<Resource>> choices;
+
+	if (m_Inventory.count(Color::Yellow)) {
+		for (const auto& card : m_Inventory.at(Color::Yellow)) {
+			for (const auto& option : card.getFlexibleChoices()) {  //getFlexibleChoise ar trebuie sa returneze un vector cu resursele disponile(Doar pentru cartile galbene)
+				if (!option.empty()) {
+					choices.push_back(option);
+				}
+			}
+		}
 	}
-	return true;
+
+	
+	for (const auto& wonder : m_Wonders) {
+		
+		for (const auto& option : wonder.getFlexibleChoices()) {  //getFlexibleChoise ar trebuie sa returneze un vector cu resursele disponile(Doar pentru Wonders cu acest efect de alegere a resursei)
+			if (!option.empty()) {
+				choices.push_back(option);
+			}
+		}
+	}
+
+	return choices;
 }
+
+std::map<Resource, std::uint8_t> Player::getMissingResources(const CardBase& card, const Player& opponent) const {
+	std::map<Resource, std::uint8_t> required = card.get_cost();
+	std::map<Resource, std::uint8_t> missing;
+	std::map<Resource, std::uint8_t> currentBaseProduction = this->getBaseProduction();
+
+	for (const auto& [res, reqAmount] : required) {
+		if (res == Resource::Coin) continue;
+
+		uint8_t available = currentBaseProduction.count(res) ? currentBaseProduction.at(res) : 0;
+
+		if (available < reqAmount) {
+			missing[res] = reqAmount - available;
+		}
+	}
+
+	std::vector<std::vector<Resource>> flexibleChoices = this->getFlexibleChoices();
+	for (const auto& choiceOptions : flexibleChoices) {
+
+		Resource bestResourceToCover = Resource::Coin; 
+		int maxCost = -1;
+
+		// Găsim cea mai SCUMPĂ resursă lipsă pe care o putem acoperi
+		for (Resource resToCover : choiceOptions) {
+
+			if (missing.count(resToCover) && missing.at(resToCover) > 0) {
+
+				int currentCost = this->getUnitTradeCost(resToCover, opponent);
+
+				// Alegem opțiunea care ne salvează cei mai mulți bani (Max Cost)
+				if (currentCost > maxCost) {
+					maxCost = currentCost;
+					bestResourceToCover = resToCover;
+				}
+			}
+		}
+
+		// Dacă s-a găsit o alocare optimă (resursa nu este Coin)
+		if (bestResourceToCover != Resource::Coin) {
+
+			// Consumăm o unitate din lipsa cea mai scumpă
+			missing.at(bestResourceToCover)--;
+
+			if (missing.at(bestResourceToCover) == 0) {
+				missing.erase(bestResourceToCover);
+			}
+		}
+	}
+
+	return missing;
+
+}
+
+
+
 
 bool Player::buyCard(const CardBase& card, const Player& opponent, const Board &board) {  
 	if (hasSufficientResources(m_Resources, card.get_cost())) {

@@ -21,7 +21,6 @@ private:
 public:
 	Player(const std::string& playerName); // constructor 
 	
-	// astea cu // sunt rezolvate 
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
 	void addCoins(std::uint8_t amount); //
@@ -46,16 +45,15 @@ public:
 	//Functie pentru a afla toate alegerile de resurse 
 	std::vector<std::vector<Resource>> getFlexibleChoices() const;
 
-	//Functie pentru a afla ce resurse ne lipsesc pentru o cumpara o carte
+	//Functie pentru a afla ce resurse ne lipsesc pentru a cumpara o carte
 	std::map<Resource, std::uint8_t> getMissingResources(const CardBase& card, const Player& opponent) const;
 
 
+	//Functie care ne zice cati banuti trebuie sa dea pentru resursele lipsa
+	std::uint8_t calculateTradeCost(const CardBase& card, const Player& opponent)const; 
 
-
-	bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a,
-		const std::map<Resource, uint8_t>& b);//
-	int calculateTradeCost(const CardBase& c, const Player& opponent)const;//calculeaza monezile necesare pentru a cumpara resursele necesare pentru a folosi o carte 
-	bool canAffordConstruction(const CardBase& c, const Player& opponent);
+	//Functie care verifica daca putem cumpara cartea
+	bool canAffordConstruction(const CardBase& card, const Player& opponent);
 
 	//Actiuni de joc
 	bool buyCard(const CardBase& card, const Player& opponent, const Board& board);

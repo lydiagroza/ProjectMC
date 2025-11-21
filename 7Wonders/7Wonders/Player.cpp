@@ -12,7 +12,7 @@ Player::Player(const std::string& playerName)
 	m_chainSymbols{} {
 }
  
-//FUNCTII PENTRU MONEDE
+//Functii pentru monede
 bool Player::decreaseCoins(std::uint8_t amount) { 
 	if (m_Resources[Coin] >= amount) {
 		m_Resources[Coin] -= amount;
@@ -28,7 +28,7 @@ void Player::addCoins(std::uint8_t amount) {
 }
 
 
-//FUNCTII PENTRU RESURSE
+//Functii pentru resurse
 void Player::add_Resource(Resource r, std::uint8_t amount)
 {
 	m_Resources[r] += amount;
@@ -38,7 +38,7 @@ void Player::add_DiscountedResource(Resource r, std::uint8_t discount) {
 	m_discountedResource[r] = discount;
 }
 
-//FUNCTII PENTRU PUNCTE SI SIMBOLURI
+//Functii pentru puncte si simboluri
 void Player::add_Points(Points p, std::uint8_t amount)
 {
 	m_pointsScore[p] += amount;
@@ -54,16 +54,8 @@ void Player::add_ChainSymbol(Symbol symbol)
 
 
 
-bool hasSufficientResources(const std::map<Resource, std::uint8_t>& a, const std::map<Resource, uint8_t>& b) {
 
-	for (const auto& [res, valueA] : a) {
-		if (valueA < b.at(res)) return false;
-	}
-	return true;
-}
-
-
-//Functie care imi da resursele de baza,exludem coins ca sa nu incurce
+//Functie care imi da resursele de baza(doar alea din cartile maro si gri),exludem coins ca sa nu incurce
 std::map<Resource, std::uint8_t> Player::getBaseProduction() const {
 	std::map<Resource, std::uint8_t> fixedProduction;
 	for (const auto& [res, amount] : m_Resources) {
@@ -83,12 +75,14 @@ std::uint8_t Player::getUnitTradeCost(Resource r, const Player& opponent) const 
 	}
 
 	const auto opponentBaseProduction = opponent.getBaseProduction();
-	int opponentResourceProduction = opponentBaseProduction.count(r) ? opponentBaseProduction.at(r) : 0;
+	std::uint8_t opponentResourceProduction = opponentBaseProduction.count(r) ? opponentBaseProduction.at(r) : 0;
 
 	return GameConstants::TRADE_BASE_COST + opponentResourceProduction;
 }
 
 
+
+//Functia pentru a obtine ce resurse putem alege
 std::vector<std::vector<Resource>> Player::getFlexibleChoices() const {
 
 	std::vector<std::vector<Resource>> choices;
@@ -116,6 +110,8 @@ std::vector<std::vector<Resource>> Player::getFlexibleChoices() const {
 	return choices;
 }
 
+
+//Functie care ne zice resursele lipsa pentru cartea respectiva
 std::map<Resource, std::uint8_t> Player::getMissingResources(const CardBase& card, const Player& opponent) const {
 	std::map<Resource, std::uint8_t> required = card.get_cost();
 	std::map<Resource, std::uint8_t> missing;
@@ -135,7 +131,7 @@ std::map<Resource, std::uint8_t> Player::getMissingResources(const CardBase& car
 	for (const auto& choiceOptions : flexibleChoices) {
 
 		Resource bestResourceToCover = Resource::Coin; 
-		int maxCost = -1;
+		std::uint8_t maxCost = -1;
 
 		// Găsim cea mai SCUMPĂ resursă lipsă pe care o putem acoperi
 		for (Resource resToCover : choiceOptions) {
@@ -169,104 +165,58 @@ std::map<Resource, std::uint8_t> Player::getMissingResources(const CardBase& car
 }
 
 
-
-
-bool Player::buyCard(const CardBase& card, const Player& opponent, const Board &board) {  
-	if (hasSufficientResources(m_Resources, card.get_cost())) {
-		m_Resources[Coin] -= card.getCostForResource(Coin);
-		m_Inventory[card.get_color()].push_back(card);
-		card.applyEffect(*this, opponent, board);
-		std::cout << "Card " << card.get_name() << " bought" << std::endl; // + se "construieste" cartea 
-		return true; 
+//Functia care ne zice cati banuti trebuie sa dea pentru resursele lipsa
+std::uint8_t Player::calculateTradeCost(const CardBase& card, const Player& opponent)const {
+	const auto missingResources = this->getMissingResources(card, opponent);
+	std::uint8_t totalTradeCost = 0;
+	for (const auto& [res, missingAmount] : missingResources) {
+		int costPerUnit = this->getUnitTradeCost(res, opponent);
+		totalTradeCost += missingAmount * costPerUnit;
 	}
-	else {  // implementare cu cartile galbene , verifici daca ai adauga orice resursa din cartile galbene daca se modifica cv
-
-		// daca nu intra pe urmatoarea ramura pt ca aici vom avea un return: 
-		// aici bagi si trade cost 
-		return;
-	}
-	
-			std::cout << "Card can't be bought"; 
-			return false;
-
-	}
-
-	/*for (const auto& pair : m_chosenResource) {
-		availableResources[pair.first] += pair.second;
-	}*/
-	
-	/*const auto& requiredResources = card.get_cost();*/
-	/*for (const auto& pair : requiredResources) {
-		const Resource resource = pair.first;
-		int requiredAmount = pair.second;
-		if (resource == Resource::Coin) {
-			continue;
-		}*/
-
-	//	int possessedAmount = availableResources.count(resource) ? availableResources.at(resource) : 0;
-	//	if (possessedAmount < requiredAmount) {
-	//		return false;
-	//	}
-	//}
-	//return true;
-
-
-int Player::calculateTradeCost(const CardBase& card, const Player& opponent) const {
-
-	const auto& requiredResources = card.get_cost(); // nu mai trb inca o variabila sa retii costul aici 
-	int totalTradeCost = 0;
-	std::map<Resource, std::uint8_t> availableResources = m_Resources; // avem m_Resources pt asta, nu trb alta variabila
-	//astea vor fi parcurse in alta fct mai sus inainte sa se apeleze fct asta 
-	/*for (const auto& pair : m_chosenResource) {
-		availableResources[pair.first] += pair.second;
-	}*
-	/*for (const auto& pair : requiredResources) {
-		const Resource resource = pair.first;
-		int requiredAmount = pair.second;
-		if (resource == Resource::Coin) {
-			continue;
-		}*/
-
-		// ---------------> alta fct care face de cate resurse mai avem nevoie 
-		// 	int missingAmount = requiredAmount - availableResources[resource];
-
-		/*	if (missingAmount > 0) {
-				if (m_discountedResource.count(resource)) {
-					totalTradeCost += missingAmount * m_discountedResource.at(resource);
-				}
-				else {
-					int opponentProduction = 0;
-					if (opponent.m_baseResources.count(resource)) {
-						opponentProduction += opponent.m_baseResources.at(resource);
-					}
-
-					int costPerUnit = (GameConstants::TRADE_BASE_COST)+opponentProduction;
-					totalTradeCost += missingAmount * costPerUnit;
-				}
-				}
-
-		return totalTradeCost;
-	}*/
+	return totalTradeCost;
 }
 
-// asta nu mai trb e fcta in teorie in buy card 
-bool Player::canAffordConstruction(const CardBase& c, const Player& opponent) {
-	int CardCoinCost = 0;
-	const auto& cardCost = c.get_cost();
-	if (cardCost.count(Resource::Coin)) {
-		CardCoinCost = cardCost.at(Resource::Coin);
-	}
-	int tradeCost = calculateTradeCost(c, opponent);
-	int totalCost = CardCoinCost + tradeCost;
-	if (decreaseCoins(totalCost)) {
+
+//Functie care ne zice efectiv daca isi permite cartea sau nu
+bool Player::canAffordConstruction(const CardBase& card, const Player& opponent) {
+	std::uint8_t cardCoinCost = card.getCostForResource(Resource::Coin);
+	std::uint8_t tradeCost = this->calculateTradeCost(card, opponent);
+	std::uint8_t totalCost = cardCoinCost + tradeCost;
+	if (m_Resources.count(Resource::Coin) && m_Resources.at(Resource::Coin) >= totalCost) {
 		return true;
 	}
 	return false;
-
 }
 
 
-void Player::discardCard(const CardBase& c) {
+
+
+//Functie care cumpara cartea 
+bool Player::buyCard(const CardBase& card, const Player& opponent, const Board &board) { 
+	bool isFreebyChain= card.m_unlocks.has_value() && m_chainSymbols.count(card.m_unlocks.value());
+	std::uint8_t totalCoinCost = 0;
+	if (isFreebyChain == false) {
+		if (!this->canAffordConstruction(card, opponent)) {
+			std::cout << "Card " << card.get_name() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
+			return false;
+		}
+	}
+	totalCoinCost = card.getCostForResource(Resource::Coin) + this->calculateTradeCost(card, opponent);
+	if (totalCoinCost > 0) {
+
+		m_Resources.at(Resource::Coin) -= totalCoinCost;
+	}
+	m_Inventory[card.m_color].push_back(card);
+	card.applyEffect(*this, opponent, board);
+	std::cout << "Card " << card.get_name() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
+	return true;
+	
+	}
+
+	
+
+//Functie in cazul in care jucatorul alege sa arda cartea pentru banuti
+void Player::discardCard(const CardBase& card) {
 
 	std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
 	gainedCoins += m_Inventory[Color::Yellow].size() * GameConstants::DISCARD_YELLOW_BONUS;
@@ -276,19 +226,17 @@ void Player::discardCard(const CardBase& c) {
 
 
 
-
-
-
-//aici nu ma bag ca nush wonders :((((
-void Player::constructWonder(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board) {
+//void Player::constructWonder(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board) {
 	/*board.incrementWondersBuilt();*/ // ---> avem un bool la wonders. daca e sau nu built ca sa nu avem 2 mapuri de wonders 
-	if (board.getTotalWondersBuilt() == GameConstants::WONDER_LIMIT) {
-		
-		// Logica: Cea de-a 8-a Minune r?mas? neconstruit? este scoas? din joc.
-		//Aceste  functii legate de Wonder trebuie implementate ori in Board ori in starea curenta a jocului
-		board.discardLastAvailableWonder();
-	}
-	m_builtWonders.push_back(wonderToBuild);
-	wonderToBuild.applyEffect(*this, opponent, board);
-}
+//if (board.getTotalWondersBuilt() == GameConstants::WONDER_LIMIT) {
+
+	// Logica: Cea de-a 8-a Minune r?mas? neconstruit? este scoas? din joc.
+	//Aceste  functii legate de Wonder trebuie implementate ori in Board ori in starea curenta a jocului
+	//board.discardLastAvailableWonder();
+//}
+//m_builtWonders.push_back(wonderToBuild);
+//wonderToBuild.applyEffect(*this, opponent, board);
+
+//}
+
 

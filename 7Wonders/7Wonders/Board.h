@@ -53,13 +53,12 @@ private:
 
 public:
 	Board() = default;
-	//~Board();
 	void setupCards(int era, std::vector<CardBase*>& deck);
-	//std::vector<CardNode*>& getActiveCards();
 
 	void printCardsTree() const;
 	void printChildrenList() const;
 	void linkCards(int);
+	bool isPyramidEmpty() const;
 
 	void setAvailableProgressTokens(const std::vector<std::shared_ptr<ProgressToken>>& tokens);
 	std::vector<std::shared_ptr<ProgressToken>> getAvailableProgressTokens() const;
@@ -71,4 +70,7 @@ public:
 	void addCardToDiscardPile(CardBase* card);
 	const std::vector<CardBase*>& getDiscardPile() const;
 	void printDiscardPile(std::ostream& fout) const;
+
+
+	void updateVisibility();
 };

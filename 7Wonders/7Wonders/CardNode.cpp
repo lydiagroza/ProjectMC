@@ -15,6 +15,11 @@ CardBase* CardNode::getCard() const
 	return m_card;
 }
 
+bool CardNode::isPlayed() const
+{
+    return m_played;
+}
+
 bool CardNode::isPlayable() const
 {
     if (m_played) 

@@ -167,6 +167,29 @@ void Board::printDiscardPile(std::ostream& fout) const
     std::cout << "]\n";
 }
 
+void Board::updateVisibility()
+{
+    for (auto& row : m_activeCards) {
+        for (auto* node : row) {
+            if (!node->isPlayed() && node->getFace() == Face::Down) {
+
+          
+                bool isBlocked = false;
+                const auto& children = node->getChildren();
+
+                for (const auto* child : children) 
+                    if (!child->isPlayed()) {
+                        isBlocked = true;
+                        break;
+                    }
+                if (!isBlocked) 
+                    node->setFace(Face::Up);
+         
+            }
+        }
+    }
+}
+
 
 //arbore de carti
 
@@ -227,4 +250,17 @@ void Board::printChildrenList() const
     }
 
     std::cout << "\n=======================================================\n";
+}
+
+
+bool Board::isPyramidEmpty() const {
+    for (const auto& row : m_activeCards) {
+        for (const auto* node : row) {
+            // Daca gasim macar o carte care NU a fost luata, piramida nu e goala
+            if (!node->isPlayable()) {
+                return false;
+            }
+        }
+    }
+    return true;
 }

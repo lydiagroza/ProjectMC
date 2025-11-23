@@ -163,10 +163,10 @@
 		    <ClCompile Include="Board.cpp" />
 		    <ClCompile Include="CardBase.cpp"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile>
 		    <ClCompile Include="CardBase.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile>
-		    <ClCompile Include="CardNode.cpp" /><ClCompile Include="MilitaryTrack.cpp" />
+		    <ClCompile Include="CardNode.cpp" /><ClCompile Include="Game.cpp" /><ClCompile Include="main.cpp" /><ClCompile Include="MilitaryTrack.cpp" />
 		    <ClCompile Include="Player.cpp"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile><ClCompile Include="WonderLoader.cpp"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile>
 		    <ClCompile Include="Wonders.cpp"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile>
-		    <ClCompile Include="temporaryGame.cpp" />
+		    
 		    <ClCompile Include="GameSetup.cpp" />
 		    <ClCompile Include="CardLoader.cpp"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile>
 		    <ClCompile Include="ProgressTokenLoader.cpp" />
@@ -178,7 +178,7 @@
 		    <ClInclude Include="Effect.h">
 			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
 			   
-		</ClInclude><ClInclude Include="GameConstants.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClInclude>
+		</ClInclude><ClInclude Include="Game.h" /><ClInclude Include="GameConstants.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClInclude>
 		    <ClInclude Include="GameSetup.h" /><ClInclude Include="MilitaryTrack.h" />
 		    		<ClInclude Include="Player.h">
 		    			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild>

@@ -47,10 +47,7 @@
 			      <Filter>Source Files</Filter>
 			   
 		</ClCompile>
-		    <ClCompile Include="temporaryGame.cpp">
-			      <Filter>Source Files</Filter>
-			   
-		</ClCompile>
+		    
 		    <ClCompile Include="CardLoader.cpp">
 			      <Filter>Source Files</Filter>
 			   
@@ -62,8 +59,7 @@
 		    <ClCompile Include="ProgressTokens.cpp">
 			      <Filter>Source Files</Filter>
 			   
-		</ClCompile>
-	</ItemGroup>
+		</ClCompile><ClCompile Include="Game.cpp"><Filter>Source Files</Filter></ClCompile><ClCompile Include="main.cpp"><Filter>Source Files</Filter></ClCompile></ItemGroup>
 	  <ItemGroup>
 		    <ClInclude Include="Board.h">
 			      <Filter>Header Files</Filter>
@@ -96,8 +92,7 @@
 		    <ClInclude Include="ProgressTokenLoader.h">
 			      <Filter>Header Files</Filter>
 			   
-		</ClInclude>
-	</ItemGroup>
+		</ClInclude><ClInclude Include="Game.h"><Filter>Header Files</Filter></ClInclude></ItemGroup>
 	  <ItemGroup>
 		    <None Include="AgeI.csv">
 			      <Filter>Source Files</Filter>

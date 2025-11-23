@@ -20,6 +20,7 @@ public:
 	CardNode();
 	void setCard(CardBase* card);
 	CardBase* getCard() const;
+	bool isPlayed() const;
 	bool isPlayable() const;
 	std::string getName()const;
 	void updatePlayedStatus(bool playedStatus);

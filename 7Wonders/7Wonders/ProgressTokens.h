@@ -3,7 +3,8 @@
 #include <vector>
 #include <functional>
 #include <memory>
-#include "Player.h"
+
+class Player;
 
 class ProgressToken {
     std::string name;

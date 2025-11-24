@@ -1,4 +1,5 @@
 ﻿#include "Board.h"
+#include "CardBase.h"
 #include <iomanip>   // pentru std::setw
 
 void Board::setupCards(int era, std::vector<CardBase*>& deck)

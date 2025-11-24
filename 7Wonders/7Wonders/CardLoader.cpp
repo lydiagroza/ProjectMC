@@ -1,145 +1,144 @@
-﻿#pragma once
-#include "CardLoader.h"
+﻿#include "CardLoader.h"
 #include "Player.h"
 
-
-    static std::vector<std::shared_ptr<CardBase>> loadFromCSV(const std::string& filename) {
-        using namespace std;
-        vector<shared_ptr<CardBase>> cards;
-        ifstream file(filename);
-        if (!file.is_open()) {
-            cerr << "Eroare: nu s-a putut deschide fisierul " << filename << endl;
-            return cards;
-        }
-
-        string line;
-        getline(file, line); // skip header
-
-        while (getline(file, line)) { // impartim pe coloane 
-            stringstream ss(line);
-            string name, idStr, colorStr, costStr, symbolStr, unlocksStr, effectsStr;
-
-            getline(ss, name, ',');
-            getline(ss, idStr, ',');
-            getline(ss, colorStr, ',');
-            getline(ss, costStr, ',');
-            getline(ss, symbolStr, ',');
-            getline(ss, unlocksStr, ',');
-            getline(ss, effectsStr, '\n');
-
-            // scoatem "" si spatiile 
-            auto trim = [](string s) {
-                s.erase(remove_if(s.begin(), s.end(), ::isspace), s.end());
-                s.erase(remove(s.begin(), s.end(), '"'), s.end());
-                return s;
-                };
-
-            name = trim(name);
-            idStr = trim(idStr);
-            colorStr = trim(colorStr);
-            costStr = trim(costStr);
-            symbolStr = trim(symbolStr);
-            unlocksStr = trim(unlocksStr);
-            effectsStr = trim(effectsStr);
-
-            // conversii
-            uint16_t id = static_cast<uint16_t>(stoi(idStr));
-            Color color = parseColor(colorStr);
-            map<Resource, uint8_t> cost = parseCost(costStr);
-            auto symbol = parseSymbol(symbolStr);
-            auto unlocks = parseUnlocks(unlocksStr);
-
-            auto card = make_shared<CardBase>(name, id, color, cost, symbol, unlocks);
-
-            // atașează efecte în funcție de text
-            auto effects = parseEffects(effectsStr);
-            for (auto& ef : effects)
-                card->addEffect(ef);
-
-            cards.push_back(card);
-        }
-
+std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string& filename) {
+    using namespace std;
+    vector<shared_ptr<CardBase>> cards;
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Eroare: nu s-a putut deschide fisierul " << filename << endl;
         return cards;
     }
 
-    static Color parseColor(const std::string& s) {
-        static std::unordered_map<std::string, Color> map = {
-            {"Brown", Color::Brown}, {"Gray", Color::Gray}, {"Yellow", Color::Yellow},
-            {"Red", Color::Red}, {"Blue", Color::Blue}, {"Green", Color::Green}, {"Purple", Color::Purple}
+    string line;
+    getline(file, line); // skip header
+
+    while (getline(file, line)) { // impartim pe coloane 
+        stringstream ss(line);
+        string name, idStr, colorStr, costStr, symbolStr, unlocksStr, effectsStr;
+
+        getline(ss, name, ',');
+        getline(ss, idStr, ',');
+        getline(ss, colorStr, ',');
+        getline(ss, costStr, ',');
+        getline(ss, symbolStr, ',');
+        getline(ss, unlocksStr, ',');
+        getline(ss, effectsStr, '\n');
+
+        // scoatem "" si spatiile 
+        auto trim = [](string s) {
+            s.erase(remove_if(s.begin(), s.end(), ::isspace), s.end());
+            s.erase(remove(s.begin(), s.end(), '"'), s.end());
+            return s;
         };
-        auto it = map.find(s);
-        return  it->second;
+
+        name = trim(name);
+        idStr = trim(idStr);
+        colorStr = trim(colorStr);
+        costStr = trim(costStr);
+        symbolStr = trim(symbolStr);
+        unlocksStr = trim(unlocksStr);
+        effectsStr = trim(effectsStr);
+
+        // conversii
+        uint16_t id = static_cast<uint16_t>(stoi(idStr));
+        Color color = parseColor(colorStr);
+        map<Resource, uint8_t> cost = parseCost(costStr);
+        auto symbol = parseSymbol(symbolStr);
+        auto unlocks = parseUnlocks(unlocksStr);
+
+        auto card = make_shared<CardBase>(name, id, color, cost, symbol, unlocks);
+
+        // atașează efecte în funcție de text
+        auto effects = parseEffects(effectsStr);
+        for (auto& ef : effects)
+            card->addEffect(ef);
+
+        cards.push_back(card);
     }
 
-    static std::optional<Symbol> parseSymbol(const std::string& s) {
-        if (s.empty()) return std::nullopt;
-        static std::unordered_map<std::string, Symbol> map = {
-            {"book", Symbol::Book}, {"mask", Symbol::Mask}, {"horse", Symbol::Horse},{"lyre", Symbol::Lyre},
-            {"gear", Symbol::Gear},
-            {"barrel", Symbol::Barrel}, 
-			{"helmet", Symbol::Helmet}, {"sun", Symbol::Sun},{"target", Symbol::Target}, {"pot", Symbol:: Pot},
-            {"column", Symbol:: Column}, {"temple", Symbol :: Temple},
-            {"castle", Symbol::Castle}, {"droplet", Symbol::Droplet}, {"moon", Symbol::Moon},
-            {"vase", Symbol::Vase}, {"sword", Symbol::Sword}
-        };
-        auto it = map.find(s);
-        if (it != map.end()) return it->second;
-        return std::nullopt;
+    return cards;
+}
+
+Color CardLoader::parseColor(const std::string& s) {
+    static std::unordered_map<std::string, Color> map = {
+        {"Brown", Color::Brown}, {"Gray", Color::Gray}, {"Yellow", Color::Yellow},
+        {"Red", Color::Red}, {"Blue", Color::Blue}, {"Green", Color::Green}, {"Purple", Color::Purple}
+    };
+    auto it = map.find(s);
+    return  it->second;
+}
+
+std::optional<Symbol> CardLoader::parseSymbol(const std::string& s) {
+    if (s.empty()) return std::nullopt;
+    static std::unordered_map<std::string, Symbol> map = {
+        {"book", Symbol::Book}, {"mask", Symbol::Mask}, {"horse", Symbol::Horse},{"lyre", Symbol::Lyre},
+        {"gear", Symbol::Gear},
+        {"barrel", Symbol::Barrel}, 
+        {"helmet", Symbol::Helmet}, {"sun", Symbol::Sun},{"target", Symbol::Target}, {"pot", Symbol:: Pot},
+        {"column", Symbol:: Column}, {"temple", Symbol :: Temple},
+        {"castle", Symbol::Castle}, {"droplet", Symbol::Droplet}, {"moon", Symbol::Moon},
+        {"vase", Symbol::Vase}, {"sword", Symbol::Sword}
+    };
+    auto it = map.find(s);
+    if (it != map.end()) return it->second;
+    return std::nullopt;
+}
+
+std::optional<Symbol> CardLoader::parseUnlocks(const std::string & s) {
+    if (s.empty()) return std::nullopt;
+
+    if (s == "mask") return Symbol::Mask;
+    if (s == "sword") return Symbol::Sword;
+    if (s == "gear") return Symbol::Gear;
+    if (s == "moon") return Symbol::Moon;
+    if (s == "vase") return Symbol::Vase;
+    if (s == "barrel") return Symbol::Barrel;
+    if (s == "book") return Symbol::Book;
+    if (s == "temple") return Symbol::Temple;
+    if (s == "target") return Symbol::Target;
+    if (s == "lyre") return Symbol::Lyre;
+    if (s == "castle") return Symbol::Castle;
+    if (s == "droplet") return Symbol::Droplet;
+    if (s == "column") return Symbol::Column;
+    if (s == "pot") return Symbol::Pot;
+    if (s == "horse") return Symbol::Horse;
+    if (s == "helmet") return Symbol::Helmet;
+    if (s == "sun") return Symbol::Sun;
+    return std::nullopt;
+}
+
+std::map<Resource, uint8_t> CardLoader::parseCost(const std::string& s) {
+    std::map<Resource, uint8_t> cost;
+    if (s.empty()) return cost;
+
+    if (s.find("coin") != std::string::npos) cost[Resource::Coin] = s.back() - '0';
+    else if (s.find("wood") != std::string::npos) cost[Resource::Wood] = s.back() - '0';
+    else if (s.find("stone") != std::string::npos) cost[Resource::Stone] = s.back() - '0';
+    else if (s.find("clay") != std::string::npos) cost[Resource::Clay] = s.back() - '0';
+    else if (s.find("glass") != std::string::npos) cost[Resource::Glass] = s.back() - '0';
+    else if (s.find("papyrus") != std::string::npos) cost[Resource::Papyrus] = s.back() - '0';
+    return cost;
+}
+
+std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::string& s) {
+    using namespace std;
+    vector<std::function<void(Player&)>> effs;
+    if (s.empty()) return effs;
+
+    stringstream ss(s);
+    string token;
+    while (getline(ss, token, ';')) {
+        token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
+        if (token == "add_resource_wood") effs.push_back([](Player& p) {p.add_Resource(Resource::Wood,1); });
+        else if (token == "add_resource_stone") effs.push_back([](Player& p) { p.add_Resource(Resource::Stone,1); });
+        else if (token == "add_resource_clay") effs.push_back([](Player& p) { p.add_Resource(Resource::Clay,1); });
+        else if (token == "add_resource_glass") effs.push_back([](Player& p) { p.add_Resource(Resource::Glass,1); });
+        else if (token == "add_resource_papyrus") effs.push_back([](Player& p) { p.add_Resource(Resource::Papyrus,1); });
+        else if (token == "add_VictoryPoint1") effs.push_back([](Player& p) { p.add_Points(Points::Victory,1);});
+        else if (token == "add_VictoryPoint3") effs.push_back([](Player& p) { p.add_Points(Points::Victory,3);});
+        else if (token == "add_MilitaryPoint1") effs.push_back([](Player& p) { p.add_Points(Points::Military,1); });
+        else if (token == "add_coin4") effs.push_back([](Player& p) { p.addCoins(4); });
     }
-
-        static std::optional<Symbol> parseUnlocks(const std::string & s) {
-            if (s.empty()) return std::nullopt;
-
-            if (s == "mask") return Symbol::Mask;
-            if (s == "sword") return Symbol::Sword;
-            if (s == "gear") return Symbol::Gear;
-            if (s == "moon") return Symbol::Moon;
-            if (s == "vase") return Symbol::Vase;
-			if (s == "barrel") return Symbol::Barrel;
-			if (s == "book") return Symbol::Book;
-			if (s == "temple") return Symbol::Temple;
-			if (s == "target") return Symbol::Target;
-			if (s == "lyre") return Symbol::Lyre;
-			if (s == "castle") return Symbol::Castle;
-			if (s == "droplet") return Symbol::Droplet;
-			if (s == "column") return Symbol::Column;
-			if (s == "pot") return Symbol::Pot;
-			if (s == "horse") return Symbol::Horse;
-			if (s == "helmet") return Symbol::Helmet;
-			if (s == "sun") return Symbol::Sun;
-        }
-
-    static std::map<Resource, uint8_t> parseCost(const std::string& s) {
-        std::map<Resource, uint8_t> cost;
-        if (s.empty()) return cost;
-
-        if (s.find("coin") != std::string::npos) cost[Resource::Coin] = s.back() - '0';
-        else if (s.find("wood") != std::string::npos) cost[Resource::Wood] = s.back() - '0';
-        else if (s.find("stone") != std::string::npos) cost[Resource::Stone] = s.back() - '0';
-        else if (s.find("clay") != std::string::npos) cost[Resource::Clay] = s.back() - '0';
-        else if (s.find("glass") != std::string::npos) cost[Resource::Glass] = s.back() - '0';
-        else if (s.find("papyrus") != std::string::npos) cost[Resource::Papyrus] = s.back() - '0';
-        return cost;
-    }
-
-    static std::vector<std::function<void(Player&)>> parseEffects(const std::string& s) {
-        using namespace std;
-        vector<std::function<void(Player&)>> effs;
-        if (s.empty()) return effs;
-
-        stringstream ss(s);
-        string token;
-        while (getline(ss, token, ';')) {
-            token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
-            if (token == "add_resource_wood") effs.push_back([](Player& p) {p.add_Resource(Resource::Wood,1); });
-            else if (token == "add_resource_stone") effs.push_back([](Player& p) { p.add_Resource(Resource::Stone,1); });
-            else if (token == "add_resource_clay") effs.push_back([](Player& p) { p.add_Resource(Resource::Clay,1); });
-            else if (token == "add_resource_glass") effs.push_back([](Player& p) { p.add_Resource(Resource::Glass,1); });
-            else if (token == "add_resource_papyrus") effs.push_back([](Player& p) { p.add_Resource(Resource::Papyrus,1); });
-            else if (token == "add_VictoryPoint1") effs.push_back([](Player& p) { p.add_Points(Points::Victory,1);});
-            else if (token == "add_VictoryPoint3") effs.push_back([](Player& p) { p.add_Points(Points::Victory,3);});
-            else if (token == "add_MilitaryPoint1") effs.push_back([](Player& p) { p.add_Points(Points::Military,1); });
-            else if (token == "add_coin4") effs.push_back([](Player& p) { p.addCoins(4); });
-        }
-        return effs;
-    }
+    return effs;
+}

@@ -6,7 +6,7 @@ int main() {
     try {
 
         Game game;
-        game.run();
+        //game.run();
     }
     catch (const std::exception& e) {
         // Prindem orice eroare critic? (ex: fi?iere lips?)

@@ -87,7 +87,7 @@ std::vector<std::vector<Resource>> Player::getFlexibleChoices() const {
 
 	std::vector<std::vector<Resource>> choices;
 
-	if (m_Inventory.count(Color::Yellow)) {
+	/*if (m_Inventory.count(Color::Yellow)) {
 		for (const auto& card : m_Inventory.at(Color::Yellow)) {
 			for (const auto& option : card.getFlexibleChoices()) {  //getFlexibleChoise ar trebuie sa returneze un vector cu resursele disponile(Doar pentru cartile galbene)
 				if (!option.empty()) {
@@ -97,6 +97,7 @@ std::vector<std::vector<Resource>> Player::getFlexibleChoices() const {
 		}
 	}
 
+
 	
 	for (const auto& wonder : m_Wonders) {
 		
@@ -105,7 +106,7 @@ std::vector<std::vector<Resource>> Player::getFlexibleChoices() const {
 				choices.push_back(option);
 			}
 		}
-	}
+	}*/
 
 	return choices;
 }

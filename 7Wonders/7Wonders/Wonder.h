@@ -5,7 +5,8 @@
 #include <functional>
 #include <memory>
 #include "CardBase.h" 
-#include "Player.h"
+
+class Player;
 
 class Wonder {
     std::string name;

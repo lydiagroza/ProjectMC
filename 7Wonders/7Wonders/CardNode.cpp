@@ -1,5 +1,5 @@
 #include "CardNode.h"
-
+#include "CardBase.h"
 
 CardNode::CardNode() : m_card(nullptr), m_played(false), m_face(Face::Down)
 {

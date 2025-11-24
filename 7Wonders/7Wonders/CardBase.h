@@ -7,6 +7,8 @@
 #include <cstdint>
 #include <functional>
 #include "Board.h"
+class Player;
+class Board;
 
 
 // Enumuri 
@@ -67,7 +69,7 @@
       }
 
       //Fct pt efecte 
-      void applyEffect(const Player& player,const Player& opponenent, const Board &board)const;
+      void applyEffect(Player& player,const Player& opponenent, const Board &board)const;
       void addEffect(std::function<void(Player&)> e);
     };
 
@@ -77,6 +79,3 @@
     std::string to_string(Color c);
     std::string to_string(Symbol s);
  
-
-
-    class Player; 

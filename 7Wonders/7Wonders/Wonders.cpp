@@ -1,7 +1,9 @@
 #include "Wonder.h"
+#include "Player.h"
 #include <sstream>
 #include <unordered_map>
 #include <iostream>
+#include "CardLoader.h"
 
 class Player;
 

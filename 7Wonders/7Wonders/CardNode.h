@@ -2,7 +2,9 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "CardBase.h"
+
+class CardBase;
+
 
 enum class Face {
 	Up,

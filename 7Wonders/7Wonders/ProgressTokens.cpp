@@ -46,3 +46,9 @@ std::vector<std::function<void(Player&, Player&)>> ProgressToken::parseEffects(c
     return effects;
 #endif
 }
+
+std::ostream& operator<<(std::ostream& os, const ProgressToken& token)
+{
+    os << "Progress Token ID: " << token.getId() << ", Name: " << token.getName();
+	return os;
+}

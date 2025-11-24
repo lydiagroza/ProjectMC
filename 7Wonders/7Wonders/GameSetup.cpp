@@ -9,10 +9,10 @@
 
 GameSetup::GameSetup(Board& board) : m_board(board) // <-- Inițializează referința aici
 {
-    // Mută logica de inițializare din vechiul constructor aici
-    loadAllResources();
-    prepareTokens();
-    prepareDecks();
+    // Corrected order of initialization
+    loadAllResources(); // 1. Load all assets from files
+    prepareDecks();     // 2. Prepare the card decks for all ages
+   // prepareTokens();    // 3. Prepare and place the tokens on the board
 }
 
 void GameSetup::loadAllResources()
@@ -85,6 +85,7 @@ void GameSetup::startAge(int age)
 {
 
     if (age == 1) {
+        prepareTokens();
         auto rawDeck = toRawPointerVector(m_deckAge1);
         m_board.setupCards(1, rawDeck);
     }

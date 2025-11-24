@@ -55,7 +55,8 @@ public:
 	Board() = default;
 	void setupCards(int era, std::vector<CardBase*>& deck);
 
-	void printCardsTree() const;
+
+	void printCardsTree(std::ostream& os) const;
 	void printChildrenList() const;
 	void linkCards(int);
 	bool isPyramidEmpty() const;
@@ -73,4 +74,6 @@ public:
 
 
 	void updateVisibility();
+
+	friend std::ostream& operator<<(std::ostream& os, const Board& board);
 };

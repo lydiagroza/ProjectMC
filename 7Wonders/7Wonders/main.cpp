@@ -7,8 +7,8 @@ int main() {
         Game game;
         
         // Call the existing and new print functions
-        game.getSetup().printDecks();
-        game.getSetup().printWonders(); 
+        game.getSetup().startAge(1);
+        std::cout << game.getSetup().getBoard() << std::endl;
 
         //game.run();
     }

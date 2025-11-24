@@ -1,6 +1,11 @@
 #include "Game.h"
 
-Game::Game() : m_player1("Player 1"), m_player2("Player 2"), m_currentAge(1), m_gameOver(false)
+Game::Game() 
+    : m_player1("Player 1"), 
+      m_player2("Player 2"), 
+      m_currentAge(1), 
+      m_gameOver(false),
+      m_setup(m_board)
 {
     m_currentPlayer = &m_player1;
     m_opponent = &m_player2;

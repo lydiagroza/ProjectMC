@@ -7,6 +7,7 @@ int main() {
 
         Game game;
         //game.run();
+        game.getSetup().printDecks();
     }
     catch (const std::exception& e) {
         // Prindem orice eroare critic? (ex: fi?iere lips?)

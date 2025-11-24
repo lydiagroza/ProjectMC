@@ -1,14 +1,15 @@
 ﻿#include "GameSetup.h"
-#include "ProgressTokenLoader.h"
 #include "CardLoader.h"
-#include <algorithm>
+#include "WonderLoader.h"
+#include "ProgressTokenLoader.h"
+#include <iostream>
 #include <random>
 #include <chrono>
 
 
-
-GameSetup::GameSetup()
+GameSetup::GameSetup(Board& board) : m_board(board) // <-- Inițializează referința aici
 {
+    // Mută logica de inițializare din vechiul constructor aici
     loadAllResources();
     prepareTokens();
     prepareDecks();
@@ -98,4 +99,31 @@ void GameSetup::startAge(int age)
 Board& GameSetup::getBoard()
 {
     return m_board;
+}
+
+void GameSetup::printDecks() const
+{
+    std::cout << "--- Age 1 Deck ---" << std::endl;
+    for (const auto& card : m_deckAge1)
+    {
+        std::cout << card->get_name() << std::endl;
+    }
+
+    std::cout << "\n--- Age 2 Deck ---" << std::endl;
+    for (const auto& card : m_deckAge2)
+    {
+        std::cout << card->get_name() << std::endl;
+    }
+
+    std::cout << "\n--- Age 3 Deck ---" << std::endl;
+    for (const auto& card : m_deckAge3)
+    {
+        std::cout << card->get_name() << std::endl;
+    }
+
+    std::cout << "\n--- Guilds Deck ---" << std::endl;
+    for (const auto& card : m_deckGuilds)
+    {
+        std::cout << card->get_name() << std::endl;
+    }
 }

@@ -8,6 +8,7 @@ class Game {
 private:
 
     GameSetup m_setup;
+    Board m_board;
 
     Player m_player1;
     Player m_player2;
@@ -31,4 +32,5 @@ private:
 public:
     Game();
 	void run();
+    GameSetup& getSetup() { return m_setup; }
 };

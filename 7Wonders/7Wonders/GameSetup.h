@@ -4,7 +4,7 @@
 class GameSetup
 {
 private:
-	Board m_board;
+	Board& m_board;
     std::vector<std::shared_ptr<CardBase>> m_deckAge1;
     std::vector<std::shared_ptr<CardBase>> m_deckAge2;
     std::vector<std::shared_ptr<CardBase>> m_deckAge3;
@@ -21,12 +21,10 @@ private:
 
 
 public:
-    GameSetup();
+    GameSetup(Board& board);
 
     void startAge(int age);
     Board& getBoard();
-
-
-
+    void printDecks()const;
 };
 

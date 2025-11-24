@@ -34,8 +34,8 @@ void Player::add_Resource(Resource r, std::uint8_t amount)
 	m_Resources[r] += amount;
 }
 
-void Player::add_DiscountedResource(Resource r, std::uint8_t discount) {
-	m_discountedResource[r] = discount;
+void Player::add_DiscountedResource(Resource r) { 
+	m_discountedResource.insert (r) ;
 }
 
 //Functii pentru puncte si simboluri
@@ -55,17 +55,6 @@ void Player::add_ChainSymbol(Symbol symbol)
 
 
 
-//Functie care imi da resursele de baza(doar alea din cartile maro si gri),exludem coins ca sa nu incurce
-std::map<Resource, std::uint8_t> Player::getBaseProduction() const {
-	std::map<Resource, std::uint8_t> fixedProduction;
-	for (const auto& [res, amount] : m_Resources) {
-		if (res != Resource::Coin) {
-			fixedProduction[res] = amount;
-		}
-	}
-	
-	return fixedProduction;
-}
 
 //Functie pentru a afla costul unei singure resurse
 std::uint8_t Player::getUnitTradeCost(Resource r, const Player& opponent) const {
@@ -74,54 +63,24 @@ std::uint8_t Player::getUnitTradeCost(Resource r, const Player& opponent) const 
 		return 1;
 	}
 
-	const auto opponentBaseProduction = opponent.getBaseProduction();
-	std::uint8_t opponentResourceProduction = opponentBaseProduction.count(r) ? opponentBaseProduction.at(r) : 0;
+	std::uint8_t opponentResourceProduction = opponent.m_Resources.count(r) ? opponent.m_Resources.at(r) : 0;
 
 	return GameConstants::TRADE_BASE_COST + opponentResourceProduction;
 }
 
 
 
-//Functia pentru a obtine ce resurse putem alege
-std::vector<std::vector<Resource>> Player::getFlexibleChoices() const {
 
-	std::vector<std::vector<Resource>> choices;
-
-	/*if (m_Inventory.count(Color::Yellow)) {
-		for (const auto& card : m_Inventory.at(Color::Yellow)) {
-			for (const auto& option : card.getFlexibleChoices()) {  //getFlexibleChoise ar trebuie sa returneze un vector cu resursele disponile(Doar pentru cartile galbene)
-				if (!option.empty()) {
-					choices.push_back(option);
-				}
-			}
-		}
-	}
-
-
-	
-	for (const auto& wonder : m_Wonders) {
-		
-		for (const auto& option : wonder.getFlexibleChoices()) {  //getFlexibleChoise ar trebuie sa returneze un vector cu resursele disponile(Doar pentru Wonders cu acest efect de alegere a resursei)
-			if (!option.empty()) {
-				choices.push_back(option);
-			}
-		}
-	}*/
-
-	return choices;
-}
 
 
 //Functie care ne zice resursele lipsa pentru cartea respectiva
 std::map<Resource, std::uint8_t> Player::getMissingResources(const CardBase& card, const Player& opponent) const {
-	std::map<Resource, std::uint8_t> required = card.get_cost();
+	
 	std::map<Resource, std::uint8_t> missing;
-	std::map<Resource, std::uint8_t> currentBaseProduction = this->getBaseProduction();
-
-	for (const auto& [res, reqAmount] : required) {
-		if (res == Resource::Coin) continue;
-
-		uint8_t available = currentBaseProduction.count(res) ? currentBaseProduction.at(res) : 0;
+	
+	for (const auto& [res, reqAmount] : card.get_cost()) {
+		
+		uint8_t available = m_Resources.count(res) ? m_Resources.at(res) : 0;
 
 		if (available < reqAmount) {
 			missing[res] = reqAmount - available;

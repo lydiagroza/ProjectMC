@@ -6,7 +6,6 @@ int main() {
     try {
         Game game;
         
-        // Call the existing and new print functions
         game.getSetup().startAge(1);
         std::cout << game.getSetup().getBoard() << std::endl;
 

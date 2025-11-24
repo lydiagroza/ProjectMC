@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "MilitaryTrack.h"
 
 Game::Game() 
     : m_player1("Player 1"), 
@@ -15,6 +16,17 @@ void Game::switchTurn()
 {
 	std::swap(m_currentPlayer, m_opponent);
     //era ceva minune de iti mai da o tura dar inca nu stiu cum sa o aplic
+}
+
+void Game::checkForInstantWin(const MilitaryResult& militaryResult)
+{
+   /* if (militaryResult.supremacyAchieved) {
+        std::cout << "\n!!! VICTORIE INSTANTANEE !!!\n";
+        std::cout << m_currentPlayer->getName() << " a castigat prin SUPREMATIE MILITARA!\n";
+        m_gameOver = true;
+        return;
+    }*/
+
 }
 
 void Game::startNextAge()

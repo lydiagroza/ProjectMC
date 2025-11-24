@@ -32,11 +32,20 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
         getline(ss, effectsStr, '\n');
 
         // scoatem "" si spatiile 
-        auto trim = [](string s) {
-            s.erase(remove_if(s.begin(), s.end(), ::isspace), s.end());
-            s.erase(remove(s.begin(), s.end(), '"'), s.end());
+        auto trim = [](std::string s) {
+            // elimină spațiile de la început
+            s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+                return !std::isspace(ch);
+                }));
+            // elimină spațiile de la sfârșit
+            s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+                return !std::isspace(ch);
+                }).base(), s.end());
+            // elimină ghilimelele
+            s.erase(std::remove(s.begin(), s.end(), '"'), s.end());
             return s;
-        };
+            };
+
 
         name = trim(name);
         idStr = trim(idStr);

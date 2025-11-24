@@ -1,5 +1,7 @@
 ﻿#include "CardLoader.h"
 #include "Player.h"
+#include <algorithm> // Pentru std::transform
+#include <cctype>    // Pentru ::tolower
 
 std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string& filename) {
     using namespace std;
@@ -13,7 +15,11 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
     string line;
     getline(file, line); // skip header
 
-    while (getline(file, line)) { // impartim pe coloane 
+    while (getline(file, line)) { 
+        
+        if (line.empty() || line.find_first_not_of(" \t\n\v\f\r,") == string::npos) {
+            continue;
+        }// impartim pe coloane 
         stringstream ss(line);
         string name, idStr, colorStr, costStr, symbolStr, unlocksStr, effectsStr;
 
@@ -61,12 +67,23 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
 }
 
 Color CardLoader::parseColor(const std::string& s) {
+    // Creează o copie a string-ului și convertește-o la litere mici
+    std::string lower_s = s;
+    std::transform(lower_s.begin(), lower_s.end(), lower_s.begin(),
+                   [](unsigned char c){ return std::tolower(c); });
+
     static std::unordered_map<std::string, Color> map = {
-        {"Brown", Color::Brown}, {"Gray", Color::Gray}, {"Yellow", Color::Yellow},
-        {"Red", Color::Red}, {"Blue", Color::Blue}, {"Green", Color::Green}, {"Purple", Color::Purple}
+        {"brown", Color::Brown}, {"gray", Color::Gray}, {"yellow", Color::Yellow},
+        {"red", Color::Red}, {"blue", Color::Blue}, {"green", Color::Green}, {"purple", Color::Purple}
     };
-    auto it = map.find(s);
-    return  it->second;
+    auto it = map.find(lower_s);
+
+    if (it != map.end()) {
+        return it->second;
+    }
+    
+    // Dacă string-ul este gol sau nu este găsit, returnează o valoare default
+    return Color::Brown; 
 }
 
 std::optional<Symbol> CardLoader::parseSymbol(const std::string& s) {
@@ -110,14 +127,28 @@ std::optional<Symbol> CardLoader::parseUnlocks(const std::string & s) {
 
 std::map<Resource, uint8_t> CardLoader::parseCost(const std::string& s) {
     std::map<Resource, uint8_t> cost;
-    if (s.empty()) return cost;
+    if (s.empty() || s == "free") {
+        return cost;
+    }
 
-    if (s.find("coin") != std::string::npos) cost[Resource::Coin] = s.back() - '0';
-    else if (s.find("wood") != std::string::npos) cost[Resource::Wood] = s.back() - '0';
-    else if (s.find("stone") != std::string::npos) cost[Resource::Stone] = s.back() - '0';
-    else if (s.find("clay") != std::string::npos) cost[Resource::Clay] = s.back() - '0';
-    else if (s.find("glass") != std::string::npos) cost[Resource::Glass] = s.back() - '0';
-    else if (s.find("papyrus") != std::string::npos) cost[Resource::Papyrus] = s.back() - '0';
+    std::stringstream ss(s);
+    std::string item;
+
+    // Permite costuri multiple separate prin ';' (ex: "1wood;1clay")
+    while (std::getline(ss, item, ';')) {
+        if (item.length() < 2) continue;
+
+        // Extrage cantitatea și tipul resursei
+        int quantity = item[0] - '0';
+        std::string resource_str = item.substr(1);
+
+        if (resource_str == "wood") cost[Resource::Wood] = quantity;
+        else if (resource_str == "clay") cost[Resource::Clay] = quantity;
+        else if (resource_str == "stone") cost[Resource::Stone] = quantity;
+        else if (resource_str == "glass") cost[Resource::Glass] = quantity;
+        else if (resource_str == "papyrus") cost[Resource::Papyrus] = quantity;
+        else if (resource_str == "coin") cost[Resource::Coin] = quantity;
+    }
     return cost;
 }
 

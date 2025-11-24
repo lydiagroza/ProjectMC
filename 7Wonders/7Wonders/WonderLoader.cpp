@@ -23,6 +23,9 @@ std::vector<std::shared_ptr<Wonder>> WonderLoader::loadWonders(const std::string
     };
 
     while (getline(file, line)) {
+        if (line.empty() || line.find_first_not_of(" \t\n\v\f\r,") == std::string::npos) {
+            continue;
+        }
         std::stringstream ss(line);
         std::string name, idStr, costStr, effectsStr;
 

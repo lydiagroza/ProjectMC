@@ -4,13 +4,15 @@
 
 int main() {
     try {
-
         Game game;
-        //game.run();
+        
+        // Call the existing and new print functions
         game.getSetup().printDecks();
+        game.getSetup().printWonders(); 
+
+        //game.run();
     }
     catch (const std::exception& e) {
-        // Prindem orice eroare critic? (ex: fi?iere lips?)
         std::cerr << "[CRITICAL ERROR]: " << e.what() << std::endl;
         return -1;
     }

@@ -76,16 +76,12 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
 }
 
 Color CardLoader::parseColor(const std::string& s) {
-    // Creează o copie a string-ului și convertește-o la litere mici
-    std::string lower_s = s;
-    std::transform(lower_s.begin(), lower_s.end(), lower_s.begin(),
-                   [](unsigned char c){ return std::tolower(c); });
-
+    
     static std::unordered_map<std::string, Color> map = {
-        {"brown", Color::Brown}, {"gray", Color::Gray}, {"yellow", Color::Yellow},
-        {"red", Color::Red}, {"blue", Color::Blue}, {"green", Color::Green}, {"purple", Color::Purple}
+        {"Brown", Color::Brown}, {"Gray", Color::Gray}, {"Yellow", Color::Yellow},
+        {"Red", Color::Red}, {"Blue", Color::Blue}, {"Green", Color::Green}, {"Purple", Color::Purple}
     };
-    auto it = map.find(lower_s);
+    auto it = map.find(s);
 
     if (it != map.end()) {
         return it->second;
@@ -129,20 +125,18 @@ std::optional<Symbol> CardLoader::parseUnlocks(const std::string & s) {
 
 std::map<Resource, uint8_t> CardLoader::parseCost(const std::string& s) {
     std::map<Resource, uint8_t> cost;
-    if (s.empty() || s == "free") {
+    if (s.empty()) {
         return cost;
     }
 
     std::stringstream ss(s);
     std::string item;
 
-    // Permite costuri multiple separate prin ';' (ex: "1wood;1clay")
+    // Permite costuri multiple separate prin ';' 
     while (std::getline(ss, item, ';')) {
-        if (item.length() < 2) continue;
-
-        // Extrage cantitatea și tipul resursei
+       // Extrage cantitatea și tipul resursei
         int quantity = item[0] - '0';
-        std::string resource_str = item.substr(1);
+        std::string resource_str = item.substr(1); // string nou de la 1 pana la final 
 
         if (resource_str == "wood") cost[Resource::Wood] = quantity;
         else if (resource_str == "clay") cost[Resource::Clay] = quantity;
@@ -156,22 +150,49 @@ std::map<Resource, uint8_t> CardLoader::parseCost(const std::string& s) {
 
 std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::string& s) {
     using namespace std;
-    vector<std::function<void(Player&)>> effs;
-    if (s.empty()) return effs;
+    vector<std::function<void(Player&)>> effects;
+    if (s.empty()) return effects;
 
     stringstream ss(s);
     string token;
+
+    // map for fixed (no-parameter) effects
+    static const unordered_map<string, function<void(Player&)>> effectMap = {
+        {"add_resource_wood", [](Player& p) { p.add_Resource(Resource::Wood, 1); }},
+        {"add_resource_stone", [](Player& p) { p.add_Resource(Resource::Stone, 1); }},
+        {"add_resource_clay", [](Player& p) { p.add_Resource(Resource::Clay, 1); }},
+        {"add_resource_glass", [](Player& p) { p.add_Resource(Resource::Glass, 1); }},
+        {"add_resource_papyrus", [](Player& p) { p.add_Resource(Resource::Papyrus, 1); }},
+   
+    };
+
+    const string vpPrefix = "add_VictoryPoint";
+    const string mpPrefix = "add_MilitaryPoint";
+
     while (getline(ss, token, ';')) {
         token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
-        if (token == "add_resource_wood") effs.push_back([](Player& p) {p.add_Resource(Resource::Wood,1); });
-        else if (token == "add_resource_stone") effs.push_back([](Player& p) { p.add_Resource(Resource::Stone,1); });
-        else if (token == "add_resource_clay") effs.push_back([](Player& p) { p.add_Resource(Resource::Clay,1); });
-        else if (token == "add_resource_glass") effs.push_back([](Player& p) { p.add_Resource(Resource::Glass,1); });
-        else if (token == "add_resource_papyrus") effs.push_back([](Player& p) { p.add_Resource(Resource::Papyrus,1); });
-        else if (token == "add_VictoryPoint1") effs.push_back([](Player& p) { p.add_Points(Points::Victory,1);});
-        else if (token == "add_VictoryPoint3") effs.push_back([](Player& p) { p.add_Points(Points::Victory,3);});
-        else if (token == "add_MilitaryPoint1") effs.push_back([](Player& p) { p.add_Points(Points::Military,1); });
-        else if (token == "add_coin4") effs.push_back([](Player& p) { p.addCoins(4); });
+
+        // numeric-suffixed tokens (variable amount)
+        if (token.rfind(vpPrefix, 0) == 0) {
+            int amount = stoi(token.substr(vpPrefix.size()));
+            effects.push_back([amount](Player& p) { p.add_Points(Points::Victory, static_cast<std::uint8_t>(amount)); });
+            continue;
+        }
+        if (token.rfind(mpPrefix, 0) == 0) {
+            int amount = stoi(token.substr(mpPrefix.size()));
+            effects.push_back([amount](Player& p) { p.add_Points(Points::Military, static_cast<std::uint8_t>(amount)); });
+            continue;
+        }
+ // fixed tokens lookup
+        auto it = effectMap.find(token);
+        if (it != effectMap.end()) {
+            effects.push_back(it->second);
+            continue;
+        }
+
+        // unknown token: optionally log or ignore
+        // std::cerr << "Unknown effect token: " << token << std::endl;
     }
-    return effs;
+
+    return effects;
 }

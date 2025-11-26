@@ -113,24 +113,17 @@ std::optional<Symbol> CardLoader::parseSymbol(const std::string& s) {
 
 std::optional<Symbol> CardLoader::parseUnlocks(const std::string & s) {
     if (s.empty()) return std::nullopt;
-
-    if (s == "mask") return Symbol::Mask;
-    if (s == "sword") return Symbol::Sword;
-    if (s == "gear") return Symbol::Gear;
-    if (s == "moon") return Symbol::Moon;
-    if (s == "vase") return Symbol::Vase;
-    if (s == "barrel") return Symbol::Barrel;
-    if (s == "book") return Symbol::Book;
-    if (s == "temple") return Symbol::Temple;
-    if (s == "target") return Symbol::Target;
-    if (s == "lyre") return Symbol::Lyre;
-    if (s == "castle") return Symbol::Castle;
-    if (s == "droplet") return Symbol::Droplet;
-    if (s == "column") return Symbol::Column;
-    if (s == "pot") return Symbol::Pot;
-    if (s == "horse") return Symbol::Horse;
-    if (s == "helmet") return Symbol::Helmet;
-    if (s == "sun") return Symbol::Sun;
+        static std::unordered_map<std::string, Symbol> map = {
+               {"book", Symbol::Book}, {"mask", Symbol::Mask}, {"horse", Symbol::Horse},{"lyre", Symbol::Lyre},
+               {"gear", Symbol::Gear},
+               {"barrel", Symbol::Barrel},
+               {"helmet", Symbol::Helmet}, {"sun", Symbol::Sun},{"target", Symbol::Target}, {"pot", Symbol::Pot},
+               {"column", Symbol::Column}, {"temple", Symbol::Temple},
+               {"castle", Symbol::Castle}, {"droplet", Symbol::Droplet}, {"moon", Symbol::Moon},
+               {"vase", Symbol::Vase}, {"sword", Symbol::Sword}
+    };
+        auto it = map.find(s); 
+        if (it != map.end()) return it->second; 
     return std::nullopt;
 }
 

@@ -81,7 +81,7 @@ void GameSetup::prepareDecks()
         m_deckAge3.resize(20);
 }
 
-void GameSetup::startAge(int age)
+GameSetup& GameSetup::startAge(int age)
 {
 
     if (age == 1) {
@@ -97,6 +97,7 @@ void GameSetup::startAge(int age)
         auto rawDeck = toRawPointerVector(m_deckAge3);
         m_board.setupCards(3, rawDeck);
     }
+	return *this;
 }
 
 Board& GameSetup::getBoard()

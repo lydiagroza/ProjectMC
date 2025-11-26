@@ -54,6 +54,7 @@ public:
 
 	//Functie care verifica daca putem cumpara cartea
 	bool canAffordConstruction(const CardBase& card, const Player& opponent);
+	std::string getName() const;
 
 	//Actiuni de joc
 	bool buyCard(const CardBase& card, const Player& opponent, const Board& board);

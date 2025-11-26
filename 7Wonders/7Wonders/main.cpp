@@ -8,6 +8,8 @@ int main() {
         
         game.getSetup().startAge(1);
         std::cout << game.getSetup().getBoard() << std::endl;
+		std::cout << game.getSetup().startAge(2).getBoard() << std::endl;
+		std::cout << game.getSetup().startAge(3).getBoard() << std::endl;
 
         //game.run();
     }

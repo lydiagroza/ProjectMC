@@ -33,4 +33,5 @@ public:
     Game();
 	void run();
     GameSetup& getSetup() { return m_setup; }
+	void printPlayerInfo(const Player& player, std::ostream& os = std::cout) const;
 };

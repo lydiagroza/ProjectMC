@@ -111,6 +111,10 @@ std::vector<std::vector<Resource>> Player::getFlexibleChoices() const {
 	return choices;
 }
 
+std::string Player::getName() const {
+	return m_name;
+}
+
 
 //Functie care ne zice resursele lipsa pentru cartea respectiva
 std::map<Resource, std::uint8_t> Player::getMissingResources(const CardBase& card, const Player& opponent) const {

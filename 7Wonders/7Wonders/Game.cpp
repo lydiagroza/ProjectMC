@@ -12,6 +12,11 @@ Game::Game()
     m_opponent = &m_player2;
 }
 
+void Game::printPlayerInfo(const Player& player, std::ostream& os) const
+{
+    os << player.getName() << "\n";
+}
+
 void Game::switchTurn()
 {
 	std::swap(m_currentPlayer, m_opponent);

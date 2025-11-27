@@ -4,13 +4,16 @@
 
 int main() {
     try {
-
         Game game;
+        
+        game.getSetup().startAge(1);
+        std::cout << game.getSetup().getBoard() << std::endl;
+		std::cout << game.getSetup().startAge(2).getBoard() << std::endl;
+		std::cout << game.getSetup().startAge(3).getBoard() << std::endl;
+
         //game.run();
-        game.getSetup().printDecks();
     }
     catch (const std::exception& e) {
-        // Prindem orice eroare critic? (ex: fi?iere lips?)
         std::cerr << "[CRITICAL ERROR]: " << e.what() << std::endl;
         return -1;
     }

@@ -3,6 +3,7 @@
 #include <vector>
 #include <functional>
 #include <memory>
+#include <ostream>
 
 class Player;
 
@@ -25,3 +26,5 @@ public:
         effects.push_back(e);
     }
 };
+
+std::ostream& operator<<(std::ostream& os, const ProgressToken& token);

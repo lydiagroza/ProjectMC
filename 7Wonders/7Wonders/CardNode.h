@@ -13,7 +13,8 @@ enum class Face {
 class CardNode
 {
 private:
-	CardBase* m_card;
+	CardBase* m_card; //sa fie shared pointer
+	//unique pointer -> numai el poate sterge din heap
 	std::vector	<CardNode*> m_children;
 	bool m_played;
 	Face m_face;

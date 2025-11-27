@@ -9,10 +9,10 @@
 
 GameSetup::GameSetup(Board& board) : m_board(board) // <-- Inițializează referința aici
 {
-    // Mută logica de inițializare din vechiul constructor aici
-    loadAllResources();
-    prepareTokens();
-    prepareDecks();
+    // Corrected order of initialization
+    loadAllResources(); // 1. Load all assets from files
+    prepareDecks();     // 2. Prepare the card decks for all ages
+   // prepareTokens();    // 3. Prepare and place the tokens on the board
 }
 
 void GameSetup::loadAllResources()
@@ -23,6 +23,8 @@ void GameSetup::loadAllResources()
     m_deckAge2 = CardLoader::loadFromCSV("AgeII.csv");
     m_deckAge3 = CardLoader::loadFromCSV("AgeIII.csv");
     m_deckGuilds = CardLoader::loadFromCSV("Guilds.csv");
+    
+    m_allWonders = WonderLoader::loadWonders("Wonders.csv");
 }
 
 std::vector<CardBase*> GameSetup::toRawPointerVector(const std::vector<std::shared_ptr<CardBase>>& sharedDeck)
@@ -79,10 +81,11 @@ void GameSetup::prepareDecks()
         m_deckAge3.resize(20);
 }
 
-void GameSetup::startAge(int age)
+GameSetup& GameSetup::startAge(int age)
 {
 
     if (age == 1) {
+        prepareTokens();
         auto rawDeck = toRawPointerVector(m_deckAge1);
         m_board.setupCards(1, rawDeck);
     }
@@ -94,6 +97,7 @@ void GameSetup::startAge(int age)
         auto rawDeck = toRawPointerVector(m_deckAge3);
         m_board.setupCards(3, rawDeck);
     }
+	return *this;
 }
 
 Board& GameSetup::getBoard()
@@ -106,24 +110,44 @@ void GameSetup::printDecks() const
     std::cout << "--- Age 1 Deck ---" << std::endl;
     for (const auto& card : m_deckAge1)
     {
-        std::cout << card->get_name() << std::endl;
+        if (card) {
+            std::cout << *card << std::endl; // Use the operator<<
+        }
     }
 
     std::cout << "\n--- Age 2 Deck ---" << std::endl;
     for (const auto& card : m_deckAge2)
     {
-        std::cout << card->get_name() << std::endl;
+        if (card) {
+            std::cout << *card << std::endl; // Use the operator<<
+        }
     }
 
     std::cout << "\n--- Age 3 Deck ---" << std::endl;
     for (const auto& card : m_deckAge3)
     {
-        std::cout << card->get_name() << std::endl;
+        if (card) {
+            std::cout << *card << std::endl; // Use the operator<<
+        }
     }
 
     std::cout << "\n--- Guilds Deck ---" << std::endl;
     for (const auto& card : m_deckGuilds)
     {
-        std::cout << card->get_name() << std::endl;
+        if (card) {
+            std::cout << *card << std::endl; // Use the operator<<
+        }
+    }
+}
+
+void GameSetup::printWonders() const
+{
+    std::cout << "\n--- All Wonders ---" << std::endl;
+    for (const auto& wonder : m_allWonders)
+    {
+        if (wonder) // Good practice to check if the pointer is valid
+        {
+            std::cout << wonder->getName() << std::endl;
+        }
     }
 }

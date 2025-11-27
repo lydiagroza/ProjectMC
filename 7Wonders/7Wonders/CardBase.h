@@ -43,6 +43,7 @@ class Board;
       std::vector<std::function<void(Player&)>> m_effects;
       bool m_isAvailable; 
 
+
       //Constructori 
       CardBase();
       CardBase(std::string name, std::uint16_t id, Color color,

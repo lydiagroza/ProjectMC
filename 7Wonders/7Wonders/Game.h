@@ -21,10 +21,10 @@ private:
 
     void switchTurn();
     void handlePlayerAction(); 
-    void checkForInstantWin(); 
+    void checkForInstantWin(const MilitaryResult& militaryResult);
     void startNextAge();
     bool isEndOfAge();
-    void printGameState() const;
+	void printGameState() const; //board + players info
     void printActionMenu() const;
 
 	//calculateFinalScore(); -> maybe sa intoarca playerul care a castigat
@@ -33,4 +33,5 @@ public:
     Game();
 	void run();
     GameSetup& getSetup() { return m_setup; }
+	void printPlayerInfo(const Player& player, std::ostream& os = std::cout) const;
 };

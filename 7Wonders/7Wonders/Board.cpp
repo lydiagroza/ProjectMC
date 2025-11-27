@@ -1,16 +1,14 @@
 ﻿#include "Board.h"
 #include "CardBase.h"
-#include <iomanip>   // pentru std::setw
+#include <iomanip>   // Asigură-te că ai acest include
+#include <iostream>
+#include <algorithm> // Pentru std::max
 
 void Board::setupCards(int era, std::vector<CardBase*>& deck)
 {
-    // Curatam tabla veche (daca exista)
-    // NOTA: Aici ar trebui stersi pointerii vechi daca nu folosesti smart pointers, 
-    // pentru a evita memory leaks. Dar ne focusam pe logica acum.
     m_activeCards.clear();
-
-    // Verificam sa nu accesam un layout inexistent
-    if (era < 1 || era > 3) return;
+    if (era < 1 || era > 3) 
+        return;
 
     const std::vector<int>& layout = m_eraLayouts[era - 1];
     int deckIndex = 0;
@@ -84,20 +82,19 @@ std::vector<std::shared_ptr<ProgressToken>> Board::getAvailableProgressTokens() 
 
 
 //tokenii aia verzi
-void Board::printTokens(std::ostream& fout) const
+void Board::printTokens(std::ostream& os) const
 {
     if (m_availableProgressTokens.empty()) {
-        fout << "Nu exista tokeni vizibili pe tabla.\n";
+        os << "No available progress tokens." << std::endl;
         return;
     }
 
-    fout << "=== Progress Tokens Vizibile ===\n";
-
-    for (size_t i = 0; i < m_availableProgressTokens.size(); ++i) {
-        const auto& t = m_availableProgressTokens[i];
-        fout << std::setw(2) << (i + 1) << ") "
-            << t->getName() << "\n";
+    for (const auto& tokenPtr : m_availableProgressTokens) {
+        if (tokenPtr) {
+            os << *tokenPtr << "\n"; // Use the stream operator
+        }
     }
+    os << std::endl;
 }
 
 //tabla militara
@@ -193,39 +190,60 @@ void Board::updateVisibility()
 
 
 //arbore de carti
-
-void Board::printCardsTree() const
+void Board::printCardsTree(std::ostream& os) const
 {
-    int totalRows = static_cast<int>(m_activeCards.size());
-
-    size_t maxRowSize = 0;
-    for (const auto& row : m_activeCards)
-        if (row.size() > maxRowSize)
-            maxRowSize = row.size();
-
-    std::cout << "\n===== STRUCTURA PIRAMIDEI =====\n\n";
-
-    for (int r = 0; r < totalRows; ++r) {
-        const auto& row = m_activeCards[r];
-
-        int spaces = (maxRowSize - row.size()) * 3;
-
-        for (int s = 0; s < spaces; ++s)
-            std::cout << ' ';
-
-        for (const auto* card : row) {
-            std::cout << "[" << card->getName()
-                << ":" << (card->getFace() == Face::Up ? "U" : "D") << "]  ";
-        }
-        std::cout << "\n\n";
+    if (m_activeCards.empty()) {
+        os << "Piramida este goala.\n";
+        return;
     }
 
-    std::cout << "===============================\n";
+	//determin latimea maxima a unei carti pentru aliniere
+    size_t max_card_width = 0;
+    for (const auto& row : m_activeCards) {
+        for (const auto* node : row) {
+            std::string status = (node->isPlayable() ? "[OK]" : (node->getFace() == Face::Up ? "[U]" : "[D]"));
+            size_t current_width = node->getName().length() + status.length() + 3;
+            if (current_width > max_card_width) {
+                max_card_width = current_width;
+            }
+        }
+    }
+
+	//latimea totala a piramidei
+    size_t max_row_count = 0;
+    for (const auto& row : m_activeCards) {
+        if (row.size() > max_row_count) {
+            max_row_count = row.size();
+        }
+    }
+    const size_t total_width = max_row_count * (max_card_width + 2);
+
+    //afisez cartile de pe fiecare rand centrat
+    for (const auto& row : m_activeCards) {
+        size_t current_row_width = row.size() * (max_card_width + 2);
+        size_t padding = (total_width - current_row_width) / 2;
+        
+        os << std::string(padding, ' ');
+
+        for (const auto* node : row) {
+            if (node->isPlayed()) {
+                os << std::string(max_card_width, ' ') << "  ";
+            } else {
+              
+                std::string status = (node->isPlayable() ? "[OK]" : (node->getFace() == Face::Up ? "[U]" : "[D]"));
+                os << std::left << std::setw(max_card_width) << (node->getName() + " " + status) << "  ";
+            }
+        }
+        os << "\n\n";
+    }
+
+    os << "Legenda: [OK] = Jucabil, [U] = Cu fata in sus (blocat), [D] = Cu fata in jos\n";
+    os << "===============================\n";
 }
 
 void Board::printChildrenList() const
 {
-    std::cout << "\n===== VERIFICARE RELAȚII BLOCARE (BLOCAT -> BLOCANT) =====\n";
+    std::cout << "\nSe afiseaza relatiile de rudenie/blocare\n";
     std::cout << " (Copiii sunt cărțile care blochează)\n\n";
 
     for (const auto& row : m_activeCards) {
@@ -256,12 +274,30 @@ void Board::printChildrenList() const
 
 bool Board::isPyramidEmpty() const {
     for (const auto& row : m_activeCards) {
-        for (const auto* node : row) {
-            // Daca gasim macar o carte care NU a fost luata, piramida nu e goala
-            if (!node->isPlayable()) {
+        for (const auto* node : row)
+            if (!node->isPlayable())
                 return false;
-            }
-        }
     }
     return true;
+}
+
+std::ostream& operator<<(std::ostream& os, const Board& board)
+{
+    os << "========== GAME BOARD STATE ==========\n\n";
+
+    os << "--- Card Pyramid ---\n";
+    board.printCardsTree(os);
+    os << "\n";
+
+    os << "--- Military Track ---\n";
+    board.printMilitaryTrack(os); 
+    os << "\n";
+
+    os << "--- Available Progress Tokens ---\n";
+    board.printTokens(os); 
+    os << "\n";
+
+    os << "======================================\n";
+
+    return os; 
 }

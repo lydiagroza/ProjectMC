@@ -161,22 +161,22 @@ std::uint8_t Player::getTotalCardCost (const CardBase& card, const Player& oppon
 
 
 //Functie care cumpara cartea 
-bool Player::buyCard(const CardBase& card, const Player& opponent, const Board &board) {
-	std::uint8_t totalCoinCost = this->getTotalCardCost(card, opponent);
+bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board &board) {
+	std::uint8_t totalCoinCost = this->getTotalCardCost(*card, opponent);
 	if (totalCoinCost == 0) {
-		std::cout << "Card " << card.get_name() << "is free." << std::endl;
+		std::cout << "Card " << card->get_name() << "is free." << std::endl;
 	}
 	if (totalCoinCost ==-1) {
-		std::cout << "Card " << card.get_name() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
+		std::cout << "Card " << card->get_name() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
 		return false;
 	}
 	if (totalCoinCost > 0) {
 		m_Resources[Resource::Coin] -= totalCoinCost;
 	}
 
-	m_Inventory[card.m_color].push_back(card);
-	card.applyEffect(*this, opponent, board);
-	std::cout << "Card " << card.get_name() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
+	m_Inventory[card->m_color].push_back(card);
+	card->applyEffect(*this, opponent, board);
+	std::cout << "Card " << card->get_name() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
 	return true;
 
 }

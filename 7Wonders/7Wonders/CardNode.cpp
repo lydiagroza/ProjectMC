@@ -5,12 +5,12 @@ CardNode::CardNode() : m_card(nullptr), m_played(false), m_face(Face::Down)
 {
 }
 
-void CardNode::setCard(CardBase* card)
+void CardNode::setCard(std::shared_ptr<CardBase> card)
 {
 	m_card = card;
 }
 
-CardBase* CardNode::getCard() const
+std::shared_ptr<CardBase> CardNode::getCard() const
 {
 	return m_card;
 }

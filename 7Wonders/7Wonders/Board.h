@@ -21,7 +21,7 @@ public:
 	Board() = default;
 
 	//functii piramida de carti
-	void setupCards(int era, std::vector<CardBase*>& deck);
+	void setupCards(int era, std::vector<std::shared_ptr<CardBase>>& deck);
 	CardNode* getNodeAt(int row, int index);
 	void updateVisibility();
 	bool isPyramidEmpty() const;

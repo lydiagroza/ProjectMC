@@ -1,5 +1,6 @@
-#include "Game.h"
+﻿#include "Game.h"
 #include "MilitaryTrack.h"
+#include <iostream>
 
 Game::Game() 
     : m_player1("Player 1"), 
@@ -49,4 +50,41 @@ void Game::startNextAge()
 bool Game::isEndOfAge()
 {
     return m_setup.getBoard().isPyramidEmpty();
+}
+
+void Game::run()
+{
+    // ... (logica de început de joc)
+    
+
+    for (m_currentAge = 1; m_currentAge <= 3 && !m_gameOver; ++m_currentAge)
+    {
+		m_setup.startAge(m_currentAge);
+        std::cout << m_board;
+        m_board.printChildrenList();
+
+       /* while (!isEndOfAge() && !m_gameOver)
+        {
+            m_board.updateVisibility(); // Actualizează cărțile vizibile
+
+             --- AFIȘEAZĂ TABLA AICI ---
+           
+            
+             Afișează și starea jucătorilor, dacă ai o funcție pentru asta
+            // std::cout << *m_currentPlayer;
+            // std::cout << *m_opponent;
+
+            //handlePlayerAction();
+            
+            //checkForInstantWin(); // Verifică dacă tura curentă a dus la o victorie
+            
+            if (!m_gameOver) {
+                switchTurn();
+            }
+        }*/
+        
+        // Aici poți adăuga logica de la finalul epocii (ex: conflict militar)
+    }
+
+    // ... (logica de final de joc)
 }

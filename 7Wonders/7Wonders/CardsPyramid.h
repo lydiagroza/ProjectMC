@@ -47,8 +47,7 @@ class CardsPyramid
 public:
 	CardsPyramid()=default;
 
-	void build(int age, std::vector<CardBase*>& deck);
-
+void build(int age, std::vector<std::shared_ptr<CardBase>>& deck);
 	void linkCards(int age);
 
 	CardNode* getNodeAt(size_t row, size_t col) const;

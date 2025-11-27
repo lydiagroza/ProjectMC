@@ -16,7 +16,7 @@ private:
 	std::map<Points, std::uint8_t>m_pointsScore; // All points 
 	std::set<Resource>m_discountedResource; // discounted resources from yellow cards
 	std::map<std::string, std::vector<Resource>>m_flexibleResources;
-	std::map<Color, std::vector<CardBase>>m_Inventory; // all cards 
+	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // all cards 
 	std::vector<Wonder>m_Wonders; // all wonders
 	std::unordered_set<Scientific_Symbol>m_scientificSymbols; // all scientific symbols 
 	std::unordered_set<Symbol>m_chainSymbols; // all chain symbols accumulated
@@ -57,7 +57,7 @@ public:
 	std::string getName() const;
 
 	//Actiuni de joc
-	bool buyCard(const CardBase& card, const Player& opponent, const Board& board);
+	bool buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board);
 	void discardCard(const CardBase& c);//
 	void constructWonder(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board);
 };

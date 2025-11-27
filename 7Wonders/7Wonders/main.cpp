@@ -1,25 +1,24 @@
-#include <iostream>
+﻿#include <iostream>
 #include <exception>
-#include "Game.h"
+#include "Game.h" // Include-ul esențial pentru clasa Game
 
 int main() {
     try {
+     
         Game game;
-        
-        game.getSetup().startAge(1);
-        std::cout << game.getSetup().getBoard() << std::endl;
-		std::cout << game.getSetup().startAge(2).getBoard() << std::endl;
-		std::cout << game.getSetup().startAge(3).getBoard() << std::endl;
-
-        //game.run();
+        game.run();
     }
     catch (const std::exception& e) {
-        std::cerr << "[CRITICAL ERROR]: " << e.what() << std::endl;
-        return -1;
+        // Prinde orice eroare standard care ar putea apărea.
+        std::cerr << "[CRITICAL ERROR]: A aparut o eroare neasteptata: " << e.what() << std::endl;
+        return 1; // Returnează un cod de eroare
     }
     catch (...) {
-        std::cerr << "[CRITICAL ERROR]: Unknown exception occurred." << std::endl;
-        return -2;
+        // Prinde orice alt tip de eroare necunoscută.
+        std::cerr << "[CRITICAL ERROR]: A aparut o eroare necunoscuta." << std::endl;
+        return 2; // Returnează un alt cod de eroare
     }
-    return 0;
+
+    std::cout << "\nJocul s-a terminat cu succes. La revedere!\n";
+    return 0; // Succes
 }

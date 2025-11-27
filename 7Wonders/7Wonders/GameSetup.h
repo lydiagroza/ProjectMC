@@ -1,6 +1,9 @@
 ﻿#pragma once
-#include "Board.h"
 #include "Wonder.h"
+
+class Board;
+class CardBase;
+class ProgressToken;
 
 class GameSetup
 {
@@ -21,9 +24,6 @@ private:
     void loadAllResources();
     void prepareDecks();  
     void prepareTokens();
-
-    std::vector<CardBase*> toRawPointerVector(const std::vector<std::shared_ptr<CardBase>>& sharedDeck);
-
 
 
 public:

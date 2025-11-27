@@ -7,8 +7,9 @@
 class Game {
 private:
 
-    GameSetup m_setup;
     Board m_board;
+    GameSetup m_setup;
+   
 
     Player m_player1;
     Player m_player2;

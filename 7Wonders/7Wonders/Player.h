@@ -38,8 +38,6 @@ public:
 	void add_ScientificSymbol(Scientific_Symbol symbol);//
 	void add_ChainSymbol(Symbol symbol);//
 
-	//Functie ca sa extrag resursele de baza fara coins
-	std::map<Resource, std::uint8_t>getBaseProduction() const;
 
 	//Functie ca sa vad cat ma costa o singura resursa
 	std::uint8_t getUnitTradeCost(Resource res, const Player& opponent) const;

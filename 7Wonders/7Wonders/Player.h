@@ -53,7 +53,7 @@ public:
 	std::uint8_t calculateTradeCost(const CardBase& card, const Player& opponent)const; 
 
 	//Functie care verifica daca putem cumpara cartea
-	bool canAffordConstruction(const CardBase& card, const Player& opponent);
+	std::uint8_t getTotalCardCost(const CardBase& card, const Player& opponent);
 	std::string getName() const;
 
 	//Actiuni de joc

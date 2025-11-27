@@ -11,8 +11,13 @@ Player::Player(const std::string& playerName)
 	m_scientificSymbols{},
 	m_chainSymbols{} {
 }
- 
-//Functii pentru monede
+
+//Functie de get pentru numele playerului
+std::string Player::getName()const {
+	return m_name;
+}
+
+//Functii pentru  gestionarea monedelor
 bool Player::decreaseCoins(std::uint8_t amount) { 
 	if (m_Resources[Coin] >= amount) {
 		m_Resources[Coin] -= amount;
@@ -56,7 +61,7 @@ void Player::add_ChainSymbol(Symbol symbol)
 
 
 
-//Functie pentru a afla costul unei singure resurse
+//Functie pentru a afla costul unei singure resurse de care jucatorul are nevoie  
 std::uint8_t Player::getUnitTradeCost(Resource r, const Player& opponent) const {
 	
 	if (m_discountedResource.count(r)) {
@@ -71,7 +76,7 @@ std::uint8_t Player::getUnitTradeCost(Resource r, const Player& opponent) const 
 
 
 
-//Functie care ne zice resursele lipsa pentru cartea respectiva
+//Functie care returneaza un map cu resursele lipsa pentru o carte 
 std::map<Resource, std::uint8_t> Player::getMissingResources(const CardBase& card, const Player& opponent) const {
 	
 	std::map<Resource, std::uint8_t> missingResources;
@@ -81,7 +86,7 @@ std::map<Resource, std::uint8_t> Player::getMissingResources(const CardBase& car
 		
 		uint8_t availableResource = m_Resources.count(res) ? m_Resources.at(res) : 0;
 
-		if (available < reqAmount) {
+		if (availableResource < reqAmount) {
 			missingResources[res] = reqAmount - availableResource;
 		}
 	}
@@ -139,13 +144,16 @@ std::uint8_t Player::calculateTradeCost(const CardBase& card, const Player& oppo
 
 
 
-//Functie care ne zice efectiv daca isi permite cartea sau nu
-bool Player::canAffordConstruction(const CardBase& card, const Player& opponent) {
+//Functie care returneaza costul pentru  a cumpara cartea 
+std::uint8_t Player::getTotalCardCost (const CardBase& card, const Player& opponent) {
+	if (card.m_unlocks.has_value() && m_chainSymbols.count(card.m_unlocks.value())) {
+		return 0; // Costul este 0 (Gratuit)
+	}
 	std::uint8_t totalCost = this->calculateTradeCost(card, opponent) + card.getCostForResource(Resource::Coin);
 	if (m_Resources.count(Resource::Coin) && m_Resources.at(Resource::Coin) >= totalCost) {
-		return true;
+		return totalCost;
 	}
-	return false;
+	return -1;
 	
 }
 
@@ -154,29 +162,22 @@ bool Player::canAffordConstruction(const CardBase& card, const Player& opponent)
 
 //Functie care cumpara cartea 
 bool Player::buyCard(const CardBase& card, const Player& opponent, const Board &board) {
-	bool isFreeByChain= card.m_unlocks.has_value() && m_chainSymbols.count(card.m_unlocks.value());
-	if (isFreeByChain == true) {
-		std::cout << "Card " << card.get_name() <<"este gratis" << std::endl;
-		m_Inventory[card.m_color].push_back(card);
-		card.applyEffect(*this, opponent, board);
-		return true;
+	std::uint8_t totalCoinCost = this->getTotalCardCost(card, opponent);
+	if (totalCoinCost == 0) {
+		std::cout << "Card " << card.get_name() << "is free." << std::endl;
 	}
-	else {
-		if (this->canAffordConstruction(card, opponent) == true) {
-			std::uint8_t totalCoinCost= this->calculateTradeCost(card, opponent) + card.getCostForResource(Resource::Coin);
-			if (totalCoinCost > 0) {
-				m_Resources.at(Resource::Coin) -= totalCoinCost;
-			}
-			std::cout << "Card " << card.get_name() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
-			m_Inventory[card.m_color].push_back(card);
-			card.applyEffect(*this, opponent, board);
-			return true;
-		}
-		else {
-			std::cout << "Card " << card.get_name() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
-			return false;
-		}
+	if (totalCoinCost ==-1) {
+		std::cout << "Card " << card.get_name() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
+		return false;
 	}
+	if (totalCoinCost > 0) {
+		m_Resources[Resource::Coin] -= totalCoinCost;
+	}
+
+	m_Inventory[card.m_color].push_back(card);
+	card.applyEffect(*this, opponent, board);
+	std::cout << "Card " << card.get_name() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
+	return true;
 
 }
 

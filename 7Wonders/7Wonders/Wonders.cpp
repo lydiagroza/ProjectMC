@@ -67,7 +67,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
             }
 
             int choice = -1;
-            std::cin >> choice; // alege player ce carte sa dea discard
+            std::cin >> choice; // alege player ce carte sa dea discard, facem cumva in UI
 
             if (choice > 0 && choice <= grayCards.size()) {
                 auto selectedCard = grayCards[choice - 1];

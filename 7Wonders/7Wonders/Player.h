@@ -55,13 +55,14 @@ public:
 
 	//Functie care verifica daca putem cumpara cartea
 	std::uint8_t getTotalCardCost(const CardBase& card, const Player& opponent);
+	std::map<Resource, std::uint8_t> getTotalWonderCost(const Wonder& wonder, const Player& opponent);
 	std::string getName() const;
 
 	//Actiuni de joc
 	bool hasExtraTurn() const { return m_hasExtraTurn; }
 	bool buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board);
 	void discardCard(const CardBase& c);//
-	void constructWonder(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board);
+	void constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board);
 
 	//chestii pentru gestionare inventar
 	const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& getInventory() const { return m_Inventory; }

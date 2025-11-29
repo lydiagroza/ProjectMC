@@ -221,4 +221,48 @@ void Player::discardCard(const CardBase& card) {
 
 //}
 
+std::uint8_t Player::getTotalWonderCost(const Wonder& wonder, const Player& opponent) {
+    // mai trebuie getMissingResources and calculateTradeCost.
+    // momentan verificam daca player are resurse
+    std::uint8_t totalCost = 0;
+    for (const auto& [res, reqAmount] : wonder.getCost()) {
+        uint8_t availableResource = m_Resources.count(res) ? m_Resources.at(res) : 0;
+        if (availableResource < reqAmount) {
+            totalCost += (reqAmount - availableResource) * getUnitTradeCost(res, opponent);
+        }
+    }
+    
+    if (m_Resources.count(Resource::Coin) && m_Resources.at(Resource::Coin) >= totalCost) {
+        return totalCost;
+    }
+
+    return 255; // Using 255 as a sentinel for "can't afford"
+}
+
+void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board) {
+    std::uint8_t totalCoinCost = this->getTotalWonderCost(wonderToBuild, opponent);
+
+    if (totalCoinCost == 255) {
+        std::cout << "Wonder " << wonderToBuild.getName() << " can't be built: Insufficient funds or resource trading cost is too high." << std::endl;
+        return;
+    }
+
+    if (totalCoinCost > 0) {
+        m_Resources[Resource::Coin] -= totalCoinCost;
+    }
+
+	// marcam wonder ca built
+    wonderToBuild.setIsBuilt();
+
+	// aplicam effectul de la wonder
+    for (const auto& effect : wonderToBuild.getEffects()) {
+        effect(*this, opponent);
+    }
+
+	// discard la cartea care o folosim sa activam wonder
+    board.addCardToDiscardPile(cardUsed);
+
+    std::cout << "Wonder " << wonderToBuild.getName() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
+}
+
 

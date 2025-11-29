@@ -62,4 +62,9 @@ public:
 	bool buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board);
 	void discardCard(const CardBase& c);//
 	void constructWonder(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board);
+
+	//chestii pentru gestionare inventar
+	const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& getInventory() const { return m_Inventory; }
+	void addCardToInventory(std::shared_ptr<CardBase> card);
+	bool removeCardFromInventory(std::shared_ptr<CardBase> card);
 };

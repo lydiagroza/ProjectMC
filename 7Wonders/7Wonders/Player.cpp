@@ -181,7 +181,21 @@ bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, con
 
 }
 
-	
+// gestionare inventar
+void Player::addCardToInventory(std::shared_ptr<CardBase> card) {
+	m_Inventory[card->m_color].push_back(card);
+}
+
+bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
+    auto& cards = m_Inventory[card->m_color];
+	for (auto it = cards.begin(); it != cards.end(); ++it) {
+		if ((*it)->get_id() == card->get_id()) {
+			cards.erase(it);
+			return true;
+		}
+	}
+    return false;
+}	
 
 //Functie in cazul in care jucatorul alege sa arda cartea pentru banuti
 void Player::discardCard(const CardBase& card) {

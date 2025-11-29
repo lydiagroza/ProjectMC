@@ -93,14 +93,14 @@ void Board::printMilitaryTrack(std::ostream& fout) const
 
 }
 //carti "arse"
-void Board::addCardToDiscardPile(CardBase* card)
+void Board::addCardToDiscardPile(std::shared_ptr<CardBase> card)
 {
     if (card) {
         m_discardPile.push_back(card);
     }
 }
 
-const std::vector<CardBase*>& Board::getDiscardPile() const
+const std::vector<std::shared_ptr<CardBase>>& Board::getDiscardPile() const
 {
     return m_discardPile;
 }
@@ -113,10 +113,22 @@ void Board::printDiscardPile(std::ostream& fout) const
         return;
     }
     std::cout << "[ ";
-    for (const auto* card : m_discardPile)
+    for (const auto& card : m_discardPile)
         std::cout << card->get_name() << ", ";
 
     std::cout << "]\n";
+}
+
+void Board::removeCardFromDiscardPile(std::shared_ptr<CardBase> card)
+{
+    for (auto it = m_discardPile.begin(); it != m_discardPile.end(); ++it)
+    {
+        if ((*it)->get_id() == card->get_id())
+        {
+            m_discardPile.erase(it);
+            return;
+        }
+    }
 }
 
 //arbore de carti

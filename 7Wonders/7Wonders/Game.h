@@ -5,6 +5,8 @@
 #include <memory>
 
 class Game {
+public:
+    static Game* currentGame;
 private:
 
     Board m_board;
@@ -34,5 +36,6 @@ public:
     Game();
 	void run();
     GameSetup& getSetup() { return m_setup; }
+    Board& getBoard() { return m_board; }
 	void printPlayerInfo(const Player& player, std::ostream& os = std::cout) const;
 };

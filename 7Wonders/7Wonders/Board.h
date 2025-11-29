@@ -14,7 +14,7 @@ private:
 	int Age;
 	CardsPyramid m_pyramid;
 	std::vector<std::shared_ptr<ProgressToken>> m_availableProgressTokens;
-	std::vector<CardBase*> m_discardPile;
+	std::vector<std::shared_ptr<CardBase>> m_discardPile;
 	MilitaryTrack m_militaryTrack;
 
 public:
@@ -35,8 +35,9 @@ public:
 	void printMilitaryTrack(std::ostream& fout = std::cout) const;
 
 	//functii discard pile
-	void addCardToDiscardPile(CardBase* card);
-	const std::vector<CardBase*>& getDiscardPile() const;
+	void addCardToDiscardPile(std::shared_ptr<CardBase> card);
+	const std::vector<std::shared_ptr<CardBase>>& getDiscardPile() const;
+	void removeCardFromDiscardPile(std::shared_ptr<CardBase> card);
 	void printDiscardPile(std::ostream& fout) const;
 
 	friend std::ostream& operator<<(std::ostream& os, const Board& board);

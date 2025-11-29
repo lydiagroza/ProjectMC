@@ -19,6 +19,7 @@ private:
 	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // all cards 
 	std::vector<Wonder>m_Wonders; // all wonders
 	std::unordered_set<Scientific_Symbol>m_scientificSymbols; // all scientific symbols 
+	bool m_hasExtraTurn = false;
 	std::unordered_set<Symbol>m_chainSymbols; // all chain symbols accumulated
 public:
 	Player(const std::string& playerName); // constructor 
@@ -57,6 +58,7 @@ public:
 	std::string getName() const;
 
 	//Actiuni de joc
+	bool hasExtraTurn() const { return m_hasExtraTurn; }
 	bool buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board);
 	void discardCard(const CardBase& c);//
 	void constructWonder(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board);

@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <iostream>
 #include "CardLoader.h"
+#include "Game.h"
 
 class Player;
 
@@ -42,12 +43,12 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
     static const std::unordered_map<std::string, std::function<void(Player&, Player&)>> effectMap = {
         {"add_coins3", [](Player& p, Player& o) { p.addCoins(3); }},
         {"decreaseCoins3", [](Player& p, Player& o) { o.decreaseCoins(3); }},
-        {"replayTurn", [](Player& p, Player& o) { /* replayTurn */ std::cout << "Replay turn effect not implemented." << std::endl; }},
+        {"replayTurn", [](Player& p, Player& o) { Game::switchTurn(); }},
         {"add_VictoryPoint3", [](Player& p, Player& o) { p.add_Points(Points::Victory, 3); }},
         {"wood/stone/clay", [](Player& p, Player& o) { p.add_Resource(Resource::Wood, 1); p.add_Resource(Resource::Stone, 1); p.add_Resource(Resource::Clay, 1); }},
         {"add_VictoryPoints4", [](Player& p, Player& o) { p.add_Points(Points::Victory, 4); }},
         {"add_coins12", [](Player& p, Player& o) { p.addCoins(12); }},
-        {"discardOpponentGrayCard", [](Player& p, Player& o) { /* discardOpponentGrayCard */ std::cout << "Discard opponent gray card not implemented." << std::endl; }},
+        {"discardOpponentGrayCard", [](Player& p, Player& o) { /* discardOpponentGrayCard*/ std::cout << "Discard opponent gray card not implemented." << std::endl; }},
         {"add_MilitaryPoint1", [](Player& p, Player& o) { p.add_Points(Points::Military, 1); }},
         {"buildDiscardedCard", [](Player& p, Player& o) { /* builDiscardedCard */ std::cout << "Build discarded card not implemented." << std::endl; }},
         {"add_VictoryPoint2", [](Player& p, Player& o) { p.add_Points(Points::Victory, 2); }},

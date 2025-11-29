@@ -2,6 +2,8 @@
 #include "MilitaryTrack.h"
 #include <iostream>
 
+Game* Game::currentGame = nullptr;
+
 Game::Game() 
     : m_player1("Player 1"), 
       m_player2("Player 2"), 
@@ -9,6 +11,7 @@ Game::Game()
       m_gameOver(false),
       m_setup(m_board)
 {
+    currentGame = this;
     m_currentPlayer = &m_player1;
     m_opponent = &m_player2;
 }

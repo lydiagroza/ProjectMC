@@ -14,4 +14,10 @@ ARSENAL,57,Red,"3clay";"2wood",,,"add_MilitaryPoint3"
 CIRCUS,58,Red,"2clay";"2stone",helmet,,"add_MilitaryPoint2"
 FORTIFICATIONS,59,Red,"2stone";"1papyrus";"1clay",castle,,"add_MilitaryPoint2"
 SIEGE WORKSHOP,60,Red,"3wood";"1glass",target,,"add_MilitaryPoint2"
+ARMORY,61,Yellow,"2stone";"1glass",,,"coin1Red";"add_VictoryPoint3"
+CHAMBER OF COMMERCE,62,Yellow,"2papyrus",,,"coin3Gray";"add_VictoryPoint3"
+LIGHTHOUSE,63,Yellow,"2clay";"1glass",,vase,"coin1Yellow";"add_VictoryPoint3"
+ARENA,64,Yellow,"1clay";"1stone";"1wood",,barrel,"coin2Wonder";"add_VictoryPoint3"
+PORT,65,Yellow,"1wood";"1glass";"1papyrus",,,"coin2Brown";"add_VictoryPoint3"
+
 

@@ -55,7 +55,7 @@ public:
 
 	//Functie care verifica daca putem cumpara cartea
 	std::uint8_t getTotalCardCost(const CardBase& card, const Player& opponent);
-	std::map<Resource, std::uint8_t> getTotalWonderCost(const Wonder& wonder, const Player& opponent);
+	std::uint8_t getTotalWonderCost(const Wonder& wonder, const Player& opponent);
 	std::string getName() const;
 
 	//Actiuni de joc

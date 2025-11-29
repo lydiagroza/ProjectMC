@@ -236,7 +236,7 @@ std::uint8_t Player::getTotalWonderCost(const Wonder& wonder, const Player& oppo
         return totalCost;
     }
 
-    return 255; // Using 255 as a sentinel for "can't afford"
+    return 255; // un nr random la carti parac era -1
 }
 
 void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board) {

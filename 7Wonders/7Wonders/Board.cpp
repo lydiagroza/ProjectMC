@@ -34,6 +34,18 @@ std::vector<std::shared_ptr<ProgressToken>> Board::getAvailableProgressTokens() 
     return m_availableProgressTokens;
 }
 
+void Board::removeAvailableProgressToken(std::shared_ptr<ProgressToken> token)
+{
+	for (auto it = m_availableProgressTokens.begin(); it != m_availableProgressTokens.end(); ++it)
+	{
+		if ((*it)->getId() == token->getId())
+		{
+			m_availableProgressTokens.erase(it);
+			return;
+		}
+	}
+}
+
 
 //tokenii aia verzi
 void Board::printTokens(std::ostream& os) const

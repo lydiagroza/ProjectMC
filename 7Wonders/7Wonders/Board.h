@@ -31,6 +31,7 @@ public:
 	//functii tokeni verzi
 	void setAvailableProgressTokens(const std::vector<std::shared_ptr<ProgressToken>>& tokens);
 	std::vector<std::shared_ptr<ProgressToken>> getAvailableProgressTokens() const;
+	void removeAvailableProgressToken(std::shared_ptr<ProgressToken> token);
 	void printTokens(std::ostream& fout = std::cout) const;
 	void printMilitaryTrack(std::ostream& fout = std::cout) const;
 

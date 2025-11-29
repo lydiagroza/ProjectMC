@@ -163,6 +163,11 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
         {"add_resource_clay", [](Player& p) { p.add_Resource(Resource::Clay, 1); }},
         {"add_resource_glass", [](Player& p) { p.add_Resource(Resource::Glass, 1); }},
         {"add_resource_papyrus", [](Player& p) { p.add_Resource(Resource::Papyrus, 1); }},
+        {"coin2Wonder",[](Player& p) {}},
+        {"coin2Brown",[](Player& p) {}},
+        {"coin1Yellow",[](Player& p) {}},
+        {"coin3Gray",[](Player& p) {}},
+        {"coin1Red",[](Player& p) {}}
    
     };
 

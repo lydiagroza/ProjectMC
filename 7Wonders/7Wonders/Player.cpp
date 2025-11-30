@@ -168,7 +168,7 @@ std::uint8_t Player::getTotalCost(const T& buildable, const Player& opponent) co
 		}
 	}
 
-	std::uint8_t totalCost = this->calculateTradeCost(buildable, opponent) + buildable.getCostForResource(Resource::Coin);
+	std::uint8_t totalCost = this->getTradeCost(buildable, opponent) + buildable.getCostForResource(Resource::Coin);
 
 	if (m_Resources.count(Resource::Coin) && m_Resources.at(Resource::Coin) >= totalCost) {
 		return totalCost;
@@ -193,9 +193,9 @@ template std::uint8_t Player::getTotalCost<Wonder>(const Wonder&, const Player&)
 bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board &board) {
 	std::uint8_t totalCoinCost = this->getTotalCost(*card, opponent);
 	if (totalCoinCost == 0) {
-		std::cout << "Card " << card->get_name() << "is free." << std::endl;
+		std::cout << "Card " << card->get_name() << " is free." << std::endl;
 	}
-	if (totalCoinCost ==-1) {
+	if (totalCoinCost == static_cast<std::uint8_t>(-1)) {
 		std::cout << "Card " << card->get_name() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
 		return false;
 	}

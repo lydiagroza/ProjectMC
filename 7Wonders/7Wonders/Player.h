@@ -1,8 +1,14 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+
+
 #include<string>
+#include<memory>
 #include<unordered_map>
 #include<map>
 #include<set>
 #include<vector>
+#include<type_traits>
 #include<unordered_set>
 #include "CardBase.h"
 #include "Board.h"
@@ -62,7 +68,6 @@ public:
 	//Functie care verifica daca putem cumpara cartea
 	template<typename T>
 	std::uint8_t getTotalCost(const T& buildable, const Player& opponent)const;
-	std::uint8_t getTotalWonderCost(const Wonder& wonder, const Player& opponent);
 	std::string getName() const;
 
 	//Actiuni de joc
@@ -81,3 +86,6 @@ private:
 	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources,const Player& opponent) const;
 	std::uint8_t calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources,const Player& opponent) const;
 };
+
+
+#endif

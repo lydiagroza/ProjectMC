@@ -21,6 +21,10 @@ private:
 	std::unordered_set<Scientific_Symbol>m_scientificSymbols; // all scientific symbols 
 	bool m_hasExtraTurn = false;
 	std::unordered_set<Symbol>m_chainSymbols; // all chain symbols accumulated
+
+
+
+
 public:
 	Player(const std::string& playerName); // constructor 
 	
@@ -47,14 +51,17 @@ public:
 	std::vector<std::vector<Resource>> getFlexibleChoices() const;
 
 	//Functie pentru a afla ce resurse ne lipsesc pentru a cumpara o carte
-	std::map<Resource, std::uint8_t> getMissingResources(const CardBase& card, const Player& opponent) const;
+	template<typename T>
+	std::map<Resource, std::uint8_t> getMissingResources(const T& buildable, const Player& opponent) const;
 
 
 	//Functie care ne zice cati banuti trebuie sa dea pentru resursele lipsa
-	std::uint8_t calculateTradeCost(const CardBase& card, const Player& opponent)const; 
+	template<typename T>
+	std::uint8_t getTradeCost(const T& buildable, const Player& opponent)const; 
 
 	//Functie care verifica daca putem cumpara cartea
-	std::uint8_t getTotalCardCost(const CardBase& card, const Player& opponent);
+	template<typename T>
+	std::uint8_t getTotalCost(const T& buildable, const Player& opponent)const;
 	std::uint8_t getTotalWonderCost(const Wonder& wonder, const Player& opponent);
 	std::string getName() const;
 
@@ -68,4 +75,9 @@ public:
 	const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& getInventory() const { return m_Inventory; }
 	void addCardToInventory(std::shared_ptr<CardBase> card);
 	bool removeCardFromInventory(std::shared_ptr<CardBase> card);
+
+
+private:
+	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources,const Player& opponent) const;
+	std::uint8_t calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources,const Player& opponent) const;
 };

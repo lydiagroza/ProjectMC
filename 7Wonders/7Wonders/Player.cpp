@@ -149,12 +149,12 @@ std::uint8_t Player::calculateTradeCost(const std::map<Resource, std::uint8_t>& 
 
 template<typename T>
 std::map<Resource, std::uint8_t> Player::getMissingResources(const T& buildable, const Player& opponent) const {
-	return MissingResources(buildable.get_cost(), opponent);
+	return MissingResources(buildable.getCost(), opponent);
 }
 
 template<typename T>
 std::uint8_t Player::getTradeCost(const T& buildable, const Player& opponent) const {
-	return calculateTradeCost(buildable.get_cost(), opponent);
+	return calculateTradeCost(buildable.getCost(), opponent);
 }
 
 

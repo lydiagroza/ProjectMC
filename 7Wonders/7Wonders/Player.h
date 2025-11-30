@@ -24,6 +24,9 @@ private:
 public:
 	Player(const std::string& playerName); // constructor 
 	
+	// getteri 
+
+	std::vector<Wonder>& getWonders() { return m_Wonders; } // se pune & ca cica face referinta la el nu copie si e mai eficient
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
 	void addCoins(std::uint8_t amount); //

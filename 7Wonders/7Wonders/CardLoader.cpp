@@ -17,7 +17,7 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
 
     while (getline(file, line)) { 
         
-        if (line.empty() || line.find_first_not_of(" \t\n\v\f\r,") == string::npos) {
+        if (line.empty() == string::npos) {
             continue;
         }// impartim pe coloane 
         stringstream ss(line);
@@ -64,7 +64,7 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
 
         auto card = make_shared<CardBase>(name, id, color, cost, symbol, unlocks);
 
-        // atașează efecte în funcție de text
+        //adauga efectele
         auto effects = parseEffects(effectsStr);
         for (auto& ef : effects)
             card->addEffect(ef);
@@ -87,7 +87,7 @@ Color CardLoader::parseColor(const std::string& s) {
         return it->second;
     }
     
-    // Dacă string-ul este gol sau nu este găsit, returnează o valoare default
+    
     return Color::Brown; 
 }
 
@@ -163,11 +163,27 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
         {"add_resource_clay", [](Player& p) { p.add_Resource(Resource::Clay, 1); }},
         {"add_resource_glass", [](Player& p) { p.add_Resource(Resource::Glass, 1); }},
         {"add_resource_papyrus", [](Player& p) { p.add_Resource(Resource::Papyrus, 1); }},
-        {"coin2Wonder",[](Player& p) {}},
-        {"coin2Brown",[](Player& p) {}},
-        {"coin1Yellow",[](Player& p) {}},
-        {"coin3Gray",[](Player& p) {}},
-        {"coin1Red",[](Player& p) {}}
+        {"coin2Wonder",[](Player& p) {
+            for (int i=0; i<p.getWonders().size(); i++)
+				p.add_Resource(Resource::Coin, 2);
+        
+}},
+        {"coin2Brown",[](Player& p) {
+        for (int i=0;i< p.getInventory().at(Color::Brown).size(); i++)
+			p.add_Resource(Resource::Coin, 2);
+        }},
+        {"coin1Yellow",[](Player& p) {
+		for (int i = 0; i < p.getInventory().at(Color::Yellow).size(); i++)
+			p.add_Resource(Resource::Coin, 1);
+        }},
+        {"coin3Gray",[](Player& p) {
+		for (int i = 0; i < p.getInventory().at(Color::Gray).size(); i++)
+			p.add_Resource(Resource::Coin, 3);
+        }},
+        {"coin1Red",[](Player& p) {
+		for(int i = 0; i < p.getInventory().at(Color::Red).size(); i++)
+			p.add_Resource(Resource::Coin, 1);
+        }}
    
     };
 
@@ -178,25 +194,24 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
         token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
 
         // numeric-suffixed tokens (variable amount)
-        if (token.rfind(vpPrefix, 0) == 0) {
+        if (token.starts_with(vpPrefix)) {
             int amount = stoi(token.substr(vpPrefix.size()));
             effects.push_back([amount](Player& p) { p.add_Points(Points::Victory, static_cast<std::uint8_t>(amount)); });
             continue;
         }
-        if (token.rfind(mpPrefix, 0) == 0) {
+        if (token.starts_with(mpPrefix)) {
             int amount = stoi(token.substr(mpPrefix.size()));
             effects.push_back([amount](Player& p) { p.add_Points(Points::Military, static_cast<std::uint8_t>(amount)); });
             continue;
         }
- // fixed tokens lookup
+
+ // fixed tokens 
         auto it = effectMap.find(token);
         if (it != effectMap.end()) {
             effects.push_back(it->second);
             continue;
         }
-
-        // unknown token: optionally log or ignore
-        // std::cerr << "Unknown effect token: " << token << std::endl;
+;
     }
 
     return effects;

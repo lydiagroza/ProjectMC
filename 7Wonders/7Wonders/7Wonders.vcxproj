@@ -160,7 +160,7 @@
 		 
 	</ItemDefinitionGroup>
 	  <ItemGroup>
-		    <ClCompile Include="Board.cpp" />
+		    <ClCompile Include="AI_Player.cpp" /><ClCompile Include="Board.cpp" />
 		    <ClCompile Include="CardBase.cpp"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile>
 		    <ClCompile Include="CardBase.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile>
 		    <ClCompile Include="CardNode.cpp" /><ClCompile Include="CardsPyramid.cpp" /><ClCompile Include="Game.cpp" /><ClCompile Include="main.cpp" /><ClCompile Include="MilitaryTrack.cpp" />
@@ -172,7 +172,7 @@
 		    <ClCompile Include="ProgressTokenLoader.cpp" />
 		    <ClCompile Include="ProgressTokens.cpp" /></ItemGroup>
 	  <ItemGroup>
-		    <ClInclude Include="Board.h" />
+		    <ClInclude Include="AI_Player.h" /><ClInclude Include="Board.h" />
 		    <ClInclude Include="CardLoader.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClInclude>
 		    <ClInclude Include="CardNode.h" /><ClInclude Include="CardsPyramid.h" />
 		    <ClInclude Include="Game.h" /><ClInclude Include="GameConstants.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClInclude>

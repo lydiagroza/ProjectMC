@@ -73,7 +73,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
                 auto selectedCard = grayCards[choice - 1];
                 o.removeCardFromInventory(selectedCard);
                 board.addCardToDiscardPile(selectedCard);
-                std::cout << "Discarded " << selectedCard->get_name() << " from opponent." << std::endl;
+                std::cout << "Discarded " << selectedCard->getName() << " from opponent." << std::endl;
             } else {
                 std::cout << "Invalid choice." << std::endl;
             }
@@ -101,7 +101,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
                 auto selectedCard = discardPile[choice - 1];
                 p.addCardToInventory(selectedCard);
                 board.removeCardFromDiscardPile(selectedCard);
-                std::cout << "Built " << selectedCard->get_name() << " from discard pile." << std::endl;
+                std::cout << "Built " << selectedCard->getName() << " from discard pile." << std::endl;
             } else {
                 std::cout << "Invalid choice." << std::endl;
             }
@@ -166,7 +166,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
                 auto selectedCard = brownCards[choice - 1];
                 o.removeCardFromInventory(selectedCard);
                 board.addCardToDiscardPile(selectedCard);
-                std::cout << "Discarded " << selectedCard->get_name() << " from opponent." << std::endl;
+                std::cout << "Discarded " << selectedCard->getName() << " from opponent." << std::endl;
             } else {
                 std::cout << "Invalid choice." << std::endl;
             }

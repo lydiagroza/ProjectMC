@@ -193,10 +193,10 @@ template std::uint8_t Player::getTotalCost<Wonder>(const Wonder&, const Player&)
 bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board &board) {
 	std::uint8_t totalCoinCost = this->getTotalCost(*card, opponent);
 	if (totalCoinCost == 0) {
-		std::cout << "Card " << card->get_name() << " is free." << std::endl;
+		std::cout << "Card " << card->getName() << " is free." << std::endl;
 	}
 	if (totalCoinCost == static_cast<std::uint8_t>(-1)) {
-		std::cout << "Card " << card->get_name() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
+		std::cout << "Card " << card->getName() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
 		return false;
 	}
 	if (totalCoinCost > 0) {
@@ -205,7 +205,7 @@ bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, con
 
 	m_Inventory[card->m_color].push_back(card);
 	card->applyEffect(*this, opponent, board);
-	std::cout << "Card " << card->get_name() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
+	std::cout << "Card " << card->getName() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
 	return true;
 
 }
@@ -218,7 +218,7 @@ void Player::addCardToInventory(std::shared_ptr<CardBase> card) {
 bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
     auto& cards = m_Inventory[card->m_color];
 	for (auto it = cards.begin(); it != cards.end(); ++it) {
-		if ((*it)->get_id() == card->get_id()) {
+		if ((*it)->getId() == card->getId()) {
 			cards.erase(it);
 			return true;
 		}
@@ -230,7 +230,7 @@ bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
 void Player::discardCard(const CardBase& card) {
 
 	std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
-	gainedCoins += m_Inventory[Color::Yellow].size() * GameConstants::DISCARD_YELLOW_BONUS;
+	gainedCoins += static_cast<uint8_t>(m_Inventory[Color::Yellow].size()) * GameConstants::DISCARD_YELLOW_BONUS;
 	addCoins(gainedCoins);
 }
 

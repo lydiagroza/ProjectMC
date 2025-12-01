@@ -34,8 +34,9 @@ private:
 
 public:
     Game();
-	void run();
+    void initialize();
     GameSetup& getSetup() { return m_setup; }
     Board& getBoard() { return m_board; }
 	void printPlayerInfo(const Player& player, std::ostream& os = std::cout) const;
+    Player* getCurrentPlayer() const { return m_currentPlayer; }
 };

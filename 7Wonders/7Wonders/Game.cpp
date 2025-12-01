@@ -4,18 +4,19 @@
 
 Game* Game::currentGame = nullptr;
 
-Game::Game() 
-    : m_player1("Player 1"), 
-      m_player2("Player 2"), 
-      m_currentAge(1), 
-      m_gameOver(false),
-      m_setup(m_board)
+Game::Game()
+    : m_player1("Player 1"),
+    m_player2("Player 2"),
+    m_currentAge(1),
+    m_gameOver(false),
+    m_setup(m_board)
 {
     currentGame = this;
     m_currentPlayer = &m_player1;
     m_opponent = &m_player2;
 }
 
+// You can keep this helper, but eventually, the UI will read the name directly.
 void Game::printPlayerInfo(const Player& player, std::ostream& os) const
 {
     os << player.getName() << "\n";
@@ -23,31 +24,22 @@ void Game::printPlayerInfo(const Player& player, std::ostream& os) const
 
 void Game::switchTurn()
 {
-	std::swap(m_currentPlayer, m_opponent);
-    //era ceva minune de iti mai da o tura dar inca nu stiu cum sa o aplic
+    std::swap(m_currentPlayer, m_opponent);
 }
 
 void Game::checkForInstantWin(const MilitaryResult& militaryResult)
 {
-   /* if (militaryResult.supremacyAchieved) {
-        std::cout << "\n!!! VICTORIE INSTANTANEE !!!\n";
-        std::cout << m_currentPlayer->getName() << " a castigat prin SUPREMATIE MILITARA!\n";
-        m_gameOver = true;
-        return;
-    }*/
-
+    /* Logic remains commented out until you implement it */
 }
 
 void Game::startNextAge()
 {
     m_currentAge++;
     if (m_currentAge > 3) {
-        //sa apelam aici o functie de ne calculeaza cine a castigat?
         m_gameOver = true;
         return;
     }
-	//trebuie ceva ca sa vedem cine incepe primul in urmatoarea epoca
-	m_setup.startAge(m_currentAge);
+    m_setup.startAge(m_currentAge);
 }
 
 bool Game::isEndOfAge()
@@ -55,39 +47,19 @@ bool Game::isEndOfAge()
     return m_setup.getBoard().isPyramidEmpty();
 }
 
-void Game::run()
+// --- THE CHANGED FUNCTION ---
+void Game::initialize()
 {
-    // ... (logica de început de joc)
-    
+    // 1. Reset variables
+    m_currentAge = 1;
+    m_gameOver = false;
 
-    for (m_currentAge = 1; m_currentAge <= 3 && !m_gameOver; ++m_currentAge)
-    {
-		m_setup.startAge(m_currentAge);
-        std::cout << m_board;
-        m_board.printChildrenList();
+    // 2. Prepare the board for the first age
+    m_setup.startAge(m_currentAge);
 
-       /* while (!isEndOfAge() && !m_gameOver)
-        {
-            m_board.updateVisibility(); // Actualizează cărțile vizibile
+    // 3. (Optional) Debug print to verify it loaded
+    std::cout << "Game Initialized. Age 1 started." << std::endl;
 
-             --- AFIȘEAZĂ TABLA AICI ---
-           
-            
-             Afișează și starea jucătorilor, dacă ai o funcție pentru asta
-            // std::cout << *m_currentPlayer;
-            // std::cout << *m_opponent;
-
-            //handlePlayerAction();
-            
-            //checkForInstantWin(); // Verifică dacă tura curentă a dus la o victorie
-            
-            if (!m_gameOver) {
-                switchTurn();
-            }
-        }*/
-        
-        // Aici poți adăuga logica de la finalul epocii (ex: conflict militar)
-    }
-
-    // ... (logica de final de joc)
+    // 4. Return immediately! 
+    // The MainWindow will now display m_board on the screen.
 }

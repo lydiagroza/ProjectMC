@@ -1,24 +1,17 @@
-﻿#include <iostream>
-#include <exception>
-#include "Game.h" // Include-ul esențial pentru clasa Game
+﻿#include "MainWindow.h" // Include your new window header
+#include <QApplication> // Include the Qt application header
 
-int main() {
-    try {
-     
-        Game game;
-        game.run();
-    }
-    catch (const std::exception& e) {
-        // Prinde orice eroare standard care ar putea apărea.
-        std::cerr << "[CRITICAL ERROR]: A aparut o eroare neasteptata: " << e.what() << std::endl;
-        return 1; // Returnează un cod de eroare
-    }
-    catch (...) {
-        // Prinde orice alt tip de eroare necunoscută.
-        std::cerr << "[CRITICAL ERROR]: A aparut o eroare necunoscuta." << std::endl;
-        return 2; // Returnează un alt cod de eroare
-    }
+int main(int argc, char* argv[])
+{
+    // 1. Initialize the Qt system
+    QApplication a(argc, argv);
 
-    std::cout << "\nJocul s-a terminat cu succes. La revedere!\n";
-    return 0; // Succes
+    // 2. Create your GUI Window
+    MainWindow w;
+
+    // 3. Display the window
+    w.show();
+
+    // 4. Start the event loop (The app sits here and waits for clicks)
+    return a.exec();
 }

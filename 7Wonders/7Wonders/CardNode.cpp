@@ -38,7 +38,7 @@ bool CardNode::isPlayable() const
 std::string CardNode::getName() const
 {
 	if (m_card != nullptr) {
-		return m_card->get_name();
+		return m_card->getName();
 	}
 	return "Empty Node";
 }

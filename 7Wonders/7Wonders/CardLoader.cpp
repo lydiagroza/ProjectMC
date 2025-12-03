@@ -159,22 +159,54 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
     // map for fixed (no-parameter) effects
     static const unordered_map<string, function<void(Player&)>> effectMap = {
         {"add_resource_wood", [](Player& p) { p.add_Resource(Resource::Wood, 1); }},
+         {"add_resource_coin4", [](Player& p) { p.add_Resource(Resource::Coin, 4); }},
+          {"add_resource_coin6", [](Player& p) { p.add_Resource(Resource::Coin, 6); }},
+        {"add_resource_clay2", [](Player& p) { p.add_Resource(Resource::Clay, 2); }},
+        {"add_resource_wood2", [](Player& p) { p.add_Resource(Resource::Wood, 2); }},
+        {"add_resource_stone2", [](Player& p) { p.add_Resource(Resource::Stone, 2); }},
         {"add_resource_stone", [](Player& p) { p.add_Resource(Resource::Stone, 1); }},
         {"add_resource_clay", [](Player& p) { p.add_Resource(Resource::Clay, 1); }},
         {"add_resource_glass", [](Player& p) { p.add_Resource(Resource::Glass, 1); }},
         {"add_resource_papyrus", [](Player& p) { p.add_Resource(Resource::Papyrus, 1); }},
-        {"coin2Wonder",[](Player& p) {}},
-        {"coin2Brown",[](Player& p) {}},
-        {"coin1Yellow",[](Player& p) {}},
-        {"coin3Gray",[](Player& p) {}},
-        {"coin1Red",[](Player& p) {}}
-   
+        {"add_scientific_symbol_ink", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol:: Ink); }},
+        {"add_scientific_symbol_scales", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
+        {"add_scientific_symbol_mortar", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Ink); }},
+        {"add_scientific_symbol_gyroscope", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Gyroscope); }},
+        {"add_scientific_symbol_sun_dial", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Sun_Dial); }},
+        {"add_scientific_symbol_wheel", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Wheel); }},
+        {"coin2Wonder",[](Player& p) {
+         p.add_Resource(Resource::Coin, 2 * p.getWonders().size()); 
+        }},
+        {"coin2Brown",[](Player& p) {
+        p.add_Resource(Resource::Coin, 2 * p.getInventory()[Color::Brown].size()); 
+        }},
+        {"coin1Yellow",[](Player& p) {
+              p.add_Resource(Resource::Coin,  p.getInventory()[Color::Yellow].size());
+        }},
+        {"coin3Gray",[](Player& p) {
+          p.add_Resource(Resource::Coin, 3 * p.getInventory()[Color::Gray].size());
+        }},
+        {"coin1Red",[](Player& p) {
+          p.add_Resource(Resource::Coin,  p.getInventory()[Color::Red].size());
+        }},
+     
+       {"sale_stone1",[](Player& p) {
+            p.set_discountedResource(2);
+        }},
+         {"sale_wood1",[](Player& p) {
+        [p.set_discountedResource(0)] ;
+        }},
+          {"sale_clay1",[](Player& p) {
+            p.set_discountedResource(1); 
+        }},
+
     };
 
     const string vpPrefix = "add_VictoryPoint";
     const string mpPrefix = "add_MilitaryPoint";
 
     while (getline(ss, token, ';')) {
+        int ok = 0;
         token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
 
         // numeric-suffixed tokens (variable amount)
@@ -182,18 +214,23 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
             int amount = stoi(token.substr(vpPrefix.size()));
             effects.push_back([amount](Player& p) { p.add_Points(Points::Victory, static_cast<std::uint8_t>(amount)); });
             continue;
+            ok = 1;
         }
-        if (token.rfind(mpPrefix, 0) == 0) {
+         else if (token.rfind(mpPrefix, 0) == 0) {
             int amount = stoi(token.substr(mpPrefix.size()));
             effects.push_back([amount](Player& p) { p.add_Points(Points::Military, static_cast<std::uint8_t>(amount)); });
             continue;
+            ok = 1;
         }
  // fixed tokens lookup
         auto it = effectMap.find(token);
-        if (it != effectMap.end()) {
+       if (it != effectMap.end()) {
             effects.push_back(it->second);
             continue;
+            ok = 1;
         }
+        
+       if (ok == 0) cout << "Effect " << token << " unknown" << endl; 
 
         // unknown token: optionally log or ignore
         // std::cerr << "Unknown effect token: " << token << std::endl;

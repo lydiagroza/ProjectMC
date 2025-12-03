@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <vector>
+#include <QEvent>
 #include "Game.h"
 
 class MainWindow : public QMainWindow {
@@ -12,6 +13,9 @@ class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
+
+protected:
+    bool eventFilter(QObject* watched, QEvent* event) override;
 
 private slots:
     void handleStartButton();
@@ -26,6 +30,7 @@ private:
     QPushButton* startButton;
     QLabel* titleLabel;     // Titlul mare (ex: "7 WONDERS DUEL")
     QLabel* ageLabel;       // Subtitlu (ex: "Age I")
+    QLabel* m_tooltipLabel; // Tooltip for card stats
 
     // Lista butoanelor (carti)
     std::vector<QPushButton*> m_cardButtons;

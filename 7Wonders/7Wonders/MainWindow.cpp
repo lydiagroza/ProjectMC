@@ -1,6 +1,12 @@
 ﻿#include "MainWindow.h"
 #include <QApplication>
 #include <QScreen>
+#include <QVariant>
+#include <QMouseEvent>
+#include "CardNode.h"
+#include <sstream>
+
+Q_DECLARE_METATYPE(CardNode*);
 
 // --- CONSTANTE DIMENSIUNI ---
 const int CARD_W = 90;   // Lățime carte
@@ -16,6 +22,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     // 2. Widget Central
     centralWidget = new QWidget(this);
     this->setCentralWidget(centralWidget);
+    centralWidget->installEventFilter(this); // <-- Instalam filtrul de evenimente
 
     // --- STIL INITIAL (FUNDAL GENERAL) ---
     // #34495e = Un gri-albastru închis, arată ca o masă de joc modernă
@@ -49,6 +56,22 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     startButton->setGeometry((1280 - btnW) / 2, (800 - btnH) / 2, btnW, btnH);
 
     connect(startButton, &QPushButton::clicked, this, &MainWindow::handleStartButton);
+
+    // --- TOOLTIP LABEL ---
+    m_tooltipLabel = new QLabel(centralWidget);
+    m_tooltipLabel->setStyleSheet(
+        "QLabel { "
+        "  background-color: #f1c40f; "
+        "  color: black; "
+        "  font-weight: bold; "
+        "  border: 2px solid black; "
+        "  border-radius: 5px; "
+        "  padding: 5px; "
+        "}"
+    );
+    m_tooltipLabel->setAlignment(Qt::AlignCenter);
+    m_tooltipLabel->setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint);
+    m_tooltipLabel->hide();
 }
 
 MainWindow::~MainWindow() {
@@ -123,7 +146,7 @@ void MainWindow::drawPyramid() {
         if (rowNodes.empty()) break;
 
         // Calcule centrare
-        int totalW = rowNodes.size() * CARD_W + (rowNodes.size() - 1) * SPACING;
+        int totalW = static_cast<int>(rowNodes.size()) * CARD_W + (static_cast<int>(rowNodes.size()) - 1) * SPACING;
         int currentX = centerX - (totalW / 2);
         int currentY = startY + (r * (CARD_H - OVERLAP));
 
@@ -131,6 +154,7 @@ void MainWindow::drawPyramid() {
 
             if (!node->isPlayed()) {
                 QPushButton* btn = new QPushButton(centralWidget);
+                btn->setProperty("cardNode", QVariant::fromValue(node));
                 btn->setGeometry(currentX, currentY, CARD_W, CARD_H);
 
                 // === STILIZARE NOUĂ PENTRU CONTURURI CLARE ===
@@ -197,4 +221,57 @@ void MainWindow::drawPyramid() {
 
 void MainWindow::onCardClicked() {
     // Aici vom adăuga logica de cumpărare data viitoare
+}
+
+bool MainWindow::eventFilter(QObject* watched, QEvent* event)
+{
+    // Verificam daca evenimentul este pe un buton de carte
+    QPushButton* btn = qobject_cast<QPushButton*>(watched);
+    if (!btn || !m_cardButtons.empty() && std::find(m_cardButtons.begin(), m_cardButtons.end(), btn) == m_cardButtons.end()) {
+        return QMainWindow::eventFilter(watched, event);
+    }
+
+    // Preluam nodul asociat (daca exista)
+    QVariant property = btn->property("cardNode");
+    if (!property.isValid()) {
+        return QMainWindow::eventFilter(watched, event);
+    }
+    CardNode* node = property.value<CardNode*>();
+
+    if (event->type() == QEvent::Enter)
+    {
+        // --- AFISAM TOOLTIP ---
+        if (node && node->getCard() && node->getFace() == Face::Up)
+        {
+            std::shared_ptr<CardBase> card = node->getCard();
+            std::map<Resource, std::uint8_t> cost = card->getCost();
+            std::stringstream ss;
+
+            ss << "Cost: ";
+            if (cost.empty()) {
+                ss << "Free";
+            } else {
+                for (auto const& [resource, amount] : cost) {
+                    if (amount > 0) {
+                        ss << to_string(resource) << "(" << (int)amount << ") ";
+                    }
+                }
+            }
+            
+            m_tooltipLabel->setText(QString::fromStdString(ss.str()));
+            
+            // Pozitionam tooltip-ul deasupra butonului
+            m_tooltipLabel->adjustSize(); // Calculam marimea mai intai
+            QPoint pos = btn->mapToGlobal(QPoint((btn->width() - m_tooltipLabel->width())/2, -m_tooltipLabel->height() - 5));
+            m_tooltipLabel->move(pos);
+            m_tooltipLabel->show();
+        }
+    }
+    else if (event->type() == QEvent::Leave)
+    {
+        // --- ASCUNDEM TOOLTIP ---
+        m_tooltipLabel->hide();
+    }
+
+    return QMainWindow::eventFilter(watched, event);
 }

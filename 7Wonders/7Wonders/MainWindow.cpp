@@ -1,7 +1,10 @@
 ﻿#include "MainWindow.h"
 #include <QApplication>
 #include <QScreen>
+<<<<<<< HEAD
 #include <QMessageBox> // Necesar pentru pop-up la finalul jocului
+=======
+>>>>>>> parent of a2a2478 (hoover action)
 
 // --- CONSTANTE DIMENSIUNI ---
 const int CARD_W = 90;   // Lățime carte
@@ -50,6 +53,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     startButton->setGeometry((1280 - btnW) / 2, (800 - btnH) / 2, btnW, btnH);
 
     connect(startButton, &QPushButton::clicked, this, &MainWindow::handleStartButton);
+<<<<<<< HEAD
 
     // --- BUTON DEBUG: NEXT AGE ---
     nextAgeButton = new QPushButton("DEBUG: Next Age >>", centralWidget);
@@ -65,6 +69,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     nextAgeButton->hide();
 
     connect(nextAgeButton, &QPushButton::clicked, this, &MainWindow::handleNextAgeButton);
+=======
+>>>>>>> parent of a2a2478 (hoover action)
 }
 
 MainWindow::~MainWindow() {
@@ -147,11 +153,16 @@ void MainWindow::drawPyramid() {
         }
         if (rowNodes.empty()) break;
 
+<<<<<<< HEAD
         // --- FIX PENTRU POZIȚIONARE (AGE 3 - RÂNDUL DIN MIJLOC) ---
         bool isSplitRow = (currentAge == 3 && r == 3);
         int visualCount = isSplitRow ? 4 : rowNodes.size();
 
         int totalW = visualCount * CARD_W + (visualCount - 1) * SPACING;
+=======
+        // Calcule centrare
+        int totalW = rowNodes.size() * CARD_W + (rowNodes.size() - 1) * SPACING;
+>>>>>>> parent of a2a2478 (hoover action)
         int currentX = centerX - (totalW / 2);
         int currentY = startY + (r * (CARD_H - OVERLAP));
 
@@ -230,6 +241,7 @@ void MainWindow::drawPyramid() {
 }
 
 void MainWindow::onCardClicked() {
+<<<<<<< HEAD
     QMessageBox::information(this, "Click", "Ai dat click pe o carte!");
 }
 
@@ -245,4 +257,7 @@ void MainWindow::handleNextAgeButton() {
     else {
         QMessageBox::information(this, "Info", "Ai ajuns la finalul jocului (Era 3)!");
     }
+=======
+    // Aici vom adăuga logica de cumpărare data viitoare
+>>>>>>> parent of a2a2478 (hoover action)
 }

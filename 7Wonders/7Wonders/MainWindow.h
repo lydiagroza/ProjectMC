@@ -3,10 +3,11 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <vector>
 #include "Game.h"
 
 class MainWindow : public QMainWindow {
-    Q_OBJECT // Essential macro for Qt
+    Q_OBJECT
 
 public:
     MainWindow(QWidget* parent = nullptr);
@@ -14,13 +15,24 @@ public:
 
 private slots:
     void handleStartButton();
+    void onCardClicked(); // Slot nou pentru când dai click pe o carte
 
 private:
     Game m_game;
 
-    // UI Elements (We are doing this without the designer for now to keep it simple)
+    // UI Elements
     QWidget* centralWidget;
-    QVBoxLayout* layout;
+    // Nu mai folosim Layout pentru carti, le punem cu coordonate fixe (setGeometry)
+    // Dar pastram layout-ul doar pentru meniul de start
+    QVBoxLayout* mainLayout;
+
     QPushButton* startButton;
     QLabel* infoLabel;
+
+    // Lista butoanelor care reprezinta cartile (ca sa le putem sterge)
+    std::vector<QPushButton*> m_cardButtons;
+
+    // Functii ajutatoare
+    void drawPyramid();
+    void clearPyramidUI();
 };

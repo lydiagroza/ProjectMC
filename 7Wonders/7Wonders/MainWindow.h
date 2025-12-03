@@ -16,9 +16,11 @@ public:
 private slots:
     void handleStartButton();
     void onCardClicked();
+    void handleNextAgeButton();
 
 private:
     Game m_game;
+    QPushButton* nextAgeButton;
 
     // UI Elements
     QWidget* centralWidget;

@@ -55,12 +55,12 @@ class Board;
       }
 
       // Getteri 
-      const std::string& get_name() const;
-      std::uint16_t get_id() const;
-      Color get_color() const;
-      const std::map<Resource, std::uint8_t>& get_cost() const;
-      const std::optional<Symbol>& get_symbol() const;
-      const std::optional<Symbol>& get_unlocks() const;
+      const std::string& getName() const;
+      std::uint16_t getId() const;
+      Color getColor() const;
+      const std::map<Resource, std::uint8_t>& getCost() const;
+      const std::optional<Symbol>& getSymbol() const;
+      const std::optional<Symbol>& getUnlocks() const;
       std::uint8_t getCostForResource(Resource r) const {
           auto it = m_cost.find(r);
           if (it != m_cost.end()) {

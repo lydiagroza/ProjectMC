@@ -126,7 +126,7 @@ void Board::printDiscardPile(std::ostream& fout) const
     }
     std::cout << "[ ";
     for (const auto& card : m_discardPile)
-        std::cout << card->get_name() << ", ";
+        std::cout << card->getName() << ", ";
 
     std::cout << "]\n";
 }
@@ -135,7 +135,7 @@ void Board::removeCardFromDiscardPile(std::shared_ptr<CardBase> card)
 {
     for (auto it = m_discardPile.begin(); it != m_discardPile.end(); ++it)
     {
-        if ((*it)->get_id() == card->get_id())
+        if ((*it)->getId() == card->getId())
         {
             m_discardPile.erase(it);
             return;
@@ -160,7 +160,7 @@ void Board::printCardsTree(std::ostream& os) const
             const auto* node = nodePtr.get();
             if (!node->isPlayed()) {
                 // Lungimea numelui + statusul [OK]/[D]
-                size_t len = node->getCard()->get_name().length() + 6;
+                size_t len = node->getCard()->getName().length() + 6;
                 if (len > max_text_width) max_text_width = len;
             }
         }
@@ -212,7 +212,7 @@ void Board::printCardsTree(std::ostream& os) const
                 else {
                     std::string status = (node->isPlayable() ? "[OK]" : "[BLK]"); // BLK = Blocat
                     // Trunchiem numele dacă e prea lung
-                    std::string name = node->getCard()->get_name();
+                    std::string name = node->getCard()->getName();
                     if (name.length() > max_text_width - 5) name = name.substr(0, max_text_width - 5);
                     content = name + " " + status;
                 }
@@ -235,7 +235,7 @@ void Board::printChildrenList() const {
             const auto* node = nodePtr.get();
             if (node->isPlayed()) continue;
 
-            std::cout << "-> " << node->getCard()->get_name();
+            std::cout << "-> " << node->getCard()->getName();
 
             const auto& children = node->getChildren();
             if (children.empty()) std::cout << " [LIBER]\n";
@@ -243,7 +243,7 @@ void Board::printChildrenList() const {
                 std::cout << " [BLOCAT DE]: ";
                 for (const auto* child : children) {
                     if (!child->isPlayed()) // Aratam doar copiii care inca sunt pe masa
-                        std::cout << child->getCard()->get_name() << ", ";
+                        std::cout << child->getCard()->getName() << ", ";
                 }
                 std::cout << "\n";
             }

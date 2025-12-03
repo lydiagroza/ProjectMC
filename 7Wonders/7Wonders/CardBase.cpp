@@ -4,22 +4,22 @@
 #include <vector>
 
 
-	const std::string&CardBase::get_name() const {
+	const std::string&CardBase::getName() const {
 		return m_name;
 	}
-	std::uint16_t CardBase::get_id() const {
+	std::uint16_t CardBase::getId() const {
 		return m_id;
 	}
-	Color CardBase::get_color() const {
+	Color CardBase::getColor() const {
 		return m_color;
 	}
-	const std::map<Resource, std::uint8_t>& CardBase::get_cost() const {
+	const std::map<Resource, std::uint8_t>& CardBase::getCost() const {
 		return m_cost;
 	}
-	const std::optional<Symbol>& CardBase::get_symbol() const {
+	const std::optional<Symbol>& CardBase::getSymbol() const {
 		return m_symbol;
 	}
-	const std::optional<Symbol>& CardBase::get_unlocks() const {
+	const std::optional<Symbol>& CardBase::getUnlocks() const {
 		return m_unlocks;
 	}
 	void CardBase::applyEffect(Player& player,const Player& opponent, const Board & board) const
@@ -34,7 +34,7 @@
 	}
 	std::ostream& operator<<(std::ostream& os, const CardBase& card)
 	{
-		os << "Card ID: " << card.get_id() << ", Name: " << card.get_name();
+		os << "Card ID: " << card.getId() << ", Name: " << card.getName();
 		return os;
 	}
 

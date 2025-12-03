@@ -77,13 +77,14 @@ std::uint8_t Player::getUnitTradeCost(Resource r, const Player& opponent) const 
 
 
 //Functie care returneaza un map cu resursele lipsa pentru o carte 
-std::map<Resource, std::uint8_t> Player::getMissingResources(const CardBase& card, const Player& opponent) const {
-	
+std::map<Resource, std::uint8_t> Player::MissingResources(const std::map<Resource, std::uint8_t>& requiredResources,const Player& opponent) const {
+
 	std::map<Resource, std::uint8_t> missingResources;
-	
-	for (const auto& [res, reqAmount] : card.get_cost()) {
+
+	// Calculăm resursele lipsă
+	for (const auto& [res, reqAmount] : requiredResources) {
 		if (res == Resource::Coin) continue;
-		
+
 		uint8_t availableResource = m_Resources.count(res) ? m_Resources.at(res) : 0;
 
 		if (availableResource < reqAmount) {
@@ -91,10 +92,11 @@ std::map<Resource, std::uint8_t> Player::getMissingResources(const CardBase& car
 		}
 	}
 
-	for (const auto& [sourceName,choiceOptions] : m_flexibleResources) {
+	// Folosim resursele flexibile pentru a acoperi lipsurile
+	for (const auto& [sourceName, choiceOptions] : m_flexibleResources) {
 
-		Resource bestResourceToCover = Resource::Coin; 
-		std::uint8_t maxCost = -1;
+		Resource bestResourceToCover = Resource::Coin;
+		std::uint8_t maxCost = 0;
 
 		// Găsim cea mai SCUMPĂ resursă lipsă pe care o putem acoperi
 		for (Resource resToCover : choiceOptions) {
@@ -124,14 +126,15 @@ std::map<Resource, std::uint8_t> Player::getMissingResources(const CardBase& car
 	}
 
 	return missingResources;
-
 }
 
 
 //Functia care ne zice cati banuti trebuie sa dea pentru resursele lipsa (excludem banutii pentru ca ei nu fac parte din logica de comert)
-std::uint8_t Player::calculateTradeCost(const CardBase& card, const Player& opponent)const {
-	const auto missingResources = this->getMissingResources(card, opponent);
+std::uint8_t Player::calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources,const Player& opponent) const {
+
+	const auto missingResources = this->MissingResources(requiredResources, opponent);
 	std::uint8_t totalTradeCost = 0;
+
 	for (const auto& [res, missingAmount] : missingResources) {
 		if (res == Resource::Coin) {
 			continue;
@@ -139,35 +142,61 @@ std::uint8_t Player::calculateTradeCost(const CardBase& card, const Player& oppo
 		std::uint8_t costPerUnit = this->getUnitTradeCost(res, opponent);
 		totalTradeCost += missingAmount * costPerUnit;
 	}
+
 	return totalTradeCost;
 }
 
 
+template<typename T>
+std::map<Resource, std::uint8_t> Player::getMissingResources(const T& buildable, const Player& opponent) const {
+	return MissingResources(buildable.getCost(), opponent);
+}
+
+template<typename T>
+std::uint8_t Player::getTradeCost(const T& buildable, const Player& opponent) const {
+	return calculateTradeCost(buildable.getCost(), opponent);
+}
+
 
 //Functie care returneaza costul pentru  a cumpara cartea 
-std::uint8_t Player::getTotalCardCost (const CardBase& card, const Player& opponent) {
-	if (card.m_unlocks.has_value() && m_chainSymbols.count(card.m_unlocks.value())) {
-		return 0; // Costul este 0 (Gratuit)
+template<typename T>
+std::uint8_t Player::getTotalCost(const T& buildable, const Player& opponent) const {
+	// Verifică dacă buildable are chain symbol și dacă îl avem (doar pentru CardBase)
+	if constexpr (std::is_same_v<T, CardBase>) {
+		if (buildable.m_unlocks.has_value() && m_chainSymbols.count(buildable.m_unlocks.value())) {
+			return 0; // Costul este 0 (Gratuit prin chain)
+		}
 	}
-	std::uint8_t totalCost = this->calculateTradeCost(card, opponent) + card.getCostForResource(Resource::Coin);
+
+	std::uint8_t totalCost = this->getTradeCost(buildable, opponent) + buildable.getCostForResource(Resource::Coin);
+
 	if (m_Resources.count(Resource::Coin) && m_Resources.at(Resource::Coin) >= totalCost) {
 		return totalCost;
 	}
-	return -1;
-	
+
+	return static_cast<std::uint8_t>(-1); // 255 = imposibil
 }
+
+template std::map<Resource, std::uint8_t> Player::getMissingResources<CardBase>(const CardBase&, const Player&) const;
+template std::map<Resource, std::uint8_t> Player::getMissingResources<Wonder>(const Wonder&, const Player&) const;
+
+template std::uint8_t Player::getTradeCost<CardBase>(const CardBase&, const Player&) const;
+template std::uint8_t Player::getTradeCost<Wonder>(const Wonder&, const Player&) const;
+
+template std::uint8_t Player::getTotalCost<CardBase>(const CardBase&, const Player&) const;
+template std::uint8_t Player::getTotalCost<Wonder>(const Wonder&, const Player&) const;
 
 
 
 
 //Functie care cumpara cartea 
 bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board &board) {
-	std::uint8_t totalCoinCost = this->getTotalCardCost(*card, opponent);
+	std::uint8_t totalCoinCost = this->getTotalCost(*card, opponent);
 	if (totalCoinCost == 0) {
-		std::cout << "Card " << card->get_name() << "is free." << std::endl;
+		std::cout << "Card " << card->getName() << " is free." << std::endl;
 	}
-	if (totalCoinCost ==-1) {
-		std::cout << "Card " << card->get_name() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
+	if (totalCoinCost == static_cast<std::uint8_t>(-1)) {
+		std::cout << "Card " << card->getName() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
 		return false;
 	}
 	if (totalCoinCost > 0) {
@@ -176,7 +205,7 @@ bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, con
 
 	m_Inventory[card->m_color].push_back(card);
 	card->applyEffect(*this, opponent, board);
-	std::cout << "Card " << card->get_name() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
+	std::cout << "Card " << card->getName() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
 	return true;
 
 }
@@ -189,7 +218,7 @@ void Player::addCardToInventory(std::shared_ptr<CardBase> card) {
 bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
     auto& cards = m_Inventory[card->m_color];
 	for (auto it = cards.begin(); it != cards.end(); ++it) {
-		if ((*it)->get_id() == card->get_id()) {
+		if ((*it)->getId() == card->getId()) {
 			cards.erase(it);
 			return true;
 		}
@@ -205,8 +234,34 @@ void Player::discardCard(const CardBase& card) {
 	addCoins(gainedCoins);
 }
 
+void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board) {
+	std::uint8_t totalCoinCost = this->getTotalCost(wonderToBuild, opponent); // TEMPLATE!
+
+	if (totalCoinCost == static_cast<std::uint8_t>(-1)) {
+		std::cout << "Wonder " << wonderToBuild.getName() << " can't be built: Insufficient funds or resource trading cost is too high." << std::endl;
+		return;
+	}
+
+	if (totalCoinCost > 0) {
+		m_Resources[Resource::Coin] -= totalCoinCost;
+	}
+
+	// Marcăm wonder ca built
+	wonderToBuild.setIsBuilt();
+
+	// Aplicăm efectul de la wonder
+	for (const auto& effect : wonderToBuild.getEffects()) {
+		effect(*this, opponent);
+	}
+
+	// Discard la cartea care o folosim să activăm wonder
+	board.addCardToDiscardPile(cardUsed);
+
+	std::cout << "Wonder " << wonderToBuild.getName() << " constructed successfully. Cost paid: " << static_cast<int>(totalCoinCost) << " coins." << std::endl;
+}
 
 
+//Ce este mai jos nu cred ca mai trebuie,am facut functiile template astfel putem folosi atat pentru a verifica daca isi permite cartea cat si Wonderul
 
 //void Player::constructWonder(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board) {
 	/*board.incrementWondersBuilt();*/ // ---> avem un bool la wonders. daca e sau nu built ca sa nu avem 2 mapuri de wonders 

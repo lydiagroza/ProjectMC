@@ -1,66 +1,92 @@
-#include "MainWindow.h"
-#include <QString>
-#include <QMessageBox> // Pentru mesaje pop-up
+﻿#include "MainWindow.h"
+#include <QApplication>
+#include <QScreen>
 
-// Constante pentru dimensiuni
-const int CARD_W = 90;
-const int CARD_H = 130;
-const int SPACING = 15;
-const int OVERLAP = 50;
+// --- CONSTANTE DIMENSIUNI ---
+const int CARD_W = 90;   // Lățime carte
+const int CARD_H = 130;  // Înălțime carte
+const int SPACING = 15;  // Spațiu orizontal între cărți
+const int OVERLAP = 50;  // Suprapunere verticală
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
-    // 1. Setup Window
-    this->setWindowTitle("7 Wonders Duel - Qt Interface");
-    this->resize(1024, 768); // Facem fereastra mai mare pentru piramida
+    // 1. Setări Fereastră
+    this->setWindowTitle("7 Wonders Duel");
+    this->resize(1280, 800);
 
-    // 2. Setup UI Elements
+    // 2. Widget Central
     centralWidget = new QWidget(this);
     this->setCentralWidget(centralWidget);
 
-    // Folosim un layout doar pentru titlu si butonul de start
-    mainLayout = new QVBoxLayout(centralWidget);
-    mainLayout->setAlignment(Qt::AlignTop); // Le punem sus
+    // --- STIL INITIAL (FUNDAL GENERAL) ---
+    // #34495e = Un gri-albastru închis, arată ca o masă de joc modernă
+    centralWidget->setStyleSheet("background-color: #34495e;");
 
-    infoLabel = new QLabel("Welcome to 7 Wonders Duel!", centralWidget);
-    QFont font = infoLabel->font();
-    font.setPointSize(16);
-    font.setBold(true);
-    infoLabel->setFont(font);
-    infoLabel->setAlignment(Qt::AlignCenter);
-    infoLabel->setStyleSheet("color: #2c3e50; background-color: #ecf0f1; padding: 10px; border-radius: 5px;");
+    // --- TITLU ---
+    titleLabel = new QLabel("7 WONDERS DUEL", centralWidget);
+    titleLabel->setStyleSheet("color: white; font-size: 48px; font-weight: bold; background: transparent;");
+    titleLabel->setAlignment(Qt::AlignCenter);
+    titleLabel->setGeometry(0, 50, 1280, 80);
 
-    startButton = new QPushButton("Start Game", centralWidget);
-    startButton->setMinimumHeight(50);
-    startButton->setStyleSheet("background-color: #27ae60; color: white; font-weight: bold; font-size: 14px; border-radius: 5px;");
+    // --- SUBTITLU ERA (Initial gol) ---
+    ageLabel = new QLabel("", centralWidget);
+    ageLabel->setStyleSheet("color: #f1c40f; font-size: 32px; font-weight: bold; background: transparent;");
+    ageLabel->setAlignment(Qt::AlignCenter);
+    ageLabel->setGeometry(0, 130, 1280, 50);
 
-    // Adaugam in layout
-    mainLayout->addWidget(infoLabel);
-    mainLayout->addWidget(startButton);
+    // --- BUTON START ---
+    startButton = new QPushButton("START GAME", centralWidget);
+    startButton->setStyleSheet(
+        "QPushButton {"
+        "  background-color: #27ae60; color: white;"
+        "  font-size: 24px; font-weight: bold;"
+        "  border-radius: 15px; border: 3px solid #219150;"
+        "}"
+        "QPushButton:hover { background-color: #2ecc71; }"
+    );
 
-    // Conectam butonul
+    // Centrare Buton
+    int btnW = 250, btnH = 80;
+    startButton->setGeometry((1280 - btnW) / 2, (800 - btnH) / 2, btnW, btnH);
+
     connect(startButton, &QPushButton::clicked, this, &MainWindow::handleStartButton);
-
-    // 3. Initialize Game (Backend)
-    // Putem lasa initializarea aici sau o mutam in Start
-    // m_game.initialize(); 
 }
 
 MainWindow::~MainWindow() {
     clearPyramidUI();
 }
 
+// Funcție pentru a schimba textele ajutătoare în funcție de eră
+void MainWindow::applyAgeStyle(int age) {
+    if (age == 1) {
+        ageLabel->setText("AGE I");
+        ageLabel->setStyleSheet("color: #D7CCC8; font-size: 32px; font-weight: bold;"); // Bej deschis
+    }
+    else if (age == 2) {
+        ageLabel->setText("AGE II");
+        ageLabel->setStyleSheet("color: #AED6F1; font-size: 32px; font-weight: bold;"); // Albastru deschis
+    }
+    else if (age == 3) {
+        ageLabel->setText("AGE III");
+        ageLabel->setStyleSheet("color: #D2B4DE; font-size: 32px; font-weight: bold;"); // Mov deschis
+    }
+}
+
 void MainWindow::handleStartButton() {
-    // 1. Actualizam textul
-    infoLabel->setText("Age I - Pyramid");
-
-    // 2. Ascundem butonul de start (ca sa nu il apesi de 2 ori)
+    // 1. Ascundem meniul de start
     startButton->hide();
-    // Sau poti sa il stergi din layout: mainLayout->removeWidget(startButton); startButton->deleteLater();
 
-    // 3. Pornim logica jocului pentru Era 1
+    // Mutăm titlul mai sus
+    titleLabel->setFont(QFont("Arial", 24, QFont::Bold));
+    titleLabel->setGeometry(0, 10, 1280, 40);
+    ageLabel->setGeometry(0, 50, 1280, 40);
+
+    // 2. Inițializăm Backend-ul (Era 1)
     m_game.getSetup().startAge(1);
 
-    // 4. Desenam Piramida
+    // 3. Setăm stilul vizual
+    applyAgeStyle(1);
+
+    // 4. Desenăm Piramida
     drawPyramid();
 }
 
@@ -72,68 +98,96 @@ void MainWindow::clearPyramidUI() {
 }
 
 void MainWindow::drawPyramid() {
-    clearPyramidUI(); // Curatam inainte sa desenam
-
+    clearPyramidUI();
     Board& board = m_game.getBoard();
 
-    // Centrul ecranului
+    // 1. Aflăm Era Curentă (Momentan 1)
+    int currentAge = 1;
+
+    // Culorile Erelor
+    QString themeColor;
+    if (currentAge == 1) themeColor = "#8D6E63";      // Maro (Age 1)
+    else if (currentAge == 2) themeColor = "#2980B9"; // Albastru (Age 2)
+    else themeColor = "#8E44AD";                      // Mov (Age 3)
+
     int centerX = this->width() / 2;
-    int startY = 150; // Lasam loc sus pentru Label
+    int startY = 150;
 
-    // Parcurgem randurile (max 20)
     for (int r = 0; r < 20; ++r) {
-
         std::vector<CardNode*> rowNodes;
         for (int c = 0; c < 20; ++c) {
             CardNode* node = board.getNodeAt(r, c);
-            if (node == nullptr) break;
+            if (!node) break;
             rowNodes.push_back(node);
         }
+        if (rowNodes.empty()) break;
 
-        if (rowNodes.empty()) break; // Gata piramida
-
-        // Calcule pentru centrare
-        int totalRowWidth = rowNodes.size() * CARD_W + (rowNodes.size() - 1) * SPACING;
-        int currentX = centerX - (totalRowWidth / 2);
+        // Calcule centrare
+        int totalW = rowNodes.size() * CARD_W + (rowNodes.size() - 1) * SPACING;
+        int currentX = centerX - (totalW / 2);
         int currentY = startY + (r * (CARD_H - OVERLAP));
 
-        for (int c = 0; c < rowNodes.size(); ++c) {
-            CardNode* node = rowNodes[c];
+        for (CardNode* node : rowNodes) {
 
-            // Daca nu e jucata (e pe masa)
             if (!node->isPlayed()) {
                 QPushButton* btn = new QPushButton(centralWidget);
                 btn->setGeometry(currentX, currentY, CARD_W, CARD_H);
 
-                // --- STILIZARE ---
+                // === STILIZARE NOUĂ PENTRU CONTURURI CLARE ===
+
                 if (node->getFace() == Face::Down) {
-                    btn->setText("???");
-                    btn->setStyleSheet(
-                        "QPushButton { background-color: #95a5a6; color: white; border: 1px solid #7f8c8d; border-radius: 8px; }"
-                    );
+                    // CAZ 1: SPATELE CĂRȚII (Face Down)
+                    // Fundal: Culoarea Erei
+                    // Contur: NEGRU (ca să nu se unească vizual)
+                    btn->setText("");
+                    btn->setStyleSheet(QString(
+                        "QPushButton {"
+                        "  background-color: %1;"  // Culoarea plină (ex: Maro)
+                        "  border: 2px solid black;" // <--- CONTUR NEGRU CLAR
+                        "  border-radius: 8px;"
+                        "}"
+                    ).arg(themeColor));
                 }
                 else {
+                    // CAZ 2: FAȚA CĂRȚII (Face Up)
                     QString name = QString::fromStdString(node->getName());
+                    if (name.length() > 9) name = name.left(7) + "..";
                     btn->setText(name);
 
                     if (node->isPlayable()) {
-                        // Carte disponibila (Verde/Albastru)
-                        btn->setStyleSheet(
-                            "QPushButton { background-color: #3498db; color: white; font-weight: bold; border: 2px solid #2980b9; border-radius: 8px; }"
-                            "QPushButton:hover { background-color: #5dade2; }"
-                        );
-                        // Aici vom conecta click-ul mai tarziu
-                        // connect(btn, &QPushButton::clicked, this, &MainWindow::onCardClicked);
+                        // DISPONIBILĂ
+                        // Fundal Alb. 
+                        // Folosim 'ridge' sau 'double' pentru a separa cartile suprapuse
+                        // SAU 'border: 2px solid black' daca vrei contrast maxim.
+
+                        // Varianta cu Ramă Colorată + Margine Neagră (simulată prin stil 'ridge')
+                        btn->setStyleSheet(QString(
+                            "QPushButton {"
+                            "  background-color: white;"
+                            "  color: black;"
+                            "  font-weight: bold;"
+                            "  border: 5px ridge %1;" // <--- RIDGE creează un efect 3D care separă cărțile
+                            "  border-radius: 8px;"
+                            "}"
+                            "QPushButton:hover { background-color: #ecf0f1; }"
+                        ).arg(themeColor));
+
+                        connect(btn, &QPushButton::clicked, this, &MainWindow::onCardClicked);
                     }
                     else {
-                        // Carte vizibila dar blocata (Galbena/Gri deschis)
-                        btn->setStyleSheet(
-                            "QPushButton { background-color: #f1c40f; color: #7f8c8d; border: 1px dashed #f39c12; border-radius: 8px; }"
-                        );
+                        // BLOCATĂ
+                        btn->setStyleSheet(QString(
+                            "QPushButton {"
+                            "  background-color: #ecf0f1;"
+                            "  color: #7f8c8d;"
+                            "  border: 2px dashed %1;" // Contur punctat colorat
+                            "  border-radius: 8px;"
+                            "}"
+                        ).arg(themeColor));
                     }
                 }
 
-                btn->show(); // Important!
+                btn->show();
                 m_cardButtons.push_back(btn);
             }
             currentX += CARD_W + SPACING;
@@ -142,5 +196,5 @@ void MainWindow::drawPyramid() {
 }
 
 void MainWindow::onCardClicked() {
-    // Vom implementa asta in pasul urmator
+    // Aici vom adăuga logica de cumpărare data viitoare
 }

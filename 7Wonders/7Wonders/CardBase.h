@@ -37,12 +37,13 @@ class Board;
       std::string m_name;
       std::uint16_t m_id : 16;
       Color m_color : 3;
-      std::optional < std::pair< Resource, int>>  m_Resources; 
+
       std::optional<Symbol> m_symbol;
       std::optional<Symbol> m_unlocks;
       std::map<Resource, std::uint8_t> m_cost;
       std::vector<std::function<void(Player&)>> m_effects;
-      bool m_isAvailable; 
+      std::optional<std::function<void(Player&)>> m_destroy; 
+
 
 
       //Constructori 
@@ -52,13 +53,10 @@ class Board;
           const std::optional<Symbol>& symbol = std::nullopt,
           const std::optional<Symbol>& unlocks = std::nullopt)
           : m_name(std::move(name)), m_id(id), m_color(color),
-          m_cost(cost), m_symbol(symbol), m_unlocks(unlocks),m_isAvailable(false) {
+          m_cost(cost), m_symbol(symbol), m_unlocks(unlocks) {
       }
 
-      // Getteri & setteri 
-      void setResource(Resource r, int qty) {
-          m_Resources = std::make_pair(r, qty);
-      }
+
       const std::string& getName() const;
       std::uint16_t getId() const;
       Color getColor() const;
@@ -76,6 +74,8 @@ class Board;
       //Fct pt efecte 
       void applyEffect(Player& player,const Player& opponenent, const Board &board)const;
       void addEffect(std::function<void(Player&)> e);
+      void setDestroy(std::optional<std::function<void(Player&)>> e);
+      void destroy(Player& player); 
     };
 
   // Operatori , fuctii to_String

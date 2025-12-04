@@ -1,13 +1,15 @@
-#pragma once
+﻿#pragma once
+
 #include <QMainWindow>
 #include <QPushButton>
 #include <QLabel>
-#include <QVBoxLayout>
+#include <QWidget>
 #include <vector>
 #include "Game.h"
+#include <QMap>
 
 class MainWindow : public QMainWindow {
-    Q_OBJECT
+   
 
 public:
     MainWindow(QWidget* parent = nullptr);
@@ -15,25 +17,43 @@ public:
 
 private slots:
     void handleStartButton();
-    void onCardClicked();
     void handleNextAgeButton();
+    void onCardClicked();
 
 private:
     Game m_game;
-    QPushButton* nextAgeButton;
 
-    // UI Elements
+    // --- UI GENERAL ---
     QWidget* centralWidget;
-    // Butoanele de meniu
-    QPushButton* startButton;
-    QLabel* titleLabel;     // Titlul mare (ex: "7 WONDERS DUEL")
-    QLabel* ageLabel;       // Subtitlu (ex: "Age I")
 
-    // Lista butoanelor (carti)
+    // ELEMENTELE CARE LIPSEAU:
+    QLabel* titleLabel;         // <--- ADAUGAT
+    QLabel* ageLabel;           // <--- ADAUGAT
+    QPushButton* startButton;   // <--- ADAUGAT
+    QPushButton* nextAgeButton; // <--- ADAUGAT
+
+    // --- UI PLAYER ZONES ---
+    QWidget* topPlayerZone;
+    QWidget* bottomPlayerZone;
+    QLabel* topPlayerLabel;
+    QLabel* bottomPlayerLabel;
+
+    // --- UI PIRAMIDA ---
     std::vector<QPushButton*> m_cardButtons;
 
-    // --- FUNCTII NOI ---
+    // --- UI DREAPTA ---
+    QWidget* rightPanel;
+    QPushButton* militaryPawn;
+    std::vector<QPushButton*> progressTokens;
+
+    // --- FUNCȚII ---
+    void setupRightPanel();
+    void updateMilitaryPawn();
+
+    void setupPlayerZones();
+    void updatePlayerInventoryUI(Player* player, QWidget* zone);
+
     void drawPyramid();
     void clearPyramidUI();
-    void applyAgeStyle(int age); // Aici schimbam culorile!
+    void applyAgeStyle(int age);
 };

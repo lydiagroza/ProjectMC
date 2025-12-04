@@ -1,12 +1,12 @@
-name,id,color,cost,symbol,unlocks,effects
-LUMBER YARD,1,Brown,"",,,"add_resource_wood"
-QUARRY,5,Brown,"",,,"add_resource_stone"
-STONE PIT,6,Brown,"coin1",,,"add_resource_stone"
-LOGGING CAMP,7,Brown,"coin1",,,"add_resource_wood"
-CLAY POOL,8,Brown,"",,,"add_resource_clay"
-CLAY PIT, 9,Brown,"1coin",,,"add_resource_clay"
-PRESS,10,Gray,"1coin",,,"add_resource_papyrus"
-GLASS WORKS,11,Gray,"1coin",,,"add_resource_glass"
+name,id,color,cost,symbol,unlocks,effects,discard
+LUMBER YARD,1,Brown,"",,,"add_resource_wood","!add_resource_wood"
+QUARRY,5,Brown,"",,,"add_resource_stone","!add_resource_stone"
+STONE PIT,6,Brown,"coin1",,,"add_resource_stone","!add_resource_stone"
+LOGGING CAMP,7,Brown,"coin1",,,"add_resource_wood","!add_resource_wood"
+CLAY POOL,8,Brown,"",,,"add_resource_clay","!add_resource_clay"
+CLAY PIT, 9,Brown,"1coin",,,"add_resource_clay","!add_resource_clay"
+PRESS,10,Gray,"1coin",,,"add_resource_papyrus","!add_resource_papyrus"
+GLASS WORKS,11,Gray,"1coin",,,"add_resource_glass","!add_resource_glass"
 APOTHECARY,12,Green,"1glass",,,"add_scientific_symbol_wheel";"add_VictoryPoint1"
 WORKSHOP,13,Green,"1papyrus",,,"add_scientific_symbol_scales";"add_VictoryPoint1"
 SCRIPTORIUM,14,Green,"2coin",,"book","add_scientific_symbol_ink";

@@ -1,9 +1,9 @@
-name,id,color,cost,symbol,unlocks,effects
-BRICKYARD,27,Brown,"2coin",,,"add_resource_clay2"
-SAWMILL,28,Brown,"2coin",,,"add_resource_wood2"
-SHELF QUARRY,29,Brown,"2coin",,,"add_resource_stone2"
-GLASS-BLOWE,30,Gray,"",,,"add_resource_glass"
-DRYING ROOM,31,Gray,"",,,"add_resource_papyrus"
+name,id,color,cost,symbol,unlocks,effects,discard
+BRICKYARD,27,Brown,"2coin",,,"add_resource_clay2","!add_resource_clay2"
+SAWMILL,28,Brown,"2coin",,,"add_resource_wood2","!add_resource_wood2"
+SHELF QUARRY,29,Brown,"2coin",,,"add_resource_stone2","!add_resource_stone2"
+GLASS-BLOWE,30,Gray,"",,,"add_resource_glass","!add_resource_glass"
+DRYING ROOM,31,Gray,"",,,"add_resource_papyrus","!add_resource_papyrus"
 ROSTRUM,32,Blue,"1stone";"1wood",,temple,"add_VictoryPoint4"
 TEMPLE,33,Blue,"1papyrus";"1wood",moon,sun,"add_VictoryPoint4"
 AQUEDUCT,34,Blue,"4stone",,droplet,"add_VictoryPoint5"

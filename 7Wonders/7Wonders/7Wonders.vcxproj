@@ -163,7 +163,7 @@
 		    <ClCompile Include="Board.cpp" />
 		    <ClCompile Include="CardBase.cpp"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile>
 		    <ClCompile Include="CardBase.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile>
-		    <ClCompile Include="CardNode.cpp" /><ClCompile Include="CardsPyramid.cpp" /><ClCompile Include="Game.cpp" /><ClCompile Include="main.cpp" /><ClCompile Include="MainWindow.cpp" /><ClCompile Include="MilitaryTrack.cpp" />
+		    <ClCompile Include="CardNode.cpp" /><ClCompile Include="CardsPyramid.cpp" /><ClCompile Include="Game.cpp" /><ClCompile Include="main.cpp" /><ClCompile Include="MainWindow.cpp"><DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">input</DynamicSource><QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).moc</QtMocFileName><DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource><QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName><DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">input</DynamicSource><QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).moc</QtMocFileName><DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource><QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName></ClCompile><ClCompile Include="MilitaryTrack.cpp" />
 		    <ClCompile Include="Player.cpp"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile><ClCompile Include="WonderLoader.cpp"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile>
 		    <ClCompile Include="Wonders.cpp"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClCompile>
 		    
@@ -176,7 +176,7 @@
 		    <ClInclude Include="CardLoader.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClInclude>
 		    <ClInclude Include="CardNode.h" /><ClInclude Include="CardsPyramid.h" />
 		    <ClInclude Include="Game.h" /><ClInclude Include="GameConstants.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClInclude>
-		    <ClInclude Include="GameSetup.h" /><ClInclude Include="WonderLoader.h" /><QtMoc Include="MainWindow.h" /><ClInclude Include="MilitaryTrack.h" />
+		    <ClInclude Include="GameSetup.h" /><ClInclude Include="WonderLoader.h" /><ClInclude Include="MainWindow.h" /><ClInclude Include="MilitaryTrack.h" />
 		    		<ClInclude Include="Player.h">
 		    			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild>
 		    			   

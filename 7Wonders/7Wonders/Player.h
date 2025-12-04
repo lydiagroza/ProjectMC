@@ -43,18 +43,14 @@ public:
 	void set_discountedResource(int a) {
 		m_discountedResource[a] = 1;
 	}
-
 	Player(const std::string& playerName); // constructor 
-	
-	// getteri 
-
-	std::vector<Wonder>& getWonders() { return m_Wonders; } // se pune & ca cica face referinta la el nu copie si e mai eficient
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
 	void addCoins(std::uint8_t amount); //
 
 	//Gestioneaza resursele
 	void add_Resource(Resource r, std::uint8_t amount);//
+	void removeResource(Resource r, std::uint8_t amount);
 
 
 	//Gestioneaza punctele de victorie
@@ -92,7 +88,7 @@ public:
 	void constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board);
 
 	//chestii pentru gestionare inventar
-	const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& getInventory() const { return m_Inventory; }
+
 	void addCardToInventory(std::shared_ptr<CardBase> card);
 	bool removeCardFromInventory(std::shared_ptr<CardBase> card);
 

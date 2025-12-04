@@ -5,17 +5,20 @@
 #include <QLabel>
 #include <QWidget>
 #include <vector>
-#include "Game.h"
+#include "Game.h" // Includem logica jocului (Backend)
+
+// ... (include-uri existente)
 #include <QMap>
 
 class MainWindow : public QMainWindow {
-   
+    Q_OBJECT
 
 public:
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
 private slots:
+    // ... sloturi existente ...
     void handleStartButton();
     void handleNextAgeButton();
     void onCardClicked();
@@ -26,15 +29,9 @@ private:
     // --- UI GENERAL ---
     QWidget* centralWidget;
 
-    // ELEMENTELE CARE LIPSEAU:
-    QLabel* titleLabel;         // <--- ADAUGAT
-    QLabel* ageLabel;           // <--- ADAUGAT
-    QPushButton* startButton;   // <--- ADAUGAT
-    QPushButton* nextAgeButton; // <--- ADAUGAT
-
-    // --- UI PLAYER ZONES ---
-    QWidget* topPlayerZone;
-    QWidget* bottomPlayerZone;
+    // --- UI PLAYER ZONES (NOU) ---
+    QWidget* topPlayerZone;    // Inventarul Adversarului (Sus)
+    QWidget* bottomPlayerZone; // Inventarul Tău (Jos)
     QLabel* topPlayerLabel;
     QLabel* bottomPlayerLabel;
 
@@ -50,8 +47,9 @@ private:
     void setupRightPanel();
     void updateMilitaryPawn();
 
-    void setupPlayerZones();
-    void updatePlayerInventoryUI(Player* player, QWidget* zone);
+    // FUNCȚII NOI PENTRU INVENTAR
+    void setupPlayerZones(); // Creează containerele sus/jos
+    void updatePlayerInventoryUI(Player* player, QWidget* zone); // Desenează cărțile micuțe
 
     void drawPyramid();
     void clearPyramidUI();

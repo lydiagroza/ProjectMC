@@ -67,7 +67,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
             }
 
             int choice = -1;
-            std::cin >> choice; // alege player ce carte sa dea discard, facem cumva in UI
+            //std::cin >> choice; // alege player ce carte sa dea discard, facem cumva in UI
 
             if (choice > 0 && choice <= grayCards.size()) {
                 auto selectedCard = grayCards[choice - 1];
@@ -95,7 +95,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
             }
 
             int choice = -1;
-            std::cin >> choice;
+            //std::cin >> choice;
 
             if (choice > 0 && choice <= discardPile.size()) {
                 auto selectedCard = discardPile[choice - 1];
@@ -125,7 +125,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
             }
 
             int choice = -1;
-            std::cin >> choice;
+            //std::cin >> choice;
 
             if (choice > 0 && choice <= availableTokens.size()) {
                 auto selectedToken = availableTokens[choice - 1];
@@ -160,7 +160,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
             }
 
             int choice = -1;
-            std::cin >> choice;
+            //std::cin >> choice;
 
             if (choice > 0 && choice <= brownCards.size()) {
                 auto selectedCard = brownCards[choice - 1];

@@ -8,6 +8,7 @@
 #include<map>
 #include<set>
 #include<vector>
+#include <bitset>
 #include<type_traits>
 #include<unordered_set>
 #include "CardBase.h"
@@ -20,7 +21,10 @@ private:
 	std::string m_name;
 	std::map<Resource, std::uint8_t> m_Resources; // All resources 
 	std::map<Points, std::uint8_t>m_pointsScore; // All points 
-	std::set<Resource>m_discountedResource; // discounted resources from yellow cards
+
+	// 0 - Wood , 1-Clay , 2- Stone, 3- Glass, 4-Papyrus 
+
+	std::bitset<5>m_discountedResource; // discounted resources from yellow cards
 	std::map<std::string, std::vector<Resource>>m_flexibleResources;
 	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // all cards 
 	std::vector<Wonder>m_Wonders; // all wonders
@@ -32,6 +36,14 @@ private:
 
 
 public:
+
+	// getteri 
+	std::map<Color, std::vector<std::shared_ptr<CardBase>>> getInventory(); 
+	std::vector<Wonder> getWonders();  
+	void set_discountedResource(int a) {
+		m_discountedResource[a] = 1;
+	}
+
 	Player(const std::string& playerName); // constructor 
 	
 	// getteri 
@@ -43,7 +55,7 @@ public:
 
 	//Gestioneaza resursele
 	void add_Resource(Resource r, std::uint8_t amount);//
-	void add_DiscountedResource(Resource r);
+
 
 	//Gestioneaza punctele de victorie
 	void add_Points(Points p, std::uint8_t amount);//

@@ -39,9 +39,7 @@ void Player::add_Resource(Resource r, std::uint8_t amount)
 	m_Resources[r] += amount;
 }
 
-void Player::add_DiscountedResource(Resource r) { 
-	m_discountedResource.insert (r) ;
-}
+
 
 //Functii pentru puncte si simboluri
 void Player::add_Points(Points p, std::uint8_t amount)

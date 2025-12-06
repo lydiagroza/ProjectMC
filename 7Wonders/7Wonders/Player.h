@@ -17,7 +17,6 @@
 #include<cstdint>
 
 class Player {
-	 
 private:
 	std::string m_name;
 	std::map<Resource, std::uint8_t> m_Resources; // All resources 
@@ -39,9 +38,11 @@ private:
 public:
 
 	// getteri 
-	const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& getInventory() const; 
-	const std::vector<Wonder>& getWonders() const;  
-	void set_discountedResource(Resource r);
+	std::map<Color, std::vector<std::shared_ptr<CardBase>>> getInventory(); 
+	std::vector<Wonder> getWonders();  
+	void set_discountedResource(int a) {
+		m_discountedResource[a] = 1;
+	}
 	Player(const std::string& playerName); // constructor 
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
@@ -95,14 +96,7 @@ public:
 private:
 	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources,const Player& opponent) const;
 	std::uint8_t calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources,const Player& opponent) const;
-	int getResourceDiscountIndex(Resource r) const;
 };
 
-extern template std::map<Resource, std::uint8_t> Player::getMissingResources<CardBase>(const CardBase&, const Player&) const;
-extern template std::map<Resource, std::uint8_t> Player::getMissingResources<Wonder>(const Wonder&, const Player&) const;
-extern template std::uint8_t Player::getTradeCost<CardBase>(const CardBase&, const Player&) const;
-extern template std::uint8_t Player::getTradeCost<Wonder>(const Wonder&, const Player&) const;
-extern template std::uint8_t Player::getTotalCost<CardBase>(const CardBase&, const Player&) const;
-extern template std::uint8_t Player::getTotalCost<Wonder>(const Wonder&, const Player&) const;
 
 #endif

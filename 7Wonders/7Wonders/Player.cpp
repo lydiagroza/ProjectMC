@@ -39,21 +39,9 @@ void Player::add_Resource(Resource r, std::uint8_t amount)
 	m_Resources[r] += amount;
 }
 
-void Player::set_discountedResource(Resource r) {
-	int index = getResourceDiscountIndex(r);
-	if (index != -1) {
-		m_discountedResource[index] = 1;
-	}
-}
-
-void Player::removeResource(Resource r, std::uint8_t amount) {
-	if (m_Resources[r] >= amount) {
-		m_Resources[r] -= amount;
-	}
-	else {
-		m_Resources[r] = 0;
-		std::cout << "Warning: Tried to remove more resources than available" << std::endl;
-	}
+void Player::removeResource(Resource r, std::uint8_t amount)
+{
+	m_Resources[r] -= amount;
 }
 
 //Functii pentru puncte si simboluri
@@ -71,25 +59,17 @@ void Player::add_ChainSymbol(Symbol symbol)
 }
 
 
-int Player::getResourceDiscountIndex(Resource r) const {
-	switch (r) {
-	case Resource::Wood: return 0;
-	case Resource::Clay: return 1;
-	case Resource::Stone: return 2;
-	case Resource::Glass: return 3;
-	case Resource::Papyrus: return 4;
-	default: return -1;
-	}
-}
+
 
 
 //Functie pentru a afla costul unei singure resurse de care jucatorul are nevoie  
 std::uint8_t Player::getUnitTradeCost(Resource r, const Player& opponent) const {
 	
-	int index = getResourceDiscountIndex(r);
-	if (index != -1 && m_discountedResource[index] == 1) {
-		return 1;
-	}
+	if (r == Resource::Wood && m_discountedResource[0] == 1) return 1; 
+	if (r == Resource::Clay && m_discountedResource[1] == 1) return 1;
+	if (r == Resource::Stone && m_discountedResource[2] == 1) return 1;
+	if (r == Resource::Glass && m_discountedResource[3] == 1) return 1;
+	if (r == Resource::Papyrus && m_discountedResource[4] == 1) return 1;
 
 	std::uint8_t opponentResourceProduction = opponent.m_Resources.count(r) ? opponent.m_Resources.at(r) : 0;
 
@@ -200,16 +180,26 @@ std::uint8_t Player::getTotalCost(const T& buildable, const Player& opponent) co
 	return static_cast<std::uint8_t>(-1); // 255 = imposibil
 }
 
+//template std::map<Resource, std::uint8_t> Player::getMissingResources<CardBase>(const CardBase&, const Player&) const;
+//template std::map<Resource, std::uint8_t> Player::getMissingResources<Wonder>(const Wonder&, const Player&) const;
+//
+//template std::uint8_t Player::getTradeCost<CardBase>(const CardBase&, const Player&) const;
+//template std::uint8_t Player::getTradeCost<Wonder>(const Wonder&, const Player&) const;
+//
+//template std::uint8_t Player::getTotalCost<CardBase>(const CardBase&, const Player&) const;
+//template std::uint8_t Player::getTotalCost<Wonder>(const Wonder&, const Player&) const;
 
 
-const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& Player:: getInventory() const {
-	return m_Inventory; 
-}
-const std::vector<Wonder>& Player::getWonders() const {
-	return m_Wonders;
-}
+
 
 //Functie care cumpara cartea 
+std::map<Color, std::vector<std::shared_ptr<CardBase>>> Player:: getInventory() {
+	return m_Inventory; 
+}
+std::vector<Wonder> Player::getWonders()
+{
+	return m_Wonders;
+}
 bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board &board) {
 	std::uint8_t totalCoinCost = this->getTotalCost(*card, opponent);
 	if (totalCoinCost == 0) {
@@ -280,17 +270,64 @@ void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderT
 	std::cout << "Wonder " << wonderToBuild.getName() << " constructed successfully. Cost paid: " << static_cast<int>(totalCoinCost) << " coins." << std::endl;
 }
 
-template std::map<Resource, std::uint8_t> Player::getMissingResources<CardBase>(const CardBase&, const Player&) const;
-template std::map<Resource, std::uint8_t> Player::getMissingResources<Wonder>(const Wonder&, const Player&) const;
-template std::uint8_t Player::getTradeCost<CardBase>(const CardBase&, const Player&) const;
-template std::uint8_t Player::getTradeCost<Wonder>(const Wonder&, const Player&) const;
-template std::uint8_t Player::getTotalCost<CardBase>(const CardBase&, const Player&) const;
-template std::uint8_t Player::getTotalCost<Wonder>(const Wonder&, const Player&) const;
 
+//Ce este mai jos nu cred ca mai trebuie,am facut functiile template astfel putem folosi atat pentru a verifica daca isi permite cartea cat si Wonderul
 
+//void Player::constructWonder(const CardBase& cardUsed, const Wonder& wonderToBuild, Player& opponent, Board& board) {
+	/*board.incrementWondersBuilt();*/ // ---> avem un bool la wonders. daca e sau nu built ca sa nu avem 2 mapuri de wonders 
+//if (board.getTotalWondersBuilt() == GameConstants::WONDER_LIMIT) {
 
+	// Logica: Cea de-a 8-a Minune r?mas? neconstruit? este scoas? din joc.
+	//Aceste  functii legate de Wonder trebuie implementate ori in Board ori in starea curenta a jocului
+	//board.discardLastAvailableWonder();
+//}
+//m_builtWonders.push_back(wonderToBuild);
+//wonderToBuild.applyEffect(*this, opponent, board);
 
+//}
 
-
+//std::uint8_t Player::getTotalWonderCost(const Wonder& wonder, const Player& opponent) {
+//    // mai trebuie getMissingResources and calculateTradeCost.
+//    // momentan verificam daca player are resurse
+//    std::uint8_t totalCost = 0;
+//    for (const auto& [res, /*missing resources?*/] : wonder.getCost()) {
+//        uint8_t availableResource = m_Resources.count(res) ? m_Resources.at(res) : 0;
+//        if (availableResource < /*missing resources?*/) {
+//            totalCost += (reqAmount - availableResource) * getUnitTradeCost(res, opponent);
+//        }
+//    }
+//    
+//    if (m_Resources.count(Resource::Coin) && m_Resources.at(Resource::Coin) >= totalCost) {
+//        return totalCost;
+//    }
+//
+//    return 255; // un nr random la carti parac era -1
+//}
+//
+//void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board) {
+//    std::uint8_t totalCoinCost = this->getTotalWonderCost(wonderToBuild, opponent);
+//
+//    if (totalCoinCost == 255) {
+//        std::cout << "Wonder " << wonderToBuild.getName() << " can't be built: Insufficient funds or resource trading cost is too high." << std::endl;
+//        return;
+//    }
+//
+//    if (totalCoinCost > 0) {
+//        m_Resources[Resource::Coin] -= totalCoinCost;
+//    }
+//
+//	// marcam wonder ca built
+//    wonderToBuild.setIsBuilt();
+//
+//	// aplicam effectul de la wonder
+//    for (const auto& effect : wonderToBuild.getEffects()) {
+//        effect(*this, opponent);
+//    }
+//
+//	// discard la cartea care o folosim sa activam wonder
+//    board.addCardToDiscardPile(cardUsed);
+//
+//    std::cout << "Wonder " << wonderToBuild.getName() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
+//}
 
 

@@ -33,4 +33,12 @@ public:
 
 	bool getIsBuilt() const { return isBuilt; }
 	void setIsBuilt() { isBuilt = true; }
+
+    std::uint8_t getCostForResource(Resource r) const {
+        auto it = m_cost.find(r);
+        if (it != m_cost.end()) {
+            return it->second;
+        }
+        return 0;
+    }
 };

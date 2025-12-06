@@ -180,5 +180,6 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
             std::cerr << "Unknown effect: " << effectStr << std::endl;
         }
     }
+
     return effects;
 }

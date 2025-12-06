@@ -50,7 +50,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
         {"add_coins12", [](Player& p, Player& o) { p.addCoins(12); }},
         {"discardOpponentGrayCard", [](Player& p, Player& o) {
             Board& board = Game::currentGame->getBoard();
-            auto& opponentInventory = o.getInventory();
+            const auto& opponentInventory = o.getInventory();
             std::vector<std::shared_ptr<CardBase>> grayCards;
             if (opponentInventory.count(Color::Gray)) {
                 grayCards = opponentInventory.at(Color::Gray);
@@ -67,7 +67,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
             }
 
             int choice = -1;
-            std::cin >> choice; // alege player ce carte sa dea discard, facem cumva in UI
+            //std::cin >> choice; // alege player ce carte sa dea discard, facem cumva in UI
 
             if (choice > 0 && choice <= grayCards.size()) {
                 auto selectedCard = grayCards[choice - 1];
@@ -95,7 +95,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
             }
 
             int choice = -1;
-            std::cin >> choice;
+            //std::cin >> choice;
 
             if (choice > 0 && choice <= discardPile.size()) {
                 auto selectedCard = discardPile[choice - 1];
@@ -125,7 +125,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
             }
 
             int choice = -1;
-            std::cin >> choice;
+            //std::cin >> choice;
 
             if (choice > 0 && choice <= availableTokens.size()) {
                 auto selectedToken = availableTokens[choice - 1];
@@ -143,7 +143,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
         {"add_MilitaryPoints2", [](Player& p, Player& o) { p.add_Points(Points::Military, 2); }},
         {"discardOpponentBrownCard", [](Player& p, Player& o) {
             Board& board = Game::currentGame->getBoard();
-            auto& opponentInventory = o.getInventory();
+          auto opponentInventory = o.getInventory();
             std::vector<std::shared_ptr<CardBase>> brownCards;
             if (opponentInventory.count(Color::Brown)) {
                 brownCards = opponentInventory.at(Color::Brown);
@@ -160,7 +160,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
             }
 
             int choice = -1;
-            std::cin >> choice;
+            //std::cin >> choice;
 
             if (choice > 0 && choice <= brownCards.size()) {
                 auto selectedCard = brownCards[choice - 1];

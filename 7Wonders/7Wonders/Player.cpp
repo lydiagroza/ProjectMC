@@ -39,8 +39,9 @@ void Player::add_Resource(Resource r, std::uint8_t amount)
 	m_Resources[r] += amount;
 }
 
-void Player::add_DiscountedResource(Resource r) { 
-	m_discountedResource.insert (r) ;
+void Player::removeResource(Resource r, std::uint8_t amount)
+{
+	m_Resources[r] -= amount;
 }
 
 //Functii pentru puncte si simboluri
@@ -64,9 +65,11 @@ void Player::add_ChainSymbol(Symbol symbol)
 //Functie pentru a afla costul unei singure resurse de care jucatorul are nevoie  
 std::uint8_t Player::getUnitTradeCost(Resource r, const Player& opponent) const {
 	
-	if (m_discountedResource.count(r)) {
-		return 1;
-	}
+	if (r == Resource::Wood && m_discountedResource[0] == 1) return 1; 
+	if (r == Resource::Clay && m_discountedResource[1] == 1) return 1;
+	if (r == Resource::Stone && m_discountedResource[2] == 1) return 1;
+	if (r == Resource::Glass && m_discountedResource[3] == 1) return 1;
+	if (r == Resource::Papyrus && m_discountedResource[4] == 1) return 1;
 
 	std::uint8_t opponentResourceProduction = opponent.m_Resources.count(r) ? opponent.m_Resources.at(r) : 0;
 
@@ -177,19 +180,26 @@ std::uint8_t Player::getTotalCost(const T& buildable, const Player& opponent) co
 	return static_cast<std::uint8_t>(-1); // 255 = imposibil
 }
 
-template std::map<Resource, std::uint8_t> Player::getMissingResources<CardBase>(const CardBase&, const Player&) const;
-template std::map<Resource, std::uint8_t> Player::getMissingResources<Wonder>(const Wonder&, const Player&) const;
-
-template std::uint8_t Player::getTradeCost<CardBase>(const CardBase&, const Player&) const;
-template std::uint8_t Player::getTradeCost<Wonder>(const Wonder&, const Player&) const;
-
-template std::uint8_t Player::getTotalCost<CardBase>(const CardBase&, const Player&) const;
-template std::uint8_t Player::getTotalCost<Wonder>(const Wonder&, const Player&) const;
+//template std::map<Resource, std::uint8_t> Player::getMissingResources<CardBase>(const CardBase&, const Player&) const;
+//template std::map<Resource, std::uint8_t> Player::getMissingResources<Wonder>(const Wonder&, const Player&) const;
+//
+//template std::uint8_t Player::getTradeCost<CardBase>(const CardBase&, const Player&) const;
+//template std::uint8_t Player::getTradeCost<Wonder>(const Wonder&, const Player&) const;
+//
+//template std::uint8_t Player::getTotalCost<CardBase>(const CardBase&, const Player&) const;
+//template std::uint8_t Player::getTotalCost<Wonder>(const Wonder&, const Player&) const;
 
 
 
 
 //Functie care cumpara cartea 
+std::map<Color, std::vector<std::shared_ptr<CardBase>>> Player:: getInventory() {
+	return m_Inventory; 
+}
+std::vector<Wonder> Player::getWonders()
+{
+	return m_Wonders;
+}
 bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board &board) {
 	std::uint8_t totalCoinCost = this->getTotalCost(*card, opponent);
 	if (totalCoinCost == 0) {
@@ -230,7 +240,7 @@ bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
 void Player::discardCard(const CardBase& card) {
 
 	std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
-	gainedCoins += m_Inventory[Color::Yellow].size() * GameConstants::DISCARD_YELLOW_BONUS;
+	gainedCoins += static_cast<uint8_t>(m_Inventory[Color::Yellow].size()) * GameConstants::DISCARD_YELLOW_BONUS;
 	addCoins(gainedCoins);
 }
 

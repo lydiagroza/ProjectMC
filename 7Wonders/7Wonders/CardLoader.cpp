@@ -1,7 +1,16 @@
-﻿#include "CardLoader.h"
+﻿#include "CardBase.h"
 #include "Player.h"
-#include <algorithm> // Pentru std::transform
-#include <cctype>    // Pentru ::tolower
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+#include <iostream>
+#include <memory>
+#include<optional>
+#include <unordered_map>
+#include <cctype>
+#include "Cardloader.h"
+
+using namespace std;
 
 std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string& filename) {
     using namespace std;
@@ -15,13 +24,11 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
     string line;
     getline(file, line); // skip header
 
-    while (getline(file, line)) { 
-        
-        if (line.empty() == string::npos) {
-            continue;
-        }// impartim pe coloane 
+    while (getline(file, line)) {
+        if (line.empty() || line.find_first_not_of(" \t\n\v\f\r,") == string::npos) continue;
+
         stringstream ss(line);
-        string name, idStr, colorStr, costStr, symbolStr, unlocksStr, effectsStr;
+        string name, idStr, colorStr, costStr, symbolStr, unlocksStr, effectsStr, destroyStr;
 
         getline(ss, name, ',');
         getline(ss, idStr, ',');
@@ -29,23 +36,15 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
         getline(ss, costStr, ',');
         getline(ss, symbolStr, ',');
         getline(ss, unlocksStr, ',');
-        getline(ss, effectsStr, '\n');
+        getline(ss, effectsStr, ',');
+        getline(ss, destroyStr, '\n');
 
-        // scoatem "" si spatiile 
-        auto trim = [](std::string s) {
-            // elimină spațiile de la început
-            s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
-                return !std::isspace(ch);
-                }));
-            // elimină spațiile de la sfârșit
-            s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
-                return !std::isspace(ch);
-                }).base(), s.end());
-            // elimină ghilimelele
-            s.erase(std::remove(s.begin(), s.end(), '"'), s.end());
+        auto trim = [](string s) {
+            s.erase(s.begin(), find_if(s.begin(), s.end(), [](unsigned char ch) { return !isspace(ch); }));
+            s.erase(find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !isspace(ch); }).base(), s.end());
+            s.erase(remove(s.begin(), s.end(), '"'), s.end());
             return s;
             };
-
 
         name = trim(name);
         idStr = trim(idStr);
@@ -54,8 +53,8 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
         symbolStr = trim(symbolStr);
         unlocksStr = trim(unlocksStr);
         effectsStr = trim(effectsStr);
+        destroyStr = trim(destroyStr);
 
-        // conversii
         uint16_t id = static_cast<uint16_t>(stoi(idStr));
         Color color = parseColor(colorStr);
         map<Resource, uint8_t> cost = parseCost(costStr);
@@ -64,10 +63,10 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
 
         auto card = make_shared<CardBase>(name, id, color, cost, symbol, unlocks);
 
-        //adauga efectele
         auto effects = parseEffects(effectsStr);
-        for (auto& ef : effects)
-            card->addEffect(ef);
+        for (auto& ef : effects) card->addEffect(ef);
+
+        card->m_destroy = parseDestroy(destroyStr);
 
         cards.push_back(card);
     }
@@ -75,69 +74,41 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
     return cards;
 }
 
-Color CardLoader::parseColor(const std::string& s) {
-    
-    static std::unordered_map<std::string, Color> map = {
+Color CardLoader::parseColor(const string& s) {
+    static unordered_map<string, Color> map = {
         {"Brown", Color::Brown}, {"Gray", Color::Gray}, {"Yellow", Color::Yellow},
         {"Red", Color::Red}, {"Blue", Color::Blue}, {"Green", Color::Green}, {"Purple", Color::Purple}
     };
     auto it = map.find(s);
-
-    if (it != map.end()) {
-        return it->second;
-    }
-    
-    
-    return Color::Brown; 
+    return (it != map.end()) ? it->second : Color::Brown;
 }
 
-std::optional<Symbol> CardLoader::parseSymbol(const std::string& s) {
+std::optional<Symbol> CardLoader::parseSymbol(const string& s) {
     if (s.empty()) return std::nullopt;
-    static std::unordered_map<std::string, Symbol> map = {
+    static unordered_map<string, Symbol> map = {
         {"book", Symbol::Book}, {"mask", Symbol::Mask}, {"horse", Symbol::Horse},{"lyre", Symbol::Lyre},
-        {"gear", Symbol::Gear},
-        {"barrel", Symbol::Barrel}, 
-        {"helmet", Symbol::Helmet}, {"sun", Symbol::Sun},{"target", Symbol::Target}, {"pot", Symbol:: Pot},
-        {"column", Symbol:: Column}, {"temple", Symbol :: Temple},
-        {"castle", Symbol::Castle}, {"droplet", Symbol::Droplet}, {"moon", Symbol::Moon},
-        {"vase", Symbol::Vase}, {"sword", Symbol::Sword}
+        {"gear", Symbol::Gear},{"barrel", Symbol::Barrel},{"helmet", Symbol::Helmet},
+        {"sun", Symbol::Sun},{"target", Symbol::Target},{"pot", Symbol::Pot},{"column", Symbol::Column},
+        {"temple", Symbol::Temple},{"castle", Symbol::Castle},{"droplet", Symbol::Droplet},
+        {"moon", Symbol::Moon},{"vase", Symbol::Vase},{"sword", Symbol::Sword}
     };
     auto it = map.find(s);
-    if (it != map.end()) return it->second;
-    return std::nullopt;
+    if (it == map.end()) return nullopt; 
 }
 
-std::optional<Symbol> CardLoader::parseUnlocks(const std::string & s) {
-    if (s.empty()) return std::nullopt;
-        static std::unordered_map<std::string, Symbol> map = {
-               {"book", Symbol::Book}, {"mask", Symbol::Mask}, {"horse", Symbol::Horse},{"lyre", Symbol::Lyre},
-               {"gear", Symbol::Gear},
-               {"barrel", Symbol::Barrel},
-               {"helmet", Symbol::Helmet}, {"sun", Symbol::Sun},{"target", Symbol::Target}, {"pot", Symbol::Pot},
-               {"column", Symbol::Column}, {"temple", Symbol::Temple},
-               {"castle", Symbol::Castle}, {"droplet", Symbol::Droplet}, {"moon", Symbol::Moon},
-               {"vase", Symbol::Vase}, {"sword", Symbol::Sword}
-    };
-        auto it = map.find(s); 
-        if (it != map.end()) return it->second; 
-    return std::nullopt;
+std::optional<Symbol> CardLoader::parseUnlocks(const string& s) {
+    return parseSymbol(s); // exact aceeasi logica
 }
 
-std::map<Resource, uint8_t> CardLoader::parseCost(const std::string& s) {
-    std::map<Resource, uint8_t> cost;
-    if (s.empty()) {
-        return cost;
-    }
+std::map<Resource, uint8_t> CardLoader::parseCost(const string& s) {
+    map<Resource, uint8_t> cost;
+    if (s.empty()) return cost;
 
-    std::stringstream ss(s);
-    std::string item;
-
-    // Permite costuri multiple separate prin ';' 
-    while (std::getline(ss, item, ';')) {
-       // Extrage cantitatea și tipul resursei
+    stringstream ss(s);
+    string item;
+    while (getline(ss, item, ';')) {
         int quantity = item[0] - '0';
-        std::string resource_str = item.substr(1); // string nou de la 1 pana la final 
-
+        string resource_str = item.substr(1);
         if (resource_str == "wood") cost[Resource::Wood] = quantity;
         else if (resource_str == "clay") cost[Resource::Clay] = quantity;
         else if (resource_str == "stone") cost[Resource::Stone] = quantity;
@@ -156,63 +127,95 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
     stringstream ss(s);
     string token;
 
-    // map for fixed (no-parameter) effects
+    // map for fixed (no-parameter) effects - păstrat exact cum l-ai avut
     static const unordered_map<string, function<void(Player&)>> effectMap = {
         {"add_resource_wood", [](Player& p) { p.add_Resource(Resource::Wood, 1); }},
+        {"add_resource_coin4", [](Player& p) { p.add_Resource(Resource::Coin, 4); }},
+        {"add_resource_coin6", [](Player& p) { p.add_Resource(Resource::Coin, 6); }},
+        {"add_resource_clay2", [](Player& p) { p.add_Resource(Resource::Clay, 2); }},
+        {"add_resource_wood2", [](Player& p) { p.add_Resource(Resource::Wood, 2); }},
+        {"add_resource_stone2", [](Player& p) { p.add_Resource(Resource::Stone, 2); }},
         {"add_resource_stone", [](Player& p) { p.add_Resource(Resource::Stone, 1); }},
         {"add_resource_clay", [](Player& p) { p.add_Resource(Resource::Clay, 1); }},
         {"add_resource_glass", [](Player& p) { p.add_Resource(Resource::Glass, 1); }},
         {"add_resource_papyrus", [](Player& p) { p.add_Resource(Resource::Papyrus, 1); }},
-        {"coin2Wonder",[](Player& p) {
-            for (int i=0; i<p.getWonders().size(); i++)
-				p.add_Resource(Resource::Coin, 2);
-        
-}},
-        {"coin2Brown",[](Player& p) {
-        for (int i=0;i< p.getInventory().at(Color::Brown).size(); i++)
-			p.add_Resource(Resource::Coin, 2);
-        }},
-        {"coin1Yellow",[](Player& p) {
-		for (int i = 0; i < p.getInventory().at(Color::Yellow).size(); i++)
-			p.add_Resource(Resource::Coin, 1);
-        }},
-        {"coin3Gray",[](Player& p) {
-		for (int i = 0; i < p.getInventory().at(Color::Gray).size(); i++)
-			p.add_Resource(Resource::Coin, 3);
-        }},
-        {"coin1Red",[](Player& p) {
-		for(int i = 0; i < p.getInventory().at(Color::Red).size(); i++)
-			p.add_Resource(Resource::Coin, 1);
-        }}
-   
+        {"add_scientific_symbol_ink", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Ink); }},
+        {"add_scientific_symbol_scales", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
+        {"add_scientific_symbol_mortar", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Ink); }},
+        {"add_scientific_symbol_gyroscope", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Gyroscope); }},
+        {"add_scientific_symbol_sun_dial", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Sun_Dial); }},
+        {"add_scientific_symbol_wheel", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Wheel); }},
+        {"coin2Wonder",[](Player& p) { p.add_Resource(Resource::Coin, 2 * p.getWonders().size()); }},
+        {"coin2Brown",[](Player& p) { p.add_Resource(Resource::Coin, 2 * p.getInventory()[Color::Brown].size()); }},
+        {"coin1Yellow",[](Player& p) { p.add_Resource(Resource::Coin, p.getInventory()[Color::Yellow].size()); }},
+        {"coin3Gray",[](Player& p) { p.add_Resource(Resource::Coin, 3 * p.getInventory()[Color::Gray].size()); }},
+        {"coin1Red",[](Player& p) { p.add_Resource(Resource::Coin, p.getInventory()[Color::Red].size()); }},
+        {"sale_stone1",[](Player& p) { p.set_discountedResource(2); }},
+        {"sale_wood1",[](Player& p) { p.set_discountedResource(0); }},
+        {"sale_clay1",[](Player& p) { p.set_discountedResource(1); }}
     };
 
     const string vpPrefix = "add_VictoryPoint";
     const string mpPrefix = "add_MilitaryPoint";
 
     while (getline(ss, token, ';')) {
+        int ok = 0;
         token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
 
-        // numeric-suffixed tokens (variable amount)
-        if (token.starts_with(vpPrefix)) {
+        if (token.rfind(vpPrefix, 0) == 0) {
             int amount = stoi(token.substr(vpPrefix.size()));
             effects.push_back([amount](Player& p) { p.add_Points(Points::Victory, static_cast<std::uint8_t>(amount)); });
+            ok = 1;
             continue;
         }
-        if (token.starts_with(mpPrefix)) {
+        else if (token.rfind(mpPrefix, 0) == 0) {
             int amount = stoi(token.substr(mpPrefix.size()));
             effects.push_back([amount](Player& p) { p.add_Points(Points::Military, static_cast<std::uint8_t>(amount)); });
+            ok = 1;
             continue;
         }
 
- // fixed tokens 
         auto it = effectMap.find(token);
         if (it != effectMap.end()) {
             effects.push_back(it->second);
+            ok = 1;
             continue;
         }
-;
+        if (ok==0)
+        cout << "Effect " << token << " unknown" << endl;
     }
 
     return effects;
 }
+
+
+std::optional<std::function<void(Player&)>> CardLoader::parseDestroy(const string& s) {
+    if (s.empty()) return std::nullopt;
+    static const unordered_map<string, function<void(Player&)>> destroyMap = {
+        {"!add_resource_wood", [](Player& p) {p.removeResource(Resource::Wood,1); }},
+        {"!add_resource_clay2", [](Player& p) {p.removeResource(Resource::Clay,2); }},
+        {"!add_resource_wood2", [](Player& p) {p.removeResource(Resource::Wood,2); }},
+        {"!add_resource_stone2", [](Player& p) {p.removeResource(Resource::Stone,2); }},
+        {"!add_resource_stone", [](Player& p) {p.removeResource(Resource::Stone,1); }},
+        {"!add_resource_clay", [](Player& p) {p.removeResource(Resource::Clay,1); }},
+        {"!add_resource_glass", [](Player& p) {p.removeResource(Resource::Glass,1); }},
+        {"!add_resource_papyrus", [](Player& p) {p.removeResource(Resource::Papyrus,1); }}
+    };
+    auto it = destroyMap.find(s);
+    if (it != destroyMap.end()) return it->second;
+    std::cerr << "Unknown destroy effect: " << s << std::endl;
+    return std::nullopt;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -32,6 +32,19 @@
 	{
 		m_effects.push_back(e);
 	}
+	void CardBase::setDestroy(std::optional<std::function<void(Player&)>> effect)
+	{
+		if (effect)
+			m_destroy = effect; 
+		
+	}
+	void CardBase::destroy(Player& player) {
+		if (m_destroy.has_value()) {
+			(*m_destroy)(player);
+		}
+	}
+
+
 	std::ostream& operator<<(std::ostream& os, const CardBase& card)
 	{
 		os << "Card ID: " << card.getId() << ", Name: " << card.getName();

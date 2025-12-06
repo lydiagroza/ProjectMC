@@ -8,6 +8,7 @@
 #include<map>
 #include<set>
 #include<vector>
+#include <bitset>
 #include<type_traits>
 #include<unordered_set>
 #include "CardBase.h"
@@ -20,7 +21,10 @@ private:
 	std::string m_name;
 	std::map<Resource, std::uint8_t> m_Resources; // All resources 
 	std::map<Points, std::uint8_t>m_pointsScore; // All points 
-	std::set<Resource>m_discountedResource; // discounted resources from yellow cards
+
+	// 0 - Wood , 1-Clay , 2- Stone, 3- Glass, 4-Papyrus 
+
+	std::bitset<5>m_discountedResource; // discounted resources from yellow cards
 	std::map<std::string, std::vector<Resource>>m_flexibleResources;
 	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // all cards 
 	std::vector<Wonder>m_Wonders; // all wonders
@@ -32,18 +36,22 @@ private:
 
 
 public:
-	Player(const std::string& playerName); // constructor 
-	
-	// getteri 
 
-	std::vector<Wonder>& getWonders() { return m_Wonders; } // se pune & ca cica face referinta la el nu copie si e mai eficient
+	// getteri 
+	std::map<Color, std::vector<std::shared_ptr<CardBase>>> getInventory(); 
+	std::vector<Wonder> getWonders();  
+	void set_discountedResource(int a) {
+		m_discountedResource[a] = 1;
+	}
+	Player(const std::string& playerName); // constructor 
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
 	void addCoins(std::uint8_t amount); //
 
 	//Gestioneaza resursele
 	void add_Resource(Resource r, std::uint8_t amount);//
-	void add_DiscountedResource(Resource r);
+	void removeResource(Resource r, std::uint8_t amount);
+
 
 	//Gestioneaza punctele de victorie
 	void add_Points(Points p, std::uint8_t amount);//
@@ -80,7 +88,7 @@ public:
 	void constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board);
 
 	//chestii pentru gestionare inventar
-	const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& getInventory() const { return m_Inventory; }
+
 	void addCardToInventory(std::shared_ptr<CardBase> card);
 	bool removeCardFromInventory(std::shared_ptr<CardBase> card);
 

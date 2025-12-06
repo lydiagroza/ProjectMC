@@ -43,6 +43,12 @@ private:
     QPushButton* militaryPawn;
     std::vector<QPushButton*> progressTokens;
 
+    // --- HEADER ---
+    QLabel* titleLabel;
+    QLabel* ageLabel; 
+    QPushButton* startButton; // Buton de start joc
+    QPushButton* nextAgeButton;
+
     // --- FUNCȚII ---
     void setupRightPanel();
     void updateMilitaryPawn();

@@ -89,7 +89,7 @@
 		    <ClInclude Include="ProgressTokenLoader.h">
 			      <Filter>Header Files</Filter>
 			   
-		</ClInclude><ClInclude Include="Game.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="CardsPyramid.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="WonderLoader.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="MainWindow.h"><Filter>Header Files</Filter></ClInclude></ItemGroup>
+		</ClInclude><ClInclude Include="Game.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="CardsPyramid.h"><Filter>Header Files</Filter></ClInclude><ClInclude Include="WonderLoader.h"><Filter>Header Files</Filter></ClInclude></ItemGroup>
 	  <ItemGroup>
 		    <None Include="AgeI.csv">
 			      <Filter>Source Files</Filter>
@@ -104,4 +104,4 @@
 			   
 		</None><None Include="Wonders.csv"><Filter>Source Files</Filter></None><None Include="ProgressTokens.csv"><Filter>Source Files</Filter></None><None Include="Guilds.csv" />
 		 
-	</ItemGroup></Project>
+	</ItemGroup><ItemGroup><QtMoc Include="MainWindow.h"><Filter>Header Files</Filter></QtMoc></ItemGroup></Project>

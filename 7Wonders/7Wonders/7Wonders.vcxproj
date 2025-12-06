@@ -176,7 +176,7 @@
 		    <ClInclude Include="CardLoader.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClInclude>
 		    <ClInclude Include="CardNode.h" /><ClInclude Include="CardsPyramid.h" />
 		    <ClInclude Include="Game.h" /><ClInclude Include="GameConstants.h"><ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild></ClInclude>
-		    <ClInclude Include="GameSetup.h" /><ClInclude Include="WonderLoader.h" /><ClInclude Include="MainWindow.h" /><ClInclude Include="MilitaryTrack.h" />
+		    <ClInclude Include="GameSetup.h" /><ClInclude Include="WonderLoader.h" /><QtMoc Include="MainWindow.h" /><ClInclude Include="MilitaryTrack.h" />
 		    		<ClInclude Include="Player.h">
 		    			      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></ExcludedFromBuild>
 		    			   

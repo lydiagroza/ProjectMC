@@ -59,7 +59,7 @@
 		    <ClCompile Include="ProgressTokens.cpp">
 			      <Filter>Source Files</Filter>
 			   
-		</ClCompile><ClCompile Include="Game.cpp"><Filter>Source Files</Filter></ClCompile><ClCompile Include="main.cpp"><Filter>Source Files</Filter></ClCompile><ClCompile Include="CardsPyramid.cpp"><Filter>Source Files</Filter></ClCompile><ClCompile Include="MainWindow.cpp"><Filter>Source Files</Filter></ClCompile></ItemGroup>
+		</ClCompile><ClCompile Include="Game.cpp"><Filter>Source Files</Filter></ClCompile><ClCompile Include="main.cpp"><Filter>Source Files</Filter></ClCompile><ClCompile Include="CardsPyramid.cpp"><Filter>Source Files</Filter></ClCompile><ClCompile Include="MainWindow.cpp"><Filter>Source Files</Filter></ClCompile><ClCompile Include="GameController.cpp"><Filter>Source Files</Filter></ClCompile></ItemGroup>
 	  <ItemGroup>
 		    <ClInclude Include="Board.h">
 			      <Filter>Header Files</Filter>
@@ -104,4 +104,4 @@
 			   
 		</None><None Include="Wonders.csv"><Filter>Source Files</Filter></None><None Include="ProgressTokens.csv"><Filter>Source Files</Filter></None><None Include="Guilds.csv" />
 		 
-	</ItemGroup></Project>
+	</ItemGroup><ItemGroup><QtMoc Include="GameController.h"><Filter>Header Files</Filter></QtMoc></ItemGroup></Project>

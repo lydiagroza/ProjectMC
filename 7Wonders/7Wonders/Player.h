@@ -1,6 +1,5 @@
-#ifndef PLAYER_H
-#define PLAYER_H
 
+#pragma once
 
 #include<string>
 #include<memory>
@@ -105,4 +104,3 @@ extern template std::uint8_t Player::getTradeCost<Wonder>(const Wonder&, const P
 extern template std::uint8_t Player::getTotalCost<CardBase>(const CardBase&, const Player&) const;
 extern template std::uint8_t Player::getTotalCost<Wonder>(const Wonder&, const Player&) const;
 
-#endif

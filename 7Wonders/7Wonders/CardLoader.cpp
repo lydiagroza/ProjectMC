@@ -11,21 +11,23 @@
 #include "Cardloader.h"
 
 using namespace std;
+template <typename T>
+std::vector<std::shared_ptr<T>> CardLoader::loadFromCSV(const std::string& filename) {
 
-std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string& filename) {
-    using namespace std;
-    vector<shared_ptr<CardBase>> cards;
-    ifstream file(filename);
+    std::vector<std::shared_ptr<T>> out;   // vectorul returnat
+
+    std::ifstream file(filename);
     if (!file.is_open()) {
-        cerr << "Eroare: nu s-a putut deschide fisierul " << filename << endl;
-        return cards;
+        std::cerr << "Eroare: nu s-a putut deschide fisierul " << filename << endl;
+        return out;
     }
 
-    string line;
+    std::string line;
     getline(file, line); // skip header
 
     while (getline(file, line)) {
-        if (line.empty() || line.find_first_not_of(" \t\n\v\f\r,") == string::npos) continue;
+        if (line.empty() || line.find_first_not_of(" \t\n\v\f\r,") == string::npos)
+            continue;
 
         stringstream ss(line);
         string name, idStr, colorStr, costStr, symbolStr, unlocksStr, effectsStr, destroyStr;
@@ -40,12 +42,16 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
         getline(ss, destroyStr, '\n');
 
         auto trim = [](string s) {
-            s.erase(s.begin(), find_if(s.begin(), s.end(), [](unsigned char ch) { return !isspace(ch); }));
-            s.erase(find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !isspace(ch); }).base(), s.end());
+            s.erase(s.begin(), find_if(s.begin(), s.end(),
+                [](unsigned char ch) { return !isspace(ch); }));
+            s.erase(find_if(s.rbegin(), s.rend(),
+                [](unsigned char ch) { return !isspace(ch); }).base(),
+                s.end());
             s.erase(remove(s.begin(), s.end(), '"'), s.end());
             return s;
             };
 
+        // trim toți parametrii
         name = trim(name);
         idStr = trim(idStr);
         colorStr = trim(colorStr);
@@ -55,24 +61,49 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
         effectsStr = trim(effectsStr);
         destroyStr = trim(destroyStr);
 
+        // valori deja parșate (comune)
         uint16_t id = static_cast<uint16_t>(stoi(idStr));
         Color color = parseColor(colorStr);
         map<Resource, uint8_t> cost = parseCost(costStr);
         auto symbol = parseSymbol(symbolStr);
         auto unlocks = parseUnlocks(unlocksStr);
-
-        auto card = make_shared<CardBase>(name, id, color, cost, symbol, unlocks);
-
         auto effects = parseEffects(effectsStr);
-        for (auto& ef : effects) card->addEffect(ef);
+        auto destroy = parseDestroy(destroyStr);
 
-        card->m_destroy = parseDestroy(destroyStr);
+        //
+        // ------------ AICI SE ÎMPART DRUMURILE ----------------
+        //
 
-        cards.push_back(card);
-    }
+        // --- CARD BASE ---
+        if constexpr (std::is_same_v<T, CardBase>) {
+            auto card = make_shared<CardBase>(name, id, color, cost, symbol, unlocks);
 
-    return cards;
+            // adaugă efecte
+            for (auto& ef : effects)
+                card->addEffect(ef);
+
+            // efect de distrugere
+            card->m_destroy = destroy;
+
+            out.push_back(card);
+        }
+
+        // --- WONDER ---
+        else if constexpr (std::is_same_v<T, Wonder>) {
+
+            // Wonder are DOAR name + effects
+            auto wonder = make_shared<Wonder>();
+            wonder->name = name;
+            wonder->effects = effects;
+
+            out.push_back(wonder);
+        }
+
+    } // while
+
+    return out;
 }
+
 
 Color CardLoader::parseColor(const string& s) {
     static unordered_map<string, Color> map = {

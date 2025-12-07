@@ -6,6 +6,7 @@
 #include "CardLoader.h"
 #include "Game.h"
 
+#include <memory>
 class Player;
 
 std::map<Resource, uint8_t> Wonder::parseCost(const std::string& s) {

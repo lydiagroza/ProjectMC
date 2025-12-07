@@ -9,8 +9,7 @@
 using namespace std;
 class CardLoader {
 public:
-    template< typename T> 
-    static std::vector<std::shared_ptr<T>> loadFromCSV(const std::string& filename);
+    static std::vector<std::shared_ptr<CardBase>> loadFromCSV(const std::string& filename);
     static Color parseColor(const std::string& s);
     static std::optional<Symbol> parseSymbol(const std::string& s);
     static std::optional<Symbol> parseUnlocks(const std::string& s);

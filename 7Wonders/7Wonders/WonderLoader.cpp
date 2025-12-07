@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cctype>
+#include <memory> 
 
 std::vector<std::shared_ptr<Wonder>> WonderLoader::loadWonders(const std::string& filename) {
     std::vector<std::shared_ptr<Wonder>> wonders;
@@ -42,7 +43,7 @@ std::vector<std::shared_ptr<Wonder>> WonderLoader::loadWonders(const std::string
         uint16_t id = static_cast<uint16_t>(stoi(idStr));
         std::map<Resource, uint8_t> cost = Wonder::parseCost(costStr);
 
-        auto wonder = make_shared<Wonder>(name, id, cost);
+        auto wonder = std:: make_shared<Wonder>(name, id, cost);
 
         auto effects = Wonder::parseEffects(effectsStr);
         for (auto& ef : effects)

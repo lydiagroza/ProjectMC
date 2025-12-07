@@ -14,7 +14,7 @@ using namespace std;
 template <typename T>
 std::vector<std::shared_ptr<T>> CardLoader::loadFromCSV(const std::string& filename) {
 
-    std::vector<std::shared_ptr<T>> out;   // vectorul returnat
+    std::vector<std::shared_ptr<T>> out;  
 
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -51,7 +51,7 @@ std::vector<std::shared_ptr<T>> CardLoader::loadFromCSV(const std::string& filen
             return s;
             };
 
-        // trim toți parametrii
+        // trim param
         name = trim(name);
         idStr = trim(idStr);
         colorStr = trim(colorStr);
@@ -61,7 +61,7 @@ std::vector<std::shared_ptr<T>> CardLoader::loadFromCSV(const std::string& filen
         effectsStr = trim(effectsStr);
         destroyStr = trim(destroyStr);
 
-        // valori deja parșate (comune)
+        // val pars
         uint16_t id = static_cast<uint16_t>(stoi(idStr));
         Color color = parseColor(colorStr);
         map<Resource, uint8_t> cost = parseCost(costStr);
@@ -70,28 +70,23 @@ std::vector<std::shared_ptr<T>> CardLoader::loadFromCSV(const std::string& filen
         auto effects = parseEffects(effectsStr);
         auto destroy = parseDestroy(destroyStr);
 
-        //
-        // ------------ AICI SE ÎMPART DRUMURILE ----------------
-        //
-
-        // --- CARD BASE ---
+       
         if constexpr (std::is_same_v<T, CardBase>) {
             auto card = make_shared<CardBase>(name, id, color, cost, symbol, unlocks);
-
-            // adaugă efecte
+     
             for (auto& ef : effects)
                 card->addEffect(ef);
 
-            // efect de distrugere
             card->m_destroy = destroy;
 
             out.push_back(card);
         }
 
-        // --- WONDER ---
+
+
         else if constexpr (std::is_same_v<T, Wonder>) {
 
-            // Wonder are DOAR name + effects
+         
             auto wonder = make_shared<Wonder>();
             wonder->name = name;
             wonder->effects = effects;
@@ -99,7 +94,7 @@ std::vector<std::shared_ptr<T>> CardLoader::loadFromCSV(const std::string& filen
             out.push_back(wonder);
         }
 
-    } // while
+    } 
 
     return out;
 }
@@ -183,7 +178,143 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
         {"coin1Red",[](Player& p) { p.add_Resource(Resource::Coin, p.getInventory()[Color::Red].size()); }},
         {"sale_stone1",[](Player& p) { p.set_discountedResource(2); }},
         {"sale_wood1",[](Player& p) { p.set_discountedResource(0); }},
-        {"sale_clay1",[](Player& p) { p.set_discountedResource(1); }}
+        {"sale_clay1",[](Player& p) { p.set_discountedResource(1); }},
+
+        // pt wonders 
+             {"add_coins3", [](Player& p, Player& o) { p.addCoins(3); }},
+        {"decreaseCoins3", [](Player& p, Player& o) { o.decreaseCoins(3); }},
+        {"replayTurn", [](Player& p, Player& o) { /*???*/ }},
+        {"add_VictoryPoint3", [](Player& p, Player& o) { p.add_Points(Points::Victory, 3); }},
+        {"wood/stone/clay", [](Player& p, Player& o) { p.add_Resource(Resource::Wood, 1); p.add_Resource(Resource::Stone, 1); p.add_Resource(Resource::Clay, 1); }},
+        {"add_VictoryPoints4", [](Player& p, Player& o) { p.add_Points(Points::Victory, 4); }},
+        {"add_coins12", [](Player& p, Player& o) { p.addCoins(12); }},
+        {"discardOpponentGrayCard", [](Player& p, Player& o) {
+            Board& board = Game::currentGame->getBoard();
+            const auto& opponentInventory = o.getInventory();
+            std::vector<std::shared_ptr<CardBase>> grayCards;
+            if (opponentInventory.count(Color::Gray)) {
+                grayCards = opponentInventory.at(Color::Gray);
+            }
+
+            if (grayCards.empty()) {
+                std::cout << "Opponent has no gray cards to discard." << std::endl;
+                return;
+            }
+
+            std::cout << "Choose a gray card to discard from your opponent:" << std::endl;
+            for (int i = 0; i < grayCards.size(); ++i) {
+                std::cout << i + 1 << ": " << *grayCards[i] << std::endl;
+            }
+
+            int choice = -1;
+            //std::cin >> choice; // alege player ce carte sa dea discard, facem cumva in UI
+
+            if (choice > 0 && choice <= grayCards.size()) {
+                auto selectedCard = grayCards[choice - 1];
+                o.removeCardFromInventory(selectedCard);
+                board.addCardToDiscardPile(selectedCard);
+                std::cout << "Discarded " << selectedCard->getName() << " from opponent." << std::endl;
+            }
+ else {
+  std::cout << "Invalid choice." << std::endl;
+}
+}},
+
+{"add_MilitaryPoint1", [](Player& p, Player& o) { p.add_Points(Points::Military, 1); }},
+{"buildDiscardedCard", [](Player& p, Player& o) {
+    Board& board = Game::currentGame->getBoard();
+    const auto& discardPile = board.getDiscardPile();
+
+    if (discardPile.empty()) {
+        std::cout << "Discard pile is empty." << std::endl;
+        return;
+    }
+
+    std::cout << "Choose a card to build from the discard pile:" << std::endl;
+    for (int i = 0; i < discardPile.size(); ++i) {
+        std::cout << i + 1 << ": " << *discardPile[i] << std::endl;
+    }
+
+    int choice = -1;
+    //std::cin >> choice;
+
+    if (choice > 0 && choice <= discardPile.size()) {
+        auto selectedCard = discardPile[choice - 1];
+        p.addCardToInventory(selectedCard);
+        board.removeCardFromDiscardPile(selectedCard);
+        std::cout << "Built " << selectedCard->getName() << " from discard pile." << std::endl;
+    }
+else {
+ std::cout << "Invalid choice." << std::endl;
+}
+}},
+
+{"add_VictoryPoint2", [](Player& p, Player& o) { p.add_Points(Points::Victory, 2); }},
+{"papyrus/glass", [](Player& p, Player& o) { p.add_Resource(Resource::Papyrus, 1); p.add_Resource(Resource::Glass, 1); }},
+{"add_VictoryPoints9", [](Player& p, Player& o) { p.add_Points(Points::Victory, 9); }},
+{"chooseProgressToken", [](Player& p, Player& o) {
+    Board& board = Game::currentGame->getBoard();
+    auto availableTokens = board.getAvailableProgressTokens();
+
+    if (availableTokens.empty()) {
+        std::cout << "No available progress tokens." << std::endl;
+        return;
+    }
+
+    std::cout << "Choose a progress token:" << std::endl;
+    for (int i = 0; i < availableTokens.size(); ++i) {
+        std::cout << i + 1 << ": " << *availableTokens[i] << std::endl;
+    }
+
+    int choice = -1;
+    //std::cin >> choice;
+
+    if (choice > 0 && choice <= availableTokens.size()) {
+        auto selectedToken = availableTokens[choice - 1];
+        for (const auto& effect : selectedToken->getEffects()) {
+            effect(p, o);
+        }
+        board.removeAvailableProgressToken(selectedToken);
+        std::cout << "You chose the " << selectedToken->getName() << " token." << std::endl;
+    }
+else {
+ std::cout << "Invalid choice." << std::endl;
+}
+}},
+{"add_coins6", [](Player& p, Player& o) { p.addCoins(6); }},
+{"add_VictoryPoints", [](Player& p, Player& o) { p.add_Points(Points::Victory, 1); }},
+{"add_MilitaryPoints2", [](Player& p, Player& o) { p.add_Points(Points::Military, 2); }},
+{"discardOpponentBrownCard", [](Player& p, Player& o) {
+    Board& board = Game::currentGame->getBoard();
+  auto opponentInventory = o.getInventory();
+    std::vector<std::shared_ptr<CardBase>> brownCards;
+    if (opponentInventory.count(Color::Brown)) {
+        brownCards = opponentInventory.at(Color::Brown);
+    }
+
+    if (brownCards.empty()) {
+        std::cout << "Opponent has no brown cards to discard." << std::endl;
+        return;
+    }
+
+    std::cout << "Choose a brown card to discard from your opponent:" << std::endl;
+    for (int i = 0; i < brownCards.size(); ++i) {
+        std::cout << i + 1 << ": " << *brownCards[i] << std::endl;
+    }
+
+    int choice = -1;
+    //std::cin >> choice;
+
+    if (choice > 0 && choice <= brownCards.size()) {
+        auto selectedCard = brownCards[choice - 1];
+        o.removeCardFromInventory(selectedCard);
+        board.addCardToDiscardPile(selectedCard);
+        std::cout << "Discarded " << selectedCard->getName() << " from opponent." << std::endl;
+    }
+else {
+ std::cout << "Invalid choice." << std::endl;
+}
+}}
     };
 
     const string vpPrefix = "add_VictoryPoint";

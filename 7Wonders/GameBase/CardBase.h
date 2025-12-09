@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <functional>
 #include "Board.h"
+#include "gameExport.h"
 class Player;
 class Board;
 
@@ -30,7 +31,7 @@ class Board;
 	  Sun_Dial, Wheel, Ink, Mortar,Gyroscope,Scales
   };
 
-  class CardBase {
+  class GAME_API CardBase {
   public:
 
       //Variabile 

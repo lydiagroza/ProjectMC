@@ -32,6 +32,14 @@ void Player::addCoins(std::uint8_t amount) {
 
 }
 
+std::uint8_t Player::getCoins() const
+{
+	if (m_Resources.count(Resource::Coin)) {
+		return m_Resources.at(Resource::Coin);
+	}
+	return 0; // Dacă nu are nicio intrare de bani, are 0
+}
+
 
 //Functii pentru resurse
 void Player::add_Resource(Resource r, std::uint8_t amount)
@@ -58,9 +66,11 @@ void Player::add_ChainSymbol(Symbol symbol)
 	m_chainSymbols.insert(symbol);
 }
 
-
-
-
+void Player::addWonders(std::shared_ptr<Wonder> wonder)
+{
+	if(wonder)
+		m_Wonders.push_back(*wonder);
+}
 
 //Functie pentru a afla costul unei singure resurse de care jucatorul are nevoie  
 std::uint8_t Player::getUnitTradeCost(Resource r, const Player& opponent) const {
@@ -196,10 +206,12 @@ std::uint8_t Player::getTotalCost(const T& buildable, const Player& opponent) co
 std::map<Color, std::vector<std::shared_ptr<CardBase>>> Player:: getInventory() {
 	return m_Inventory; 
 }
-std::vector<Wonder> Player::getWonders()
+
+const std::vector<Wonder> Player::getWonders() const
 {
 	return m_Wonders;
 }
+
 bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board &board) {
 	std::uint8_t totalCoinCost = this->getTotalCost(*card, opponent);
 	if (totalCoinCost == 0) {

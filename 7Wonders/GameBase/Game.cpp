@@ -5,18 +5,17 @@
 Game* Game::currentGame = nullptr;
 
 Game::Game()
-    : m_player1("Player 1"),
+    : m_board(),         
+    m_setup(m_board),   
+    m_player1("Player 1"),
     m_player2("Player 2"),
     m_currentAge(1),
-    m_gameOver(false),
-    m_setup(m_board)
+    m_gameOver(false)
 {
     currentGame = this;
     m_currentPlayer = &m_player1;
     m_opponent = &m_player2;
 }
-
-// You can keep this helper, but eventually, the UI will read the name directly.
 void Game::printPlayerInfo(const Player& player, std::ostream& os) const
 {
     os << player.getName() << "\n";
@@ -24,12 +23,187 @@ void Game::printPlayerInfo(const Player& player, std::ostream& os) const
 
 void Game::switchTurn()
 {
-    std::swap(m_currentPlayer, m_opponent);
+    // Schimbăm pointerii între ei
+    Player* temp = m_currentPlayer;
+    m_currentPlayer = m_opponent;
+    m_opponent = temp;
 }
 
-void Game::checkForInstantWin(const MilitaryResult& militaryResult)
+void Game::handlePlayerAction()
 {
-    /* Logic remains commented out until you implement it */
+    std::cout << "\n>>> ESTE RANDUL LUI: " << m_currentPlayer->getName() << "\n";
+    std::cout << "Resurse (Bani): " << (int)m_currentPlayer->getCoins() << "\n";
+    std::cout << "Introdu ID-ul cartii de jos pe care vrei sa o iei: ";
+
+    int cardId;
+    // Citire sigură (să nu crape dacă bagi litere)
+    while (!(std::cin >> cardId)) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Te rog introdu un numar valid: ";
+    }
+
+    // 1. Căutăm cartea în piramidă
+    CardNode* selectedNode = nullptr;
+
+    // Putem accesa m_board direct pentru că suntem în clasa Game
+    // Nota: getPyramid() returneaza const&, deci iteram const
+    const auto& rows = m_board.getPyramid().getRows();
+
+    for (const auto& row : rows) {
+        for (const auto& node : row) {
+            // Verificăm ID-ul
+            if (node && node->getCard() && node->getCard()->getId() == cardId) {
+                // Hack mic: const_cast pentru că selectedNode va fi modificat
+                // (Sau faci o funcție în Board care returnează Node* ne-const)
+                selectedNode = const_cast<CardNode*>(node.get());
+            }
+        }
+    }
+
+    // 2. Validări
+    if (!selectedNode) {
+        std::cout << "Eroare: Nu exista carte cu ID-ul " << cardId << "! Incearca iar.\n";
+        handlePlayerAction(); // Recursivitate simplă pentru retry
+        return;
+    }
+    if (selectedNode->isPlayed()) {
+        std::cout << "Eroare: Cartea a fost deja luata! Incearca iar.\n";
+        handlePlayerAction();
+        return;
+    }
+    if (!selectedNode->isPlayable()) {
+        std::cout << "Eroare: Cartea este blocata de altele! Incearca iar.\n";
+        handlePlayerAction();
+        return;
+    }
+
+    // 3. Alegerea Acțiunii
+    std::cout << "Ai ales: " << selectedNode->getCard()->getName() << "\n";
+    std::cout << "Ce faci? [1]=Cumpara, [2]=Vinde: ";
+    int action;
+    std::cin >> action;
+
+    bool success = false;
+
+    if (action == 1) {
+        // CUMPARARE
+        success = m_currentPlayer->buyCard(selectedNode->getCard(), *m_opponent, m_board);
+    }
+    else if (action == 2) {
+        // VANZARE
+        m_currentPlayer->discardCard(*selectedNode->getCard());
+        std::cout << "Carte vanduta pentru bani.\n";
+        success = true;
+    }
+    else {
+        std::cout << "Actiune invalida.\n";
+        handlePlayerAction();
+        return;
+    }
+
+    // 4. Finalizare tură
+    if (success) {
+        // Marchem cartea ca luată în piramidă
+        selectedNode->updatePlayedStatus(true);
+
+        // Actualizăm vizibilitatea (cărțile de deasupra se întorc)
+        m_board.updateVisibility();
+
+        // Schimbăm tura (dacă nu are Extra Turn - logica de extra turn o poți pune aici)
+        if (!m_currentPlayer->hasExtraTurn()) {
+            switchTurn();
+        }
+        else {
+            std::cout << "Ai primit o tura extra! Mai joci o data.\n";
+            // Trebuie resetat flagul de extra turn în Player după ce e consumat
+        }
+    }
+    else {
+        // Dacă tranzacția a eșuat (nu are bani), îl lăsăm să încerce iar
+        std::cout << "Actiunea a esuat. Incearca altceva.\n";
+        handlePlayerAction();
+    }
+}
+
+void Game::printGameState() const {
+    std::cout << "\n============================================\n";
+    std::cout << "               STAREA JOCULUI (Age " << m_currentAge << ")      \n";
+    std::cout << "============================================\n";
+
+    std::cout << "[P1] " << m_player1.getName()
+        << " | Bani: " << (int)m_player1.getCoins()
+        << " | Minuni: " << m_player1.getWonders().size() << "\n";
+
+    std::cout << "[P2] " << m_player2.getName()
+        << " | Bani: " << (int)m_player2.getCoins()
+        << " | Minuni: " << m_player2.getWonders().size() << "\n";
+
+    std::cout << "\n--- Pista Militara ---\n";
+    m_board.printMilitaryTrack();
+
+    m_board.printCardsTree(std::cout);
+    std::cout << "============================================\n";
+}
+
+void handleWonderChoice( std::vector<std::shared_ptr<Wonder>>& availableWonders, Player& player, int count)
+{
+    for (int i = 0; i < count; ++i) {
+
+        std::cout << "\n--- Minuni Disponibile Pt " << player.getName() << " (Alege #" << i + 1 << ") ---\n";
+        for (size_t j = 0; j < availableWonders.size(); ++j) {
+            const auto& wonder = availableWonders[j];
+            std::cout << "[" << j + 1 << "] " << wonder->getName() << "\n";
+        }
+
+        std::cout << "Alege numarul Minunii (1-" << availableWonders.size() << "): ";
+        int choiceIndex;
+        std::cin >> choiceIndex;
+
+        size_t index = choiceIndex - 1; // Calculăm indexul bazat pe 0
+
+        if (index < availableWonders.size()) {
+
+            // Transfer Minunea la Jucător (Apelezi funcția pe care am adăugat-o)
+            player.addWonders(availableWonders[index]);
+            std::cout << player.getName() << " a ales: " << availableWonders[index]->getName() << "\n";
+
+            //Elimină Minunea din lista de opțiuni
+            availableWonders.erase(availableWonders.begin() + index);
+
+        }
+        else {
+            // Dacă input-ul este invalid, cerem alegerea din nou
+            std::cout << "Alegere invalida. Incearca din nou.\n";
+            i--;
+        }
+    }
+}
+
+void Game::draftWondersPhase() {
+    Player* p1 = &m_player1;
+    Player* p2 = &m_player2;
+    std::cout << "\n\n=== [DRAFT 1] ALEGERE MINUNI (4) ===\n";
+    std::vector<std::shared_ptr<Wonder>> draftSet1 = m_setup.drawWonders(4);
+
+    handleWonderChoice(draftSet1, *p1, 1);
+    handleWonderChoice(draftSet1, *p2, 2);
+
+    if (!draftSet1.empty()) {
+        std::cout << p1->getName() << " ia automat Minunea ramasa: " << draftSet1[0]->getName() << "\n";
+        p1->addWonders(draftSet1[0]); 
+    }
+
+    std::cout << "\n\n=== [DRAFT 2] ALEGERE MINUNI (4) ===\n";
+    std::vector<std::shared_ptr<Wonder>> draftSet2 = m_setup.drawWonders(4);
+
+    handleWonderChoice(draftSet2, *p2, 1);
+    handleWonderChoice(draftSet2, *p1, 2);
+
+    if (!draftSet2.empty()) {
+        std::cout << p2->getName() << " ia automat Minunea ramasa: " << draftSet2[0]->getName() << "\n";
+        p2->addWonders(draftSet2[0]);
+    }
 }
 
 void Game::startNextAge()
@@ -47,19 +221,25 @@ bool Game::isEndOfAge()
     return m_setup.getBoard().isPyramidEmpty();
 }
 
-// --- THE CHANGED FUNCTION ---
+bool Game::isGameOver() const
+{
+    return m_gameOver;
+}
+
+
 void Game::initialize()
 {
-    // 1. Reset variables
     m_currentAge = 1;
     m_gameOver = false;
-
-    // 2. Prepare the board for the first age
+	draftWondersPhase();
     m_setup.startAge(m_currentAge);
+    m_player1.addCoins(7);
+    m_player2.addCoins(7);
+    m_board.updateVisibility();
+    std::cout << "[Game Logic] Initialization Complete. Age 1 Started. Players have 7 coins.\n";
+}
 
-    // 3. (Optional) Debug print to verify it loaded
-    std::cout << "Game Initialized. Age 1 started." << std::endl;
-
-    // 4. Return immediately! 
-    // The MainWindow will now display m_board on the screen.
+void Game::checkForInstantWin(const MilitaryResult& militaryResult)
+{
+    /* Logic remains commented out until you implement it */
 }

@@ -10,6 +10,7 @@
 void Board::setupCards(int era, std::vector<std::shared_ptr<CardBase>>& deck) {
     // Delegam toata munca grea clasei specializate
     m_pyramid.build(era, deck);
+    m_pyramid.updateVisibility();
 }
 
 CardNode* Board::getNodeAt(int row, int index) {
@@ -168,8 +169,6 @@ void Board::printCardsTree(std::ostream& os) const
     // Setăm o lățime minimă fixă ca să arate bine
     if (max_text_width < 15) max_text_width = 15;
 
-    // 2. Aflăm care este cel mai lung rând (baza piramidei)
-    // În Age 1 e rândul de jos (6 cărți). În Age 3 e mijlocul (4 cărți).
     size_t max_cards_in_row = 0;
     for (const auto& row : rows) {
         if (row.size() > max_cards_in_row) max_cards_in_row = row.size();
@@ -181,8 +180,6 @@ void Board::printCardsTree(std::ostream& os) const
     for (size_t r = 0; r < rows.size(); ++r) {
         const auto& row = rows[r];
 
-        // --- CALCUL CENTRARE ---
-        // Cât spațiu ocupă o singură carte + spațiul dintre ele
         size_t block_size = max_text_width + 4;
 
         // Câte "blocuri" lipsesc pe acest rând față de cel mai lung rând?
@@ -213,8 +210,9 @@ void Board::printCardsTree(std::ostream& os) const
                     std::string status = (node->isPlayable() ? "[OK]" : "[BLK]"); // BLK = Blocat
                     // Trunchiem numele dacă e prea lung
                     std::string name = node->getCard()->getName();
+                    std::string id_prefix = std::to_string(node->getCard()->getId());
                     if (name.length() > max_text_width - 5) name = name.substr(0, max_text_width - 5);
-                    content = name + " " + status;
+                    content = id_prefix + name + " " + status;
                 }
 
                 // Folosim setw pentru a forța fiecare carte să aibă aceeași lățime vizuală
@@ -249,6 +247,16 @@ void Board::printChildrenList() const {
             }
         }
     }
+}
+
+const CardsPyramid& Board::getPyramid() const
+{
+	return m_pyramid;
+}
+
+MilitaryTrack& Board::getMilitaryTrack()
+{
+	return m_militaryTrack;
 }
 
 std::ostream& operator<<(std::ostream& os, const Board& board)

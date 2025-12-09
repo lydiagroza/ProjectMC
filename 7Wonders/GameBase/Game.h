@@ -22,22 +22,27 @@ private:
 
     int m_currentAge;
     bool m_gameOver;
-
-    void switchTurn();
-    void handlePlayerAction(); 
+   
     void checkForInstantWin(const MilitaryResult& militaryResult);
-    void startNextAge();
-    bool isEndOfAge();
-	void printGameState() const; //board + players info
     void printActionMenu() const;
+    void draftWondersPhase();
 
 	//calculateFinalScore(); -> maybe sa intoarca playerul care a castigat
 
 public:
     Game();
     void initialize();
+    void handlePlayerAction();
+    void startNextAge();
+    bool isEndOfAge();
+    bool isGameOver() const;
+    void switchTurn();
+    void printGameState() const; //board + players info
     GameSetup& getSetup() { return m_setup; }
     Board& getBoard() { return m_board; }
 	void printPlayerInfo(const Player& player, std::ostream& os = std::cout) const;
     Player* getCurrentPlayer() const { return m_currentPlayer; }
+
+    Player& getPlayer1() { return m_player1; }
+    Player& getPlayer2() { return m_player2; }
 };

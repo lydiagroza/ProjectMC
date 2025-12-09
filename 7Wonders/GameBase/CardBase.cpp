@@ -4,7 +4,11 @@
 #include <vector>
 
 
-	const std::string&CardBase::getName() const {
+CardBase::CardBase()
+{
+}
+
+const std::string&CardBase::getName() const {
 		return m_name;
 	}
 	std::uint16_t CardBase::getId() const {

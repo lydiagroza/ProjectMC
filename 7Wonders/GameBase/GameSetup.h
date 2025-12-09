@@ -34,5 +34,7 @@ public:
     Board& getBoard();
     void printDecks()const;
 	void printWonders() const;
+
+    std::vector<std::shared_ptr<Wonder>> drawWonders(int count);
 };
 

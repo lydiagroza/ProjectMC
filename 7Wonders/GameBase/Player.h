@@ -39,7 +39,7 @@ public:
 
 	// getteri 
 	std::map<Color, std::vector<std::shared_ptr<CardBase>>> getInventory(); 
-	std::vector<Wonder> getWonders();  
+	const std::vector<Wonder> getWonders() const;  
 	void set_discountedResource(int a) {
 		m_discountedResource[a] = 1;
 	}
@@ -47,6 +47,7 @@ public:
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
 	void addCoins(std::uint8_t amount); //
+	std::uint8_t getCoins() const;
 
 	//Gestioneaza resursele
 	void add_Resource(Resource r, std::uint8_t amount);//
@@ -59,6 +60,10 @@ public:
 	//Gestioneaza simbolurile
 	void add_ScientificSymbol(Scientific_Symbol symbol);//
 	void add_ChainSymbol(Symbol symbol);//
+
+
+	//adauga wonder in lista de wonders a jucatorului
+	void addWonders(std::shared_ptr<Wonder> wonder);
 
 
 	//Functie ca sa vad cat ma costa o singura resursa

@@ -28,6 +28,11 @@ public:
 	bool isPyramidEmpty() const;
 	void printCardsTree(std::ostream& os) const;
 	void printChildrenList() const;
+	const CardsPyramid& getPyramid() const;
+
+	//functii military track
+	MilitaryTrack& getMilitaryTrack();
+
 
 	//functii tokeni verzi
 	void setAvailableProgressTokens(const std::vector<std::shared_ptr<ProgressToken>>& tokens);

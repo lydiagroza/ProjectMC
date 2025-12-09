@@ -1,11 +1,12 @@
 ﻿#pragma once
 #include "Wonder.h"
+#include "gameExport.h"
 
 class Board;
 class CardBase;
 class ProgressToken;
 
-class GameSetup
+class GAME_API GameSetup
 {
 private:
 	Board& m_board;

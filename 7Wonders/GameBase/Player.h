@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-
+#include "gameExport.h"
 #include<string>
 #include<memory>
 #include<unordered_map>
@@ -16,7 +16,7 @@
 #include "Wonder.h"
 #include<cstdint>
 
-class Player {
+class GAME_API Player {
 private:
 	std::string m_name;
 	std::map<Resource, std::uint8_t> m_Resources; // All resources 

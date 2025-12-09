@@ -6,9 +6,10 @@
 #include "CardsPyramid.h"
 #include <iostream>
 #include <memory>
+#include "gameExport.h"
 
 
-class Board
+class GAME_API Board
 {
 private:
 	int Age;

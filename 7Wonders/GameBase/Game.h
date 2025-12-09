@@ -3,8 +3,9 @@
 #include "Player.h"
 #include "Board.h"
 #include <memory>
+#include "gameExport.h"
 
-class Game {
+class GAME_API Game {
 public:
     static Game* currentGame;
 private:

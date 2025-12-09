@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-
+#include "gameExport.h"
 class CardBase;
 
 
@@ -10,7 +10,7 @@ enum class Face {
 	Up,
 	Down
 };
-class CardNode
+class GAME_API CardNode
 {
 private:
 	std::shared_ptr<CardBase> m_card; //sa fie shared pointer

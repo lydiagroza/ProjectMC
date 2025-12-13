@@ -74,7 +74,7 @@ public:
 	std::string getName() const;
 	//Actiuni de joc
 	bool hasExtraTurn() const { return m_hasExtraTurn; }
-	bool buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board);
+	bool buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Board& board);
 	void discardCard(const CardBase& c);//
 	void constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board);
 	//chestii pentru gestionare inventar
@@ -82,17 +82,17 @@ public:
 	bool removeCardFromInventory(std::shared_ptr<CardBase> card);
 
 	// Progress Token Effects
-	void setWonderDiscount(bool v);
-	void setBlueCardDiscount(bool v);
-	void setGainsOpponentTradeCost(bool v);
-	void setGetsCoinsForFreeCards(bool v);
-	bool hasWonderDiscount() const;
-	bool hasBlueCardDiscount() const;
-	bool gainsOpponentTradeCost() const;
-	bool getsCoinsForFreeCards() const;
-	void addProgressToken(std::shared_ptr<ProgressToken> token);
-	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens() const;
-	void setHasExtraTurn(bool v);
+	void setWonderDiscount(bool v) { m_hasWonderDiscount = v; }
+	void setBlueCardDiscount(bool v) { m_hasBlueCardDiscount = v; }
+	void setGainsOpponentTradeCost(bool v) { m_gainsOpponentTradeCost = v; }
+	void setGetsCoinsForFreeCards(bool v) { m_getsCoinsForFreeCards = v; }
+	bool hasWonderDiscount() const { return m_hasWonderDiscount; }
+	bool hasBlueCardDiscount() const { return m_hasBlueCardDiscount; }
+	bool gainsOpponentTradeCost() const { return m_gainsOpponentTradeCost; }
+	bool getsCoinsForFreeCards() const { return m_getsCoinsForFreeCards; }
+	void addProgressToken(std::shared_ptr<ProgressToken> token) { m_progressTokens.push_back(token); }
+	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens() const { return m_progressTokens; }
+	void setHasExtraTurn(bool v) { m_hasExtraTurn = v; }
 private:
 	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;
 	std::uint8_t calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;

@@ -9,7 +9,13 @@ Player::Player(const std::string& playerName)
 	m_discountedResource{},
 	m_Wonders{},
 	m_scientificSymbols{},
-	m_chainSymbols{} {
+	m_chainSymbols{},
+    m_hasWonderDiscount(false),
+    m_hasBlueCardDiscount(false),
+    m_gainsOpponentTradeCost(false),
+    m_getsCoinsForFreeCards(false),
+    m_progressTokens{}
+{
 }
 
 //Functie de get pentru numele playerului
@@ -193,6 +199,18 @@ std::uint8_t Player::getTotalCost(const T& buildable, const Player& opponent) co
 
 	std::uint8_t totalCost = this->getTradeCost(buildable, opponent) + buildable.getCostForResource(Resource::Coin);
 
+    // Apply discounts from Progress Tokens
+    if constexpr (std::is_same_v<T, Wonder>) {
+        if (m_hasWonderDiscount && totalCost > 0) {
+            totalCost = (totalCost > 1) ? totalCost - 1 : 0; // 1 coin discount
+        }
+    }
+    if constexpr (std::is_same_v<T, CardBase>) {
+        if (m_hasBlueCardDiscount && buildable.getColor() == Color::Blue && totalCost > 0) {
+            totalCost = (totalCost > 1) ? totalCost - 1 : 0; // 1 coin discount
+        }
+    }
+
 	if (m_Resources.count(Resource::Coin) && m_Resources.at(Resource::Coin) >= totalCost) {
 		return totalCost;
 	}
@@ -210,16 +228,27 @@ const std::vector<Wonder>& Player::getWonders() const {
 }
 
 //Functie care cumpara cartea 
-bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board) {
+bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Board& board) {
 	std::uint8_t totalCoinCost = this->getTotalCost(*card, opponent);
 	if (totalCoinCost == 0) {
 		std::cout << "Card " << card->getName() << " is free." << std::endl;
+        if (getsCoinsForFreeCards()) { // Check if player gets coins for free cards
+            addCoins(4); // Assuming 4 coins for free card
+            std::cout << getName() << " gained 4 coins for building " << card->getName() << " for free.\n";
+        }
 	}
 	if (totalCoinCost == static_cast<std::uint8_t>(-1)) {
 		std::cout << "Card " << card->getName() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
 		return false;
 	}
 	if (totalCoinCost > 0) {
+        // Calculate trade cost separately to give to opponent if needed
+        std::uint8_t tradeCost = this->getTradeCost(*card, opponent);
+        if (opponent.gainsOpponentTradeCost()) { // If opponent has the token, they gain coins
+            opponent.addCoins(tradeCost); // Opponent gains coins
+            std::cout << opponent.getName() << " gained " << static_cast<int>(tradeCost) << " coins from " << getName() << "'s trade.\n";
+        }
+
 		m_Resources[Resource::Coin] -= totalCoinCost;
 	}
 
@@ -263,6 +292,12 @@ void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderT
 	}
 
 	if (totalCoinCost > 0) {
+        // Calculate trade cost separately to give to opponent if needed
+        std::uint8_t tradeCost = this->getTradeCost(wonderToBuild, opponent);
+        if (opponent.gainsOpponentTradeCost()) { // If opponent has the token, they gain coins
+            opponent.addCoins(tradeCost); // Opponent gains coins
+            std::cout << opponent.getName() << " gained " << static_cast<int>(tradeCost) << " coins from " << getName() << "'s wonder construction trade.\n";
+        }
 		m_Resources[Resource::Coin] -= totalCoinCost;
 	}
 

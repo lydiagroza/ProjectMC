@@ -90,6 +90,7 @@ void Game::handle7WondersRule()
 	Wonder* lastRemainingWonder = nullptr;
     auto findUnbuiltAvailableWonder = [](Player& p) -> Wonder* {
         for (auto wonders : p.getWonders()) {
+
             if (!wonders.getIsBuilt() && wonders.isAvailable()) {
                 return &wonders;
             }

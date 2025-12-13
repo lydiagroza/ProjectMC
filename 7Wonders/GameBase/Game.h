@@ -27,6 +27,9 @@ private:
     void printActionMenu() const;
     void draftWondersPhase();
 
+    bool handleWonderConstruction(std::shared_ptr<CardBase> cardUsed);
+
+
 	//calculateFinalScore(); -> maybe sa intoarca playerul care a castigat
 
 public:

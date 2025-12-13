@@ -29,6 +29,57 @@ void Game::switchTurn()
     m_opponent = temp;
 }
 
+bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
+
+    std::vector<Wonder*> availableWonders;
+
+    for (const Wonder& wonder : m_currentPlayer->getWonders())
+        if (!wonder.getIsBuilt()) 
+            availableWonders.push_back(const_cast<Wonder*>(&wonder));
+       
+
+    if (availableWonders.empty()) {
+        std::cout << "Eroare: Nu ai Minuni neconstruite disponibile pentru a construi.\n";
+        return false;
+    }
+
+    //ii dam minunile disp
+    std::cout << "\n--- Minuni Neconstruite Disponibile ---\n";
+    for (size_t i = 0; i < availableWonders.size(); ++i)
+        std::cout << "[" << i + 1 << "] "<< availableWonders[i]->getName()<< "\n";
+   
+
+	//alegem minunea
+    std::cout << "Alege numarul Minunii pe care vrei sa o construiesti: ";
+    int choice;
+    if (!(std::cin >> choice)) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Alegere invalida. Te rog introdu un numar.\n";
+        return false;
+    }
+
+    size_t index = choice - 1;
+
+    if (index >= availableWonders.size()) {
+        std::cout << "Alegere invalida. Incearca din nou.\n";
+        return false;
+    }
+
+    Wonder* selectedWonder = availableWonders[index];
+
+    m_currentPlayer->constructWonder(
+        cardUsed,
+        *selectedWonder,
+        *m_opponent,
+        m_board
+    );
+
+    if (selectedWonder->getIsBuilt()) 
+        return true;
+    return false;
+}
+
 void Game::handlePlayerAction()
 {
     std::cout << "\n>>> ESTE RANDUL LUI: " << m_currentPlayer->getName() << "\n";
@@ -43,11 +94,7 @@ void Game::handlePlayerAction()
         std::cout << "Te rog introdu un numar valid: ";
     }
 
-    // 1. Căutăm cartea în piramidă
     CardNode* selectedNode = nullptr;
-
-    // Putem accesa m_board direct pentru că suntem în clasa Game
-    // Nota: getPyramid() returneaza const&, deci iteram const
     const auto& rows = m_board.getPyramid().getRows();
 
     for (const auto& row : rows) {
@@ -61,7 +108,7 @@ void Game::handlePlayerAction()
         }
     }
 
-    // 2. Validări
+    //Validări
     if (!selectedNode) {
         std::cout << "Eroare: Nu exista carte cu ID-ul " << cardId << "! Incearca iar.\n";
         handlePlayerAction(); // Recursivitate simplă pentru retry
@@ -80,7 +127,7 @@ void Game::handlePlayerAction()
 
     // 3. Alegerea Acțiunii
     std::cout << "Ai ales: " << selectedNode->getCard()->getName() << "\n";
-    std::cout << "Ce faci? [1]=Cumpara, [2]=Vinde: ";
+    std::cout << "Ce faci? [1]=Cumpara, [2]=Vinde, [3]=Construieste minune: ";
     int action;
     std::cin >> action;
 
@@ -96,31 +143,31 @@ void Game::handlePlayerAction()
         std::cout << "Carte vanduta pentru bani.\n";
         success = true;
     }
+    else if (action == 3)
+    {
+        success = handleWonderConstruction(selectedNode->getCard());
+        if (success) {
+            selectedNode->updatePlayedStatus(true);
+        }
+    }
     else {
         std::cout << "Actiune invalida.\n";
         handlePlayerAction();
         return;
     }
-
-    // 4. Finalizare tură
     if (success) {
-        // Marchem cartea ca luată în piramidă
         selectedNode->updatePlayedStatus(true);
 
-        // Actualizăm vizibilitatea (cărțile de deasupra se întorc)
         m_board.updateVisibility();
 
-        // Schimbăm tura (dacă nu are Extra Turn - logica de extra turn o poți pune aici)
         if (!m_currentPlayer->hasExtraTurn()) {
             switchTurn();
         }
         else {
             std::cout << "Ai primit o tura extra! Mai joci o data.\n";
-            // Trebuie resetat flagul de extra turn în Player după ce e consumat
         }
     }
     else {
-        // Dacă tranzacția a eșuat (nu are bani), îl lăsăm să încerce iar
         std::cout << "Actiunea a esuat. Incearca altceva.\n";
         handlePlayerAction();
     }

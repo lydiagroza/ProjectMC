@@ -11,6 +11,7 @@
 #include "CardBase.h"
 #include "Board.h"
 #include "Wonder.h"
+#include "ProgressTokens.h"
 #include<cstdint>
 #include "gameExport.h"   
 
@@ -33,6 +34,13 @@ private:
 	std::unordered_set<Scientific_Symbol>m_scientificSymbols; // all scientific symbols
 	bool m_hasExtraTurn = false;
 	std::unordered_set<Symbol>m_chainSymbols; // all chain symbols accumulated
+
+	// Progress Token Effects
+	bool m_hasWonderDiscount = false;
+	bool m_hasBlueCardDiscount = false;
+	bool m_gainsOpponentTradeCost = false;
+	bool m_getsCoinsForFreeCards = false;
+	std::vector<std::shared_ptr<ProgressToken>> m_progressTokens;
 public:
 	// getteri
 	const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& getInventory() const;
@@ -72,6 +80,19 @@ public:
 	//chestii pentru gestionare inventar
 	void addCardToInventory(std::shared_ptr<CardBase> card);
 	bool removeCardFromInventory(std::shared_ptr<CardBase> card);
+
+	// Progress Token Effects
+	void setWonderDiscount(bool v);
+	void setBlueCardDiscount(bool v);
+	void setGainsOpponentTradeCost(bool v);
+	void setGetsCoinsForFreeCards(bool v);
+	bool hasWonderDiscount() const;
+	bool hasBlueCardDiscount() const;
+	bool gainsOpponentTradeCost() const;
+	bool getsCoinsForFreeCards() const;
+	void addProgressToken(std::shared_ptr<ProgressToken> token);
+	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens() const;
+	void setHasExtraTurn(bool v);
 private:
 	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;
 	std::uint8_t calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;

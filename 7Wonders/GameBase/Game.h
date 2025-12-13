@@ -29,8 +29,9 @@ private:
 
     bool handleWonderConstruction(std::shared_ptr<CardBase> cardUsed);
 
-
-	//calculateFinalScore(); -> maybe sa intoarca playerul care a castigat
+    //fct care ma ajuta sa vad cine a castigat
+	int calculatePlayerVP(const Player& player) const;
+	Player determinateWinner(); //intoarce jucatorul care a castigat
 
 public:
     Game();

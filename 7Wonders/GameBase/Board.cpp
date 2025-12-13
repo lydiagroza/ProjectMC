@@ -254,7 +254,7 @@ const CardsPyramid& Board::getPyramid() const
 	return m_pyramid;
 }
 
-MilitaryTrack& Board::getMilitaryTrack()
+const MilitaryTrack& Board::getMilitaryTrack() const
 {
 	return m_militaryTrack;
 }

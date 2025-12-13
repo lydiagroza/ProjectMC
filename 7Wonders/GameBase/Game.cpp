@@ -80,6 +80,57 @@ bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
     return false;
 }
 
+
+int Game::calculatePlayerVP(const Player& player) const {
+    int totalVP = 0;
+    int playerId = (player.getName() == m_player1.getName()) ? 1 : 2;
+    totalVP += player.getCoins() / 3;
+    totalVP += m_board.getMilitaryTrack().getVictoryPointsForPlayer(playerId);
+    totalVP += player.getVPFromBuildings();
+    totalVP += player.getVPFromWonders();
+    totalVP += player.getVPFromTokens();
+    return totalVP;
+}
+
+Player Game::determinateWinner()
+{
+    int vp1 = calculatePlayerVP(m_player1);
+    int vp2 = calculatePlayerVP(m_player2);
+
+	std::cout << "\n--- Rezultatele Finale ---\n";
+    std::cout << m_player1.getName() << " Total VP: " << vp1 << "\n";
+    std::cout << m_player2.getName() << " Total VP: " << vp2 << "\n";
+    if (vp1 > vp2) {
+        std::cout << "\n Câștigătorul este: " << m_player1.getName() << "\n";
+        return m_player1;
+    }
+    else if (vp2 > vp1) {
+        std::cout << "\n Câștigătorul este: " << m_player2.getName() << "\n";
+        return m_player2;
+    }
+    else {
+
+        int blueVP1 = m_player1.getVPFromBlueCards();
+        int blueVP2 = m_player2.getVPFromBlueCards();
+
+        if (blueVP1 > blueVP2) {
+            std::cout << "Jocul s-a terminat la egalitate, dar " << m_player1.getName()
+                << " castiga la tie-breaker (Clădiri Civile - Albastre).\n";
+            return m_player1;
+        }
+        else if (blueVP2 > blueVP1) {
+            std::cout << "Jocul s-a terminat la egalitate, dar " << m_player2.getName()
+                << " castiga la tie-breaker (Clădiri Civile - Albastre).\n";
+            return m_player2;
+        }
+        else {
+            std::cout << "Jocul s-a terminat la egalitate perfectă. Este remiză.\n";
+            return ;
+        }
+    }
+
+}
+
 void Game::handlePlayerAction()
 {
     std::cout << "\n>>> ESTE RANDUL LUI: " << m_currentPlayer->getName() << "\n";
@@ -134,11 +185,9 @@ void Game::handlePlayerAction()
     bool success = false;
 
     if (action == 1) {
-        // CUMPARARE
         success = m_currentPlayer->buyCard(selectedNode->getCard(), *m_opponent, m_board);
     }
     else if (action == 2) {
-        // VANZARE
         m_currentPlayer->discardCard(*selectedNode->getCard());
         std::cout << "Carte vanduta pentru bani.\n";
         success = true;

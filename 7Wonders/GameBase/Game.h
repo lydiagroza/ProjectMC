@@ -22,12 +22,14 @@ private:
 
     int m_currentAge;
     bool m_gameOver;
+    int m_numberOfWondersBuilt=0;
    
     bool checkForInstantWin();
     void printActionMenu() const;
     void draftWondersPhase();
 
     bool handleWonderConstruction(std::shared_ptr<CardBase> cardUsed);
+    void handle7WondersRule();
 
     //fct care ma ajuta sa vad cine a castigat
 	int calculatePlayerVP(const Player& player) const;

@@ -75,9 +75,38 @@ bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
         m_board
     );
 
-    if (selectedWonder->getIsBuilt()) 
+    if (selectedWonder->getIsBuilt()) {
+        std::cout << m_currentPlayer->getName() << " a construit Minunea: " << selectedWonder->getName() << "\n";
+        m_numberOfWondersBuilt++;
+        if (m_numberOfWondersBuilt == 7)
+            handle7WondersRule();
         return true;
+    }
     return false;
+}
+
+void Game::handle7WondersRule()
+{
+	Wonder* lastRemainingWonder = nullptr;
+    auto findUnbuiltAvailableWonder = [](Player& p) -> Wonder* {
+        for (auto wonders : p.getWonders()) {
+            if (!wonders.getIsBuilt() && wonders.isAvailable()) {
+                return &wonders;
+            }
+        }
+        return nullptr;
+        };
+    lastRemainingWonder = findUnbuiltAvailableWonder(m_player1);
+
+    if (lastRemainingWonder == nullptr) {
+        lastRemainingWonder = findUnbuiltAvailableWonder(m_player2);
+    }
+
+    if (lastRemainingWonder != nullptr) {
+        std::cout<< lastRemainingWonder->getName() << "' este scoasa din joc (returnata la cutie).\n";
+        // Marchează Minunea ca indisponibilă, astfel încât să nu mai apară în meniu.
+        lastRemainingWonder->returnToBox();
+    }
 }
 
 
@@ -195,9 +224,8 @@ void Game::handlePlayerAction()
     else if (action == 3)
     {
         success = handleWonderConstruction(selectedNode->getCard());
-        if (success) {
+        if (success)
             selectedNode->updatePlayedStatus(true);
-        }
     }
     else {
         std::cout << "Actiune invalida.\n";

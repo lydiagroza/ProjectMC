@@ -239,7 +239,36 @@ void Game::initialize()
     std::cout << "[Game Logic] Initialization Complete. Age 1 Started. Players have 7 coins.\n";
 }
 
-void Game::checkForInstantWin(const MilitaryResult& militaryResult)
-{
-    /* Logic remains commented out until you implement it */
+bool Game::checkForInstantWin() {
+
+    int militaryPosition = m_board.getMilitaryTrack().getPawnPosition();
+
+    // Player 1 atinge +9 (sau mai mult)
+    if (militaryPosition >= 9) {
+		std::cout << "Victorie militara pt " << m_player1.getName() << "\n";
+        m_gameOver = true;
+        return true;
+    }
+
+    // Player 2 atinge -9 (sau mai puțin)
+    if (militaryPosition <=- 9) {
+        std::cout << "Victorie militara pt " << m_player2.getName() << "\n";
+        m_gameOver = true;
+        return true;
+    }
+
+    //verif suprematie stiintifica
+
+	if (m_player1.ScientificSymbolCount() >= 6) { //trebuie implementata fct in player
+		std::cout << "victorie stiintifica pt " << m_player1.getName() << "\n";
+        m_gameOver = true;
+        return true;
+    }
+
+    if (m_player2.ScientificSymbolCount() >= 6) {
+		std::cout << "victorie stiintifica pt " << m_player2.getName() << "\n";
+        return true;
+    }
+
+    return false;
 }

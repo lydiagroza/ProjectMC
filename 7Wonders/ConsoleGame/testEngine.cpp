@@ -17,10 +17,6 @@ void TestEngine::runGameLoop() {
     while (!m_game.isGameOver()) {
         std::cout << "\n\n################ TURNA " << turnCounter << " ################\n";
 
-        // --- AICI NU MAI AI NEVOIE DE LOGICA ACTVEPLAYER/OPPONENT ---
-        // (Pentru că Game::handlePlayerAction și Game::printGameState accesează
-        // deja m_game.m_currentPlayer și m_game.m_opponent)
-
         // 1. Afișează starea
         m_game.printGameState();
 

@@ -5,10 +5,11 @@
 #include <functional>
 #include <memory>
 #include "CardBase.h" 
+#include "gameExport.h"
 
 class Player;
 
-class Wonder {
+class GAME_API Wonder {
     std::string m_name;
     uint16_t m_id;
     std::map<Resource, uint8_t> m_cost;

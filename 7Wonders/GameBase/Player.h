@@ -12,7 +12,11 @@
 #include "Board.h"
 #include "Wonder.h"
 #include<cstdint>
-class Player {
+#include "gameExport.h"   
+
+//vreau fucntie care sa im ireturneze cate simboluri stintifice are un player
+
+class GAME_API Player {
 private:
 	std::string m_name;
 	std::map<Resource, std::uint8_t> m_Resources; // All resources

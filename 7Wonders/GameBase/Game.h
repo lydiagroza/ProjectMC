@@ -23,7 +23,7 @@ private:
     int m_currentAge;
     bool m_gameOver;
    
-    void checkForInstantWin(const MilitaryResult& militaryResult);
+    bool checkForInstantWin();
     void printActionMenu() const;
     void draftWondersPhase();
 

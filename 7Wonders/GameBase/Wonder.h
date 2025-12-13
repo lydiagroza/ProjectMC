@@ -18,7 +18,8 @@ class GAME_API Wonder {
     uint16_t m_id;
     std::map<Resource, uint8_t> m_cost;
     std::vector<std::function<void(Player&, Player&)>> m_effects;
-	bool isBuilt = false;
+	bool m_isBuilt = false;
+    bool m_isAvailable = true;
 
 public:
     Wonder(const std::string& name, uint16_t id, const std::map<Resource, uint8_t>& cost)
@@ -40,11 +41,26 @@ public:
         return 0;
     }
 
+	bool getIsBuilt() const { return m_isBuilt; }
+    bool getIsAvailable() const { return m_isAvailable; }
+
+
+	void setIsBuilt() { 
+        if (m_isAvailable) {
+            m_isBuilt = true;
+        }
+        else {
+            // punem eroare? asta este pentru cand minunea a fost eliminata 
+        }
+    }
+
+    void returnToBox() {
+        m_isAvailable = false;
+    }
+
+
     void addEffect(std::function<void(Player&, Player&)> e) {
         m_effects.push_back(e);
     }
-
-	bool getIsBuilt() const { return isBuilt; }
-	void setIsBuilt() { isBuilt = true; }
 
 };

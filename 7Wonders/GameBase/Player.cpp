@@ -222,10 +222,8 @@ const std::vector<Wonder>& Player::getWonders() const {
 
 //Functie care cumpara cartea 
 
-bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board) {
-=======
 bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Board& board) {
->>>>>>> parent of 5af32ae (Merge branch 'separareProiecte' of https://github.com/lydiagroza/ProjectMC into separareProiecte)
+//>>>>>>> parent of 5af32ae (Merge branch 'separareProiecte' of https://github.com/lydiagroza/ProjectMC into separareProiecte)
 	std::uint8_t totalCoinCost = this->getTotalCost(*card, opponent);
 	if (totalCoinCost == 0) {
 		std::cout << "Card " << card->getName() << " is free." << std::endl;

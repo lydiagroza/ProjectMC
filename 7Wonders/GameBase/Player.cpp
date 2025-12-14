@@ -356,7 +356,7 @@ std::uint8_t Player::getScientificSymbolCount() const {
 	return static_cast<std::uint8_t>(m_scientificSymbols.size());
 }
 
-std::uint8_t Player::getVPFromTokens() const {
+std::uint8_t Player::getVPFromMilitaryTokens() const {
 	
 	if (m_pointsScore.count(Points::Military)) {
 		return m_pointsScore.at(Points::Military);
@@ -378,6 +378,17 @@ std::uint8_t Player::getVPFromTokens() const {
 //	return totalVP;
 //}
 
+
+//std::uint8_t Player::getVPFromWonders() const {
+//	std::uint8_t totalVP = 0;
+//
+//	for (const auto& wonder : m_Wonders) {
+//		
+//		totalVP += wonder.getVictoryPoints();
+//	}
+//
+//	return totalVP;
+//}
 
 
 

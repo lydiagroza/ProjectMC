@@ -74,7 +74,7 @@ public:
 	//Functie ca sa vad cat ma costa o singura resursa
 	std::uint8_t findUnitTradeCost(Resource res, const Player& opponent) const;
 	//Functie pentru a afla toate alegerile de resurse
-	std::vector<std::vector<Resource>> findFlexibleChoices() const; // ---> de modif 
+	std::vector<std::vector<Resource>> findFlexibleChoices() const;  
 	//Functie pentru a afla ce resurse ne lipsesc pentru a cumpara o carte
 	template<typename T>
 	std::map<Resource, std::uint8_t> findMissingResources(const T& buildable, const Player& opponent) const;
@@ -96,11 +96,14 @@ public:
 	//Numarul de simboluri stiintifice
 	std::uint8_t getScientificSymbolCount() const;
 
-	//Puncte din tokens
-	std::uint8_t getVPFromTokens() const;
+	//Puncte din  Military tokens
+	std::uint8_t getVPFromMilitaryTokens() const;
 
 	//Puncte din albastre
 	std::uint8_t getVPFromBlueCards() const;
+
+	//Puncte din Wonders
+	std::uint8_t getVPFromWonders()const;
 
 private:
 	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;

@@ -15,8 +15,8 @@
 #include<cstdint>
 #include "gameExport.h"   
 
-//vreau functie care sa im ireturneze cate simboluri stintifice are un player
-//fucntie care imi retuneaza cati banuti are un player
+//vreau functie care sa im ireturneze cate simboluri stintifice are un player -> done 
+//fucntie care imi retuneaza cati banuti are un player--> done
 //uramtoare le fucntii .getVPFromBuildings();
 					//getVPFromWonders();
 					//getVPFromTokens();
@@ -26,7 +26,6 @@ private:
 	std::string m_name;
 	std::map<Resource, std::uint8_t> m_Resources; // All resources
 	std::map<Points, std::uint8_t>m_pointsScore; // All points
-	// 0 - Wood , 1-Clay , 2- Stone, 3- Glass, 4-Papyrus
 	std::bitset<5>m_discountedResource; // discounted resources from yellow cards
 	std::map<std::string, std::vector<Resource>>m_flexibleResources; // vector,bitset> 
 	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // all cards
@@ -44,6 +43,7 @@ private:
 public:
 	// getteri
 	const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& getInventory() const;
+	int getCoins();
 	const std::vector<Wonder>& getWonders() const;
 	void set_discountedResource(Resource r);
 	Player(const std::string& playerName); // constructor
@@ -83,7 +83,7 @@ public:
 	//chestii pentru gestionare inventar
 	void addCardToInventory(std::shared_ptr<CardBase> card);
 	bool removeCardFromInventory(std::shared_ptr<CardBase> card);
-
+	int getNrOfScientificSymbols();
 
 	// Progress Token Effects
 	void setWonderDiscount(bool v) { m_hasWonderDiscount = v; }

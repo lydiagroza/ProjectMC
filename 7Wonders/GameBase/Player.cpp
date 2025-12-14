@@ -216,6 +216,11 @@ std::uint8_t Player::getTotalCost(const T& buildable, const Player& opponent) co
 const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& Player::getInventory() const {
 	return m_Inventory;
 }
+int Player::getCoins()
+	{
+		auto it = m_Resources.find(Resource::Coin);
+		return (it != m_Resources.end()) ? it->second : 0;
+	}
 const std::vector<Wonder>& Player::getWonders() const {
 	return m_Wonders;
 }
@@ -268,6 +273,11 @@ bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
 		}
 	}
 	return false;
+}
+
+int Player::getNrOfScientificSymbols()
+{
+	return m_scientificSymbols.size();
 }
 
 //Functie in cazul in care jucatorul alege sa arda cartea pentru banuti

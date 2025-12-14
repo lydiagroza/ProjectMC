@@ -365,30 +365,18 @@ std::uint8_t Player::getVPFromMilitaryTokens() const {
 }
 
 
-//
-//std::uint8_t Player::getVPFromBlueCards() const {
-//	std::uint8_t totalVP = 0;
-//
-//	if (m_Inventory.count(Color::Blue)) {
-//		for (const auto& card : m_Inventory.at(Color::Blue)) {
-//			
-//			totalVP += card->getVP();
-//		}
-//	}
-//	return totalVP;
-//}
+
+std::uint8_t Player::getVPFromBlueCards() const {
+	if (m_pointsScore.count(Points::BlueCards)) {
+		return m_pointsScore.at(Points::BlueCards);
+	}
+	return 0;
+	
+}
 
 
-//std::uint8_t Player::getVPFromWonders() const {
-//	std::uint8_t totalVP = 0;
-//
-//	for (const auto& wonder : m_Wonders) {
-//		
-//		totalVP += wonder.getVictoryPoints();
-//	}
-//
-//	return totalVP;
-//}
+
+
 
 
 

@@ -25,7 +25,7 @@ class Board;
       Barrel, Gear, Book, Temple, Target, Lyre, Castle, Droplet, Vase, Column, Sword, Pot, Horse, Helmet, Mask, Sun, Moon
     };
   enum  Points : std::uint8_t {
-        Victory, Military
+        Victory, Military,BlueCards
 	};
   enum Scientific_Symbol : std::uint8_t {
 	  Sun_Dial, Wheel, Ink, Mortar,Gyroscope,Scales

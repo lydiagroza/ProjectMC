@@ -14,12 +14,7 @@
 #include<cstdint>
 #include "gameExport.h"   
 
-//vreau functie care sa im ireturneze cate simboluri stintifice are un player
-//fucntie care imi retuneaza cati banuti are un player
-//uramtoare le fucntii .getVPFromBuildings();
-					//getVPFromWonders();
-					//getVPFromTokens();
-					//getVPFromBlueCards();
+
 class GAME_API Player {
 private:
 	std::string m_name;

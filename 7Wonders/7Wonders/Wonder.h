@@ -19,21 +19,15 @@ public:
     Wonder(const std::string& name, uint16_t id, const std::map<Resource, uint8_t>& cost)
         : m_name(name), m_id(id), m_cost(cost) {}
 
-    static std::map<Resource, uint8_t> parseCost(const std::string& s);
-    static std::vector<std::function<void(Player&, Player&)>> parseEffects(const std::string& s);
+   /* static std::map<Resource, uint8_t> parseCost(const std::string& s);
+    static std::vector<std::function<void(Player&, Player&)>> parseEffects(const std::string& s);*/
 
-    const std::string& getName() const { return m_name; }
-    uint16_t getId() const { return m_id; }
-    const std::map<Resource, uint8_t>& getCost() const { return m_cost; }
-    const std::vector<std::function<void(Player&, Player&)>>& getEffects() const { return m_effects; }
+    const std::string& getName() const;
+    uint16_t getId() const;
+    const std::map<Resource, uint8_t>& getCost() const;
+    const std::vector<std::function<void(Player&, Player&)>>& getEffects() const;
 
-    std::uint8_t getCostForResource(Resource r) const {
-        auto it = m_cost.find(r);
-        if (it != m_cost.end()) {
-            return it->second;
-        }
-        return 0;
-    }
+    std::uint8_t getCostForResource(Resource r) const;
 
     void addEffect(std::function<void(Player&, Player&)> e) {
         m_effects.push_back(e);

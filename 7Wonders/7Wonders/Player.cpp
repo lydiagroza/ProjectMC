@@ -27,11 +27,6 @@ bool Player::decreaseCoins(std::uint8_t amount) {
 	return false; 
 }
 
-void Player::addCoins(std::uint8_t amount) {
-	m_Resources[Coin] += amount;
-
-}
-
 
 //Functii pentru resurse
 void Player::add_Resource(Resource r, std::uint8_t amount)

@@ -33,13 +33,6 @@ bool Player::decreaseCoins(std::uint8_t amount) {
 	return false;
 }
 
-void Player::addCoins(std::uint8_t amount) {
-	m_Resources[Coin] += amount;
-
-}
-
-
-//Functii pentru resurse
 void Player::add_Resource(Resource r, std::uint8_t amount)
 {
 	m_Resources[r] += amount;
@@ -228,7 +221,7 @@ const std::vector<Wonder>& Player::getWonders() const {
 }
 
 //Functie care cumpara cartea 
-<<<<<<< HEAD
+
 bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board) {
 =======
 bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Board& board) {
@@ -257,7 +250,7 @@ bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Boa
 	}
 
 	m_Inventory[card->m_color].push_back(card);
-	card->applyEffect(*this, opponent, board);
+	card->applyEffect(*this, opponent,board);
 	std::cout << "Card " << card->getName() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
 	return true;
 

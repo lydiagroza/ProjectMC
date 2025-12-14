@@ -74,18 +74,16 @@ public:
 	std::string getName() const;
 	//Actiuni de joc
 	bool hasExtraTurn() const { return m_hasExtraTurn; }
-<<<<<<< HEAD
+
 	bool buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board);
-=======
+
 	bool buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Board& board);
->>>>>>> parent of 5af32ae (Merge branch 'separareProiecte' of https://github.com/lydiagroza/ProjectMC into separareProiecte)
-	void discardCard(const CardBase& c);//
+	void discardCard(const CardBase& c);
 	void constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board);
 	//chestii pentru gestionare inventar
 	void addCardToInventory(std::shared_ptr<CardBase> card);
 	bool removeCardFromInventory(std::shared_ptr<CardBase> card);
-<<<<<<< HEAD
-=======
+
 
 	// Progress Token Effects
 	void setWonderDiscount(bool v) { m_hasWonderDiscount = v; }
@@ -99,7 +97,6 @@ public:
 	void addProgressToken(std::shared_ptr<ProgressToken> token) { m_progressTokens.push_back(token); }
 	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens() const { return m_progressTokens; }
 	void setHasExtraTurn(bool v) { m_hasExtraTurn = v; }
->>>>>>> parent of 5af32ae (Merge branch 'separareProiecte' of https://github.com/lydiagroza/ProjectMC into separareProiecte)
 private:
 	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;
 	std::uint8_t calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;

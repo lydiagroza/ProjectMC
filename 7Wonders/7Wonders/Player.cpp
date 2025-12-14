@@ -236,7 +236,7 @@ void Player::discardCard(const CardBase& card) {
 
 	std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
 	gainedCoins += static_cast<uint8_t>(m_Inventory[Color::Yellow].size()) * GameConstants::DISCARD_YELLOW_BONUS;
-	addCoins(gainedCoins);
+	add_Resource(Coin, gainedCoins);
 }
 
 void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board) {

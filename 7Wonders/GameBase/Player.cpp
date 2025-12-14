@@ -33,7 +33,7 @@ bool Player::decreaseCoins(std::uint8_t amount) {
 	return false;
 }
 
-void Player::add_Resource(Resource r, std::uint8_t amount)
+void Player::addResource(Resource r, std::uint8_t amount)
 {
 	m_Resources[r] += amount;
 }
@@ -67,10 +67,6 @@ void Player::add_ScientificSymbol(Scientific_Symbol symbol)
 void Player::add_ChainSymbol(Symbol symbol)
 {
 	m_chainSymbols.insert(symbol);
-}
-
-void Player::addCoins(std::uint8_t amount) {
-	m_Resources[Coin] += amount;
 }
 
 bool Player::hasExtraTurn() const {
@@ -280,7 +276,7 @@ bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Boa
 	if (totalCoinCost == 0) {
 		std::cout << "Card " << card->getName() << " is free." << std::endl;
         if (getsCoinsForFreeCards()) { // Check if player gets coins for free cards
-            addCoins(4); // Assuming 4 coins for free card
+            addResource(Coin,4); // Assuming 4 coins for free card
             std::cout << getName() << " gained 4 coins for building " << card->getName() << " for free.\n";
         }
 	}
@@ -292,7 +288,7 @@ bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Boa
         // Calculate trade cost separately to give to opponent if needed
         std::uint8_t tradeCost = this->findTradeCost(*card, opponent);
         if (opponent.gainsOpponentTradeCost()) { // If opponent has the token, they gain coins
-            opponent.addCoins(tradeCost); // Opponent gains coins
+            opponent.addResource(Coin,tradeCost); // Opponent gains coins
             std::cout << opponent.getName() << " gained " << static_cast<int>(tradeCost) << " coins from " << getName() << "'s trade.\n";
         }
 
@@ -333,7 +329,7 @@ void Player::discardCard(const CardBase& card) {
 
 	std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
 	gainedCoins += static_cast<uint8_t>(m_Inventory[Color::Yellow].size()) * GameConstants::DISCARD_YELLOW_BONUS;
-	addCoins(gainedCoins);
+	addResource(Coin,gainedCoins);
 }
 
 void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board) {
@@ -348,7 +344,7 @@ void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderT
         // Calculate trade cost separately to give to opponent if needed
         std::uint8_t tradeCost = this->findTradeCost(wonderToBuild, opponent);
         if (opponent.gainsOpponentTradeCost()) { // If opponent has the token, they gain coins
-            opponent.addCoins(tradeCost); // Opponent gains coins
+            opponent.addResource(Coin,tradeCost); // Opponent gains coins
             std::cout << opponent.getName() << " gained " << static_cast<int>(tradeCost) << " coins from " << getName() << "'s wonder construction trade.\n";
         }
 		m_Resources[Resource::Coin] -= totalCoinCost;

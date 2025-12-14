@@ -358,8 +358,8 @@ void Game::initialize()
     m_gameOver = false;
 	draftWondersPhase();
     m_setup.startAge(m_currentAge);
-    m_player1.addCoins(7);
-    m_player2.addCoins(7);
+    m_player1.addResource(Coin,7);
+    m_player2.addResource(Coin, 7);
     m_board.updateVisibility();
     std::cout << "[Game Logic] Initialization Complete. Age 1 Started. Players have 7 coins.\n";
 }

@@ -70,9 +70,8 @@ public:
 	Player(const std::string& playerName); // constructor
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
-	void addCoins(std::uint8_t amount); //
 	//Gestioneaza resursele
-	void add_Resource(Resource r, std::uint8_t amount);//
+	void addResource(Resource r, std::uint8_t amount);//
 	void removeResource(Resource r, std::uint8_t amount);
 	//Gestioneaza punctele de victorie
 	void add_Points(Points p, std::uint8_t amount);//

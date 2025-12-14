@@ -17,7 +17,7 @@ std::vector<std::function<void(Player&, Player&)>> ProgressToken::parseEffects(c
  
 
     static const std::unordered_map<std::string, std::function<void(Player&, Player&)>> effectMap = {
-        {"add_coins6", [](Player& p, Player& o) { p.addCoins(6); }},
+        {"add_coins6", [](Player& p, Player& o) { p.addResource(Coin,6); }},
         {"add_VictoryPoint4", [](Player& p, Player& o) { p.add_Points(Points::Victory, 4); }},
         {"WondersDiscount", [](Player& p, Player& o) { p.setWonderDiscount(true); }},
         {"gainOpponentTradeCost", [](Player& p, Player& o) { p.setGainsOpponentTradeCost(true); }},

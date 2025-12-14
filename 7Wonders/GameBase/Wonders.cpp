@@ -42,13 +42,13 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
     std::string effectStr;
 
     static const std::unordered_map<std::string, std::function<void(Player&, Player&)>> effectMap = {
-        {"add_coins3", [](Player& p, Player& o) { p.addCoins(3); }},
+        {"add_coins3", [](Player& p, Player& o) { p.addResource(Coin,3); }},
         {"decreaseCoins3", [](Player& p, Player& o) { o.decreaseCoins(3); }},
         {"replayTurn", [](Player& p, Player& o) { /*???*/ }},
         {"add_VictoryPoint3", [](Player& p, Player& o) { p.add_Points(Points::Victory, 3); }},
-        {"wood/stone/clay", [](Player& p, Player& o) { p.add_Resource(Resource::Wood, 1); p.add_Resource(Resource::Stone, 1); p.add_Resource(Resource::Clay, 1); }},
+        {"wood/stone/clay", [](Player& p, Player& o) { p.addResource(Resource::Wood, 1); p.addResource(Resource::Stone, 1); p.addResource(Resource::Clay, 1); }},
         {"add_VictoryPoints4", [](Player& p, Player& o) { p.add_Points(Points::Victory, 4); }},
-        {"add_coins12", [](Player& p, Player& o) { p.addCoins(12); }},
+        {"add_coins12", [](Player& p, Player& o) { p.addResource(Coin,12); }},
         {"discardOpponentGrayCard", [](Player& p, Player& o) {
             Board& board = Game::currentGame->getBoard();
             const auto& opponentInventory = o.getInventory();
@@ -109,7 +109,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
         }},
 
         {"add_VictoryPoint2", [](Player& p, Player& o) { p.add_Points(Points::Victory, 2); }},
-        {"papyrus/glass", [](Player& p, Player& o) { p.add_Resource(Resource::Papyrus, 1); p.add_Resource(Resource::Glass, 1); }},
+        {"papyrus/glass", [](Player& p, Player& o) { p.addResource(Resource::Papyrus, 1); p.addResource(Resource::Glass, 1); }},
         {"add_VictoryPoints9", [](Player& p, Player& o) { p.add_Points(Points::Victory, 9); }},
         {"chooseProgressToken", [](Player& p, Player& o) {
             Board& board = Game::currentGame->getBoard();
@@ -140,7 +140,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
                 std::cout << "Invalid choice." << std::endl;
             }
         }},
-        {"add_coins6", [](Player& p, Player& o) { p.addCoins(6); }},
+        {"add_coins6", [](Player& p, Player& o) { p.addResource(Coin,6); }},
         {"add_VictoryPoints", [](Player& p, Player& o) { p.add_Points(Points::Victory, 1); }},
         {"add_MilitaryPoints2", [](Player& p, Player& o) { p.add_Points(Points::Military, 2); }},
         {"discardOpponentBrownCard", [](Player& p, Player& o) {

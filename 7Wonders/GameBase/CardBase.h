@@ -28,7 +28,7 @@ class Board;
         Victory, Military,BlueCards
 	};
   enum Scientific_Symbol : std::uint8_t {
-	  Sun_Dial, Wheel, Ink, Mortar,Gyroscope,Scales
+	  Sun_Dial, Wheel, Ink, Mortar,Gyroscope,Scales,Law
   };
 
   class GAME_API CardBase {

@@ -1,6 +1,7 @@
 ﻿#include "Game.h"
 #include "MilitaryTrack.h"
 #include <iostream>
+#include <optional> // Add this include
 
 Game* Game::currentGame = nullptr;
 
@@ -91,7 +92,7 @@ void Game::handle7WondersRule()
     auto findUnbuiltAvailableWonder = [](Player& p) -> Wonder* {
         for (auto wonders : p.getWonders()) {
 
-            if (!wonders.getIsBuilt() && wonders.isAvailable()) {
+            if (!wonders.getIsBuilt() && wonders.getIsAvailable()) {
                 return &wonders;
             }
         }
@@ -116,13 +117,12 @@ int Game::calculatePlayerVP(const Player& player) const {
     int playerId = (player.getName() == m_player1.getName()) ? 1 : 2;
     totalVP += player.getCoins() / 3;
     totalVP += m_board.getMilitaryTrack().getVictoryPointsForPlayer(playerId);
-    totalVP += player.getVPFromBuildings();
-    totalVP += player.getVPFromWonders();
-    totalVP += player.getVPFromTokens();
+   // totalVP += player.getVPFromBuildings();
+    totalVP += player.getVPFromMilitaryTokens();
     return totalVP;
 }
 
-Player Game::determinateWinner()
+std::optional<Player> Game::determinateWinner()
 {
     int vp1 = calculatePlayerVP(m_player1);
     int vp2 = calculatePlayerVP(m_player2);
@@ -155,7 +155,7 @@ Player Game::determinateWinner()
         }
         else {
             std::cout << "Jocul s-a terminat la egalitate perfectă. Este remiză.\n";
-            return ;
+            return std::nullopt; // Return an empty optional for a draw
         }
     }
 
@@ -384,13 +384,13 @@ bool Game::checkForInstantWin() {
 
     //verif suprematie stiintifica
 
-	if (m_player1.ScientificSymbolCount() >= 6) { //trebuie implementata fct in player
+	if (m_player1.getNrOfScientificSymbols() >= 6) { //trebuie implementata fct in player
 		std::cout << "victorie stiintifica pt " << m_player1.getName() << "\n";
         m_gameOver = true;
         return true;
     }
 
-    if (m_player2.ScientificSymbolCount() >= 6) {
+    if (m_player2.getNrOfScientificSymbols() >= 6) {
 		std::cout << "victorie stiintifica pt " << m_player2.getName() << "\n";
         return true;
     }

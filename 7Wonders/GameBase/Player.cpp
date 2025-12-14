@@ -69,6 +69,13 @@ void Player::add_ChainSymbol(Symbol symbol)
 	m_chainSymbols.insert(symbol);
 }
 
+void Player::addCoins(std::uint8_t amount) {
+	m_Resources[Coin] += amount;
+}
+
+bool Player::hasExtraTurn() const {
+	return m_hasExtraTurn;
+}
 
 int Player::getResourceDiscountIndex(Resource r) const {
 	switch (r) {
@@ -208,7 +215,7 @@ std::uint8_t Player::findTotalCost(const T& buildable, const Player& opponent) c
 		}
 	}
 
-	std::uint8_t totalCost = this->getTradeCost(buildable, opponent) + buildable.getCostForResource(Resource::Coin);
+	std::uint8_t totalCost = this->findTradeCost(buildable, opponent) + buildable.getCostForResource(Resource::Coin);
 
     // Apply discounts from Progress Tokens
     if constexpr (std::is_same_v<T, Wonder>) {
@@ -234,7 +241,7 @@ std::uint8_t Player::findTotalCost(const T& buildable, const Player& opponent) c
 const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& Player::getInventory() const {
 	return m_Inventory;
 }
-int Player::getCoins()
+int Player::getCoins() const
 	{
 		auto it = m_Resources.find(Resource::Coin);
 		return (it != m_Resources.end()) ? it->second : 0;
@@ -313,6 +320,11 @@ bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
 		}
 	}
 	return false;
+}
+
+void Player::addWonders(const std::shared_ptr<Wonder>& wonder)
+{
+	m_Wonders.push_back(*wonder);
 }
 
 

@@ -1,4 +1,4 @@
-#pragma one
+#pragma once
 #include<string>
 #include<memory>
 #include<unordered_map>
@@ -15,12 +15,7 @@
 #include<cstdint>
 #include "gameExport.h"   
 
-//vreau functie care sa im ireturneze cate simboluri stintifice are un player -> done 
-//fucntie care imi retuneaza cati banuti are un player--> done
-//uramtoare le fucntii .getVPFromBuildings();
-					//getVPFromWonders();
-					//getVPFromTokens();
-					//getVPFromBlueCards();
+
 class GAME_API Player {
 private:
 	std::string m_name;
@@ -58,7 +53,7 @@ public:
 
 	const std::unordered_set<Symbol>& getChainSymbols() const;
 
-	int getCoins();
+	int getCoins() const;
 
 	int getNrOfScientificSymbols() const;
 
@@ -99,7 +94,6 @@ public:
 	std::uint8_t findTotalCost(const T& buildable, const Player& opponent)const;
 	
 	//Actiuni de joc
-	bool hasExtraTurn() const { return m_hasExtraTurn; }
 
 	bool buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board);
 
@@ -109,6 +103,8 @@ public:
 	//chestii pentru gestionare inventar
 	void addCardToInventory(std::shared_ptr<CardBase> card);
 	bool removeCardFromInventory(std::shared_ptr<CardBase> card);
+
+	void addWonders(const std::shared_ptr<Wonder>& wonder);
 	
 
 	// Progress Token Effects

@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Board.h"
 #include <memory>
+#include <optional>
 #include "gameExport.h"
 
 class GAME_API Game {
@@ -33,7 +34,7 @@ private:
 
     //fct care ma ajuta sa vad cine a castigat
 	int calculatePlayerVP(const Player& player) const;
-	Player determinateWinner(); //intoarce jucatorul care a castigat
+	std::optional<Player> determinateWinner();
 
 public:
     Game();

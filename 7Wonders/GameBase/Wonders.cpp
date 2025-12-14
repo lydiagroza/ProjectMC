@@ -185,3 +185,12 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
 
     return effects;
 }
+
+inline bool Wonder::getIsAvailable() const
+{
+    return isAvailable;
+}
+inline bool Wonder::getIsBuilt() const
+{
+    return m_isBuilt;
+}

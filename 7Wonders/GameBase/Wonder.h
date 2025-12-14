@@ -10,9 +10,6 @@
 class Player;
 
 
-//cam pt m_isAvailable si un getter pt ea si o fc de return toBox care steabileste isAvailable pe false
-// -> ca sa nu mai poata fi construita
-
 class GAME_API Wonder {
     std::string m_name;
     uint16_t m_id;
@@ -41,8 +38,8 @@ public:
         return 0;
     }
 
-	bool getIsBuilt() const { return m_isBuilt; }
-    bool getIsAvailable() const { return isAvailable; }
+    bool getIsBuilt() const;
+    bool getIsAvailable() const;
 
 
 	void setIsBuilt() { 

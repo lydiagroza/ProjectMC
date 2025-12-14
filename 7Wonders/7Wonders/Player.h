@@ -46,7 +46,6 @@ public:
 	Player(const std::string& playerName); // constructor 
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
-	void addCoins(std::uint8_t amount); //
 
 	//Gestioneaza resursele
 	void add_Resource(Resource r, std::uint8_t amount);//

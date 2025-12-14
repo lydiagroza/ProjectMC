@@ -8,23 +8,20 @@
 class Player;
 
 class ProgressToken {
-    std::string name;
+    std::string  m_name;
     uint16_t id;
     std::vector<std::function<void(Player&, Player&)>> effects;
 
 public:
     ProgressToken(const std::string& name, uint16_t id)
-        : name(name), id(id) {}
+        : m_name(name), id(id) {}
 
-    static std::vector<std::function<void(Player&, Player&)>> parseEffects(const std::string& s);
 
-    const std::string& getName() const { return name; }
+    const std::string& getName() const;
     uint16_t getId() const { return id; }
-    const std::vector<std::function<void(Player&, Player&)>>& getEffects() const { return effects; }
+    const std::vector<std::function<void(Player&, Player&)>>& getEffects() const;
 
-    void addEffect(std::function<void(Player&, Player&)> e) {
-        effects.push_back(e);
-    }
+    void addEffect(std::function<void(Player&, Player&)> e); 
 };
 
 std::ostream& operator<<(std::ostream& os, const ProgressToken& token);

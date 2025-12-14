@@ -7,50 +7,15 @@
 
 class Player;
 
-std::vector<std::function<void(Player&, Player&)>> ProgressToken::parseEffects(const std::string& s) {
-   
-    return{};
-#if 0
-    std::vector<std::function<void(Player&, Player&)>> effects;
-    std::stringstream ss(s);
-    std::string effectStr;
- 
-
-    static const std::unordered_map<std::string, std::function<void(Player&, Player&)>> effectMap = {
-        {"add_coins6", [](Player& p, Player& o) { p.addCoins(6); }},
-        {"add_VictoryPoint4", [](Player& p, Player& o) { p.add_Points(Points::Victory, 4); }},
-        {"WondersDiscount", [](Player& p, Player& o) { /* WondersDiscount */ std::cout << "WondersDiscount not implemented." << std::endl; }},
-        {"gainOpponentTradeCost", [](Player& p, Player& o) {/* gainOpponentTradeCost */ std::cout << "gainOpponentTradeCost not implemented." << std::endl; }},
-        {"add_scientific_symbol_scales", [](Player& p, Player& o) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
-        {"victoryPointsPerProgress", [](Player& p, Player& o) { /* victoryPointsPerProgress */ std::cout << "victoryPointsPerProgress not implemented." << std::endl; }},
-        {"BlueCardDiscount", [](Player& p, Player& o) { /* BlueCardDiscount */ std::cout << "BlueCardDiscount not implemented." << std::endl; }},
-        {"add_VictoryPoint7", [](Player& p, Player& o) { p.add_Points(Points::Victory, 7); }},
-        /* aici la MilitaryPoints trebuie sa vedem cum facem, daca returnam cumva nr de carti spre board sau le adaugam undeva*/
-        {"add_MilitaryPoint1PerRedCard", [](Player& p, Player& o) { /* add_MilitaryPoint1PerRedCard */ std::cout << "add_MilitaryPoint1PerRedCard not implemented." << std::endl; }},
-        {"WondersGetReplayTurn", [](Player& p, Player& o) { /* WondersGetReplayTurn */ std::cout << "WondersGetReplayTurn not implemented." << std::endl; }},
-        {"add_coins4PerFreeCard", [](Player& p, Player& o) { 
-            
-            std::cout << "add_coins4PerFreeCard not implemented." << std::endl; }}
-    };
-
-    while (std::getline(ss, effectStr, ';')) {
-       
-        effectStr.erase(remove_if(effectStr.begin(), effectStr.end(), ::isspace), effectStr.end());
-        effectStr.erase(remove(effectStr.begin(), effectStr.end(), '"'), effectStr.end());
-
-        if (effectMap.count(effectStr)) {
-            effects.push_back(effectMap.at(effectStr));
-        } else {
-            std::cerr << "Unknown progress token effect: " << effectStr << std::endl;
-        }
-    }
-
-    return effects;
-#endif
-}
+const std::string& ProgressToken:: getName() const { return m_name; }
 
 std::ostream& operator<<(std::ostream& os, const ProgressToken& token)
 {
     os << "Progress Token ID: " << token.getId() << ", Name: " << token.getName();
 	return os;
+}
+const std::vector<std::function<void(Player&, Player&)>>& ProgressToken :: getEffects() const { return effects; }
+
+void ProgressToken:: addEffect(std::function<void(Player&, Player&)> e) {
+    effects.push_back(e);
 }

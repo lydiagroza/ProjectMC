@@ -17,10 +17,15 @@ uint16_t Wonder :: getId() const { return m_id; }
 const std::map<Resource, uint8_t>& Wonder :: getCost() const { return m_cost; }
 const std::vector<std::function<void(Player&, Player&)>>& Wonder:: getEffects() const { return m_effects; }
 
-std::uint8_t getCostForResource(Resource r) const {
+std::uint8_t Wonder :: getCostForResource(Resource r) const {
     auto it = m_cost.find(r);
     if (it != m_cost.end()) {
         return it->second;
     }
     return 0;
 }
+void  Wonder::addEffect(std::function<void(Player&, Player&)> e) {
+    m_effects.push_back(e);
+}
+bool Wonder :: getIsBuilt() const { return isBuilt; }
+void Wonder ::  setIsBuilt() { isBuilt = true; }

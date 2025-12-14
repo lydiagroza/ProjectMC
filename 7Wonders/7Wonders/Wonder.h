@@ -29,11 +29,9 @@ public:
 
     std::uint8_t getCostForResource(Resource r) const;
 
-    void addEffect(std::function<void(Player&, Player&)> e) {
-        m_effects.push_back(e);
-    }
+    void addEffect(std::function<void(Player&, Player&)> e);
 
-	bool getIsBuilt() const { return isBuilt; }
-	void setIsBuilt() { isBuilt = true; }
+    bool getIsBuilt() const;
+    void setIsBuilt();
 
 };

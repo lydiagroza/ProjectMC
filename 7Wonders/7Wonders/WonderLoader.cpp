@@ -1,6 +1,5 @@
 
 #include "WonderLoader.h"
-#include "Wonder.h"
 #include "Game.h"
 #include "CardBase.h"
 #include <fstream>
@@ -8,10 +7,9 @@
 #include <iostream>
 #include <algorithm>
 #include <cctype>
-#include <memory>
 #include <unordered_map>
 
-std::map<Resource, uint8_t> Wonder::parseCost(const std::string& s) {
+std::map<Resource, uint8_t> WonderLoader:: parseCost(const std::string& s) {
     std::map<Resource, uint8_t> cost;
     std::stringstream ss(s);
     std::string item;
@@ -229,7 +227,7 @@ std::vector<std::shared_ptr<Wonder>> WonderLoader::loadWonders(const std::string
         effectsStr = trim(effectsStr);
 
         uint16_t id = static_cast<uint16_t>(stoi(idStr));
-        std::map<Resource, uint8_t> cost = Wonder::parseCost(costStr);
+        std::map<Resource, uint8_t> cost =parseCost(costStr);
 
         auto wonder = std::make_shared<Wonder>(name, id, cost);
 

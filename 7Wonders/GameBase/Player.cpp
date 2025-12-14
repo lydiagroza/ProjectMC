@@ -351,38 +351,6 @@ void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderT
 	std::cout << "Wonder " << wonderToBuild.getName() << " constructed successfully. Cost paid: " << static_cast<int>(totalCoinCost) << " coins." << std::endl;
 }
 
-std::uint8_t Player::getScientificSymbolCount() const {
-	
-	return static_cast<std::uint8_t>(m_scientificSymbols.size());
-}
-
-std::uint8_t Player::getVPFromTokens() const {
-	
-	if (m_pointsScore.count(Points::Military)) {
-		return m_pointsScore.at(Points::Military);
-	}
-	return 0;
-}
-
-
-//
-//std::uint8_t Player::getVPFromBlueCards() const {
-//	std::uint8_t totalVP = 0;
-//
-//	if (m_Inventory.count(Color::Blue)) {
-//		for (const auto& card : m_Inventory.at(Color::Blue)) {
-//			
-//			totalVP += card->getVP();
-//		}
-//	}
-//	return totalVP;
-//}
-
-
-
-
-
-
 template std::map<Resource, std::uint8_t> Player::findMissingResources<CardBase>(const CardBase&, const Player&) const;
 template std::map<Resource, std::uint8_t> Player::findMissingResources<Wonder>(const Wonder&, const Player&) const;
 template std::uint8_t Player::findTradeCost<CardBase>(const CardBase&, const Player&) const;

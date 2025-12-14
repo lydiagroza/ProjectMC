@@ -146,13 +146,13 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
         {"add_scientific_symbol_sun_dial", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Sun_Dial); }},
         {"add_scientific_symbol_wheel", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Wheel); }},
         {"coin2Wonder",[](Player& p) { p.add_Resource(Resource::Coin, 2 * p.getWonders().size()); }},
-        {"coin2Brown",[](Player& p) { p.add_Resource(Resource::Coin, 2 * p.getInventory().at(Color::Brown).size()); }},
-        {"coin1Yellow",[](Player& p) { p.add_Resource(Resource::Coin, p.getInventory().at(Color::Yellow).size()); }},
-        {"coin3Gray",[](Player& p) { p.add_Resource(Resource::Coin, 3 * p.getInventory().at(Color::Gray).size()); }},
-        {"coin1Red",[](Player& p) { p.add_Resource(Resource::Coin, p.getInventory().at(Color::Red).size()); }},
-        {"sale_stone1",[](Player& p) { p.set_discountedResource(Resource::Stone); }},
-        {"sale_wood1",[](Player& p) { p.set_discountedResource(Resource::Wood); }},
-        {"sale_clay1",[](Player& p) { p.set_discountedResource(Resource::Clay); }}
+        {"coin2Brown",[](Player& p) { p.add_Resource(Resource::Coin, 2 * p.getInventory()[Color::Brown].size()); }},
+        {"coin1Yellow",[](Player& p) { p.add_Resource(Resource::Coin, p.getInventory()[Color::Yellow].size()); }},
+        {"coin3Gray",[](Player& p) { p.add_Resource(Resource::Coin, 3 * p.getInventory()[Color::Gray].size()); }},
+        {"coin1Red",[](Player& p) { p.add_Resource(Resource::Coin, p.getInventory()[Color::Red].size()); }},
+        {"sale_stone1",[](Player& p) { p.set_discountedResource(2); }},
+        {"sale_wood1",[](Player& p) { p.set_discountedResource(0); }},
+        {"sale_clay1",[](Player& p) { p.set_discountedResource(1); }}
     };
 
     const string vpPrefix = "add_VictoryPoint";

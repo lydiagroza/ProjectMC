@@ -60,7 +60,11 @@ public:
 
 	int getCoins();
 
-	int getNrOfScientificSymbols();
+	int getNrOfScientificSymbols() const;
+
+	int getVPFromMilitaryTokens() const;
+
+	int getVPFromBlueCards() const;
 
 	
 

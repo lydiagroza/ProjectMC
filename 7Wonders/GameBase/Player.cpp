@@ -243,6 +243,28 @@ const std::vector<Wonder>& Player::getWonders() const {
 	return m_Wonders;
 }
 
+
+int Player::getNrOfScientificSymbols() const
+{
+	return m_scientificSymbols.size();
+}
+
+int Player::getVPFromMilitaryTokens() const {
+
+	if (m_pointsScore.count(Points::Military)) {
+		return m_pointsScore.at(Points::Military);
+	}
+	return 0;
+}
+
+int Player::getVPFromBlueCards() const {
+	if (m_pointsScore.count(Points::BlueCards)) {
+		return m_pointsScore.at(Points::BlueCards);
+	}
+	return 0;
+
+}
+
 //Functie care cumpara cartea 
 
 bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Board& board) {
@@ -293,10 +315,6 @@ bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
 	return false;
 }
 
-int Player::getNrOfScientificSymbols()
-{
-	return m_scientificSymbols.size();
-}
 
 //Functie in cazul in care jucatorul alege sa arda cartea pentru banuti
 void Player::discardCard(const CardBase& card) {

@@ -33,13 +33,6 @@ bool Player::decreaseCoins(std::uint8_t amount) {
 	return false;
 }
 
-void Player::addCoins(std::uint8_t amount) {
-	m_Resources[Coin] += amount;
-
-}
-
-
-//Functii pentru resurse
 void Player::add_Resource(Resource r, std::uint8_t amount)
 {
 	m_Resources[r] += amount;
@@ -223,16 +216,19 @@ std::uint8_t Player::getTotalCost(const T& buildable, const Player& opponent) co
 const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& Player::getInventory() const {
 	return m_Inventory;
 }
+int Player::getCoins()
+	{
+		auto it = m_Resources.find(Resource::Coin);
+		return (it != m_Resources.end()) ? it->second : 0;
+	}
 const std::vector<Wonder>& Player::getWonders() const {
 	return m_Wonders;
 }
 
 //Functie care cumpara cartea 
-<<<<<<< HEAD
-bool Player::buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board) {
-=======
+
 bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Board& board) {
->>>>>>> parent of 5af32ae (Merge branch 'separareProiecte' of https://github.com/lydiagroza/ProjectMC into separareProiecte)
+//>>>>>>> parent of 5af32ae (Merge branch 'separareProiecte' of https://github.com/lydiagroza/ProjectMC into separareProiecte)
 	std::uint8_t totalCoinCost = this->getTotalCost(*card, opponent);
 	if (totalCoinCost == 0) {
 		std::cout << "Card " << card->getName() << " is free." << std::endl;
@@ -257,7 +253,7 @@ bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Boa
 	}
 
 	m_Inventory[card->m_color].push_back(card);
-	card->applyEffect(*this, opponent, board);
+	card->applyEffect(*this, opponent,board);
 	std::cout << "Card " << card->getName() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
 	return true;
 
@@ -277,6 +273,11 @@ bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
 		}
 	}
 	return false;
+}
+
+int Player::getNrOfScientificSymbols()
+{
+	return m_scientificSymbols.size();
 }
 
 //Functie in cazul in care jucatorul alege sa arda cartea pentru banuti

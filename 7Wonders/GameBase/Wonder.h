@@ -19,7 +19,7 @@ class GAME_API Wonder {
     std::map<Resource, uint8_t> m_cost;
     std::vector<std::function<void(Player&, Player&)>> m_effects;
 	bool m_isBuilt = false;
-    bool m_isAvailable = true;
+    bool isAvailable = true;
 
 public:
     Wonder(const std::string& name, uint16_t id, const std::map<Resource, uint8_t>& cost)
@@ -42,11 +42,11 @@ public:
     }
 
 	bool getIsBuilt() const { return m_isBuilt; }
-    bool getIsAvailable() const { return m_isAvailable; }
+    bool getIsAvailable() const { return isAvailable; }
 
 
 	void setIsBuilt() { 
-        if (m_isAvailable) {
+        if (isAvailable) {
             m_isBuilt = true;
         }
         else {
@@ -55,7 +55,7 @@ public:
     }
 
     void returnToBox() {
-        m_isAvailable = false;
+        isAvailable = false;
     }
 
 

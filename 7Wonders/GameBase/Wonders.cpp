@@ -134,6 +134,7 @@ std::vector<std::function<void(Player&, Player&)>> Wonder::parseEffects(const st
                     effect(p, o);
                 }
                 board.removeAvailableProgressToken(selectedToken);
+                p.addProgressToken(selectedToken); // Add the token to the player
                 std::cout << "You chose the " << selectedToken->getName() << " token." << std::endl;
             } else {
                 std::cout << "Invalid choice." << std::endl;

@@ -11,6 +11,7 @@
 #include "CardBase.h"
 #include "Board.h"
 #include "Wonder.h"
+#include "ProgressTokens.h"
 #include<cstdint>
 #include "gameExport.h"   
 
@@ -33,6 +34,13 @@ private:
 	std::unordered_set<Scientific_Symbol>m_scientificSymbols; // all scientific symbols
 	bool m_hasExtraTurn = false;
 	std::unordered_set<Symbol>m_chainSymbols; // all chain symbols accumulated
+
+	// Progress Token Effects
+	bool m_hasWonderDiscount = false;
+	bool m_hasBlueCardDiscount = false;
+	bool m_gainsOpponentTradeCost = false;
+	bool m_getsCoinsForFreeCards = false;
+	std::vector<std::shared_ptr<ProgressToken>> m_progressTokens;
 public:
 	// getteri
 	const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& getInventory() const;
@@ -66,12 +74,32 @@ public:
 	std::string getName() const;
 	//Actiuni de joc
 	bool hasExtraTurn() const { return m_hasExtraTurn; }
+<<<<<<< HEAD
 	bool buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board);
+=======
+	bool buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Board& board);
+>>>>>>> parent of 5af32ae (Merge branch 'separareProiecte' of https://github.com/lydiagroza/ProjectMC into separareProiecte)
 	void discardCard(const CardBase& c);//
 	void constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board);
 	//chestii pentru gestionare inventar
 	void addCardToInventory(std::shared_ptr<CardBase> card);
 	bool removeCardFromInventory(std::shared_ptr<CardBase> card);
+<<<<<<< HEAD
+=======
+
+	// Progress Token Effects
+	void setWonderDiscount(bool v) { m_hasWonderDiscount = v; }
+	void setBlueCardDiscount(bool v) { m_hasBlueCardDiscount = v; }
+	void setGainsOpponentTradeCost(bool v) { m_gainsOpponentTradeCost = v; }
+	void setGetsCoinsForFreeCards(bool v) { m_getsCoinsForFreeCards = v; }
+	bool hasWonderDiscount() const { return m_hasWonderDiscount; }
+	bool hasBlueCardDiscount() const { return m_hasBlueCardDiscount; }
+	bool gainsOpponentTradeCost() const { return m_gainsOpponentTradeCost; }
+	bool getsCoinsForFreeCards() const { return m_getsCoinsForFreeCards; }
+	void addProgressToken(std::shared_ptr<ProgressToken> token) { m_progressTokens.push_back(token); }
+	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens() const { return m_progressTokens; }
+	void setHasExtraTurn(bool v) { m_hasExtraTurn = v; }
+>>>>>>> parent of 5af32ae (Merge branch 'separareProiecte' of https://github.com/lydiagroza/ProjectMC into separareProiecte)
 private:
 	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;
 	std::uint8_t calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;

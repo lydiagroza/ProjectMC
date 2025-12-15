@@ -2,10 +2,11 @@
 #include <vector>
 #include <memory>
 #include "CardNode.h"
+#include "gameExport.h"
 
 class CardBase;
 
-class CardsPyramid
+class GAME_API CardsPyramid
 {
 	std::vector<std::vector<std::unique_ptr<CardNode>>> m_rows;
 	void clear();
@@ -47,7 +48,13 @@ class CardsPyramid
 public:
 	CardsPyramid()=default;
 
-void build(int age, std::vector<std::shared_ptr<CardBase>>& deck);
+	CardsPyramid(const CardsPyramid&) = delete;
+	CardsPyramid& operator=(const CardsPyramid&) = delete;
+
+	CardsPyramid(CardsPyramid&&) = default;
+	CardsPyramid& operator=(CardsPyramid&&) = default;
+
+	void build(int age, std::vector<std::shared_ptr<CardBase>>& deck);
 	void linkCards(int age);
 
 	CardNode* getNodeAt(size_t row, size_t col) const;

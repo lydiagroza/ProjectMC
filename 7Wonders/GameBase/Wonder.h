@@ -5,7 +5,7 @@
 #include <functional>
 #include <memory>
 #include "CardBase.h" 
-#include "gameExport"
+#include "gameExport.h"
 
 class Player;
 
@@ -14,7 +14,8 @@ class GAME_API Wonder {
     uint16_t m_id;
     std::map<Resource, uint8_t> m_cost;
     std::vector<std::function<void(Player&, Player&)>> m_effects;
-    bool isBuilt = false;
+    bool m_isBuilt = false;
+    bool m_isAvailable = true;
 
 public:
     Wonder(const std::string& name, uint16_t id, const std::map<Resource, uint8_t>& cost)
@@ -35,5 +36,8 @@ public:
 
     bool getIsBuilt() const;
     void setIsBuilt();
+    bool getIsAvailable() const;
+
+    void returnToBox();
 
 };

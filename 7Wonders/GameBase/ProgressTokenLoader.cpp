@@ -8,14 +8,14 @@
 std::vector<std::function<void(Player&, Player&)>> ProgressTokenLoader::parseEffects(const std::string& s) {
 
     return{};
-//#if 0
+    //#if 0
     std::vector<std::function<void(Player&, Player&)>> effects;
     std::stringstream ss(s);
     std::string effectStr;
 
 
     static const std::unordered_map<std::string, std::function<void(Player&, Player&)>> effectMap = {
-        {"add_coins6", [](Player& p, Player& o) { p.add_Resource(Coin, 6); }},
+        {"add_coins6", [](Player& p, Player& o) { p.addResource(Coin, 6); }},
         {"add_VictoryPoint4", [](Player& p, Player& o) { p.add_Points(Points::Victory, 4); }},
         {"WondersDiscount", [](Player& p, Player& o) { /* WondersDiscount */ std::cout << "WondersDiscount not implemented." << std::endl; }},
         {"gainOpponentTradeCost", [](Player& p, Player& o) {/* gainOpponentTradeCost */ std::cout << "gainOpponentTradeCost not implemented." << std::endl; }},
@@ -45,7 +45,7 @@ std::vector<std::function<void(Player&, Player&)>> ProgressTokenLoader::parseEff
     }
 
     return effects;
-//#endif
+    //#endif
 }
 std::vector<std::shared_ptr<ProgressToken>> ProgressTokenLoader::loadProgressTokens(const std::string& filename) {
     using namespace std;
@@ -63,7 +63,7 @@ std::vector<std::shared_ptr<ProgressToken>> ProgressTokenLoader::loadProgressTok
         s.erase(remove_if(s.begin(), s.end(), ::isspace), s.end());
         s.erase(remove(s.begin(), s.end(), '"'), s.end());
         return s;
-    };
+        };
 
     while (getline(file, line)) {
         stringstream ss(line);

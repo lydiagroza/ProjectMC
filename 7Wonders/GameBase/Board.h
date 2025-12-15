@@ -6,9 +6,10 @@
 #include "CardsPyramid.h"
 #include <iostream>
 #include <memory>
+#include "gameExport.h"
 
 
-class Board
+class GAME_API Board
 {
 private:
 	int Age;
@@ -27,6 +28,11 @@ public:
 	bool isPyramidEmpty() const;
 	void printCardsTree(std::ostream& os) const;
 	void printChildrenList() const;
+	const CardsPyramid& getPyramid() const;
+
+	//functii military track
+	const MilitaryTrack& getMilitaryTrack() const;
+
 
 	//functii tokeni verzi
 	void setAvailableProgressTokens(const std::vector<std::shared_ptr<ProgressToken>>& tokens);

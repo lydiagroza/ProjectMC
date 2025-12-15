@@ -14,14 +14,15 @@ class ProgressToken {
 
 public:
     ProgressToken(const std::string& name, uint16_t id)
-        : m_name(name), id(id) {}
+        : m_name(name), id(id) {
+    }
 
 
     const std::string& getName() const;
     uint16_t getId() const { return id; }
     const std::vector<std::function<void(Player&, Player&)>>& getEffects() const;
 
-    void addEffect(std::function<void(Player&, Player&)> e); 
+    void addEffect(std::function<void(Player&, Player&)> e);
 };
 
 std::ostream& operator<<(std::ostream& os, const ProgressToken& token);

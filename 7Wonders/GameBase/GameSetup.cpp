@@ -7,7 +7,7 @@
 #include <chrono>
 
 
-GameSetup::GameSetup(Board& board) : m_board(board) // <-- Inițializează referința aici
+GameSetup::GameSetup(Board& board) : m_board(board) 
 {
     loadAllResources();
 	prepareTokens();
@@ -68,6 +68,9 @@ void GameSetup::prepareDecks()
     if (m_deckAge3.size() > 20) 
         m_deckAge3.resize(20);
 
+	//facem suffle si la minuni
+    std::shuffle(m_allWonders.begin(), m_allWonders.end(), e);
+
 }
 
 GameSetup& GameSetup::startAge(int age)
@@ -93,45 +96,42 @@ void GameSetup::printDecks() const
 {
     std::cout << "--- Age 1 Deck ---" << std::endl;
     for (const auto& card : m_deckAge1)
-    {
-        if (card) {
-            std::cout << *card << std::endl; // Use the operator<<
-        }
-    }
+        if (card) 
+            std::cout << *card << std::endl; 
 
     std::cout << "\n--- Age 2 Deck ---" << std::endl;
     for (const auto& card : m_deckAge2)
-    {
-        if (card) {
-            std::cout << *card << std::endl; // Use the operator<<
-        }
-    }
-
+        if (card) 
+            std::cout << *card << std::endl; 
     std::cout << "\n--- Age 3 Deck ---" << std::endl;
     for (const auto& card : m_deckAge3)
-    {
-        if (card) {
-            std::cout << *card << std::endl; // Use the operator<<
-        }
-    }
-
+        if (card) 
+            std::cout << *card << std::endl;
     std::cout << "\n--- Guilds Deck ---" << std::endl;
     for (const auto& card : m_deckGuilds)
-    {
-        if (card) {
-            std::cout << *card << std::endl; // Use the operator<<
-        }
-    }
+        if (card)
+            std::cout << *card << std::endl;
 }
 
 void GameSetup::printWonders() const
 {
     std::cout << "\n--- All Wonders ---" << std::endl;
     for (const auto& wonder : m_allWonders)
-    {
-        if (wonder) // Good practice to check if the pointer is valid
-        {
+        if (wonder) 
             std::cout << wonder->getName() << std::endl;
-        }
-    }
+}
+
+std::vector<std::shared_ptr<Wonder>> GameSetup::drawWonders(int count)
+{
+    int actualCount = std::min((int)m_allWonders.size(), count);
+    std::vector<std::shared_ptr<Wonder>> selectedWonders;
+    selectedWonders.insert(selectedWonders.end(),
+        m_allWonders.begin(),
+        m_allWonders.begin() + actualCount);
+
+    //le sterg din pachetul cu toate
+    m_allWonders.erase(m_allWonders.begin(), m_allWonders.begin() + actualCount);
+
+    return selectedWonders;
+
 }

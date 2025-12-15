@@ -22,7 +22,7 @@ private:
 	std::map<Resource, std::uint8_t> m_Resources; // All resources
 	std::map<Points, std::uint8_t>m_pointsScore; // All points
 	std::bitset<5>m_discountedResource; // discounted resources from yellow cards
-	std::vector<std::bitset<5>>m_flexibleResources; 
+	std::vector<std::bitset<5>>m_choiceResources; 
 	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // all cards
 	std::vector<Wonder>m_Wonders; // all wonders
 	std::unordered_set<Scientific_Symbol>m_scientificSymbols; // all scientific symbols
@@ -38,9 +38,8 @@ private:
 public:
 	// getteri
 	std::string getName() const;
-
+	std::vector<std::bitset<5>> getChoiceResources() const;	
 	const std::map<Resource, std::uint8_t>& getResources() const;
-
 	const std::map<Points, std::uint8_t>& getPoints() const;
 
 	const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& getInventory() const;
@@ -64,9 +63,9 @@ public:
 	
 
 
+	void addChoiceResources(std::vector<Resource> choices);
 
-
-	void set_discountedResource(Resource r);
+void set_discountedResource(Resource r);
 	Player(const std::string& playerName); // constructor
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //

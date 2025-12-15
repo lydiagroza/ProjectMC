@@ -152,7 +152,15 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
         {"coin1Red",[](Player& p) { p.addResource(Resource::Coin, p.getInventory().at(Color::Red).size()); }},
         {"sale_stone1",[](Player& p) { p.set_discountedResource(Stone); }},
         {"sale_wood1",[](Player& p) { p.set_discountedResource(Wood); }},
-        {"sale_clay1",[](Player& p) { p.set_discountedResource(Clay); }}
+        {"sale_clay1",[](Player& p) { p.set_discountedResource(Clay); }},
+        {"add_resource_glass/papyrus",[](Player& p) {
+			std::vector<Resource> choices = { Resource::Glass, Resource::Papyrus };
+            p.addChoiceResources(choices);
+        }},
+        {"add_resource_wood/clay/stone",[](Player& p) {
+        std:: vector<Resource> choices ={ Resource::Wood, Resource::Clay, Resource::Stone };
+		p.addChoiceResources(choices);
+        }}
     };
 
     const string vpPrefix = "add_VictoryPoint";

@@ -23,6 +23,11 @@ std::string Player::getName()const {
 	return m_name;
 }
 
+std::vector<std::bitset<5>> Player::getChoiceResources() const
+{
+	return m_choiceResources; 
+}
+
 //Functii pentru  gestionarea monedelor
 bool Player::decreaseCoins(std::uint8_t amount) {
 	if (m_Resources[Coin] >= amount) {
@@ -73,6 +78,14 @@ bool Player::hasExtraTurn() const {
 	return m_hasExtraTurn;
 }
 
+void Player:: addChoiceResources(std::vector<Resource> choices)
+{
+	std::bitset<5> all_choices;
+	for (int i = 0; i < choices.size(); i++) {
+		all_choices[getResourceDiscountIndex(choices[i])] = 1;
+	}
+	m_choiceResources.push_back(all_choices);
+}
 int Player::getResourceDiscountIndex(Resource r) const {
 	switch (r) {
 	case Resource::Wood: return 0;
@@ -131,7 +144,7 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
 	}
 
 	// ✅ NOU: Folosim bitset în loc de map<string, vector>
-	for (const auto& flexibleSet : m_flexibleResources) {
+	/*for (const auto& flexibleSet : m_flexibleResources) {*/
 		//                ^^^^^^^^^^^
 		//                Fiecare bitset = un set de opțiuni
 
@@ -140,7 +153,7 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
 
 		// Iterăm prin cei 5 biți (0=Wood, 1=Clay, 2=Stone, 3=Glass, 4=Papyrus)
 		for (int i = 0; i < 5; ++i) {
-			if (flexibleSet[i] == 0) continue;  // Acest bit = 0 → resursa nu e disponibilă
+			//if (flexibleSet[i] == 0) continue;   Acest bit = 0 → resursa nu e disponibilă
 
 			// Convertim index → Resource
 			Resource resToCover = findResourceDiscountFromIndex(i);
@@ -165,10 +178,10 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
 				missingResources.erase(bestResourceToCover);
 			}
 		}
+		return missingResources; 
 	}
 
-	return missingResources;
-}
+	/*return missingResources;*/
 
 
 

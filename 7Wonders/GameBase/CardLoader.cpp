@@ -128,7 +128,7 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
     string token;
 
     // map for fixed (no-parameter) effects - păstrat exact cum l-ai avut
-    static const unordered_map<string, function<void(Player&)>> effectMap = {
+    static const unordered_map<string, function<void(Player&,Board&)>> effectMap = {
         {"add_resource_wood", [](Player& p) { p.addResource(Resource::Wood, 1); }},
         {"add_resource_coin4", [](Player& p) { p.addResource(Resource::Coin, 4); }},
         {"add_resource_coin6", [](Player& p) { p.addResource(Resource::Coin, 6); }},

@@ -93,7 +93,7 @@ void set_discountedResource(Resource r);
 	
 	//Actiuni de joc
 
-	bool buyCard(std::shared_ptr<CardBase> card, const Player& opponent, const Board& board);
+	bool buyCard(std::shared_ptr<CardBase> card,  Player& opponent,  Board& board);
 
 	bool buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Board& board);
 	void discardCard(const CardBase& c);

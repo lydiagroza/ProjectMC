@@ -119,45 +119,45 @@ std::map<Resource, uint8_t> CardLoader::parseCost(const string& s) {
     return cost;
 }
 
-std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::string& s) {
+std::vector<std::function<void(Player&,Board&, Player&)>> CardLoader::parseEffects(const std::string& s) {
     using namespace std;
-    vector<std::function<void(Player&)>> effects;
+    vector<std::function<void(Player&, Board&, Player&)>> effects;
     if (s.empty()) return effects;
 
     stringstream ss(s);
     string token;
 
     // map for fixed (no-parameter) effects - păstrat exact cum l-ai avut
-    static const unordered_map<string, function<void(Player&,Board&)>> effectMap = {
-        {"add_resource_wood", [](Player& p) { p.addResource(Resource::Wood, 1); }},
-        {"add_resource_coin4", [](Player& p) { p.addResource(Resource::Coin, 4); }},
-        {"add_resource_coin6", [](Player& p) { p.addResource(Resource::Coin, 6); }},
-        {"add_resource_clay2", [](Player& p) { p.addResource(Resource::Clay, 2); }},
-        {"add_resource_wood2", [](Player& p) { p.addResource(Resource::Wood, 2); }},
-        {"add_resource_stone2", [](Player& p) { p.addResource(Resource::Stone, 2); }},
-        {"add_resource_stone", [](Player& p) { p.addResource(Resource::Stone, 1); }},
-        {"add_resource_clay", [](Player& p) { p.addResource(Resource::Clay, 1); }},
-        {"add_resource_glass", [](Player& p) { p.addResource(Resource::Glass, 1); }},
-        {"add_resource_papyrus", [](Player& p) { p.addResource(Resource::Papyrus, 1); }},
-        {"add_scientific_symbol_ink", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Ink); }},
-        {"add_scientific_symbol_scales", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
-        {"add_scientific_symbol_mortar", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Ink); }},
-        {"add_scientific_symbol_gyroscope", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Gyroscope); }},
-        {"add_scientific_symbol_sun_dial", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Sun_Dial); }},
-        {"add_scientific_symbol_wheel", [](Player& p) { p.add_ScientificSymbol(Scientific_Symbol::Wheel); }},
-        {"coin2Wonder",[](Player& p) { p.addResource(Resource::Coin, 2 * p.getWonders().size()); }},
-        {"coin2Brown",[](Player& p) { p.addResource(Resource::Coin, 2 * p.getInventory().at(Color::Brown).size()); }},
-        {"coin1Yellow",[](Player& p) { p.addResource(Resource::Coin, p.getInventory().at(Color::Yellow).size()); }},
-        {"coin3Gray",[](Player& p) { p.addResource(Resource::Coin, 3 * p.getInventory().at(Color::Gray).size()); }},
-        {"coin1Red",[](Player& p) { p.addResource(Resource::Coin, p.getInventory().at(Color::Red).size()); }},
-        {"sale_stone1",[](Player& p) { p.set_discountedResource(Stone); }},
-        {"sale_wood1",[](Player& p) { p.set_discountedResource(Wood); }},
-        {"sale_clay1",[](Player& p) { p.set_discountedResource(Clay); }},
-        {"add_resource_glass/papyrus",[](Player& p) {
+    static const unordered_map<string, function<void(Player&,Board&, Player&)>> effectMap = {
+        {"add_resource_wood", [](Player& p,Board& b, Player&) { p.addResource(Resource::Wood, 1); }},
+        {"add_resource_coin4", [](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, 4); }},
+        {"add_resource_coin6", [](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, 6); }},
+        {"add_resource_clay2", [](Player& p,Board& b, Player&) { p.addResource(Resource::Clay, 2); }},
+        {"add_resource_wood2", [](Player& p,Board& b, Player&) { p.addResource(Resource::Wood, 2); }},
+        {"add_resource_stone2", [](Player& p,Board& b, Player&) { p.addResource(Resource::Stone, 2); }},
+        {"add_resource_stone", [](Player& p,Board& b, Player&) { p.addResource(Resource::Stone, 1); }},
+        {"add_resource_clay", [](Player& p,Board& b, Player&) { p.addResource(Resource::Clay, 1); }},
+        {"add_resource_glass", [](Player& p,Board& b, Player&) { p.addResource(Resource::Glass, 1); }},
+        {"add_resource_papyrus", [](Player& p,Board& b, Player&) { p.addResource(Resource::Papyrus, 1); }},
+        {"add_scientific_symbol_ink", [](Player& p,Board& b,Player&) { p.add_ScientificSymbol(Scientific_Symbol::Ink); }},
+        {"add_scientific_symbol_scales", [](Player& p,Board& b, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
+        {"add_scientific_symbol_mortar", [](Player& p,Board& b, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Ink); }},
+        {"add_scientific_symbol_gyroscope", [](Player& p,Board& b, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Gyroscope); }},
+        {"add_scientific_symbol_sun_dial", [](Player& p,Board& b, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Sun_Dial); }},
+        {"add_scientific_symbol_wheel", [](Player& p,Board &b, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Wheel); }},
+        {"coin2Wonder",[](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, 2 * p.getWonders().size()); }},
+        {"coin2Brown",[](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, 2 * p.getInventory().at(Color::Brown).size()); }},
+        {"coin1Yellow",[](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, p.getInventory().at(Color::Yellow).size()); }},
+        {"coin3Gray",[](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, 3 * p.getInventory().at(Color::Gray).size()); }},
+        {"coin1Red",[](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, p.getInventory().at(Color::Red).size()); }},
+        {"sale_stone1",[](Player& p,Board& b, Player&) { p.set_discountedResource(Stone); }},
+        {"sale_wood1",[](Player& p,Board& b, Player&) { p.set_discountedResource(Wood); }},
+        {"sale_clay1",[](Player& p,Board& b, Player&) { p.set_discountedResource(Clay); }},
+        {"add_resource_glass/papyrus",[](Player& p,Board& b, Player&) {
 			std::vector<Resource> choices = { Resource::Glass, Resource::Papyrus };
             p.addChoiceResources(choices);
         }},
-        {"add_resource_wood/clay/stone",[](Player& p) {
+        {"add_resource_wood/clay/stone",[](Player& p,Board& b, Player&) {
         std:: vector<Resource> choices ={ Resource::Wood, Resource::Clay, Resource::Stone };
 		p.addChoiceResources(choices);
         }}
@@ -172,13 +172,13 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
 
         if (token.rfind(vpPrefix, 0) == 0) {
             int amount = stoi(token.substr(vpPrefix.size()));
-            effects.push_back([amount](Player& p) { p.add_Points(Points::Victory, static_cast<std::uint8_t>(amount)); });
+            effects.push_back([amount](Player& p, Board &b, Player&) { p.add_Points(Points::Victory, static_cast<std::uint8_t>(amount)); });
             ok = 1;
             continue;
         }
         else if (token.rfind(mpPrefix, 0) == 0) {
             int amount = stoi(token.substr(mpPrefix.size()));
-            effects.push_back([amount](Player& p) { p.add_Points(Points::Military, static_cast<std::uint8_t>(amount)); });
+            effects.push_back([amount](Player& p, Board &b, Player&) { p.add_Points(Points::Military, static_cast<std::uint8_t>(amount)); });
             ok = 1;
             continue;
         }
@@ -197,17 +197,17 @@ std::vector<std::function<void(Player&)>> CardLoader::parseEffects(const std::st
 }
 
 
-std::optional<std::function<void(Player&)>> CardLoader::parseDestroy(const string& s) {
+std::optional<std::function<void(Player&,Board &, Player&)>> CardLoader::parseDestroy(const string& s) {
     if (s.empty()) return std::nullopt;
-    static const unordered_map<string, function<void(Player&)>> destroyMap = {
-        {"!add_resource_wood", [](Player& p) {p.removeResource(Resource::Wood,1); }},
-        {"!add_resource_clay2", [](Player& p) {p.removeResource(Resource::Clay,2); }},
-        {"!add_resource_wood2", [](Player& p) {p.removeResource(Resource::Wood,2); }},
-        {"!add_resource_stone2", [](Player& p) {p.removeResource(Resource::Stone,2); }},
-        {"!add_resource_stone", [](Player& p) {p.removeResource(Resource::Stone,1); }},
-        {"!add_resource_clay", [](Player& p) {p.removeResource(Resource::Clay,1); }},
-        {"!add_resource_glass", [](Player& p) {p.removeResource(Resource::Glass,1); }},
-        {"!add_resource_papyrus", [](Player& p) {p.removeResource(Resource::Papyrus,1); }}
+    static const unordered_map<string, function<void(Player&, Board &, Player&)>> destroyMap = {
+        {"!add_resource_wood", [](Player& p, Board&, Player&) {p.removeResource(Resource::Wood,1); }},
+        {"!add_resource_clay2", [](Player& p,Board&, Player&) {p.removeResource(Resource::Clay,2); }},
+        {"!add_resource_wood2", [](Player& p,Board &, Player&) {p.removeResource(Resource::Wood,2); }},
+        {"!add_resource_stone2", [](Player& p,Board &, Player&) {p.removeResource(Resource::Stone,2); }},
+        {"!add_resource_stone", [](Player& p, Board &,Player&) {p.removeResource(Resource::Stone,1); }},
+        {"!add_resource_clay", [](Player& p, Board &, Player&) {p.removeResource(Resource::Clay,1); }},
+        {"!add_resource_glass", [](Player& p, Board &, Player&) {p.removeResource(Resource::Glass,1); }},
+        {"!add_resource_papyrus", [](Player& p, Board &, Player&) {p.removeResource(Resource::Papyrus,1); }}
     };
     auto it = destroyMap.find(s);
     if (it != destroyMap.end()) return it->second;

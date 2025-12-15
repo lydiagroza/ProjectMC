@@ -42,8 +42,8 @@ class Board;
       std::optional<Symbol> m_symbol;
       std::optional<Symbol> m_unlocks;
       std::map<Resource, std::uint8_t> m_cost;
-      std::vector<std::function<void(Player&)>> m_effects;
-      std::optional<std::function<void(Player&)>> m_destroy; 
+      std::vector<std::function<void(Player&,Board&, Player&)>> m_effects;
+      std::optional<std::function<void(Player&,Board&, Player &)>> m_destroy; 
 
 
 
@@ -73,10 +73,10 @@ class Board;
       }
 
       //Fct pt efecte 
-      void applyEffect(Player& player,const Player& opponenent, const Board &board)const;
-      void addEffect(std::function<void(Player&)> e);
-      void setDestroy(std::optional<std::function<void(Player&)>> e);
-      void destroy(Player& player); 
+      void applyEffect( Player& player,  Board &board, Player& opponenent)const;
+      void addEffect(std::function<void(Player&,Board&,Player &)> e);
+      void setDestroy(std::optional<std::function<void(Player&,Board&, Player &) >> e);
+      void destroy(Player& player, Board& board, Player& opponent);
     };
 
   // Operatori , fuctii to_String

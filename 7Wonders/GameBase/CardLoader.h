@@ -15,7 +15,7 @@ public:
     static std::optional<Symbol> parseSymbol(const std::string& s);
     static std::optional<Symbol> parseUnlocks(const std::string& s);
     static std::map<Resource, uint8_t> parseCost(const std::string& s);
-    static std::vector<std::function<void(Player&)>> parseEffects(const std::string& s);
-    static std::optional<std::function<void(Player&)>> parseDestroy(const std::string& s);
+    static std::vector<std::function<void(Player&,Board &, Player&)>> parseEffects(const std::string& s);
+    static std::optional<std::function<void(Player&,Board &, Player&)>> parseDestroy(const std::string& s);
 };
 

@@ -283,7 +283,7 @@ int Player::getVPFromBlueCards() const {
 
 //Functie care cumpara cartea 
 
-bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Board& board) {
+bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, Board& board) {
 
 	std::uint8_t totalCoinCost = this->findTotalCost(*card, opponent);
 	if (totalCoinCost == 0) {
@@ -309,7 +309,7 @@ bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Boa
 	}
 
 	m_Inventory[card->m_color].push_back(card);
-	card->applyEffect(*this, opponent,board);
+	card->applyEffect(*this,board,opponent);
 	std::cout << "Card " << card->getName() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
 	return true;
 

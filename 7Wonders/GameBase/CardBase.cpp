@@ -26,25 +26,25 @@ const std::string&CardBase::getName() const {
 	const std::optional<Symbol>& CardBase::getUnlocks() const {
 		return m_unlocks;
 	}
-	void CardBase::applyEffect(Player& player,const Player& opponent, const Board & board) const
+	void CardBase::applyEffect( Player& player,  Board & board,  Player& opponent) const
 	{
 		for (const auto& effect :m_effects) {
-			effect(player);
+			effect(player,board,opponent);
 		}
 	}
-	void CardBase::addEffect(std::function<void(Player&)> e)
+	void CardBase::addEffect(std::function<void(Player&,Board&, Player&)> e)
 	{
 		m_effects.push_back(e);
 	}
-	void CardBase::setDestroy(std::optional<std::function<void(Player&)>> effect)
+	void CardBase::setDestroy(std::optional<std::function<void(Player&,Board&, Player&)>> effect)
 	{
 		if (effect)
 			m_destroy = effect; 
 		
 	}
-	void CardBase::destroy(Player& player) {
+	void CardBase::destroy(Player& player, Board& board, Player& opponent) {
 		if (m_destroy.has_value()) {
-			(*m_destroy)(player);
+			(*m_destroy)(player, board,opponent);
 		}
 	}
 

@@ -66,7 +66,7 @@ public:
 
 
 
-	void set_discountedResource(Resource r);
+	void setDiscountedResource(Resource r);
 	Player(const std::string& playerName); // constructor
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
@@ -74,10 +74,10 @@ public:
 	void addResource(Resource r, std::uint8_t amount);//
 	void removeResource(Resource r, std::uint8_t amount);
 	//Gestioneaza punctele de victorie
-	void add_Points(Points p, std::uint8_t amount);//
+	void addPoints(Points p, std::uint8_t amount);//
 	//Gestioneaza simbolurile
-	void add_ScientificSymbol(Scientific_Symbol symbol);//
-	void add_ChainSymbol(Symbol symbol);//
+	void addScientificSymbol(Scientific_Symbol symbol);//
+	void addChainSymbol(Symbol symbol);//
 	//Functie ca sa vad cat ma costa o singura resursa
 	std::uint8_t findUnitTradeCost(Resource res, const Player& opponent) const;
 	//Functie pentru a afla toate alegerile de resurse
@@ -125,8 +125,7 @@ private:
 	int getResourceDiscountIndex(Resource r) const;
 	Resource findResourceDiscountFromIndex(int index) const;
 };
-extern template std::map<Resource, std::uint8_t> Player::findMissingResources<CardBase>(const CardBase&, const Player&) const;
-extern template std::map<Resource, std::uint8_t> Player::findMissingResources<Wonder>(const Wonder&, const Player&) const;
+
 extern template std::uint8_t Player::findTradeCost<CardBase>(const CardBase&, const Player&) const;
 extern template std::uint8_t Player::findTradeCost<Wonder>(const Wonder&, const Player&) const;
 extern template std::uint8_t Player::findTotalCost<CardBase>(const CardBase&, const Player&) const;

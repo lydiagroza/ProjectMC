@@ -107,17 +107,18 @@ public:
 	
 
 	// Progress Token Effects
-	void setWonderDiscount(bool v) { m_hasWonderDiscount = v; }
-	void setBlueCardDiscount(bool v) { m_hasBlueCardDiscount = v; }
-	void setGainsOpponentTradeCost(bool v) { m_gainsOpponentTradeCost = v; }
-	void setGetsCoinsForFreeCards(bool v) { m_getsCoinsForFreeCards = v; }
-	bool hasWonderDiscount() const { return m_hasWonderDiscount; }
-	bool hasBlueCardDiscount() const { return m_hasBlueCardDiscount; }
-	bool gainsOpponentTradeCost() const { return m_gainsOpponentTradeCost; }
-	bool getsCoinsForFreeCards() const { return m_getsCoinsForFreeCards; }
-	void addProgressToken(std::shared_ptr<ProgressToken> token) { m_progressTokens.push_back(token); }
-	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens() const { return m_progressTokens; }
-	void setHasExtraTurn(bool v) { m_hasExtraTurn = v; }
+	void setWonderDiscount(bool v);
+	void setBlueCardDiscount(bool v);
+	void setGainsOpponentTradeCost(bool v);
+	void setGetsCoinsForFreeCards(bool v);
+	bool hasWonderDiscount();
+	bool hasBlueCardDiscount();	
+	bool gainsOpponentTradeCost();
+	bool getsCoinsForFreeCards();
+	void addProgressToken(std::shared_ptr<ProgressToken> token);
+	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens();
+	void setHasExtraTurn(bool v);
+
 private:
 	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;
 	std::uint8_t calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;

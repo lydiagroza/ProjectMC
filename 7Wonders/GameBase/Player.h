@@ -66,7 +66,7 @@ public:
 
 
 
-	void setDiscountedResource(Resource r);
+	void set_discountedResource(Resource r);
 	Player(const std::string& playerName); // constructor
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
@@ -74,10 +74,10 @@ public:
 	void addResource(Resource r, std::uint8_t amount);//
 	void removeResource(Resource r, std::uint8_t amount);
 	//Gestioneaza punctele de victorie
-	void addPoints(Points p, std::uint8_t amount);//
+	void add_Points(Points p, std::uint8_t amount);//
 	//Gestioneaza simbolurile
-	void addScientificSymbol(Scientific_Symbol symbol);//
-	void addChainSymbol(Symbol symbol);//
+	void add_ScientificSymbol(Scientific_Symbol symbol);//
+	void add_ChainSymbol(Symbol symbol);//
 	//Functie ca sa vad cat ma costa o singura resursa
 	std::uint8_t findUnitTradeCost(Resource res, const Player& opponent) const;
 	//Functie pentru a afla toate alegerile de resurse

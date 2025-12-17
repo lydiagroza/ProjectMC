@@ -77,6 +77,8 @@ void set_discountedResource(Resource r);
 	//Gestioneaza simbolurile
 	void add_ScientificSymbol(Scientific_Symbol symbol);//
 	void add_ChainSymbol(Symbol symbol);//
+
+
 	//Functie ca sa vad cat ma costa o singura resursa
 	std::uint8_t findUnitTradeCost(Resource res, const Player& opponent) const;
 	//Functie pentru a afla toate alegerile de resurse

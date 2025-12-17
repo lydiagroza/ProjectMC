@@ -41,15 +41,13 @@ static std::vector<std::function<void(Player&, Player&)>> parseWonderEffects(con
     if (s.empty()) return effects;
 
     std::stringstream ss(s);
-    std::string effectStr;
+    std::string token;
 
     static const std::unordered_map<std::string, std::function<void(Player&, Player&)>> effectMap = {
         {"add_coins3", [](Player& p, Player& o) { p.addResource(Coin,3); }},
         {"decreaseCoins3", [](Player& p, Player& o) { o.decreaseCoins(3); }},
         {"replayTurn", [](Player& p, Player& o) { p.set_discountedResource(Wood); /* placeholder for replay turn logic */ }},
-        {"add_VictoryPoint3", [](Player& p, Player& o) { p.add_Points(Points::Victory, 3); }},
         {"wood/stone/clay", [](Player& p, Player& o) { p.addResource(Resource::Wood, 1); p.addResource(Resource::Stone, 1); p.addResource(Resource::Clay, 1); }},
-        {"add_VictoryPoints4", [](Player& p, Player& o) { p.add_Points(Points::Victory, 4); }},
         {"add_coins12", [](Player& p, Player& o) { p.addResource(Coin, 12); }},
         {"discardOpponentGrayCard", [](Player& p, Player& o) {
             Board& board = Game::currentGame->getBoard();
@@ -82,7 +80,6 @@ static std::vector<std::function<void(Player&, Player&)>> parseWonderEffects(con
 }
 }},
 
-{"add_MilitaryPoint1", [](Player& p, Player& o) { p.add_Points(Points::Military, 1); }},
 {"buildDiscardedCard", [](Player& p, Player& o) {
     Board& board = Game::currentGame->getBoard();
     const auto& discardPile = board.getDiscardPile();
@@ -111,9 +108,7 @@ else {
 }
 }},
 
-{"add_VictoryPoint2", [](Player& p, Player& o) { p.add_Points(Points::Victory, 2); }},
 {"papyrus/glass", [](Player& p, Player& o) { p.addResource(Resource::Papyrus, 1); p.addResource(Resource::Glass, 1); }},
-{"add_VictoryPoints9", [](Player& p, Player& o) { p.add_Points(Points::Victory, 9); }},
 {"chooseProgressToken", [](Player& p, Player& o) {
     Board& board = Game::currentGame->getBoard();
     auto availableTokens = board.getAvailableProgressTokens();
@@ -144,8 +139,6 @@ else {
 }
 }},
 {"add_coins6", [](Player& p, Player& o) { p.addResource(Coin,6); }},
-{"add_VictoryPoints", [](Player& p, Player& o) { p.add_Points(Points::Victory, 1); }},
-{"add_MilitaryPoints2", [](Player& p, Player& o) { p.add_Points(Points::Military, 2); }},
 {"discardOpponentBrownCard", [](Player& p, Player& o) {
     Board& board = Game::currentGame->getBoard();
     auto opponentInventory = o.getInventory();
@@ -179,18 +172,34 @@ else {
 }}
     };
 
-    while (std::getline(ss, effectStr, ';')) {
-        // Remove whitespace and quotes
-        effectStr.erase(std::remove_if(effectStr.begin(), effectStr.end(), ::isspace), effectStr.end());
-        effectStr.erase(std::remove(effectStr.begin(), effectStr.end(), '"'), effectStr.end());
+    const std::string vpPrefix = "add_VictoryPoint";
+    const std::string mpPrefix = "add_MilitaryPoint";
 
-        auto it = effectMap.find(effectStr);
+    while (getline(ss, token, ';')) {
+        int ok = 0;
+        token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
+
+        if (token.rfind(vpPrefix, 0) == 0) {
+            int amount = stoi(token.substr(vpPrefix.size()));
+            effects.push_back([amount](Player& p, Player& o) { p.add_Points(Points::Victory, static_cast<std::uint8_t>(amount)); });
+            ok = 1;
+            continue;
+        }
+        else if (token.rfind(mpPrefix, 0) == 0) {
+            int amount = stoi(token.substr(mpPrefix.size()));
+            effects.push_back([amount](Player& p, Player& o) { p.add_Points(Points::Military, static_cast<std::uint8_t>(amount)); });
+            ok = 1;
+            continue;
+        }
+
+        auto it = effectMap.find(token);
         if (it != effectMap.end()) {
             effects.push_back(it->second);
+            ok = 1;
+            continue;
         }
-        else {
-            std::cerr << "Unknown wonder effect: " << effectStr << std::endl;
-        }
+        if (ok == 0)
+            std::cout << "Effect " << token << " unknown" << std::endl;
     }
 
     return effects;

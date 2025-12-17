@@ -8,8 +8,8 @@ Game* Game::currentGame = nullptr;
 Game::Game()
     : m_board(),         
     m_setup(m_board),   
-    m_player1("Player 1"),
-    m_player2("Player 2"),
+    m_player1("Player 1",0),
+    m_player2("Player 2",1),
     m_currentAge(1),
     m_gameOver(false)
 {

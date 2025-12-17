@@ -9,5 +9,5 @@ PIRAEUS				 ,67,"1clay";"1stone";"2wood"			 ,"papyrus/glass";"replayTurn";"add_V
 THE PYRAMIDS		 ,68,"1papyrus";"3stone"				 ,"add_VictoryPoint9"
 THE GREAT LIBRARY	 ,69,"1papyrus";"1glass";"3wood"		 ,"chooseProgressToken";"add_VictoryPoint4"
 THE HANGING GARDENS	 ,70,"1papyrus";"1glass";"2wood"		 ,"add_coins6";"replayTurn";"add_VictoryPoint3"
-THE COLOSUS			 ,71,"1glass";"3clay"					 ,"add_MilitaryPoints2";"add_VictoryPoint3"		
+THE COLOSUS			 ,71,"1glass";"3clay"					 ,"add_MilitaryPoint2";"add_VictoryPoint3"		
 THE STATUE OF ZEUS	 ,72,"2papyrus";"1clay";"1wood";"1stone" ,"discardOpponentBrownCard";"add_MilitaryPoint1";"add_VictoryPoint3"

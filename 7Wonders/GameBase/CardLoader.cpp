@@ -172,13 +172,29 @@ std::vector<std::function<void(Player&,Board&, Player&)>> CardLoader::parseEffec
 
         if (token.rfind(vpPrefix, 0) == 0) {
             int amount = stoi(token.substr(vpPrefix.size()));
-            effects.push_back([amount](Player& p, Board &b, Player&) { p.add_Points(Points::Victory, static_cast<std::uint8_t>(amount)); });
+            effects.push_back([amount](Player& p, Board &b, Player&) { 
+                p.add_Points(Points::Victory, static_cast<std::uint8_t>(amount)); });
             ok = 1;
             continue;
         }
         else if (token.rfind(mpPrefix, 0) == 0) {
+            // Extragem numărul de scuturi (ex: "add_MilitaryPoint2" -> 2)
             int amount = stoi(token.substr(mpPrefix.size()));
-            effects.push_back([amount](Player& p, Board &b, Player&) { p.add_Points(Points::Military, static_cast<std::uint8_t>(amount)); });
+
+            // Lambda-ul primește Player (self), Board (b) și Player (opponent)
+            effects.push_back([amount](Player& p, Board& b, Player& opponent) {
+                int coinsToTake = 0;
+
+                // 1. Apelăm logica militară care mută pionul
+                // p.getId() ar trebui să returneze 1 sau 2
+                b.getMilitaryTrack().applyShields(p.getId(), amount, coinsToTake);
+
+                // 2. Dacă s-a trecut peste un jeton, coinsToTake va fi > 0
+                if (coinsToTake > 0) {
+                    std::cout << "[MILITAR] " << opponent.getName() << " pierde " << coinsToTake << " banuti!\n";
+                    opponent.removeResource(Resource::Coin, coinsToTake);
+                }
+                });
             ok = 1;
             continue;
         }

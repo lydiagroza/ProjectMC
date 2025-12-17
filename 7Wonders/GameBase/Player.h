@@ -13,11 +13,12 @@
 #include "Wonder.h"
 #include "ProgressTokens.h"
 #include<cstdint>
-#include "gameExport.h"   
+#include "gameExport.h" 
 
 
 class GAME_API Player {
 private:
+	unsigned int m_Id:2;
 	std::string m_name;
 	std::map<Resource, std::uint8_t> m_Resources; // All resources
 	std::map<Points, std::uint8_t>m_pointsScore; // All points
@@ -37,6 +38,7 @@ private:
 	std::vector<std::shared_ptr<ProgressToken>> m_progressTokens;
 public:
 	// getteri
+	unsigned int getId() const;
 	std::string getName() const;
 	std::vector<std::bitset<5>> getChoiceResources() const;	
 	const std::map<Resource, std::uint8_t>& getResources() const;
@@ -77,6 +79,8 @@ void set_discountedResource(Resource r);
 	//Gestioneaza simbolurile
 	void add_ScientificSymbol(Scientific_Symbol symbol);//
 	void add_ChainSymbol(Symbol symbol);//
+
+
 	//Functie ca sa vad cat ma costa o singura resursa
 	std::uint8_t findUnitTradeCost(Resource res, const Player& opponent) const;
 	//Functie pentru a afla toate alegerile de resurse

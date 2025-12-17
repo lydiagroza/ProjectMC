@@ -149,7 +149,7 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
 	}
 
 	// ✅ NOU: Folosim bitset în loc de map<string, vector>
-	/*for (const auto& flexibleSet : m_flexibleResources) {*/
+	for (const auto& flexibleSet : m_choiceResources) {
 		//                ^^^^^^^^^^^
 		//                Fiecare bitset = un set de opțiuni
 
@@ -183,6 +183,7 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
 				missingResources.erase(bestResourceToCover);
 			}
 		}
+	}
 		return missingResources; 
 	}
 

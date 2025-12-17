@@ -18,9 +18,9 @@ Player::Player(const std::string& playerName)
 {
 }
 
-unsigned int Player::getPlayerId() const
+unsigned int Player::getId() const
 {
-    return m_playerId;
+    return m_Id;
 }
 
 //Functie de get pentru numele playerului

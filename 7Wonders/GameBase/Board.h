@@ -31,7 +31,7 @@ public:
 	const CardsPyramid& getPyramid() const;
 
 	//functii military track
-	const MilitaryTrack& getMilitaryTrack() const;
+	 MilitaryTrack& getMilitaryTrack();
 
 
 	//functii tokeni verzi

@@ -49,7 +49,7 @@ static std::vector<std::function<void(Player&, Player&)>> parseWonderEffects(con
         {"add_resource_coin12", [](Player& p, Player& o) { p.addResource(Coin, 12); }},
         {"decreaseCoin3", [](Player& p, Player& o) { o.decreaseCoins(3); }},
 
-        {"replayTurn", [](Player& p, Player& o) { p.set_discountedResource(Wood); /* placeholder for replay turn logic */ }},
+        {"replayTurn", [](Player& p, Player& o) { p.setHasExtraTurn(true);}},
         {"wood/stone/clay", [](Player& p, Player& o) { p.addResource(Resource::Wood, 1); p.addResource(Resource::Stone, 1); p.addResource(Resource::Clay, 1); }},
         {"papyrus/glass", [](Player& p, Player& o) { p.addResource(Resource::Papyrus, 1); p.addResource(Resource::Glass, 1); }},
         
@@ -176,13 +176,6 @@ static std::vector<std::function<void(Player&, Player&)>> parseWonderEffects(con
         }
         }},
 
-        /*{"add_VictoryPoints", [](Player& p, Player& o) { p.add_Points(Points::Victory, 1); }},
-        { "add_VictoryPoint2", [](Player& p, Player& o) { p.add_Points(Points::Victory, 2); } },
-        { "add_VictoryPoint3", [](Player& p, Player& o) { p.add_Points(Points::Victory, 3); } },
-        { "add_VictoryPoint4", [](Player& p, Player& o) { p.add_Points(Points::Victory, 4); } },
-        { "add_VictoryPoint9", [](Player& p, Player& o) { p.add_Points(Points::Victory, 9); } },
-        { "add_MilitaryPoints2", [](Player& p, Player& o) { p.add_Points(Points::Military, 2); } },
-        { "add_MilitaryPoint1", [](Player& p, Player& o) { p.add_Points(Points::Military, 1); } },*/
     };
 
     const std::string vpPrefix = "add_VictoryPoint";

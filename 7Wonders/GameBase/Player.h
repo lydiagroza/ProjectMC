@@ -13,11 +13,12 @@
 #include "Wonder.h"
 #include "ProgressTokens.h"
 #include<cstdint>
-#include "gameExport.h"   
+#include "gameExport.h" 
 
 
 class GAME_API Player {
 private:
+	unsigned int m_playerId:2;
 	std::string m_name;
 	std::map<Resource, std::uint8_t> m_Resources; // All resources
 	std::map<Points, std::uint8_t>m_pointsScore; // All points
@@ -37,6 +38,7 @@ private:
 	std::vector<std::shared_ptr<ProgressToken>> m_progressTokens;
 public:
 	// getteri
+	unsigned int getPlayerId() const;
 	std::string getName() const;
 	std::vector<std::bitset<5>> getChoiceResources() const;	
 	const std::map<Resource, std::uint8_t>& getResources() const;

@@ -2,8 +2,10 @@
 #include "GameConstants.h"
 
 //Constructor
-Player::Player(const std::string& playerName)
-	:m_name(playerName),
+Player::Player(const std::string& playerName,int id)
+	:
+	m_Id(id),
+	m_name(playerName),
 	m_Resources{},
 	m_pointsScore{},
 	m_discountedResource{},
@@ -149,7 +151,7 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
 	}
 
 	// ✅ NOU: Folosim bitset în loc de map<string, vector>
-	/*for (const auto& flexibleSet : m_flexibleResources) {*/
+	for (const auto& flexibleSet : m_choiceResources) {
 		//                ^^^^^^^^^^^
 		//                Fiecare bitset = un set de opțiuni
 
@@ -183,10 +185,11 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
 				missingResources.erase(bestResourceToCover);
 			}
 		}
+	}
 		return missingResources; 
 	}
 
-	/*return missingResources;*/
+	
 
 
 
@@ -208,10 +211,6 @@ std::uint8_t Player::calculateTradeCost(const std::map<Resource, std::uint8_t>& 
 }
 
 
-template<typename T>
-std::map<Resource, std::uint8_t> Player::findMissingResources(const T& buildable, const Player& opponent) const {
-	return MissingResources(buildable.getCost(), opponent);
-}
 
 template<typename T>
 std::uint8_t Player::findTradeCost(const T& buildable, const Player& opponent) const {
@@ -382,8 +381,6 @@ void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderT
 	std::cout << "Wonder " << wonderToBuild.getName() << " constructed successfully. Cost paid: " << static_cast<int>(totalCoinCost) << " coins." << std::endl;
 }
 
-template std::map<Resource, std::uint8_t> Player::findMissingResources<CardBase>(const CardBase&, const Player&) const;
-template std::map<Resource, std::uint8_t> Player::findMissingResources<Wonder>(const Wonder&, const Player&) const;
 template std::uint8_t Player::findTradeCost<CardBase>(const CardBase&, const Player&) const;
 template std::uint8_t Player::findTradeCost<Wonder>(const Wonder&, const Player&) const;
 template std::uint8_t Player::findTotalCost<CardBase>(const CardBase&, const Player&) const;

@@ -68,7 +68,7 @@ public:
 	void addChoiceResources(std::vector<Resource> choices);
 
 void set_discountedResource(Resource r);
-	Player(const std::string& playerName); // constructor
+	Player(const std::string& playerName,int id); // constructor
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
 	//Gestioneaza resursele
@@ -99,7 +99,6 @@ void set_discountedResource(Resource r);
 
 	bool buyCard(std::shared_ptr<CardBase> card,  Player& opponent,  Board& board);
 
-	bool buyCard(std::shared_ptr<CardBase> card, Player& opponent, const Board& board);
 	void discardCard(const CardBase& c);
 	void constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board);
 	//chestii pentru gestionare inventar
@@ -127,8 +126,7 @@ private:
 	int getResourceDiscountIndex(Resource r) const;
 	Resource findResourceDiscountFromIndex(int index) const;
 };
-extern template std::map<Resource, std::uint8_t> Player::findMissingResources<CardBase>(const CardBase&, const Player&) const;
-extern template std::map<Resource, std::uint8_t> Player::findMissingResources<Wonder>(const Wonder&, const Player&) const;
+
 extern template std::uint8_t Player::findTradeCost<CardBase>(const CardBase&, const Player&) const;
 extern template std::uint8_t Player::findTradeCost<Wonder>(const Wonder&, const Player&) const;
 extern template std::uint8_t Player::findTotalCost<CardBase>(const CardBase&, const Player&) const;

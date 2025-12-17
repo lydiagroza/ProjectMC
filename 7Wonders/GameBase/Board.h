@@ -32,6 +32,7 @@ public:
 
 	//functii military track
 	 MilitaryTrack& getMilitaryTrack();
+	const  MilitaryTrack& getMilitaryTrack() const;
 
 
 	//functii tokeni verzi

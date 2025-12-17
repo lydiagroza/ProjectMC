@@ -258,6 +258,11 @@ MilitaryTrack& Board::getMilitaryTrack() {
 	return m_militaryTrack;
 }
 
+const MilitaryTrack& Board::getMilitaryTrack() const
+{
+    return m_militaryTrack;
+}
+
 std::ostream& operator<<(std::ostream& os, const Board& board)
 {
     os << "========== GAME BOARD STATE ==========\n\n";

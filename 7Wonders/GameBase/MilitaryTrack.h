@@ -1,14 +1,6 @@
 #pragma once
 #include <cstdint>
 
-
-struct MilitaryResult
-{
-    bool supremacyAchieved = false;
-    int coinsLostByOpponent = 0; 
-    bool tokenRemoved = false;
-};
-
 class MilitaryTrack
 {
 private:
@@ -35,7 +27,7 @@ public:
 
 	int getPawnPosition() const;
 
-	MilitaryResult applyShields(int platerId, int shields);
+    void applyShields(int platerId, int shields, int& coinsLostByOpponent);
 
     bool isTokenVisible(int tokenIndex) const;
 

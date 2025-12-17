@@ -6,9 +6,8 @@ int MilitaryTrack::getPawnPosition() const
     return m_pawnPosition;
 }
 
-MilitaryResult MilitaryTrack::applyShields(int playerId, int shields)
+void MilitaryTrack::applyShields(int playerId, int shields, int& coinsLostByOpponent)
 {
-	MilitaryResult result;
 	int8_t oldPosition = m_pawnPosition;
 	int direction = (playerId == 1) ? 1 : -1;
 	int temporaryPos = m_pawnPosition+ direction * shields;
@@ -17,8 +16,7 @@ MilitaryResult MilitaryTrack::applyShields(int playerId, int shields)
 
 	if(std::abs(m_pawnPosition) == MAX_Position)
 	{
-		result.supremacyAchieved = true;
-		return result;
+		return;
 	}
 
 	bool isAdvancing = false;
@@ -39,8 +37,7 @@ MilitaryResult MilitaryTrack::applyShields(int playerId, int shields)
             int tokenIdx = (playerId == 1) ? 2 : 1;
 
             if (!m_removedTokens[tokenIdx]) {
-                result.coinsLostByOpponent += 2;
-                result.tokenRemoved = true;
+                coinsLostByOpponent += 2;
                 m_removedTokens[tokenIdx] = true;
             }
         }
@@ -51,13 +48,12 @@ MilitaryResult MilitaryTrack::applyShields(int playerId, int shields)
             int tokenIdx = (playerId == 1) ? 3 : 0;
 
             if (!m_removedTokens[tokenIdx]) {
-                result.coinsLostByOpponent += 5;
-                result.tokenRemoved = true;
+                coinsLostByOpponent += 5;
                 m_removedTokens[tokenIdx] = true;
             }
         }
 	}
-	return result;
+	return;
 
 }
 

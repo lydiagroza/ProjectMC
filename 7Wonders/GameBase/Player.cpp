@@ -381,6 +381,59 @@ void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderT
 	std::cout << "Wonder " << wonderToBuild.getName() << " constructed successfully. Cost paid: " << static_cast<int>(totalCoinCost) << " coins." << std::endl;
 }
 
+// Progress token funcitons
+void Player::addWonders(const std::shared_ptr<Wonder>& wonder)
+{
+	m_Wonders.push_back(*wonder);
+}
+
+void Player::setWonderDiscount(bool v)
+{
+	m_hasWonderDiscount = v;
+}
+
+void Player::setBlueCardDiscount(bool v)
+{
+	m_hasBlueCardDiscount = v;
+}
+
+void Player::setGainsOpponentTradeCost(bool v) {
+	m_gainsOpponentTradeCost = v;
+}
+
+void Player::setGetsCoinsForFreeCards(bool v) {
+	m_getsCoinsForFreeCards = v;
+}
+
+bool Player::hasWonderDiscount() {
+	return m_hasWonderDiscount;
+}
+
+bool Player::hasBlueCardDiscount() {
+	return m_hasBlueCardDiscount;
+}
+
+bool Player::gainsOpponentTradeCost() {
+	return m_gainsOpponentTradeCost;
+}
+
+bool Player::getsCoinsForFreeCards() {
+	return m_getsCoinsForFreeCards;
+}
+
+void Player::addProgressToken(std::shared_ptr<ProgressToken> token) {
+	m_progressTokens.push_back(token);
+}
+
+const std::vector<std::shared_ptr<ProgressToken>>& Player::getProgressTokens()
+{
+	return m_progressTokens;
+}
+
+void Player::setHasExtraTurn(bool v) {
+	m_hasExtraTurn = v;
+}
+
 template std::uint8_t Player::findTradeCost<CardBase>(const CardBase&, const Player&) const;
 template std::uint8_t Player::findTradeCost<Wonder>(const Wonder&, const Player&) const;
 template std::uint8_t Player::findTotalCost<CardBase>(const CardBase&, const Player&) const;

@@ -25,16 +25,18 @@ private:
 	std::bitset<5>m_discountedResource; // discounted resources from yellow cards
 	std::vector<std::bitset<5>>m_choiceResources; 
 	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // all cards
-	std::vector<Wonder>m_Wonders; // all wonders
-	std::unordered_set<Scientific_Symbol>m_scientificSymbols; // all scientific symbols
-	bool m_hasExtraTurn = false;
+	std::vector<std::shared_ptr<Wonder>> m_Wonders; // all wonders
+	std::unordered_set<Scientific_Symbol>m_scientificSymbols; // all scientific symbol
 	std::unordered_set<Symbol>m_chainSymbols; // all chain symbols accumulated
-
-	// Progress Token Effects
-	bool m_hasWonderDiscount = false;
-	bool m_hasBlueCardDiscount = false;
-	bool m_gainsOpponentTradeCost = false;
-	bool m_getsCoinsForFreeCards = false;
+	enum PlayerFlags {
+		ExtraTurn = 0,
+		WonderDiscount = 1,
+		BlueCardDiscount = 2,
+		OpponentTrade = 3,
+		FreeCardCoins = 4,
+		FlagCount = 5
+	};
+	std::bitset<FlagCount> m_flags;
 	std::vector<std::shared_ptr<ProgressToken>> m_progressTokens;
 public:
 	// getteri
@@ -46,11 +48,10 @@ public:
 
 	const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& getInventory() const;
 
-	const std::vector<Wonder>& getWonders() const;
+	const std::vector<std::shared_ptr<Wonder>>& getWonders() const;
 
 	const std::unordered_set<Scientific_Symbol>& getScientificSymbols() const;
 
-	bool hasExtraTurn() const;
 
 	const std::unordered_set<Symbol>& getChainSymbols() const;
 
@@ -61,9 +62,6 @@ public:
 	int getVPFromMilitaryTokens() const;
 
 	int getVPFromBlueCards() const;
-
-	
-
 
 	void addChoiceResources(std::vector<Resource> choices);
 
@@ -109,17 +107,24 @@ void set_discountedResource(Resource r);
 	
 
 	// Progress Token Effects
-	void setWonderDiscount(bool v);
-	void setBlueCardDiscount(bool v);
-	void setGainsOpponentTradeCost(bool v);
-	void setGetsCoinsForFreeCards(bool v);
-	bool hasWonderDiscount();
-	bool hasBlueCardDiscount();	
-	bool gainsOpponentTradeCost();
-	bool getsCoinsForFreeCards();
+	inline bool hasExtraTurn() const { return m_flags.test(ExtraTurn); }
+	inline void setHasExtraTurn(bool v) { m_flags.set(ExtraTurn, v); }
+
+	inline bool hasWonderDiscount() const { return m_flags.test(WonderDiscount); }
+	inline void setWonderDiscount(bool v) { m_flags.set(WonderDiscount, v); }
+
+	inline bool hasBlueCardDiscount() const { return m_flags.test(BlueCardDiscount); }
+	inline void setBlueCardDiscount(bool v) { m_flags.set(BlueCardDiscount, v); }
+
+	inline bool gainsOpponentTradeCost() const { return m_flags.test(OpponentTrade); }
+	inline void setGainsOpponentTradeCost(bool v) { m_flags.set(OpponentTrade, v); }
+
+	inline bool getsCoinsForFreeCards() const { return m_flags.test(FreeCardCoins); }
+	inline void setGetsCoinsForFreeCards(bool v) { m_flags.set(FreeCardCoins, v); }
+
 	void addProgressToken(std::shared_ptr<ProgressToken> token);
 	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens();
-	void setHasExtraTurn(bool v);
+
 private:
 	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;
 	std::uint8_t calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;

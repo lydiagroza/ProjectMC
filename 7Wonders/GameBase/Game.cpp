@@ -34,9 +34,9 @@ bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
 
     std::vector<Wonder*> availableWonders;
 
-    for (const Wonder& wonder : m_currentPlayer->getWonders())
-        if (!wonder.getIsBuilt()) 
-            availableWonders.push_back(const_cast<Wonder*>(&wonder));
+    for (const auto& wonder : m_currentPlayer->getWonders())
+        if (!wonder->getIsBuilt()) 
+            availableWonders.push_back(const_cast<Wonder*>(wonder.get()));
        
 
     if (availableWonders.empty()) {
@@ -92,8 +92,8 @@ void Game::handle7WondersRule()
     auto findUnbuiltAvailableWonder = [](Player& p) -> Wonder* {
         for (auto wonders : p.getWonders()) {
 
-            if (!wonders.getIsBuilt() && wonders.getIsAvailable()) {
-                return &wonders;
+            if (!wonders->getIsBuilt() && wonders->getIsAvailable()) {
+                return wonders.get();
             }
         }
         return nullptr;

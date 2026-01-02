@@ -24,7 +24,8 @@ enum class AI_Strategy {
     BALANCED
 };
 
-// Structură pentru starea jocului (feature vector)
+//
+// starea jocului 
 struct GameState {
     // Resurse proprii
     int myCoins;
@@ -51,7 +52,89 @@ struct GameState {
     int currentAge;
     int remainingCards;
 
-    // Hash pentru Q-Table
+    // Hde acțiunea
+//    bool actionTaken = false;
+//
+//    // 1. Încearcă să cumpere cartea
+//    if (shouldBuyCard(selectedCard, opponent)) {
+//        if (buyCard(selectedCard, opponent, board)) {
+//            std::cout << "AI cumpără cartea.\n";
+//            actionTaken = true;
+//        }
+//    }
+//
+//    // 2. Încearcă să construiască wonder
+//    if (!actionTaken && shouldConstructWonder(selectedCard, opponent)) {
+//        std::vector<Wonder*> availableWonders;
+//        for (const auto& wonder : getWonders()) {
+//            if (!wonder.getIsBuilt()) {
+//                availableWonders.push_back(const_cast<Wonder*>(&wonder));
+//            }
+//        }
+//
+//        if (!availableWonders.empty()) {
+//            Wonder* chosenWonder = chooseBestWonder(availableWonders);
+//            if (chosenWonder) {
+//                constructWonder(selectedCard, *chosenWonder, opponent, board);
+//                std::cout << "AI construiește minunea: " << chosenWonder->getName() << "\n";
+//                actionTaken = true;
+//            }
+//        }
+//    }
+//
+//    // 3. Fallback: Vinde cartea
+//    if (!actionTaken) {
+//        discardCard(*selectedCard);
+//        std::cout << "AI vinde cartea pentru bani.\n";
+//    }
+//
+//    // Actualizează board
+//    // Marchează cartea ca jucată
+//    const auto& rows = board.getPyramid().getRows();
+//    for (const auto& row : rows) {
+//        for (const auto& node : row) {
+//            if (node && node->getCard() && node->getCard()->getId() == selectedCard->getId()) {
+//                const_cast<CardNode*>(node.get())->updatePlayedStatus(true);
+//                break;
+//            }
+//        }
+//    }
+//
+//    board.updateVisibility();
+//}
+//
+//std::shared_ptr<Wonder> AI_Player::chooseWonderFromDraft(const std::vector<std::shared_ptr<Wonder>>& availableWonders) {
+//    if (availableWonders.empty()) return nullptr;
+//
+//    std::cout << "AI (" << getName() << ") alege o minune...\n";
+//
+//    // Easy: Random
+//    if (m_difficulty == AI_Difficulty::EASY) {
+//        std::uniform_int_distribution<size_t> dist(0, availableWonders.size() - 1);
+//        auto chosen = availableWonders[dist(m_rng)];
+//        std::cout << "AI alege: " << chosen->getName() << "\n";
+//        return chosen;
+//    }
+//
+//    // Medium/Hard: Evaluează
+//    std::shared_ptr<Wonder> bestWonder = nullptr;
+//    int bestValue = -1000;
+//
+//    for (const auto& wonder : availableWonders) {
+//        int value = evaluateWonder(*wonder);
+//
+//        if (value > bestValue) {
+//            bestValue = value;
+//            bestWonder = wonder;
+//        }
+//    }
+//
+//    if (bestWonder) {
+//        std::cout << "AI alege: " << bestWonder->getName() << "\n";
+//    }
+//
+//    return bestWonder;
+//}ash pentru Q-Table
     std::string toHash() const;
 
     // Extrage starea din joc
@@ -122,6 +205,8 @@ private:
     float getMaxQValue(const std::string& stateHash,
         const std::vector<Action>& actions) const;
 };
+
+
 
 class AI_Player : public Player {
 private:

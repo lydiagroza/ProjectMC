@@ -7,31 +7,22 @@
 #include <algorithm>
 #include <cctype>
 #include <unordered_map>
+using namespace std; 
+std::map<Resource, uint8_t> WonderLoader::parseCost(const string& s) {
+    map<Resource, uint8_t> cost;
+    if (s.empty()) return cost;
 
-std::map<Resource, uint8_t> WonderLoader::parseCost(const std::string& s) {
-    std::map<Resource, uint8_t> cost;
-    std::stringstream ss(s);
-    std::string item;
-    while (std::getline(ss, item, ';')) {
-        std::string resourceName;
-        int amount = 0;
-        for (char c : item) {
-            if (isalpha(c)) {
-                resourceName += c;
-            }
-            else if (isdigit(c)) {
-                amount = amount * 10 + (c - '0');
-            }
-        }
-
-        if (amount == 0) amount = 1; // Default la 1 daca nu este specificat un amount
-
-        if (resourceName == "wood") cost[Resource::Wood] = amount;
-        else if (resourceName == "clay") cost[Resource::Clay] = amount;
-        else if (resourceName == "stone") cost[Resource::Stone] = amount;
-        else if (resourceName == "glass") cost[Resource::Glass] = amount;
-        else if (resourceName == "papyrus") cost[Resource::Papyrus] = amount;
-        else if (resourceName == "coin") cost[Resource::Coin] = amount;
+    stringstream ss(s);
+    string item;
+    while (getline(ss, item, ';')) {
+        int quantity = item[0] - '0';
+        string resource_str = item.substr(1);
+        if (resource_str == "wood") cost[Resource::Wood] = quantity;
+        else if (resource_str == "clay") cost[Resource::Clay] = quantity;
+        else if (resource_str == "stone") cost[Resource::Stone] = quantity;
+        else if (resource_str == "glass") cost[Resource::Glass] = quantity;
+        else if (resource_str == "papyrus") cost[Resource::Papyrus] = quantity;
+        else if (resource_str == "coin") cost[Resource::Coin] = quantity;
     }
     return cost;
 }

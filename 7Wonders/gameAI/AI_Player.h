@@ -138,7 +138,7 @@ struct GameState {
     std::string toHash() const;
 
     // Extrage starea din joc
-    static GameState extract(const Player& me, const Player& opponent, const Board& board);
+    // static GameState extract(const Player& me, const Player& opponent, const Board& board);
 };
 
 // Acțiune posibilă
@@ -241,11 +241,11 @@ private:
         const Player& opponent,
         const Board& board);
 
-    Wonder* chooseBestWonder(const std::vector<Wonder*>& availableWonders) const;
+    Wonder* chooseBestWonder(const std::vector<Wonder*>& availableWonders) ;
 
     // Funcții helper
-    bool shouldBuyCard(const std::shared_ptr<CardBase>& card, const Player& opponent) const;
-    bool shouldConstructWonder(const std::shared_ptr<CardBase>& card, const Player& opponent) const;
+    bool shouldBuyCard(const std::shared_ptr<CardBase>& card, const Player& opponent) ;
+    bool shouldConstructWonder(const std::shared_ptr<CardBase>& card, const Player& opponent) ;
     std::vector<std::shared_ptr<CardBase>> getPlayableCards(const Board& board, const Player& opponent) const;
 
     // Conversie între cărți și acțiuni

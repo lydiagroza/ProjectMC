@@ -41,50 +41,50 @@ std::string GameState::toHash() const {
     return oss.str();
 }
 
-GameState GameState::extract(const Player& me, const Player& opponent, const Board& board) {
-    GameState state;
+// GameState GameState::extract(const Player& me, const Player& opponent, const Board& board) {
+//     GameState state;
     
-    // Resurse proprii
-    const auto& myResources = me.getResources();
-    state.myCoins = myResources.count(Resource::Coin) ? myResources.at(Resource::Coin) : 0;
-    state.myWoodCount = myResources.count(Resource::Wood) ? myResources.at(Resource::Wood) : 0;
-    state.myClayCount = myResources.count(Resource::Clay) ? myResources.at(Resource::Clay) : 0;
-    state.myStoneCount = myResources.count(Resource::Stone) ? myResources.at(Resource::Stone) : 0;
-    state.myGlassCount = myResources.count(Resource::Glass) ? myResources.at(Resource::Glass) : 0;
-    state.myPapyrusCount = myResources.count(Resource::Papyrus) ? myResources.at(Resource::Papyrus) : 0;
+//     // Resurse proprii
+//     const auto& myResources = me.getResources();
+//     state.myCoins = myResources.count(Resource::Coin) ? myResources.at(Resource::Coin) : 0;
+//     state.myWoodCount = myResources.count(Resource::Wood) ? myResources.at(Resource::Wood) : 0;
+//     state.myClayCount = myResources.count(Resource::Clay) ? myResources.at(Resource::Clay) : 0;
+//     state.myStoneCount = myResources.count(Resource::Stone) ? myResources.at(Resource::Stone) : 0;
+//     state.myGlassCount = myResources.count(Resource::Glass) ? myResources.at(Resource::Glass) : 0;
+//     state.myPapyrusCount = myResources.count(Resource::Papyrus) ? myResources.at(Resource::Papyrus) : 0;
     
-    // Progres militar și științific
-    state.myMilitaryPosition = board.getMilitaryTrack().getPawnPosition();
-    state.myScienceSymbols = me.getNrOfScientificSymbols();
+//     // Progres militar și științific
+//     state.myMilitaryPosition = board.getMilitaryTrack().getPawnPosition();
+//     state.myScienceSymbols = me.getNrOfScientificSymbols();
     
-    // Inventar
-    const auto& inventory = me.getInventory();
-    state.myBlueCardCount = inventory.count(Color::Blue) ? inventory.at(Color::Blue).size() : 0;
-    state.myRedCardCount = inventory.count(Color::Red) ? inventory.at(Color::Red).size() : 0;
-    state.myGreenCardCount = inventory.count(Color::Green) ? inventory.at(Color::Green).size() : 0;
-    state.myYellowCardCount = inventory.count(Color::Yellow) ? inventory.at(Color::Yellow).size() : 0;
+//     // Inventar
+//     const auto& inventory = me.getInventory();
+//     state.myBlueCardCount = inventory.count(Color::Blue) ? inventory.at(Color::Blue).size() : 0;
+//     state.myRedCardCount = inventory.count(Color::Red) ? inventory.at(Color::Red).size() : 0;
+//     state.myGreenCardCount = inventory.count(Color::Green) ? inventory.at(Color::Green).size() : 0;
+//     state.myYellowCardCount = inventory.count(Color::Yellow) ? inventory.at(Color::Yellow).size() : 0;
     
-    // Info despre oponent
-    const auto& oppResources = opponent.getResources();
-    state.oppCoins = oppResources.count(Resource::Coin) ? oppResources.at(Resource::Coin) : 0;
-    state.oppMilitaryPosition = -state.myMilitaryPosition; // Poziție relativă
-    state.oppScienceSymbols = opponent.getNrOfScientificSymbols();
+//     // Info despre oponent
+//     const auto& oppResources = opponent.getResources();
+//     state.oppCoins = oppResources.count(Resource::Coin) ? oppResources.at(Resource::Coin) : 0;
+//     state.oppMilitaryPosition = -state.myMilitaryPosition; // Poziție relativă
+//     state.oppScienceSymbols = opponent.getNrOfScientificSymbols();
     
-    // Starea jocului (simplificat - ar trebui să vină din Game)
-    state.currentAge = 1; // TODO: Obține din Game
-    state.remainingCards = 0;
+//     // Starea jocului (simplificat - ar trebui să vină din Game)
+//     state.currentAge = 1; // TODO: Obține din Game
+//     state.remainingCards = 0;
     
-    const auto& rows = board.getPyramid().getRows();
-    for (const auto& row : rows) {
-        for (const auto& node : row) {
-            if (node && !node->isPlayed()) {
-                state.remainingCards++;
-            }
-        }
-    }
+//     const auto& rows = board.getPyramid().getRows();
+//     for (const auto& row : rows) {
+//         for (const auto& node : row) {
+//             if (node && !node->isPlayed()) {
+//                 state.remainingCards++;
+//             }
+//         }
+//     }
     
-    return state;
-}
+//     return state;
+// }
 
 
 std::string Action::toString() const {
@@ -482,7 +482,7 @@ int AI_Player::evaluateWonder(const Wonder& wonder) const {
     return value;
 }
 
-bool AI_Player::shouldBuyCard(const std::shared_ptr<CardBase>& card, const Player& opponent) const {
+bool AI_Player::shouldBuyCard(const std::shared_ptr<CardBase>& card, const Player& opponent)  {
     uint8_t cost = findTotalCost(*card, opponent);
     if (cost == 255) return false;
     
@@ -495,7 +495,7 @@ bool AI_Player::shouldBuyCard(const std::shared_ptr<CardBase>& card, const Playe
     return cardValue > costThreshold;
 }
 
-bool AI_Player::shouldConstructWonder(const std::shared_ptr<CardBase>& card, const Player& opponent) const {
+bool AI_Player::shouldConstructWonder(const std::shared_ptr<CardBase>& card, const Player& opponent)  {
     bool hasUnbuiltWonder = false;
     for (const auto& wonder : getWonders()) {
         if (!wonder->getIsBuilt()) {
@@ -550,7 +550,7 @@ std::shared_ptr<CardBase> AI_Player::chooseBestCardHeuristic(
     return bestCard;
 }
 
-Wonder* AI_Player::chooseBestWonder(const std::vector<Wonder*>& availableWonders) const {
+Wonder* AI_Player::chooseBestWonder(const std::vector<Wonder*>& availableWonders)  {
     if (availableWonders.empty()) return nullptr;
     
     if (m_difficulty == AI_Difficulty::EASY) {
@@ -576,125 +576,125 @@ Wonder* AI_Player::chooseBestWonder(const std::vector<Wonder*>& availableWonders
 // ML DECISION MAKING
 // ============================================================================
 
-std::shared_ptr<CardBase> AI_Player::chooseBestCardML(
-    const std::vector<std::shared_ptr<CardBase>>& availableCards,
-    const Player& opponent,
-    const Board& board) {
-    if (availableCards.empty() || !m_learningAgent) return nullptr;
+// std::shared_ptr<CardBase> AI_Player::chooseBestCardML(
+//     const std::vector<std::shared_ptr<CardBase>>& availableCards,
+//     const Player& opponent,
+//     const Board& board) {
+//     if (availableCards.empty() || !m_learningAgent) return nullptr;
     
-    // Extrage starea
-    GameState currentState = GameState::extract(*this, opponent, board);
+//     // Extrage starea
+//     GameState currentState = GameState::extract(*this, opponent, board);
     
-    // Obține acțiunile posibile
-    std::vector<Action> possibleActions = getPossibleActions(availableCards, opponent);
-    if (possibleActions.empty()) return nullptr;
+//     // Obține acțiunile posibile
+//     std::vector<Action> possibleActions = getPossibleActions(availableCards, opponent);
+//     if (possibleActions.empty()) return nullptr;
     
-    // Selectează acțiunea
-    Action chosenAction = m_learningAgent->selectAction(currentState, possibleActions, m_isTraining);
+//     // Selectează acțiunea
+//     Action chosenAction = m_learningAgent->selectAction(currentState, possibleActions, m_isTraining);
     
-    // Salvează pentru update ulterior
-    m_lastState = currentState;
-    m_lastAction = chosenAction;
+//     // Salvează pentru update ulterior
+//     m_lastState = currentState;
+//     m_lastAction = chosenAction;
     
-    // Găsește cartea corespunzătoare
-    for (const auto& card : availableCards) {
-        if (card->getId() == chosenAction.cardId) {
-            return card;
-        }
-    }
+//     // Găsește cartea corespunzătoare
+//     for (const auto& card : availableCards) {
+//         if (card->getId() == chosenAction.cardId) {
+//             return card;
+//         }
+//     }
     
-    return availableCards[0]; // Fallback
-}
+//     return availableCards[0]; // Fallback
+// }
 
 // ============================================================================
 // MAIN DECISION FUNCTION
 // ============================================================================
 
-void AI_Player::makeDecision(Board& board, Player& opponent) {
-    std::cout << "\n>>> AI (" << getName() << ") deciding...\n";
+// void AI_Player::makeDecision(Board& board, Player& opponent) {
+//     std::cout << "\n>>> AI (" << getName() << ") deciding...\n";
     
-    auto playableCards = getPlayableCards(board, opponent);
-    if (playableCards.empty()) {
-        std::cout << "[AI] No cards available.\n";
-        return;
-    }
+//     auto playableCards = getPlayableCards(board, opponent);
+//     if (playableCards.empty()) {
+//         std::cout << "[AI] No cards available.\n";
+//         return;
+//     }
     
-    // Alege carte
-    std::shared_ptr<CardBase> selectedCard;
-    if (m_difficulty == AI_Difficulty::HARD || m_difficulty == AI_Difficulty::ADAPTIVE) {
-        selectedCard = chooseBestCardML(playableCards, opponent, board);
-    } else {
-        selectedCard = chooseBestCardHeuristic(playableCards, opponent, board);
-    }
+//     // Alege carte
+//     std::shared_ptr<CardBase> selectedCard;
+//     if (m_difficulty == AI_Difficulty::HARD || m_difficulty == AI_Difficulty::ADAPTIVE) {
+//         selectedCard = chooseBestCardML(playableCards, opponent, board);
+//     } else {
+//         selectedCard = chooseBestCardHeuristic(playableCards, opponent, board);
+//     }
     
-    if (!selectedCard) {
-        std::cout << "[AI] Error choosing card.\n";
-        return;
-    }
+//     if (!selectedCard) {
+//         std::cout << "[AI] Error choosing card.\n";
+//         return;
+//     }
     
-    std::cout << "[AI] Selected: " << selectedCard->getName() << "\n";
+//     std::cout << "[AI] Selected: " << selectedCard->getName() << "\n";
     
-    // Decide acțiunea
-    bool actionTaken = false;
-    Action executedAction;
+//     // Decide acțiunea
+//     bool actionTaken = false;
+//     Action executedAction;
     
-    if (shouldBuyCard(selectedCard, opponent)) {
-        if (buyCard(selectedCard, opponent, board)) {
-            std::cout << "[AI] Buys card.\n";
-            executedAction = {Action::BUY_CARD, selectedCard->getId(), 0};
-            actionTaken = true;
-        }
-    }
+//     if (shouldBuyCard(selectedCard, opponent)) {
+//         if (buyCard(selectedCard, opponent, board)) {
+//             std::cout << "[AI] Buys card.\n";
+//             executedAction = {Action::BUY_CARD, selectedCard->getId(), 0};
+//             actionTaken = true;
+//         }
+//     }
     
-    if (!actionTaken && shouldConstructWonder(selectedCard, opponent)) {
-        std::vector<Wonder*> availableWonders;
-        for (const auto& wonder : getWonders()) {
-            if (!wonder->getIsBuilt()) {
-                availableWonders.push_back(const_cast<Wonder*>(wonder.get()));
-            }
-        }
+//     if (!actionTaken && shouldConstructWonder(selectedCard, opponent)) {
+//         std::vector<Wonder*> availableWonders;
+//         for (const auto& wonder : getWonders()) {
+//             if (!wonder->getIsBuilt()) {
+//                 availableWonders.push_back(const_cast<Wonder*>(wonder.get()));
+//             }
+//         }
         
-        if (!availableWonders.empty()) {
-            Wonder* chosenWonder = chooseBestWonder(availableWonders);
-            if (chosenWonder) {
-                constructWonder(selectedCard, *chosenWonder, opponent, board);
-                std::cout << "[AI] Builds wonder: " << chosenWonder->getName() << "\n";
-                executedAction = {Action::BUILD_WONDER, selectedCard->getId(), chosenWonder->getId()};
-                actionTaken = true;
-            }
-        }
-    }
+//         if (!availableWonders.empty()) {
+//             Wonder* chosenWonder = chooseBestWonder(availableWonders);
+//             if (chosenWonder) {
+//                 constructWonder(selectedCard, *chosenWonder, opponent, board);
+//                 std::cout << "[AI] Builds wonder: " << chosenWonder->getName() << "\n";
+//                 executedAction = {Action::BUILD_WONDER, selectedCard->getId(), chosenWonder->getId()};
+//                 actionTaken = true;
+//             }
+//         }
+//     }
     
-    if (!actionTaken) {
-        discardCard(*selectedCard);
-        std::cout << "[AI] Discards card.\n";
-        executedAction = {Action::DISCARD_CARD, selectedCard->getId(), 0};
-    }
+//     if (!actionTaken) {
+//         discardCard(*selectedCard);
+//         std::cout << "[AI] Discards card.\n";
+//         executedAction = {Action::DISCARD_CARD, selectedCard->getId(), 0};
+//     }
     
-    // ML: Update Q-value
-    if (m_learningAgent && m_isTraining) {
-        GameState newState = GameState::extract(*this, opponent, board);
-        float reward = calculateReward(m_lastState, newState, executedAction);
+//     // ML: Update Q-value
+//     if (m_learningAgent && m_isTraining) {
+//         GameState newState = GameState::extract(*this, opponent, board);
+//         float reward = calculateReward(m_lastState, newState, executedAction);
         
-        auto nextCards = getPlayableCards(board, opponent);
-        auto nextActions = getPossibleActions(nextCards, opponent);
+//         auto nextCards = getPlayableCards(board, opponent);
+//         auto nextActions = getPossibleActions(nextCards, opponent);
         
-        m_learningAgent->updateQValue(m_lastState, executedAction, reward, newState, nextActions);
-    }
+//         m_learningAgent->updateQValue(m_lastState, executedAction, reward, newState, nextActions);
+//     }
     
-    // Update board
-    const auto& rows = board.getPyramid().getRows();
-    for (const auto& row : rows) {
-        for (const auto& node : row) {
-            if (node && node->getCard() && node->getCard()->getId() == selectedCard->getId()) {
-                const_cast<CardNode*>(node.get())->updatePlayedStatus(true);
-                break;
-            }
-        }
-    }
+//     // Update board
+//     const auto& rows = board.getPyramid().getRows();
+//     for (const auto& row : rows) {
+//         for (const auto& node : row) {
+//             if (node && node->getCard() && node->getCard()->getId() == selectedCard->getId()) {
+//                 const_cast<CardNode*>(node.get())->updatePlayedStatus(true);
+//                 break;
+//             }
+//         }
+//     }
     
-    board.updateVisibility();
-}
+//     board.updateVisibility();
+// }
 
 std::shared_ptr<Wonder> AI_Player::chooseWonderFromDraft(
     const std::vector<std::shared_ptr<Wonder>>& availableWonders) {

@@ -60,8 +60,9 @@ public:
 
 	int getNrOfScientificSymbols() const;
 
-	int getVPFromMilitaryTokens() const;
 
+	//VP for winner determination
+	int getVPFromMilitaryTokens() const;
 	int getVPFromBlueCards() const;
 
 	void addChoiceResources(std::vector<Resource> choices);

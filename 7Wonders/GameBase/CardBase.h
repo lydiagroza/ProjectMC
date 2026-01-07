@@ -30,6 +30,14 @@ class Board;
   enum Scientific_Symbol : std::uint8_t {
 	  Sun_Dial, Wheel, Ink, Mortar,Gyroscope,Scales,Law
   };
+  enum class GuildType : uint16_t {
+      None = 0,
+      Traders = 61,      // Merchants Guild
+      Craftsmens = 62,   // Builders Guild
+      Philosophers = 63, // Magicians Guild
+      Spies = 64,        // Tacticians Guild
+      Shipowners = 65    // Shipowners Guild
+  };
 
   class GAME_API CardBase {
   public:

@@ -33,6 +33,11 @@ std::vector<std::bitset<5>> Player::getChoiceResources() const
 	return m_choiceResources; 
 }
 
+const std::map<Points, std::uint8_t>& Player::getPoints() const
+{
+	return m_pointsScore;
+}
+
 //Functii pentru  gestionarea monedelor
 bool Player::decreaseCoins(std::uint8_t amount) {
 	if (m_Resources[Coin] >= amount) {
@@ -82,14 +87,9 @@ void Player::add_Points(Points p, std::uint8_t amount)
 }
 
 bool Player::add_ScientificSymbol(Scientific_Symbol symbol) {
-	// 1. Incrementăm numărul de apariții pentru acest simbol
 	m_scientificSymbols[symbol]++;
-
-	// 2. Verificăm dacă tocmai s-a format o pereche (2, 4 sau 6 simboluri identice)
-	// Regulamentul: "A player who gathers 2 identical Scientific symbols immediately 
-	// chooses one of the Progress tokens."
 	if (m_scientificSymbols[symbol] % 2 == 0) {
-		return true; // Semnalăm că jucătorul are dreptul la un Progress Token
+		return true; 
 	}
 	return false;
 }

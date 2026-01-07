@@ -9,7 +9,7 @@ Game* Game::currentGame = nullptr;
 Game::Game()
     : m_board(),
     m_setup(m_board),
-    m_player1("Player 1", 1), // ID setat explicit pentru logica militara
+    m_player1("Player 1", 1),
     m_player2("Player 2", 2),
     m_currentAge(1),
     m_gameOver(false),
@@ -25,9 +25,9 @@ void Game::initialize()
     m_currentAge = 1;
     m_gameOver = false;
     m_numberOfWondersBuilt = 0;
-    draftWondersPhase(); // Faza initiala de alegere a minunilor [cite: 143]
+    draftWondersPhase(); // Faza initiala de alegere a minunilor 
     m_setup.startAge(m_currentAge);
-    m_player1.addResource(Coin, 7); // Fiecare jucator incepe cu 7 monede [cite: 121]
+    m_player1.addResource(Coin, 7); // Fiecare jucator incepe cu 7 monede 
     m_player2.addResource(Coin, 7);
     m_board.updateVisibility();
     std::cout << "[Game Logic] Initialization Complete. Age 1 Started. Players have 7 coins.\n";
@@ -45,7 +45,7 @@ void Game::switchTurn()
     m_opponent = temp;
 }
 
-// Gestionarea constructiei unei Minuni [cite: 269, 270]
+// Gestionarea constructiei unei Minuni 
 bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
     std::vector<Wonder*> availableWonders;
 
@@ -110,93 +110,82 @@ void Game::handle7WondersRule()
     }
 }
 
-void Game::handlePlayerAction()
-{
-    if (m_gameOver) return;
+//logica necesara pt actiunea unui jucator
 
-    std::cout << "\n>>> ESTE RANDUL LUI: " << m_currentPlayer->getName() << "\n";
-    std::cout << "Resurse (Bani): " << (int)m_currentPlayer->getCoins() << "\n";
-    std::cout << "Introdu ID-ul cartii de jos pe care vrei sa o iei: ";
-
-    int cardId;
-    while (!(std::cin >> cardId)) {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "Te rog introdu un numar valid: ";
-    }
-
-    CardNode* selectedNode = nullptr;
+CardNode* Game::findNodeById(int cardId) const {
     const auto& rows = m_board.getPyramid().getRows();
     for (const auto& row : rows) {
         for (const auto& node : row) {
             if (node && node->getCard() && node->getCard()->getId() == cardId) {
-                selectedNode = const_cast<CardNode*>(node.get());
+                return const_cast<CardNode*>(node.get());
             }
         }
     }
+    return nullptr;
+}
 
-    if (!selectedNode || selectedNode->isPlayed() || !selectedNode->isPlayable()) {
-        std::cout << "Eroare: Cartea nu este disponibila! Incearca iar.\n";
-        handlePlayerAction();
-        return;
-    }
+void Game::handlePlayerAction() {
+    if (m_gameOver) return;
 
-    std::cout << "Ai ales: " << selectedNode->getCard()->getName() << "\n";
-    std::cout << "Ce faci? [1]=Cumpara, [2]=Vinde, [3]=Construieste minune: ";
-    int action;
-    std::cin >> action;
+    bool actionProcessed = false;
+    while (!actionProcessed) {
+        std::cout << "\n>>> RANDUL LUI: " << m_currentPlayer->getName() << "\n";
+        std::cout << "Bani: " << (int)m_currentPlayer->getCoins() << "\n";
 
-    bool success = false;
-    std::shared_ptr<CardBase> selectedCard = selectedNode->getCard();
+        int cardId;
+        std::cout << "ID carte: ";
+        if (!(std::cin >> cardId)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
 
-    if (action == 1) {
-        success = m_currentPlayer->buyCard(selectedCard, *m_opponent, m_board);
+        CardNode* selectedNode = findNodeById(cardId);
+
+        if (!selectedNode || selectedNode->isPlayed() || !selectedNode->isPlayable()) {
+            std::cout << "Eroare: Cartea nu este disponibila!\n";
+            continue;
+        }
+
+        std::shared_ptr<CardBase> selectedCard = selectedNode->getCard();
+        std::cout << "Ai ales: " << selectedCard->getName() << "\n";
+        std::cout << "[1]Cumpara, [2]Vinde, [3]Minune: ";
+
+        int action;
+        std::cin >> action;
+
+        bool success = false;
+        if (action == 1) {
+            success = m_currentPlayer->buyCard(selectedCard, *m_opponent, m_board);
+            if (success) selectedCard->applyEffect(*m_currentPlayer, m_board, *m_opponent);
+        }
+        else if (action == 2) {
+            m_currentPlayer->discardCard(*selectedCard);
+            success = true;
+        }
+        else if (action == 3) {
+            success = handleWonderConstruction(selectedCard);
+        }
+
         if (success) {
-            // Aplicam efectele cartii (militar, stiintific, resurse) [cite: 289, 301]
-            selectedCard->applyEffect(*m_currentPlayer, m_board, *m_opponent);
+            selectedNode->updatePlayedStatus(true);
+            m_board.updateVisibility();
+            if (checkForInstantWin()) return;
 
-            // Verificare pereche stiintifica pentru Jeton de Progres 
-            // Nota: Presupunem ca add_ScientificSymbol returneaza true daca s-a format o pereche
-            // Daca metoda ta nu returneaza bool, trebuie modificata in Player.cpp
-            /* if (selectedCard->getColor() == Color::Green && m_currentPlayer->hasNewScientificPair()) {
-                handleProgressTokenChoice();
-            }
-            */
+            processTurnTransition();
+            actionProcessed = true;
         }
     }
-    else if (action == 2) {
-        m_currentPlayer->discardCard(*selectedCard); // Vanzare pentru bani [cite: 260]
-        std::cout << "Carte vanduta pentru bani.\n";
-        success = true;
-    }
-    else if (action == 3) {
-        success = handleWonderConstruction(selectedCard);
+}
+
+void Game::processTurnTransition() {
+    if (m_currentPlayer->hasExtraTurn()) {
+        m_currentPlayer->setExtraTurn(false);
+        printGameState();
+        handlePlayerAction(); // Aici este permis deoarece este un flux nou de joc (Replay)
     }
     else {
-        std::cout << "Actiune invalida.\n";
-        handlePlayerAction();
-        return;
-    }
-
-    if (success) {
-        selectedNode->updatePlayedStatus(true);
-        m_board.updateVisibility(); // Reveleaza cartile de dedesubt
-
-        if (checkForInstantWin()) return; // Jocul se termina la suprematie
-
-        // Logica de tura extra (Replay) [cite: 249, 455, 485]
-        if (m_currentPlayer->hasExtraTurn()) {
-            m_currentPlayer->setExtraTurn(false); // Resetăm flag-ul ca să nu joace la infinit
-            printGameState();
-            handlePlayerAction(); // Reapelăm funcția pentru același jucător
-        }
-        else {
-            switchTurn(); // Dacă nu are tura extra, trecem la adversar
-        }
-    }
-    else {
-        std::cout << "Actiunea a esuat. Incearca altceva.\n";
-        handlePlayerAction();
+        switchTurn();
     }
 }
 
@@ -221,7 +210,7 @@ void Game::handleProgressTokenChoice() {
     auto selectedToken = availableTokens[choice];
     m_currentPlayer->addProgressToken(selectedToken);
 
-    // Aplicam efectele imediate ale jetonului [cite: 351]
+    // Aplicam efectele imediate ale jetonului 
     for (auto& effect : selectedToken->getEffects()) {
         effect(*m_currentPlayer, *m_opponent);
     }
@@ -306,13 +295,14 @@ void Game::startNextAge()
         m_gameOver = true;
         return;
     }
+    determinateWhoStartsNextAge();
     m_setup.startAge(m_currentAge);
     m_board.updateVisibility();
 }
 
 bool Game::isEndOfAge()
 {
-    return m_board.isPyramidEmpty(); // Era se termina cand piramida e goala [cite: 275, 641]
+    return m_board.isPyramidEmpty(); // Era se termina cand piramida e goala 
 }
 
 bool Game::isGameOver() const
@@ -323,25 +313,25 @@ bool Game::isGameOver() const
 bool Game::checkForInstantWin() {
     int militaryPosition = m_board.getMilitaryTrack().getPawnPosition();
 
-    // Victorie prin Suprematie Militara (atingerea capitalei adverse la +/- 9) [cite: 43, 296, 651]
-    if (militaryPosition >= 9) {
+    // Victorie prin Suprematie Militara (atingerea capitalei adverse la +/- 9) 
+    if (militaryPosition >= MILITARY_VICTORY_THRESHOLD) {
         std::cout << "VICTORIE MILITARA! " << m_player1.getName() << " a cucerit capitala adversa!\n";
         m_gameOver = true;
         return true;
     }
-    if (militaryPosition <= -9) {
+    if (militaryPosition <= -MILITARY_VICTORY_THRESHOLD) {
         std::cout << "VICTORIE MILITARA! " << m_player2.getName() << " a cucerit capitala adversa!\n";
         m_gameOver = true;
         return true;
     }
 
-    // Victorie prin Suprematie Stiintifica (6 simboluri diferite) [cite: 43, 303, 652]
-    if (m_player1.getNrOfScientificSymbols() >= 6) {
+    // Victorie prin Suprematie Stiintifica (6 simboluri diferite) 
+    if (m_player1.getNrOfScientificSymbols() >= SCIENCE_VICTORY_THRESHOLD) {
         std::cout << "VICTORIE STIINTIFICA! " << m_player1.getName() << " a descoperit 6 simboluri diferite!\n";
         m_gameOver = true;
         return true;
     }
-    if (m_player2.getNrOfScientificSymbols() >= 6) {
+    if (m_player2.getNrOfScientificSymbols() >= SCIENCE_VICTORY_THRESHOLD) {
         std::cout << "VICTORIE STIINTIFICA! " << m_player2.getName() << " a descoperit 6 simboluri diferite!\n";
         m_gameOver = true;
         return true;
@@ -350,28 +340,75 @@ bool Game::checkForInstantWin() {
     return false;
 }
 
+
 int Game::calculatePlayerVP(const Player& player) const {
-    int totalVP = 0;
+    int totalFinal = 0;
+    const auto& pointsMap = player.getPoints();
+
+    // VP (verzi/galbene/minuni) + Military (jetoane) + BlueCards (civile)
+    for (auto const& [type, value] : pointsMap) 
+        totalFinal += value;
+	//punctele date de cartile mov (gilde)
+    totalFinal+= calculatePurpleGuilds(player);
+    // Adăugăm punctele din Tezaur (Bani): 1 VP la fiecare 3 monede
+    totalFinal += player.getCoins() / COINS_PER_VICTORY_POINT;
+
+    // Adăugăm punctele de pe Pista Militară (unde a rămas pionul la final: 0, 2, 5 sau 10)
     int playerId = (player.getName() == m_player1.getName()) ? 1 : 2;
+    totalFinal += m_board.getMilitaryTrack().getVictoryPointsForPlayer(playerId);
 
-    // 1. Puncte din Tezaur: 1 punct la fiecare 3 monede [cite: 320]
-    totalVP += player.getCoins() / 3;
+    return totalFinal;
+}
+int Game::calculatePurpleGuilds(const Player& player) const {
+    const auto& inventory = player.getInventory();
+    auto it = inventory.find(Color::Purple);
+    if (it == inventory.end()) return 0;
 
-    // 2. Puncte Militare conform pozitiei pionului [cite: 316]
-    totalVP += m_board.getMilitaryTrack().getVictoryPointsForPlayer(playerId);
+    int totalPoints = 0;
+    const Player& opponent = (player.getId() == m_player1.getId()) ? m_player2 : m_player1;
 
-    // 3. Puncte din Cladiri (Albastre, Verzi, Galbene, Mov) [cite: 317]
-    // totalVP += player.getVPFromBuildings(); 
+    for (const auto& card : it->second) {
+        // static_cast folosind enum-ul tău global
+        GuildType type = static_cast<GuildType>(card->getId());
 
-    // 4. Puncte din Minuni [cite: 318]
-    // totalVP += player.getVPFromWonders();
-
-    // 5. Puncte din Jetoane de Progres (Militar/Stiintific) [cite: 319]
-    totalVP += player.getVPFromMilitaryTokens();
-
-    return totalVP;
+        switch (type) {
+        case GuildType::Traders:
+            totalPoints += std::max(getCategoryCount(player, Color::Brown) + getCategoryCount(player, Color::Gray),
+                getCategoryCount(opponent, Color::Brown) + getCategoryCount(opponent, Color::Gray));
+            break;
+        case GuildType::Craftsmens:
+            totalPoints += 2 * std::max(getBuiltWondersCount(player), getBuiltWondersCount(opponent));
+            break;
+        case GuildType::Philosophers:
+            totalPoints += std::max(getCategoryCount(player, Color::Green), getCategoryCount(opponent, Color::Green));
+            break;
+        case GuildType::Spies:
+            totalPoints += std::max(getCategoryCount(player, Color::Red), getCategoryCount(opponent, Color::Red));
+            break;
+        case GuildType::Shipowners:
+            totalPoints += std::max(getCategoryCount(player, Color::Blue), getCategoryCount(opponent, Color::Blue));
+            break;
+        default:
+            break;
+        }
+    }
+    return totalPoints;
 }
 
+int Game::getCategoryCount(const Player& player, Color color) const {
+    auto it = player.getInventory().find(color);
+    return (it != player.getInventory().end()) ? static_cast<int>(it->second.size()) : 0;
+}
+
+int Game::getBuiltWondersCount(const Player& player) const {
+    int count = 0;
+    for (const auto& wonder : player.getWonders()) {
+        if (wonder->getIsBuilt()) {
+            count++;
+        }
+    }
+    return count;
+}
 std::optional<Player> Game::determinateWinner()
 {
     int vp1 = calculatePlayerVP(m_player1);
@@ -390,7 +427,6 @@ std::optional<Player> Game::determinateWinner()
         return m_player2;
     }
     else {
-        // Departajare (Tie-breaker): Cladiri Civile (Albastre) [cite: 321]
         int blueVP1 = m_player1.getVPFromBlueCards();
         int blueVP2 = m_player2.getVPFromBlueCards();
 
@@ -406,5 +442,42 @@ std::optional<Player> Game::determinateWinner()
             std::cout << "Egalitate perfecta. Remiza!\n";
             return std::nullopt;
         }
+    }
+}
+
+void Game::determinateWhoStartsNextAge()
+{
+    int militaryPos = m_board.getMilitaryTrack().getPawnPosition();
+    Player* picker = nullptr;
+
+    if (militaryPos > 0) {
+        // Pionul e spre Player 1, deci Player 2 domină militar. P1 alege.
+        picker = &m_player1;
+    }
+    else if (militaryPos < 0) {
+        // Pionul e spre Player 2, deci Player 1 domină militar. P2 alege.
+        picker = &m_player2;
+    }
+    else {
+        // Egalitate militară: jucătorul care a jucat ultima carte alege cine începe
+        // De regulă, în codul tău, m_currentPlayer este cel care tocmai a terminat.
+        // Regulamentul spune: "The player who played the last card chooses".
+        picker = m_currentPlayer;
+    }
+
+    std::cout << "\n--- TRANZITIE EON ---" << std::endl;
+    std::cout << picker->getName() << " decide cine incepe Era " << m_currentAge << ".\n";
+    std::cout << "1. Incep eu\n2. Incepe oponentul\nChoice: ";
+
+    int choice;
+    std::cin >> choice;
+
+    if (choice == 1) {
+        m_currentPlayer = picker;
+        m_opponent = (picker == &m_player1) ? &m_player2 : &m_player1;
+    }
+    else {
+        m_opponent = picker;
+        m_currentPlayer = (picker == &m_player1) ? &m_player2 : &m_player1;
     }
 }

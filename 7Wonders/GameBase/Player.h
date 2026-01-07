@@ -26,7 +26,7 @@ private:
 	std::vector<std::bitset<5>>m_choiceResources; 
 	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // all cards
 	std::vector<std::shared_ptr<Wonder>> m_Wonders; // all wonders
-	std::unordered_set<Scientific_Symbol>m_scientificSymbols; // all scientific symbol
+	std::unordered_map<Scientific_Symbol, int> m_scientificSymbols; // all scientific symbols
 	std::unordered_set<Symbol>m_chainSymbols; // all chain symbols accumulated
 	enum PlayerFlags {
 		ExtraTurn = 0,
@@ -38,6 +38,7 @@ private:
 	};
 	std::bitset<FlagCount> m_flags;
 	std::vector<std::shared_ptr<ProgressToken>> m_progressTokens;
+	bool m_extraTurn=true;
 public:
 	// getteri
 	unsigned int getId() const;
@@ -65,7 +66,8 @@ public:
 
 	void addChoiceResources(std::vector<Resource> choices);
 
-void set_discountedResource(Resource r);
+	void set_discountedResource(Resource r);
+	void setExtraTurn(bool v);
 	Player(const std::string& playerName,int id); // constructor
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
@@ -75,7 +77,8 @@ void set_discountedResource(Resource r);
 	//Gestioneaza punctele de victorie
 	void add_Points(Points p, std::uint8_t amount);//
 	//Gestioneaza simbolurile
-	void add_ScientificSymbol(Scientific_Symbol symbol);//
+	bool add_ScientificSymbol(Scientific_Symbol symbol);//
+	int getUniqueScientificSymbolsCount() const;
 	void add_ChainSymbol(Symbol symbol);//
 
 
@@ -107,7 +110,6 @@ void set_discountedResource(Resource r);
 	
 
 	// Progress Token Effects
-	inline bool hasExtraTurn() const { return m_flags.test(ExtraTurn); }
 	inline void setHasExtraTurn(bool v) { m_flags.set(ExtraTurn, v); }
 
 	inline bool hasWonderDiscount() const { return m_flags.test(WonderDiscount); }
@@ -124,6 +126,8 @@ void set_discountedResource(Resource r);
 
 	void addProgressToken(std::shared_ptr<ProgressToken> token);
 	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens();
+
+	bool hasExtraTurn() const;	
 
 private:
 	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;

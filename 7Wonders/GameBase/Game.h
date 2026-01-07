@@ -30,6 +30,7 @@ private:
     void draftWondersPhase();
 
     bool handleWonderConstruction(std::shared_ptr<CardBase> cardUsed);
+	void handleProgressTokenChoice();
     void handle7WondersRule();
 
     //fct care ma ajuta sa vad cine a castigat

@@ -6,6 +6,7 @@ Player::Player(const std::string& playerName,int id)
 	:
 	m_Id(id),
 	m_name(playerName),
+	m_extraTurn(false),
 	m_Resources{},
 	m_pointsScore{},
 	m_discountedResource{},
@@ -54,6 +55,16 @@ void Player::set_discountedResource(Resource r) {
 	}
 }
 
+void Player::setExtraTurn(bool value)
+{
+	m_extraTurn = value;
+}
+
+bool Player::hasExtraTurn() const
+{
+	return m_extraTurn;
+}
+
 void Player::removeResource(Resource r, std::uint8_t amount) {
 	if (m_Resources[r] >= amount) {
 		m_Resources[r] -= amount;
@@ -69,9 +80,23 @@ void Player::add_Points(Points p, std::uint8_t amount)
 {
 	m_pointsScore[p] += amount;
 }
-void Player::add_ScientificSymbol(Scientific_Symbol symbol)
-{
-	m_scientificSymbols.insert(symbol);
+
+bool Player::add_ScientificSymbol(Scientific_Symbol symbol) {
+	// 1. Incrementăm numărul de apariții pentru acest simbol
+	m_scientificSymbols[symbol]++;
+
+	// 2. Verificăm dacă tocmai s-a format o pereche (2, 4 sau 6 simboluri identice)
+	// Regulamentul: "A player who gathers 2 identical Scientific symbols immediately 
+	// chooses one of the Progress tokens."
+	if (m_scientificSymbols[symbol] % 2 == 0) {
+		return true; // Semnalăm că jucătorul are dreptul la un Progress Token
+	}
+	return false;
+}
+
+int Player::getUniqueScientificSymbolsCount() const {
+	// Pentru victoria prin Supremație Științifică (6 simboluri DIFERITE)
+	return static_cast<int>(m_scientificSymbols.size());
 }
 void Player::add_ChainSymbol(Symbol symbol)
 {

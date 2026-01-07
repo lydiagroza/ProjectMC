@@ -37,7 +37,7 @@ static std::vector<std::function<void(Player&, Player&)>> parseWonderEffects(con
     static const std::unordered_map<std::string, std::function<void(Player&, Player&)>> effectMap = {
         {"add_coins3", [](Player& p, Player& o) { p.addResource(Coin,3); }},
         {"decreaseCoins3", [](Player& p, Player& o) { o.decreaseCoins(3); }},
-        {"replayTurn", [](Player& p, Player& o) { p.set_discountedResource(Wood); /* placeholder for replay turn logic */ }},
+        {"replayTurn", [](Player& p, Player& o) { p.setExtraTurn(true); std::cout << "\n[EFECT] " << p.getName() << " a castigat o tura extra!\n";}},
         {"wood/stone/clay", [](Player& p, Player& o) { p.addResource(Resource::Wood, 1); p.addResource(Resource::Stone, 1); p.addResource(Resource::Clay, 1); }},
         {"add_coins12", [](Player& p, Player& o) { p.addResource(Coin, 12); }},
         {"discardOpponentGrayCard", [](Player& p, Player& o) {

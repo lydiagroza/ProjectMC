@@ -6,7 +6,6 @@ Player::Player(const std::string& playerName,int id)
 	:
 	m_Id(id),
 	m_name(playerName),
-	m_extraTurn(false),
 	m_Resources{},
 	m_pointsScore{},
 	m_discountedResource{},
@@ -60,15 +59,6 @@ void Player::set_discountedResource(Resource r) {
 	}
 }
 
-void Player::setExtraTurn(bool value)
-{
-	m_extraTurn = value;
-}
-
-bool Player::hasExtraTurn() const
-{
-	return m_extraTurn;
-}
 
 void Player::removeResource(Resource r, std::uint8_t amount) {
 	if (m_Resources[r] >= amount) {

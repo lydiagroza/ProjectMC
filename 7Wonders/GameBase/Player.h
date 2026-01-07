@@ -38,7 +38,6 @@ private:
 	};
 	std::bitset<FlagCount> m_flags;
 	std::vector<std::shared_ptr<ProgressToken>> m_progressTokens;
-	bool m_extraTurn=true;
 public:
 	// getteri
 	unsigned int getId() const;
@@ -111,6 +110,7 @@ public:
 	
 
 	// Progress Token Effects
+	inline bool hasExtraTurn() const { return m_flags.test(ExtraTurn); }
 	inline void setHasExtraTurn(bool v) { m_flags.set(ExtraTurn, v); }
 
 	inline bool hasWonderDiscount() const { return m_flags.test(WonderDiscount); }
@@ -128,7 +128,7 @@ public:
 	void addProgressToken(std::shared_ptr<ProgressToken> token);
 	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens();
 
-	bool hasExtraTurn() const;	
+	
 
 private:
 	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;

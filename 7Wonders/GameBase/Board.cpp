@@ -132,6 +132,17 @@ void Board::printDiscardPile(std::ostream& fout) const
     std::cout << "]\n";
 }
 
+void Board::removeFromDiscardPile(const std::shared_ptr<CardBase>& card)
+{
+    auto it = std::find_if(m_discardPile.begin(), m_discardPile.end(),
+        [&card](const std::shared_ptr<CardBase>& c) {
+            return c->getId() == card->getId();
+        });
+    if (it != m_discardPile.end()) {
+        m_discardPile.erase(it);
+	}
+}
+
 void Board::removeCardFromDiscardPile(std::shared_ptr<CardBase> card)
 {
     for (auto it = m_discardPile.begin(); it != m_discardPile.end(); ++it)

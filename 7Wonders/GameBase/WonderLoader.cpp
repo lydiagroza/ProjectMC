@@ -1,4 +1,4 @@
-#include "WonderLoader.h"
+﻿#include "WonderLoader.h"
 #include "Game.h"
 #include "CardBase.h"
 #include <fstream>
@@ -72,32 +72,15 @@ static std::vector<std::function<void(Player&, Player&)>> parseWonderEffects(con
 }},
 
 {"buildDiscardedCard", [](Player& p, Player& o) {
-    Board& board = Game::currentGame->getBoard();
-    const auto& discardPile = board.getDiscardPile();
-
-    if (discardPile.empty()) {
-        std::cout << "Discard pile is empty." << std::endl;
-        return;
-    }
-
-    std::cout << "Choose a card to build from the discard pile:" << std::endl;
-    for (int i = 0; i < (int)discardPile.size(); ++i) {
-        std::cout << i + 1 << ": " << *discardPile[i] << std::endl;
-    }
-
-    int choice = -1;
-    // UI should provide choice; placeholder here
-
-    if (choice > 0 && choice <= (int)discardPile.size()) {
-        auto selectedCard = discardPile[choice - 1];
-        p.addCardToInventory(selectedCard);
-        board.removeCardFromDiscardPile(selectedCard);
-        std::cout << "Built " << selectedCard->getName() << " from discard pile." << std::endl;
-    }
-else {
- std::cout << "No choice made (UI required) or invalid choice." << std::endl;
-}
-}},
+            // Verificăm dacă există o instanță de joc activă
+            if (Game::currentGame) {
+                // Apelăm funcția pe care ai scris-o deja în clasa Game
+                Game::currentGame->handleBuildFromDiscard();
+            }
+         else {
+          std::cerr << "[Eroare] Instanta Game nu a fost gasita pentru efectul Mausoleum!" << std::endl;
+      }
+  }},
 
 {"papyrus/glass", [](Player& p, Player& o) { p.addResource(Resource::Papyrus, 1); p.addResource(Resource::Glass, 1); }},
 {"chooseProgressToken", [](Player& p, Player& o) {

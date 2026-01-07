@@ -161,6 +161,7 @@ void Game::handlePlayerAction() {
         }
         else if (action == 2) {
             m_currentPlayer->discardCard(*selectedCard);
+            m_board.addCardToDiscardPile(selectedCard);
             success = true;
         }
         else if (action == 3) {
@@ -219,26 +220,6 @@ void Game::handleProgressTokenChoice() {
     std::cout << "Ai obtinut jetonul: " << selectedToken->getName() << "\n";
 }
 
-void Game::printGameState() const {
-    std::cout << "\n============================================\n";
-    std::cout << "               STAREA JOCULUI (Age " << m_currentAge << ")      \n";
-    std::cout << "============================================\n";
-
-    std::cout << "[P1] " << m_player1.getName()
-        << " | Bani: " << (int)m_player1.getCoins()
-        << " | Minuni: " << m_player1.getWonders().size() << "\n";
-
-    std::cout << "[P2] " << m_player2.getName()
-        << " | Bani: " << (int)m_player2.getCoins()
-        << " | Minuni: " << m_player2.getWonders().size() << "\n";
-
-    std::cout << "\n--- Pista Militara ---\n";
-    m_board.printMilitaryTrack();
-
-    m_board.printCardsTree(std::cout);
-    std::cout << "============================================\n";
-}
-
 void handleWonderChoice(std::vector<std::shared_ptr<Wonder>>& availableWonders, Player& player, int count)
 {
     for (int i = 0; i < count; ++i) {
@@ -264,6 +245,8 @@ void handleWonderChoice(std::vector<std::shared_ptr<Wonder>>& availableWonders, 
     }
 }
 
+
+
 void Game::draftWondersPhase() {
     std::cout << "\n\n=== [DRAFT 1] ALEGERE MINUNI (4) ===\n";
     std::vector<std::shared_ptr<Wonder>> draftSet1 = m_setup.drawWonders(4);
@@ -288,22 +271,6 @@ void Game::draftWondersPhase() {
     }
 }
 
-void Game::startNextAge()
-{
-    m_currentAge++;
-    if (m_currentAge > 3) {
-        m_gameOver = true;
-        return;
-    }
-    determinateWhoStartsNextAge();
-    m_setup.startAge(m_currentAge);
-    m_board.updateVisibility();
-}
-
-bool Game::isEndOfAge()
-{
-    return m_board.isPyramidEmpty(); // Era se termina cand piramida e goala 
-}
 
 bool Game::isGameOver() const
 {
@@ -445,6 +412,24 @@ std::optional<Player> Game::determinateWinner()
     }
 }
 
+//functii pt era management
+void Game::startNextAge()
+{
+    m_currentAge++;
+    if (m_currentAge > 3) {
+        m_gameOver = true;
+        return;
+    }
+    determinateWhoStartsNextAge();
+    m_setup.startAge(m_currentAge);
+    m_board.updateVisibility();
+}
+
+bool Game::isEndOfAge()
+{
+    return m_board.isPyramidEmpty(); // Era se termina cand piramida e goala 
+}
+
 void Game::determinateWhoStartsNextAge()
 {
     int militaryPos = m_board.getMilitaryTrack().getPawnPosition();
@@ -480,4 +465,58 @@ void Game::determinateWhoStartsNextAge()
         m_opponent = picker;
         m_currentPlayer = (picker == &m_player1) ? &m_player2 : &m_player1;
     }
+}
+
+void Game::handleBuildFromDiscard() {
+    auto discardPile = m_board.getDiscardPile();
+    if (discardPile.empty()) {
+        std::cout << "Discard Pile este goala. Nu poti construi nimic.\n";
+        return;
+    }
+
+    std::cout << "\n--- ALEGE O CARTE DIN DISCARD PILE ---\n";
+    for (size_t i = 0; i < discardPile.size(); ++i) {
+        std::cout << "[" << i << "] " << discardPile[i]->getName() << "\n";
+    }
+
+    int choice;
+    std::cout << "Selectia ta: ";
+    if (!(std::cin >> choice) || choice < 0 || choice >= (int)discardPile.size()) {
+        std::cin.clear();
+        std::cin.ignore();
+        std::cout << "Alegere invalida.\n";
+        return;
+    }
+
+    auto cardToBuild = discardPile[choice];
+
+    // O adăugăm direct în inventar (Mausoleum oferă construcție gratuită)
+    m_currentPlayer->addCardToInventory(cardToBuild);
+    cardToBuild->applyEffect(*m_currentPlayer, m_board, *m_opponent);
+
+    // O eliminăm din Discard Pile
+    m_board.removeFromDiscardPile(cardToBuild);
+
+    std::cout << "Ai construit gratuit: " << cardToBuild->getName() << "\n";
+}
+
+
+void Game::printGameState() const {
+    std::cout << "\n============================================\n";
+    std::cout << "               STAREA JOCULUI (Age " << m_currentAge << ")      \n";
+    std::cout << "============================================\n";
+
+    std::cout << "[P1] " << m_player1.getName()
+        << " | Bani: " << (int)m_player1.getCoins()
+        << " | Minuni: " << m_player1.getWonders().size() << "\n";
+
+    std::cout << "[P2] " << m_player2.getName()
+        << " | Bani: " << (int)m_player2.getCoins()
+        << " | Minuni: " << m_player2.getWonders().size() << "\n";
+
+    std::cout << "\n--- Pista Militara ---\n";
+    m_board.printMilitaryTrack();
+
+    m_board.printCardsTree(std::cout);
+    std::cout << "============================================\n";
 }

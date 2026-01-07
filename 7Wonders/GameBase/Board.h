@@ -47,6 +47,7 @@ public:
 	const std::vector<std::shared_ptr<CardBase>>& getDiscardPile() const;
 	void removeCardFromDiscardPile(std::shared_ptr<CardBase> card);
 	void printDiscardPile(std::ostream& fout) const;
+	void removeFromDiscardPile(const std::shared_ptr<CardBase>& card);
 
 	friend std::ostream& operator<<(std::ostream& os, const Board& board);
 };

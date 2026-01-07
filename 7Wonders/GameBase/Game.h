@@ -52,6 +52,7 @@ private:
     void processTurnTransition();
     CardNode* findNodeById(int cardId) const;
 
+
 public:
     Game();
     void initialize();
@@ -69,4 +70,5 @@ public:
 
     Player& getPlayer1() { return m_player1; }
     Player& getPlayer2() { return m_player2; }
+    void handleBuildFromDiscard();
 };

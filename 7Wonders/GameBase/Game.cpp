@@ -181,7 +181,7 @@ void Game::handlePlayerAction() {
 
 void Game::processTurnTransition() {
     if (m_currentPlayer->hasExtraTurn()) {
-        m_currentPlayer->setExtraTurn(false);
+        m_currentPlayer->setHasExtraTurn(false);
         printGameState();
         handlePlayerAction(); // Aici este permis deoarece este un flux nou de joc (Replay)
     }

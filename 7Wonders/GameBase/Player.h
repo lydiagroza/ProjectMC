@@ -67,7 +67,6 @@ public:
 	void addChoiceResources(std::vector<Resource> choices);
 
 	void set_discountedResource(Resource r);
-	void setExtraTurn(bool v);
 	Player(const std::string& playerName,int id); // constructor
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //

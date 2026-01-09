@@ -14,6 +14,7 @@
 #include "ProgressTokens.h"
 #include<cstdint>
 #include "gameExport.h" 
+#include "GameConstants.h"
 
 
 class GAME_API Player {
@@ -34,10 +35,26 @@ private:
 		BlueCardDiscount = 2,
 		OpponentTrade = 3,
 		FreeCardCoins = 4,
-		FlagCount = 5
+		ExtraMilitary = 5,
+		MathBonus=6,
+		TheologyBonus=7,
+		FlagCount = 8
 	};
 	std::bitset<FlagCount> m_flags;
 	std::vector<std::shared_ptr<ProgressToken>> m_progressTokens;
+
+	std::uint8_t findUnitTradeCost(Resource r, const Player& opponent) const;
+	std::uint8_t calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;
+	int getResourceDiscountIndex(Resource r) const;
+	Resource findResourceDiscountFromIndex(int index) const;
+
+	template<typename T>
+	std::uint8_t findTradeCost(const T& buildable, const Player& opponent) const {
+		return calculateTradeCost(buildable.getCost(), opponent);
+	}
+
+
+
 public:
 	// getteri
 	unsigned int getId() const;
@@ -50,7 +67,7 @@ public:
 
 	const std::vector<std::shared_ptr<Wonder>>& getWonders() const;
 
-	const std::unordered_set<Scientific_Symbol>& getScientificSymbols() const;
+	const std::unordered_map<Scientific_Symbol,int>& getScientificSymbols() const;
 
 
 	const std::unordered_set<Symbol>& getChainSymbols() const;
@@ -80,20 +97,40 @@ public:
 	int getUniqueScientificSymbolsCount() const;
 	void add_ChainSymbol(Symbol symbol);//
 
+	
+	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources,const Player& opponent) const;
 
-	//Functie ca sa vad cat ma costa o singura resursa
-	std::uint8_t findUnitTradeCost(Resource res, const Player& opponent) const;
-	//Functie pentru a afla toate alegerile de resurse
-	std::vector<std::vector<Resource>> findFlexibleChoices() const; // ---> de modif 
-	//Functie pentru a afla ce resurse ne lipsesc pentru a cumpara o carte
+
+
 	template<typename T>
-	std::map<Resource, std::uint8_t> findMissingResources(const T& buildable, const Player& opponent) const;
-	//Functie care ne zice cati banuti trebuie sa dea pentru resursele lipsa
-	template<typename T>
-	std::uint8_t findTradeCost(const T& buildable, const Player& opponent)const;
-	//Functie care verifica daca putem cumpara cartea
-	template<typename T>
-	std::uint8_t findTotalCost(const T& buildable, const Player& opponent)const;
+	std::uint8_t findTotalCost(const T& buildable, const Player& opponent) const {
+		// Verific? dac? buildable are chain symbol ?i dac? îl avem (doar pentru CardBase)
+		if constexpr (std::is_same_v<T, CardBase>) {
+			if (buildable.m_unlocks.has_value() && m_chainSymbols.count(buildable.m_unlocks.value())) {
+				return 0; // Costul este 0 (Gratuit prin chain)
+			}
+		}
+
+		std::uint8_t totalCost = this->findTradeCost(buildable, opponent) + buildable.getCostForResource(Resource::Coin);
+
+		// Apply discounts from Progress Tokens
+		if constexpr (std::is_same_v<T, Wonder>) {
+			if (hasWonderDiscount() && totalCost > 0) {
+				totalCost = (totalCost > 1) ? totalCost - 1 : 0;
+			}
+		}
+		if constexpr (std::is_same_v<T, CardBase>) {
+			if (hasBlueCardDiscount() && buildable.getColor() == Color::Blue && totalCost > 0) {
+				totalCost = (totalCost > 1) ? totalCost - 1 : 0;
+			}
+		}
+
+		if (m_Resources.count(Resource::Coin) && m_Resources.at(Resource::Coin) >= totalCost) {
+			return totalCost;
+		}
+
+		return GameConstants::IMPOSSIBLE_COST;
+	}
 	
 	//Actiuni de joc
 
@@ -124,19 +161,19 @@ public:
 	inline bool getsCoinsForFreeCards() const { return m_flags.test(FreeCardCoins); }
 	inline void setGetsCoinsForFreeCards(bool v) { m_flags.set(FreeCardCoins, v); }
 
+	inline bool hasExtraMilitary() const { return m_flags.test(ExtraMilitary); }
+	inline void setExtraMilitary(bool v) { m_flags.set(ExtraMilitary, v); }
+
+	inline bool hasMathBonus() const { return m_flags.test(MathBonus); }
+	inline void setMathBonus(bool v) { m_flags.set(MathBonus, v); }
+
+	inline bool hasTheologyBonus() const { return m_flags.test(TheologyBonus); }
+	inline void setTheologyBonus(bool v) { m_flags.set(TheologyBonus, v); }
+
 	void addProgressToken(std::shared_ptr<ProgressToken> token);
 	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens();
 
 	
 
-private:
-	std::map<Resource, std::uint8_t> MissingResources(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;
-	std::uint8_t calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const;
-	int getResourceDiscountIndex(Resource r) const;
-	Resource findResourceDiscountFromIndex(int index) const;
 };
 
-extern template std::uint8_t Player::findTradeCost<CardBase>(const CardBase&, const Player&) const;
-extern template std::uint8_t Player::findTradeCost<Wonder>(const Wonder&, const Player&) const;
-extern template std::uint8_t Player::findTotalCost<CardBase>(const CardBase&, const Player&) const;
-extern template std::uint8_t Player::findTotalCost<Wonder>(const Wonder&, const Player&) const;

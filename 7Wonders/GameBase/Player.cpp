@@ -27,6 +27,14 @@ std::string Player::getName()const {
 	return m_name;
 }
 
+const std::map<Resource, std::uint8_t>& Player::getResources() const {
+	return m_Resources;
+}
+
+const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& Player::getInventory() const {
+	return m_Inventory;
+}
+
 std::vector<std::bitset<5>> Player::getChoiceResources() const
 {
 	return m_choiceResources; 
@@ -36,6 +44,61 @@ const std::map<Points, std::uint8_t>& Player::getPoints() const
 {
 	return m_pointsScore;
 }
+
+const std::unordered_map<Scientific_Symbol,int>& Player:: getScientificSymbols() const {
+	return m_scientificSymbols;
+
+}
+
+const std::unordered_set<Symbol>& Player:: getChainSymbols() const {
+	return m_chainSymbols;
+
+}
+
+const std::vector<std::shared_ptr<ProgressToken>>& Player::getProgressTokens()
+{
+	return m_progressTokens;
+}
+
+int Player::getUniqueScientificSymbolsCount() const {
+	// Pentru victoria prin Supremație Științifică (6 simboluri DIFERITE)
+	return static_cast<int>(m_scientificSymbols.size());
+}
+
+
+int Player::getCoins() const
+{
+	auto it = m_Resources.find(Resource::Coin);
+	return (it != m_Resources.end()) ? it->second : 0;
+}
+
+
+const std::vector<std::shared_ptr<Wonder>>& Player::getWonders() const {
+	return m_Wonders;
+}
+
+int Player::getNrOfScientificSymbols() const
+{
+	return m_scientificSymbols.size();
+}
+
+int Player::getVPFromMilitaryTokens() const {
+
+	if (m_pointsScore.count(Points::Military)) {
+		return m_pointsScore.at(Points::Military);
+	}
+	return 0;
+}
+
+int Player::getVPFromBlueCards() const {
+	if (m_pointsScore.count(Points::BlueCards)) {
+		return m_pointsScore.at(Points::BlueCards);
+	}
+
+	return 0;
+}
+
+
 
 //Functii pentru  gestionarea monedelor
 bool Player::decreaseCoins(std::uint8_t amount) {
@@ -84,10 +147,7 @@ bool Player::add_ScientificSymbol(Scientific_Symbol symbol) {
 	return false;
 }
 
-int Player::getUniqueScientificSymbolsCount() const {
-	// Pentru victoria prin Supremație Științifică (6 simboluri DIFERITE)
-	return static_cast<int>(m_scientificSymbols.size());
-}
+
 void Player::add_ChainSymbol(Symbol symbol)
 {
 	m_chainSymbols.insert(symbol);
@@ -222,79 +282,6 @@ std::uint8_t Player::calculateTradeCost(const std::map<Resource, std::uint8_t>& 
 
 
 
-template<typename T>
-std::uint8_t Player::findTradeCost(const T& buildable, const Player& opponent) const {
-	return calculateTradeCost(buildable.getCost(), opponent);
-}
-
-
-//Functie care returneaza costul pentru  a cumpara cartea 
-template<typename T>
-std::uint8_t Player::findTotalCost(const T& buildable, const Player& opponent) const {
-	// Verifică dacă buildable are chain symbol și dacă îl avem (doar pentru CardBase)
-	if constexpr (std::is_same_v<T, CardBase>) {
-		if (buildable.m_unlocks.has_value() && m_chainSymbols.count(buildable.m_unlocks.value())) {
-			return 0; // Costul este 0 (Gratuit prin chain)
-		}
-	}
-
-	std::uint8_t totalCost = this->findTradeCost(buildable, opponent) + buildable.getCostForResource(Resource::Coin);
-
-    // Apply discounts from Progress Tokens
-    if constexpr (std::is_same_v<T, Wonder>) {
-        if (hasWonderDiscount() && totalCost > 0) {
-            totalCost = (totalCost > 1) ? totalCost - 1 : 0; // 1 coin discount
-        }
-    }
-    if constexpr (std::is_same_v<T, CardBase>) {
-        if (hasBlueCardDiscount() && buildable.getColor() == Color::Blue && totalCost > 0) {
-            totalCost = (totalCost > 1) ? totalCost - 1 : 0; // 1 coin discount
-        }
-    }
-
-	if (m_Resources.count(Resource::Coin) && m_Resources.at(Resource::Coin) >= totalCost) {
-		return totalCost;
-	}
-
-	return static_cast<std::uint8_t>(-1); // 255 = imposibil
-}
-
-
-
-const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& Player::getInventory() const {
-	return m_Inventory;
-}
-int Player::getCoins() const
-	{
-		auto it = m_Resources.find(Resource::Coin);
-		return (it != m_Resources.end()) ? it->second : 0;
-	}
-const std::vector<std::shared_ptr<Wonder>>& Player::getWonders() const {
-	return m_Wonders;
-}
-
-
-int Player::getNrOfScientificSymbols() const
-{
-	return m_scientificSymbols.size();
-}
-
-int Player::getVPFromMilitaryTokens() const {
-
-	if (m_pointsScore.count(Points::Military)) {
-		return m_pointsScore.at(Points::Military);
-	}
-	return 0;
-}
-
-int Player::getVPFromBlueCards() const {
-	if (m_pointsScore.count(Points::BlueCards)) {
-		return m_pointsScore.at(Points::BlueCards);
-	}
-	return 0;
-
-}
-
 //Functie care cumpara cartea 
 
 bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, Board& board) {
@@ -307,7 +294,7 @@ bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, Board& bo
             std::cout << getName() << " gained 4 coins for building " << card->getName() << " for free.\n";
         }
 	}
-	if (totalCoinCost == static_cast<std::uint8_t>(-1)) {
+	if (totalCoinCost == GameConstants::IMPOSSIBLE_COST) {
 		std::cout << "Card " << card->getName() << " can't be bought: Insufficient funds or resource trading cost is too high." << std::endl;
 		return false;
 	}
@@ -324,6 +311,16 @@ bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, Board& bo
 
 	m_Inventory[card->m_color].push_back(card);
 	card->applyEffect(*this,board,opponent);
+	if (card->getColor() == Color::Red && hasExtraMilitary()) {
+		int lostCoins = 0;
+		board.getMilitaryTrack().applyShields(this->getId(), 1, lostCoins);
+		if (lostCoins > 0) {
+			opponent.decreaseCoins(lostCoins);
+			std::cout << opponent.getName() << " lost " << lostCoins << " coins due to military tokens.\n";
+		}
+		add_Points(Points::Military, 1);
+		std::cout << "[Strategy Bonus] +1 shield applied!\n";
+	}
 	std::cout << "Card " << card->getName() << " constructed successfully. Cost paid: " << totalCoinCost << " coins." << std::endl;
 	return true;
 
@@ -382,6 +379,11 @@ void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder &wonderT
 		effect(*this, opponent);
 	}
 
+	if (hasTheologyBonus()) {
+		setHasExtraTurn(true);
+		std::cout << "[Theology] gave an extra round bonus!\n";
+	}
+
 	// Discard la cartea care o folosim să activăm wonder
 	board.addCardToDiscardPile(cardUsed);
 
@@ -399,16 +401,10 @@ void Player::addProgressToken(std::shared_ptr<ProgressToken> token) {
 	m_progressTokens.push_back(token);
 }
 
-const std::vector<std::shared_ptr<ProgressToken>>& Player::getProgressTokens()
-{
-	return m_progressTokens;
-}
 
 
-template std::uint8_t Player::findTradeCost<CardBase>(const CardBase&, const Player&) const;
-template std::uint8_t Player::findTradeCost<Wonder>(const Wonder&, const Player&) const;
-template std::uint8_t Player::findTotalCost<CardBase>(const CardBase&, const Player&) const;
-template std::uint8_t Player::findTotalCost<Wonder>(const Wonder&, const Player&) const;
+
+
 
 
 

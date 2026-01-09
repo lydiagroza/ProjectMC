@@ -17,18 +17,19 @@ std::vector<std::function<void(Player&, Player&)>> ProgressTokenLoader::parseEff
     static const std::unordered_map<std::string, std::function<void(Player&, Player&)>> effectMap = {
         {"add_coins6", [](Player& p, Player& o) { p.addResource(Coin, 6); }},
         {"add_VictoryPoint4", [](Player& p, Player& o) { p.add_Points(Points::Victory, 4); }},
-        {"WondersDiscount", [](Player& p, Player& o) { /* WondersDiscount */ std::cout << "WondersDiscount not implemented." << std::endl; }},
-        {"gainOpponentTradeCost", [](Player& p, Player& o) {/* gainOpponentTradeCost */ std::cout << "gainOpponentTradeCost not implemented." << std::endl; }},
+        {"WondersDiscount", [](Player& p, Player& o) { p.setWonderDiscount(true); }},
+        {"gainOpponentTradeCost", [](Player& p, Player& o) {p.setGainsOpponentTradeCost(true); }},
         {"add_scientific_symbol_scales", [](Player& p, Player& o) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
-        {"victoryPointsPerProgress", [](Player& p, Player& o) { /* victoryPointsPerProgress */ std::cout << "victoryPointsPerProgress not implemented." << std::endl; }},
-        {"BlueCardDiscount", [](Player& p, Player& o) { /* BlueCardDiscount */ std::cout << "BlueCardDiscount not implemented." << std::endl; }},
+        //aici trebuie cumva apelat la sfarsitul jocului nu in timpul jocului 
+        {"victoryPointsPerProgress", [](Player& p, Player& o) {p.setMathBonus(true); }},
+        {"BlueCardDiscount", [](Player& p, Player& o) { p.setBlueCardDiscount(true); }},
         {"add_VictoryPoint7", [](Player& p, Player& o) { p.add_Points(Points::Victory, 7); }},
         /* aici la MilitaryPoints trebuie sa vedem cum facem, daca returnam cumva nr de carti spre board sau le adaugam undeva*/
-        {"add_MilitaryPoint1PerRedCard", [](Player& p, Player& o) { /* add_MilitaryPoint1PerRedCard */ std::cout << "add_MilitaryPoint1PerRedCard not implemented." << std::endl; }},
-        {"WondersGetReplayTurn", [](Player& p, Player& o) { /* WondersGetReplayTurn */ std::cout << "WondersGetReplayTurn not implemented." << std::endl; }},
+        {"add_MilitaryPoint1PerRedCard", [](Player& p, Player& o) { p.setExtraMilitary(true); }},
+        {"WondersGetReplayTurn", [](Player& p, Player& o) { p.setTheologyBonus(true); }},
         {"add_coins4PerFreeCard", [](Player& p, Player& o) {
 
-            std::cout << "add_coins4PerFreeCard not implemented." << std::endl; }}
+            p.setGetsCoinsForFreeCards(true); }}
     };
 
     while (std::getline(ss, effectStr, ';')) {

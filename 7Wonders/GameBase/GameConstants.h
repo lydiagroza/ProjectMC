@@ -29,4 +29,6 @@ namespace GameConstants {
 
     constexpr std::uint8_t CARDS_PER_AGE = 20;
 
+    constexpr std::uint8_t IMPOSSIBLE_COST = -1;
+
 }

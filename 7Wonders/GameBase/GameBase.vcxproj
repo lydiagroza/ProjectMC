@@ -34,6 +34,7 @@
     <ClCompile Include="CardsPyramid.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameSetup.cpp" />
+    <ClCompile Include="GuildLoader.cpp" />
     <ClCompile Include="MilitaryTrack.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ProgressTokenLoader.cpp" />
@@ -51,6 +52,7 @@
     <ClInclude Include="GameConstants.h" />
     <ClInclude Include="gameExport.h" />
     <ClInclude Include="GameSetup.h" />
+    <ClInclude Include="GuildLoader.h" />
     <ClInclude Include="MilitaryTrack.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ProgressTokenLoader.h" />

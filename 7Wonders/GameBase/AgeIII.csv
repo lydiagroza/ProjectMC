@@ -19,5 +19,13 @@ CHAMBER OF COMMERCE,62,Yellow,"2papyrus",,,"coin3Gray";"add_VictoryPoint3"
 LIGHTHOUSE,63,Yellow,"2clay";"1glass",,vase,"coin1Yellow";"add_VictoryPoint3"
 ARENA,64,Yellow,"1clay";"1stone";"1wood",,barrel,"coin2Wonder";"add_VictoryPoint3"
 PORT,65,Yellow,"1wood";"1glass";"1papyrus",,,"coin2Brown";"add_VictoryPoint3"
+BUILDERS_GUILD,61,"wood2";"clay1";"glass1",,,
+MONEYLENDERS_GUILD,62,Purple,"stone2";"wood1",,,
+SCIENTISTS_GUILD,63,Purple,"wood2";"clay1";"papyrus1",,,coins_per_green
+SHIPOWNERS_GUILD,64,Purple,"wood1";"clay1";"glass1";"papyrus1",,,coins_per_brown_grey
+TRADERS_GUILD,65,Purple,"glass1";"papyrus1",,,coins_per_yellow
+MAGISTRATES_GUILD,Purple,66,"wood1";"stone1";"clay1",,,coins_per_blue
+TACTICIANS_GUILD,67,Purple,"stone2";"clay1";"papyrus1",,,coins_per_red
+
 
 

@@ -161,6 +161,66 @@ std::vector<std::function<void(Player&,Board&, Player&)>> CardLoader::parseEffec
         std:: vector<Resource> choices ={ Resource::Wood, Resource::Clay, Resource::Stone };
 		p.addChoiceResources(choices);
         }}
+          {
+"coins_per_green", [](Player& p, Board& b, Player& o) {
+ auto countGreen = [](const Player& player) {
+     return player.getInventory().count(Color::Green)
+         ? player.getInventory().at(Color::Green).size() : 0;
+ };
+ int maxGreen = std::max(countGreen(p), countGreen(o));
+ p.addResource(Coin, maxGreen);
+ cout << p.getName() << " gained " << maxGreen
+      << " coins from Scientists Guild." << endl;
+}
+},
+
+{"coins_per_brown_grey", [](Player& p, Board& b, Player& o) {
+    auto countBrownGrey = [](const Player& player) {
+        int count = 0;
+        if (player.getInventory().count(Color::Brown))
+            count += player.getInventory().at(Color::Brown).size();
+        if (player.getInventory().count(Color::Gray))
+            count += player.getInventory().at(Color::Gray).size();
+        return count;
+    };
+    int maxCount = std::max(countBrownGrey(p), countBrownGrey(o));
+    p.addResource(Coin, maxCount);
+    cout << p.getName() << " gained " << maxCount
+         << " coins from Shipowners Guild." << endl;
+}},
+
+{"coins_per_yellow", [](Player& p, Board& b, Player& o) {
+    auto countYellow = [](const Player& player) {
+        return player.getInventory().count(Color::Yellow)
+            ? player.getInventory().at(Color::Yellow).size() : 0;
+    };
+    int maxYellow = std::max(countYellow(p), countYellow(o));
+    p.addResource(Coin, maxYellow);
+    cout << p.getName() << " gained " << maxYellow
+         << " coins from Traders Guild." << endl;
+}},
+
+{"coins_per_blue", [](Player& p, Board& b, Player& o) {
+    auto countBlue = [](const Player& player) {
+        return player.getInventory().count(Color::Blue)
+            ? player.getInventory().at(Color::Blue).size() : 0;
+    };
+    int maxBlue = std::max(countBlue(p), countBlue(o));
+    p.addResource(Coin, maxBlue);
+    cout << p.getName() << " gained " << maxBlue
+         << " coins from Magistrates Guild." << endl;
+}},
+
+{"coins_per_red", [](Player& p, Board& b, Player& o) {
+    auto countRed = [](const Player& player) {
+        return player.getInventory().count(Color::Red)
+            ? player.getInventory().at(Color::Red).size() : 0;
+    };
+    int maxRed = std::max(countRed(p), countRed(o));
+    p.addResource(Coin, maxRed);
+    cout << p.getName() << " gained " << maxRed
+         << " coins from Tacticians Guild." << endl;
+}}
     };
 
     const string vpPrefix = "add_VictoryPoint";

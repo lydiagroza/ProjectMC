@@ -160,9 +160,8 @@ std::vector<std::function<void(Player&,Board&, Player&)>> CardLoader::parseEffec
         {"add_resource_wood/clay/stone",[](Player& p,Board& b, Player&) {
         std:: vector<Resource> choices ={ Resource::Wood, Resource::Clay, Resource::Stone };
 		p.addChoiceResources(choices);
-        }}
-          {
-"coins_per_green", [](Player& p, Board& b, Player& o) {
+        }},
+         {"coins_per_green", [](Player& p, Board& b, Player& o) {
  auto countGreen = [](const Player& player) {
      return player.getInventory().count(Color::Green)
          ? player.getInventory().at(Color::Green).size() : 0;
@@ -271,6 +270,7 @@ std::vector<std::function<void(Player&,Board&, Player&)>> CardLoader::parseEffec
 
     return effects;
 }
+
 
 
 std::optional<std::function<void(Player&,Board &, Player&)>> CardLoader::parseDestroy(const string& s) {

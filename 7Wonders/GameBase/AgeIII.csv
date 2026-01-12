@@ -24,7 +24,7 @@ MONEYLENDERS_GUILD,62,Purple,"stone2";"wood1",,,
 SCIENTISTS_GUILD,63,Purple,"wood2";"clay1";"papyrus1",,,coins_per_green
 SHIPOWNERS_GUILD,64,Purple,"wood1";"clay1";"glass1";"papyrus1",,,coins_per_brown_grey
 TRADERS_GUILD,65,Purple,"glass1";"papyrus1",,,coins_per_yellow
-MAGISTRATES_GUILD,Purple,66,"wood1";"stone1";"clay1",,,coins_per_blue
+MAGISTRATES_GUILD,66,Purple,"wood1";"stone1";"clay1",,,coins_per_blue
 TACTICIANS_GUILD,67,Purple,"stone2";"clay1";"papyrus1",,,coins_per_red
 
 

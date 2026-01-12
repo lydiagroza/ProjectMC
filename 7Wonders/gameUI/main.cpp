@@ -1,17 +1,17 @@
-﻿#include "MainWindow.h" // Include your new window header
-#include <QApplication> // Include the Qt application header
+﻿#include "MainWindow.h"
+#include <QtWidgets/QApplication>
 
 int main(int argc, char* argv[])
 {
-    // 1. Initialize the Qt system
+    // 1. Inițializează aplicația Qt (gestionează resursele grafice)
     QApplication a(argc, argv);
 
-    // 2. Create your GUI Window
+    // 2. Creează fereastra principală (care conține Board-ul și Jocul)
     MainWindow w;
 
-    // 3. Display the window
+    // 3. Afișează fereastra
     w.show();
 
-    // 4. Start the event loop (The app sits here and waits for clicks)
+    // 4. Pornește bucla infinită de evenimente (așteaptă click-uri)
     return a.exec();
 }

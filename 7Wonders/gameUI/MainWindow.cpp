@@ -133,7 +133,7 @@ MainWindow::~MainWindow()
 void MainWindow::startGame()
 {
     m_game->initialize();
-    updateGameState();
+    MainWindow::updateGameState();
 }
 
 void MainWindow::updateGameState()

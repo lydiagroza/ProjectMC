@@ -46,7 +46,8 @@ private:
     void renderGame();                          
     QString getColorHex(Color c);        
     void updatePlayerInventories();
-    void startGame();                    /
+    void startGame();
     void updateGameState();
+   
     void startWonderDraft();
 };

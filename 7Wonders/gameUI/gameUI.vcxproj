@@ -156,6 +156,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="MilitaryTrackWidget.cpp" />
+    <ClCompile Include="SplashScreen.cpp" />
     <ClCompile Include="WonderSelectionWidget.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MilitaryTrackWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="SplashScreen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(QtMsBuild)\qt.targets" Condition="Exists('$(QtMsBuild)\qt.targets')" />

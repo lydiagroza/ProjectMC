@@ -5,6 +5,7 @@
 #include "BoardWidget.h"
 #include "WonderSelectionWidget.h"
 #include "MilitaryTrackWidget.h"
+#include "SplashScreen.h"
 #include "Game.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -21,7 +22,7 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), m_game(new Game()), m_selectedCardId(-1), m_draftPhase(0)
 {
-    this->setWindowTitle("⚔️ 7 Wonders Duel - Age of Empires ⚔️");
+    this->setWindowTitle("⚔️ 7 Wonders Duel - The Empire of the Ducks ⚔️");
 
     this->setStyleSheet(
         "QMainWindow { "
@@ -66,7 +67,7 @@ MainWindow::MainWindow(QWidget* parent)
     );
     QVBoxLayout* oppLay = new QVBoxLayout(m_opponentZone);
 
-    m_opponentLabel = new QLabel("⚔️ OPPONENT EMPIRE ⚔️", m_opponentZone);
+    m_opponentLabel = new QLabel("⚔️ OPPONENT DUCK EMPIRE ⚔️", m_opponentZone);
     m_opponentLabel->setStyleSheet(
         "color: #FFD700; "
         "font-weight: bold; "
@@ -90,8 +91,13 @@ MainWindow::MainWindow(QWidget* parent)
     oppLay->addLayout(opponentWondersLayout);
 
     m_stack = new QStackedWidget();
+
+    m_splashScreen = new SplashScreen(this);
+    m_stack->addWidget(m_splashScreen);  // Index 0
+
     m_wonderSelection = new WonderSelectionWidget(this);
-    m_stack->addWidget(m_wonderSelection);
+    m_stack->addWidget(m_wonderSelection);  // Index 1
+
     m_boardWidget = new BoardWidget(this);
     m_boardWidget->setStyleSheet(
         "background: qradialgradient(cx:0.5, cy:0.5, radius:0.8, "
@@ -99,7 +105,7 @@ MainWindow::MainWindow(QWidget* parent)
         "border: 4px solid #8B4513; "
         "border-radius: 15px;"
     );
-    m_stack->addWidget(m_boardWidget);
+    m_stack->addWidget(m_boardWidget);  // Index 2
 
     m_playerZone = new QFrame();
     m_playerZone->setFixedHeight(150);
@@ -114,7 +120,7 @@ MainWindow::MainWindow(QWidget* parent)
     );
     QVBoxLayout* pLay = new QVBoxLayout(m_playerZone);
 
-    m_playerLabel = new QLabel("🏛️ YOUR CIVILIZATION 🏛️", m_playerZone);
+    m_playerLabel = new QLabel("🏛️ YOUR DUCK CIVILIZATION 🏛️", m_playerZone);
     m_playerLabel->setStyleSheet(
         "color: #FFD700; "
         "font-weight: bold; "
@@ -141,18 +147,19 @@ MainWindow::MainWindow(QWidget* parent)
     leftLayout->addWidget(m_stack, 1);
     leftLayout->addWidget(m_playerZone);
 
-    QFrame* rightZone = new QFrame();
-    rightZone->setFixedWidth(280);
-    rightZone->setStyleSheet(
+    // ✅ MENIUL DIN DREAPTA - salvat ca membru pentru a-l putea ascunde
+    m_rightZone = new QFrame();
+    m_rightZone->setFixedWidth(280);
+    m_rightZone->setStyleSheet(
         "QFrame { "
         "  background: qlineargradient(x1:0, y1:0, x2:1, y2:0, "
         "    stop:0 #3E2723, stop:0.5 #4E342E, stop:1 #3E2723); "
         "  border-left: 4px solid #8B4513; "
         "}"
     );
-    QVBoxLayout* rightLayout = new QVBoxLayout(rightZone);
+    QVBoxLayout* rightLayout = new QVBoxLayout(m_rightZone);
 
-    QLabel* panelTitle = new QLabel("📜 GAME STATUS 📜", rightZone);
+    QLabel* panelTitle = new QLabel("📜 DUCKS STATUS 📜", m_rightZone);
     panelTitle->setStyleSheet(
         "color: #DAA520; "
         "font-weight: bold; "
@@ -169,9 +176,9 @@ MainWindow::MainWindow(QWidget* parent)
     titleShadow->setOffset(2, 2);
     panelTitle->setGraphicsEffect(titleShadow);
 
-    m_militaryTrackWidget = new MilitaryTrackWidget(rightZone);
+    m_militaryTrackWidget = new MilitaryTrackWidget(m_rightZone);
 
-    QLabel* lblTok = new QLabel("⚡ DIVINE BLESSINGS ⚡", rightZone);
+    QLabel* lblTok = new QLabel("⚡ DIVINE DUCKS BLESSINGS ⚡", m_rightZone);
     lblTok->setStyleSheet(
         "color: #FFD700; "
         "font-weight: bold; "
@@ -189,7 +196,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     m_progressTokensLayout = new QVBoxLayout();
 
-    QPushButton* btnConstruct = new QPushButton("⚒️ CONSTRUIESTE ⚒️", rightZone);
+    QPushButton* btnConstruct = new QPushButton("⚒️ BUILD ⚒️", m_rightZone);
     btnConstruct->setFixedHeight(60);
     btnConstruct->setCursor(Qt::PointingHandCursor);
     btnConstruct->setStyleSheet(
@@ -222,21 +229,37 @@ MainWindow::MainWindow(QWidget* parent)
     rightLayout->addWidget(btnConstruct);
 
     mainLayout->addWidget(leftZone, 1);
-    mainLayout->addWidget(rightZone, 0);
+    mainLayout->addWidget(m_rightZone, 0);
 
     connect(m_boardWidget, &BoardWidget::cardClicked, this, &MainWindow::onCardSelected);
     connect(btnConstruct, &QPushButton::clicked, this, &MainWindow::onConstructClicked);
     connect(m_wonderSelection, &WonderSelectionWidget::wonderChosen, this, &MainWindow::onWonderChosen);
+    connect(m_splashScreen, &SplashScreen::startGame, this, &MainWindow::onSplashFinished);
 
-    this->statusBar()->showMessage("⚔️ Prepare for glory! Choose your wonders... ⚔️");
+    this->statusBar()->showMessage("⚔️ Press ENTER to begin your conquest! ⚔️");
+
+    // ✅ ASCUNDE zona de jos (opponent/player) și meniul din dreapta pe splash screen
+    m_opponentZone->setVisible(false);
+    m_playerZone->setVisible(false);
+    m_rightZone->setVisible(false);
 
     m_stack->setCurrentIndex(0);
-    QTimer::singleShot(100, this, &MainWindow::startGame);
 }
 
 MainWindow::~MainWindow()
 {
     delete m_game;
+}
+
+void MainWindow::onSplashFinished()
+{
+    // ✅ ARATĂ zonele când ieșim din splash screen
+    m_opponentZone->setVisible(true);
+    m_playerZone->setVisible(true);
+    m_rightZone->setVisible(true);
+
+    this->statusBar()->showMessage("⚔️ Initializing the ancient world of ducks... ⚔️");
+    QTimer::singleShot(100, this, &MainWindow::startGame);
 }
 
 void MainWindow::startGame()
@@ -249,11 +272,11 @@ void MainWindow::updateGameState()
 {
     m_draftPhase = m_game->getDraftPhase();
     if (m_draftPhase > 0 && !m_game->getCurrentDraftSet().empty()) {
-        m_stack->setCurrentIndex(0);
+        m_stack->setCurrentIndex(1);
         startWonderDraft();
     }
     else {
-        m_stack->setCurrentIndex(1);
+        m_stack->setCurrentIndex(2);
         renderGame();
     }
     updatePlayerInventories();
@@ -317,17 +340,16 @@ void MainWindow::updatePlayerInventories()
 
     if (!player || !opponent) return;
 
-    QString playerText = QString("🏛️ %1 | 💰 %2 Denarii")
+    QString playerText = QString("🏛️ %1 | 🦆 %2 ducks")
         .arg(QString::fromStdString(player->getName()))
         .arg(player->getCoins());
     m_playerLabel->setText(playerText);
 
-    QString opponentText = QString("⚔️ %1 | 💰 %2 Denarii")
+    QString opponentText = QString("⚔️ %1 | 🦆 %2 ducks")
         .arg(QString::fromStdString(opponent->getName()))
         .arg(opponent->getCoins());
     m_opponentLabel->setText(opponentText);
 
-    // ✅ FĂRĂ punct și virgulă după lambda
     auto setupWonders = [this](const Player* p, QFrame* zone) {
         QVBoxLayout* mainZoneLayout = qobject_cast<QVBoxLayout*>(zone->layout());
         if (!mainZoneLayout || mainZoneLayout->count() < 2) return;
@@ -350,7 +372,7 @@ void MainWindow::updatePlayerInventories()
             wonderWidget->setupCard(name, color, true);
             wondersLayout->addWidget(wonderWidget);
         }
-        }; // ✅ Punct și virgulă DOAR aici
+        };
 
     setupWonders(player, m_playerZone);
     setupWonders(opponent, m_opponentZone);
@@ -363,7 +385,6 @@ void MainWindow::updatePlayerInventories()
         delete item;
     }
 
-    // ✅ FĂRĂ punct și virgulă după lambda
     auto addPlayerTokens = [this](const Player* p) {
         for (const auto& tokenPtr : p->getProgressTokens()) {
             QLabel* tokenLabel = new QLabel("⚡ " + QString::fromStdString(tokenPtr->getName()), this);
@@ -387,13 +408,14 @@ void MainWindow::updatePlayerInventories()
 
             m_progressTokensLayout->addWidget(tokenLabel);
         }
-        }; // ✅ Punct și virgulă DOAR aici
+        };
 
     addPlayerTokens(player);
     addPlayerTokens(opponent);
 }
 
-QString MainWindow::getColorHex(Color c) {
+QString MainWindow::getColorHex(Color c)
+{
     switch (c) {
     case Color::Blue:   return "#1565C0";
     case Color::Red:    return "#B71C1C";
@@ -406,10 +428,11 @@ QString MainWindow::getColorHex(Color c) {
     }
 }
 
-void MainWindow::renderGame() {
+void MainWindow::renderGame()
+{
     if (!m_boardWidget || !m_game) return;
 
-    m_boardWidget->clearBoard();  // șterge toate cărțile existente de pe board
+    m_boardWidget->clearBoard();
     Board& boardData = m_game->getBoard();
     const auto& rows = boardData.getPyramid().getRows();
 
@@ -420,7 +443,7 @@ void MainWindow::renderGame() {
         for (size_t c = 0; c < row.size(); ++c) {
             const auto& node = row[c];
 
-            if (!node || node->isPlayed()) continue; // skip dacă cartea a fost jucată
+            if (!node || node->isPlayed()) continue;
             auto cardPtr = node->getCard();
             if (!cardPtr) continue;
 
@@ -434,5 +457,3 @@ void MainWindow::renderGame() {
         }
     }
 }
-
-

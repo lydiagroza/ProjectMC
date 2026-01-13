@@ -1,63 +1,52 @@
 ﻿#pragma once
-
-#include <QMainWindow>
-#include <QPushButton>
+#include <QtWidgets/QMainWindow>
+#include <QStackedWidget>
+#include <QFrame>
 #include <QLabel>
-#include <QWidget>
-#include <vector>
-#include "Game.h" // Includem logica jocului (Backend)
+#include <QVBoxLayout> 
+#include "Game.h"
+#include "BoardWidget.h"
+#include "WonderSelectionWidget.h" 
+#include "MilitaryTrackWidget.h"   
 
-// ... (include-uri existente)
-#include <QMap>
-
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* parent = nullptr);
+    explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
 private slots:
-    // ... sloturi existente ...
-    void handleStartButton();
-    void handleNextAgeButton();
-    void onCardClicked();
+    void onCardSelected(int cardId);      
+    void onConstructClicked();          
+
+    void onWonderChosen(int cardId);
 
 private:
-    Game m_game;
+    Game* m_game;           
 
-    // --- UI GENERAL ---
-    QWidget* centralWidget;
 
-    // --- UI PLAYER ZONES (NOU) ---
-    QWidget* topPlayerZone;    // Inventarul Adversarului (Sus)
-    QWidget* bottomPlayerZone; // Inventarul Tău (Jos)
-    QLabel* topPlayerLabel;
-    QLabel* bottomPlayerLabel;
+    QStackedWidget* m_stack;            
+    BoardWidget* m_boardWidget;         
+    WonderSelectionWidget* m_wonderSelection;
 
-    // --- UI PIRAMIDA ---
-    std::vector<QPushButton*> m_cardButtons;
+    MilitaryTrackWidget* m_militaryTrackWidget; 
+    QFrame* m_opponentZone;            
+    QFrame* m_playerZone;               
+    QLabel* m_opponentLabel;          
+    QLabel* m_playerLabel;              
 
-    // --- UI DREAPTA ---
-    QWidget* rightPanel;
-    QPushButton* militaryPawn;
-    std::vector<QPushButton*> progressTokens;
+    QVBoxLayout* m_progressTokensLayout; 
 
-    // --- HEADER ---
-    QLabel* titleLabel;
-    QLabel* ageLabel; 
-    QPushButton* startButton; // Buton de start joc
-    QPushButton* nextAgeButton;
+    int m_selectedCardId = -1;          
+    int m_draftPhase = 0;                
 
-    // --- FUNCȚII ---
-    void setupRightPanel();
-    void updateMilitaryPawn();
-
-    // FUNCȚII NOI PENTRU INVENTAR
-    void setupPlayerZones(); // Creează containerele sus/jos
-    void updatePlayerInventoryUI(Player* player, QWidget* zone); // Desenează cărțile micuțe
-
-    void drawPyramid();
-    void clearPyramidUI();
-    void applyAgeStyle(int age);
+    // Funcții ajutătoare
+    void renderGame();                          
+    QString getColorHex(Color c);        
+    void updatePlayerInventories();
+    void startGame();                    /
+    void updateGameState();
+    void startWonderDraft();
 };

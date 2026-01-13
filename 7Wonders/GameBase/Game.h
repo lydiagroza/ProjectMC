@@ -52,6 +52,11 @@ private:
     void processTurnTransition();
     CardNode* findNodeById(int cardId) const;
 
+    // Membri pentru gestionarea fazei de draft
+    std::vector<std::shared_ptr<Wonder>> m_draftSet1;
+    std::vector<std::shared_ptr<Wonder>> m_draftSet2;
+    int m_draftPhase = 0; // 0=înainte de draft, 1=draft 1, 2=draft 2
+
 
 public:
     Game();
@@ -65,10 +70,16 @@ public:
     GameSetup& getSetup() { return m_setup; }
     Board& getBoard() { return m_board; }
 	void printPlayerInfo(const Player& player, std::ostream& os = std::cout) const;
-    Player* getCurrentPlayer() const { return m_currentPlayer; }
     int calculatePlayerVP(const Player& player) const;
 
     Player& getPlayer1() { return m_player1; }
     Player& getPlayer2() { return m_player2; }
     void handleBuildFromDiscard();
+
+    // Funcții noi pentru a gestiona faza de draft din UI
+    const std::vector<std::shared_ptr<Wonder>>& getCurrentDraftSet() const;
+    bool draftWonder(int wonderId);
+    Player* getCurrentPlayer();
+    Player* getOpponent();
+    int getDraftPhase() const;
 };

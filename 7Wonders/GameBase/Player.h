@@ -75,6 +75,7 @@ public:
 	int getCoins() const;
 
 	int getNrOfScientificSymbols() const;
+	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens() const;
 
 
 	//VP for winner determination
@@ -85,6 +86,7 @@ public:
 
 	void set_discountedResource(Resource r);
 	Player(const std::string& playerName,int id); // constructor
+	Player(const std::string& name);
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
 	//Gestioneaza resursele

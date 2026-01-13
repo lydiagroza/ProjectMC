@@ -3,13 +3,13 @@
 CardWidget::CardWidget(int cardId, QWidget* parent)
     : QPushButton(parent), m_cardId(cardId), m_isFaceUp(false)
 {
-    this->setFixedSize(100, 150); // Dimensiunea unei cărți
+    // AICI SCHIMBĂM DIMENSIUNEA
+    this->setFixedSize(70, 100); // Era 100, 150 -> Acum e mult mai compact
     this->setFlat(false);
 
-    // Font un pic mai mare și bold ca să se vadă numele
     QFont font = this->font();
     font.setBold(true);
-    font.setPointSize(10);
+    font.setPointSize(7); // Micșorăm fontul să încapă pe cartea mică
     this->setFont(font);
 }
 
@@ -19,19 +19,18 @@ void CardWidget::setupCard(const QString& name, const QString& colorCode, bool i
 
     if (m_isFaceUp) {
         // --- CARTE VIZIBILĂ ---
-        this->setText(name); // Scriem numele (ex: "Baths")
+        this->setText(name);
         this->setEnabled(true);
 
-        // Setăm culoarea de fundal în funcție de tipul cărții
-        // colorCode va fi ceva gen: "#e74c3c" (Roșu) sau "blue", "green"
+        // Stil CSS pentru carte colorată
         QString style = QString(
             "QPushButton { "
-            "  background-color: %1; "
-            "  color: white; "        // Scris alb
+            "  background-color: %1; "  // Culoarea din parametru
+            "  color: white; "          // Text alb
             "  border: 2px solid #333; "
-            "  border-radius: 5px; "
+            "  border-radius: 6px; "
             "}"
-            "QPushButton:hover { filter: brightness(110%); }" // Efect la mouse over
+            "QPushButton:hover { background-color: %1; filter: brightness(110%); }"
         ).arg(colorCode);
 
         this->setStyleSheet(style);
@@ -39,35 +38,36 @@ void CardWidget::setupCard(const QString& name, const QString& colorCode, bool i
     }
     else {
         // --- CARTE ACOPERITĂ (SPATE) ---
-        this->setText("???"); // Nu știm ce e
-        this->setEnabled(false); // Nu putem da click
+        this->setText("Age Back");
+        this->setEnabled(false); // Nu se poate da click
 
-        // O culoare gri/maro generică pentru spate
+        // Stil gri generic
         this->setStyleSheet(
             "QPushButton { "
-            "  background-color: #95a5a6; " // Un gri neutru
-            "  color: #2c3e50; "
-            "  border: 2px dashed #7f8c8d; "
-            "  border-radius: 5px; "
+            "  background-color: #7f8c8d; "
+            "  color: #bdc3c7; "
+            "  border: 2px dashed #95a5a6; "
+            "  border-radius: 6px; "
             "}"
         );
     }
 }
 
+
 void CardWidget::setSelected(bool selected)
 {
-    // Când selectăm, adăugăm un contur GALBEN gros peste stilul existent
-    // Notă: Aici e un mic truc, în mod real am re-aplica stilul complet, 
-    // dar pentru moment putem schimba doar border-ul dacă reținem culoarea.
-
-    // Varianta simplă: Dacă e selectat, îi schimbăm textul să arate asta vizual
+    // Când selectăm, schimbăm DOAR border-ul, păstrând culoarea de fundal
+    // Nota: Aici e un mic hack vizual rapid.
     if (selected) {
+        // Adaugă un border galben gros
         QString currentStyle = this->styleSheet();
-        // Adăugăm border galben la stilul curent
-        this->setStyleSheet(currentStyle + "border: 4px solid yellow;");
+        currentStyle.replace("border: 2px solid #333;", "border: 4px solid yellow;");
+        this->setStyleSheet(currentStyle);
     }
     else {
-        // Resetăm borderul (trebuie reapelat setupCard ideal, dar merge și așa pt test)
-        // Cel mai corect e să reții culoarea în clasă și să o reaplici.
+        // Revino la border normal
+        QString currentStyle = this->styleSheet();
+        currentStyle.replace("border: 4px solid yellow;", "border: 2px solid #333;");
+        this->setStyleSheet(currentStyle);
     }
 }

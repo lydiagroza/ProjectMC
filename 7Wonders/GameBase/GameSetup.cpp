@@ -6,7 +6,7 @@
 #include <iostream>
 #include <random>
 #include <chrono>
-
+#include "Game.h"
 
 GameSetup::GameSetup(Board& board) : m_board(board) 
 {

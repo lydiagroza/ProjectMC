@@ -1,398 +1,310 @@
 ﻿#include "MainWindow.h"
-#include <QApplication>
-#include <QScreen>
+#include "CardBase.h"
+#include "Wonder.h"
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QPushButton>
 #include <QMessageBox>
-#include <QGraphicsDropShadowEffect>
-#include <cmath>
-#include <map>
+#include <QDebug>
+#include <QTimer>
+#include <QStatusBar>
 
-// --- CONSTANTE DIMENSIUNI ---
-const int CARD_W = 90;
-const int CARD_H = 130;
-const int SPACING = 15;
-const int OVERLAP = 50;
+MainWindow::MainWindow(QWidget* parent)
+    : QMainWindow(parent), m_game(new Game()), m_selectedCardId(-1), m_draftPhase(0)
+{
+    // 1. Configurare Fereastră
+    this->setWindowTitle("7 Wonders Duel - Qt Edition");
+    this->setStyleSheet(
+        "QMainWindow { background-color: #2c3e50; }"
+        "QLabel { font-family: 'Segoe UI'; }"
+        "QStatusBar { color: white; }"
+    );
 
-// --- FUNCȚIE AJUTĂTOARE PENTRU UMBRE ---
-void addShadow(QWidget* widget, int radius = 10, int offset = 3) {
-    QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
-    shadow->setBlurRadius(radius);
-    shadow->setOffset(offset, offset);
-    shadow->setColor(QColor(0, 0, 0, 120));
-    widget->setGraphicsEffect(shadow);
-}
-
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
-    // 1. Setări Fereastră
-    this->setWindowTitle("7 Wonders Duel - UI DEMO");
-    this->resize(1280, 900);
-
-    // 2. Widget Central
-    centralWidget = new QWidget(this);
+    // 2. Widget Central și Layout Principal
+    QWidget* centralWidget = new QWidget(this);
     this->setCentralWidget(centralWidget);
 
-    // --- STIL INITIAL ---
-    centralWidget->setStyleSheet("background-color: rgb(52, 73, 94);");
+    QHBoxLayout* mainLayout = new QHBoxLayout(centralWidget);
+    mainLayout->setSpacing(5);
+    mainLayout->setContentsMargins(5, 5, 5, 5);
 
-    // --- TITLU ---
-    titleLabel = new QLabel("7 WONDERS DUEL", centralWidget);
-    titleLabel->setStyleSheet("color: rgb(255, 255, 255); font-size: 48px; font-weight: bold; background: transparent;");
-    titleLabel->setAlignment(Qt::AlignCenter);
-    titleLabel->setGeometry(0, 20, 1000, 80);
-    addShadow(titleLabel);
+    // ZONA STÂNGA
+    QFrame* leftZone = new QFrame();
+    leftZone->setStyleSheet("background-color: transparent;");
+    QVBoxLayout* leftLayout = new QVBoxLayout(leftZone);
+    leftLayout->setContentsMargins(0, 0, 0, 0);
 
-    // --- SUBTITLU ERA ---
-    ageLabel = new QLabel("", centralWidget);
-    ageLabel->setStyleSheet("color: rgb(241, 196, 15); font-size: 32px; font-weight: bold; background: transparent;");
-    ageLabel->setAlignment(Qt::AlignCenter);
-    ageLabel->setGeometry(0, 100, 1000, 50);
-    addShadow(ageLabel);
+    // A. Zona Oponent
+    m_opponentZone = new QFrame();
+    m_opponentZone->setFixedHeight(120); // 1. Increase height
+    m_opponentZone->setStyleSheet("background-color: rgba(192, 57, 43, 0.4); border-bottom: 2px solid #c0392b; border-radius: 5px; padding: 5px;");
+    QVBoxLayout* oppLay = new QVBoxLayout(m_opponentZone);
 
-    // --- BUTON START ---
-    startButton = new QPushButton("START GAME", centralWidget);
-    startButton->setStyleSheet(
-        "QPushButton {"
-        "  background-color: rgb(39, 174, 96); color: rgb(255, 255, 255);"
-        "  font-size: 24px; font-weight: bold;"
-        "  border-radius: 15px; border: 3px solid rgb(33, 145, 80);"
-        "}"
-        "QPushButton:hover { background-color: rgb(46, 204, 113); }"
-    );
-    int btnW = 250, btnH = 80;
-    startButton->setGeometry((1000 - btnW) / 2, (800 - btnH) / 2, btnW, btnH);
-    addShadow(startButton);
+    m_opponentLabel = new QLabel("OPPONENT", m_opponentZone);
+    m_opponentLabel->setStyleSheet("color: white; font-weight: bold; background: transparent; border: none;");
+    m_opponentLabel->setAlignment(Qt::AlignHCenter);
 
-    connect(startButton, &QPushButton::clicked, this, &MainWindow::handleStartButton);
+    // 2. Add layout for opponent's wonders
+    QHBoxLayout* opponentWondersLayout = new QHBoxLayout();
+    opponentWondersLayout->setSpacing(5);
 
-    // --- BUTON DEBUG ---
-    nextAgeButton = new QPushButton("DEBUG: Next Age >>", centralWidget);
-    nextAgeButton->setStyleSheet("background-color: rgb(231, 76, 60); color: white; border-radius: 5px; font-weight: bold;");
-    nextAgeButton->setGeometry(20, 850, 150, 40);
-    nextAgeButton->hide();
-    connect(nextAgeButton, &QPushButton::clicked, this, &MainWindow::handleNextAgeButton);
+    oppLay->addWidget(m_opponentLabel);
+    oppLay->addLayout(opponentWondersLayout); // Add the wonders layout to the zone
 
-    // --- INIȚIALIZĂM ZONELE VIZUALE ---
-    setupRightPanel();
-    setupPlayerZones();
+    // B. Zona Centrală (STACKED WIDGET)
+    m_stack = new QStackedWidget();
+    m_wonderSelection = new WonderSelectionWidget(this);
+    m_stack->addWidget(m_wonderSelection);
+    m_boardWidget = new BoardWidget(this);
+    m_boardWidget->setStyleSheet("background-color: rgba(255, 255, 255, 0.05); border-radius: 10px;");
+    m_stack->addWidget(m_boardWidget);
+
+    // C. Zona Jucător
+    m_playerZone = new QFrame();
+    m_playerZone->setFixedHeight(140); // 3. Increase height
+    m_playerZone->setStyleSheet("background-color: rgba(39, 174, 96, 0.4); border-top: 2px solid #27ae60; border-radius: 5px; padding: 5px;");
+    QVBoxLayout* pLay = new QVBoxLayout(m_playerZone);
+
+    m_playerLabel = new QLabel("PLAYER", m_playerZone);
+    m_playerLabel->setStyleSheet("color: white; font-weight: bold; background: transparent; border: none;");
+    m_playerLabel->setAlignment(Qt::AlignHCenter);
+
+    // 4. Add layout for player's wonders
+    QHBoxLayout* playerWondersLayout = new QHBoxLayout();
+    playerWondersLayout->setSpacing(5);
+
+    pLay->addWidget(m_playerLabel);
+    pLay->addLayout(playerWondersLayout); // Add the wonders layout to the zone
+
+    leftLayout->addWidget(m_opponentZone);
+    leftLayout->addWidget(m_stack, 1);
+    leftLayout->addWidget(m_playerZone);
+
+    // ZONA DREAPTA
+    QFrame* rightZone = new QFrame();
+    rightZone->setFixedWidth(260);
+    rightZone->setStyleSheet("background-color: #34495e; border-left: 3px solid #2980b9;");
+    QVBoxLayout* rightLayout = new QVBoxLayout(rightZone);
+
+    // --- REMOVE OLD PLACEHOLDERS AND ADD NEW WIDGETS ---
+
+    // 1. Military Track
+    m_militaryTrackWidget = new MilitaryTrackWidget(rightZone);
+
+    // 2. Progress Tokens Area
+    QLabel* lblTok = new QLabel("PROGRESS TOKENS", rightZone);
+    lblTok->setStyleSheet("color: #2ecc71; font-weight: bold; font-size: 14px;");
+    lblTok->setAlignment(Qt::AlignCenter);
+    m_progressTokensLayout = new QVBoxLayout(); // This will hold the tokens
+
+    // 3. Construct Button
+    QPushButton* btnConstruct = new QPushButton("CONSTRUIESTE", rightZone);
+    btnConstruct->setFixedHeight(50);
+    btnConstruct->setStyleSheet("background-color: #f1c40f; color: black; font-weight: bold; font-size: 14px;");
+
+    // Add widgets to the right layout
+    rightLayout->addWidget(m_militaryTrackWidget);
+    rightLayout->addStretch();
+    rightLayout->addWidget(lblTok);
+    rightLayout->addLayout(m_progressTokensLayout);
+    rightLayout->addStretch();
+    rightLayout->addWidget(btnConstruct);
+
+    // FINALIZARE
+    mainLayout->addWidget(leftZone, 1);
+    mainLayout->addWidget(rightZone, 0);
+
+    // Conectare Semnale
+    connect(m_boardWidget, &BoardWidget::cardClicked, this, &MainWindow::onCardSelected);
+    connect(btnConstruct, &QPushButton::clicked, this, &MainWindow::onConstructClicked);
+    connect(m_wonderSelection, &WonderSelectionWidget::wonderChosen, this, &MainWindow::onWonderChosen);
+
+    // Pornire Joc
+    m_stack->setCurrentIndex(0);
+    QTimer::singleShot(100, this, &MainWindow::startGame);
 }
 
-MainWindow::~MainWindow() {
-    clearPyramidUI();
+MainWindow::~MainWindow()
+{
+    delete m_game;
 }
 
-// ---------------------------------------------------------
-// LOGICA DE START (SIMULATĂ)
-// ---------------------------------------------------------
-void MainWindow::handleStartButton() {
-    startButton->hide();
-
-    // Mutăm elementele de titlu
-    titleLabel->setFont(QFont("Arial", 24, QFont::Bold));
-    titleLabel->setGeometry(0, 10, 1000, 40);
-    ageLabel->setGeometry(0, 50, 1000, 40);
-    nextAgeButton->show();
-
-    // AICI PORNEAM LOGICA REALA. ACUM DOAR SIMULĂM VISUALUL.
-    // m_game.getSetup().startAge(1); <--- COMENTAT PENTRU SIGURANȚĂ
-
-    applyAgeStyle(1);
-
-    // Desenăm o piramidă "falsă" sau cea reală dacă structura e încărcată, 
-    // dar fără interacțiune complexă.
-    // Incercam sa desenam structura reala daca m_game nu crapa la startAge.
-    // Daca crapa, comentati linia startAge si drawPyramid va fi gol.
-    try {
-        m_game.getSetup().startAge(1);
-        drawPyramid();
-    }
-    catch (...) {
-        // Daca nu merge backend-ul, nu desenam piramida, dar restul UI-ului apare.
-    }
-
-    // DESENĂM INVENTARE "FALSE" (MOCK) CA SĂ VEZI CUM ARATĂ
-    // Trimitem nullptr pentru că funcția noastră modificată de inventar va ignora playerul
-    // și va desena date false.
-    updatePlayerInventoryUI(nullptr, bottomPlayerZone);
-    updatePlayerInventoryUI(nullptr, topPlayerZone);
+void MainWindow::startGame()
+{
+    m_game->initialize();
+    updateGameState();
 }
 
-void MainWindow::applyAgeStyle(int age) {
-    if (age == 1) {
-        ageLabel->setText("AGE I");
-        ageLabel->setStyleSheet("color: rgb(215, 204, 200); font-size: 32px; font-weight: bold;");
+void MainWindow::updateGameState()
+{
+    m_draftPhase = m_game->getDraftPhase();
+    if (m_draftPhase > 0 && !m_game->getCurrentDraftSet().empty()) {
+        m_stack->setCurrentIndex(0);
+        startWonderDraft();
+    } else {
+        m_stack->setCurrentIndex(1);
+        renderGame();
     }
-    else if (age == 2) {
-        ageLabel->setText("AGE II");
-        ageLabel->setStyleSheet("color: rgb(174, 214, 241); font-size: 32px; font-weight: bold;");
+    updatePlayerInventories();
+}
+
+void MainWindow::startWonderDraft()
+{
+    const auto& availableWonders = m_game->getCurrentDraftSet();
+    if (availableWonders.empty()) {
+        updateGameState();
+        return;
     }
-    else {
-        ageLabel->setText("AGE III");
-        ageLabel->setStyleSheet("color: rgb(210, 180, 222); font-size: 32px; font-weight: bold;");
+
+    std::vector<int> ids;
+    std::vector<QString> names;
+    std::vector<QString> colors;
+
+    for (const auto& wonderPtr : availableWonders) {
+        ids.push_back(wonderPtr->getId());
+        names.push_back(QString::fromStdString(wonderPtr->getName()));
+        colors.push_back("#f39c12");
+    }
+
+    QString currentPlayerName = QString::fromStdString(m_game->getCurrentPlayer()->getName());
+    this->statusBar()->showMessage("Este randul lui " + currentPlayerName + " sa aleaga o minune.", 5000);
+
+    m_wonderSelection->setWonders(ids, names, colors);
+}
+
+void MainWindow::onWonderChosen(int wonderId)
+{
+    if (m_game->draftWonder(wonderId)) {
+        updateGameState();
+    } else {
+        QMessageBox::warning(this, "Alegere Invalidă", "A apărut o eroare. Minunea selectată nu este validă.");
     }
 }
 
-void MainWindow::handleNextAgeButton() {
-    // Schimbare vizuală simplă
-    static int debugAge = 1;
-    debugAge++;
-    if (debugAge > 3) debugAge = 1;
-    applyAgeStyle(debugAge);
-
-    // Putem forța redesenarea piramidei reale dacă backend-ul permite
-    try {
-        m_game.getSetup().startAge(debugAge);
-        drawPyramid();
-    }
-    catch (...) {}
+void MainWindow::onCardSelected(int cardId)
+{
+    m_selectedCardId = cardId;
+    qDebug() << "Carte selectata:" << cardId;
 }
 
-// ---------------------------------------------------------
-// ZONA INVENTAR (MOCK / FAKE DATA)
-// ---------------------------------------------------------
-void MainWindow::setupPlayerZones() {
-    // Zona Sus (Oponent)
-    topPlayerZone = new QWidget(centralWidget);
-    topPlayerZone->setGeometry(100, 10, 800, 140);
-    topPlayerZone->setStyleSheet("background-color: rgba(0,0,0,40); border-radius: 10px;");
-
-    QLabel* l1 = new QLabel("OPPONENT", topPlayerZone);
-    l1->setObjectName("nameLabel"); // Îl marcam ca să-l găsim
-    l1->setGeometry(10, 5, 400, 20);
-    l1->setStyleSheet("color: rgb(200,200,200); font-weight: bold; background: transparent;");
-
-    // Zona Jos (Player Curent)
-    bottomPlayerZone = new QWidget(centralWidget);
-    bottomPlayerZone->setGeometry(100, 750, 800, 140);
-    bottomPlayerZone->setStyleSheet("background-color: rgba(0,0,0,40); border-radius: 10px;");
-
-    QLabel* l2 = new QLabel("YOU", bottomPlayerZone);
-    l2->setObjectName("nameLabel");
-    l2->setGeometry(10, 5, 400, 20);
-    l2->setStyleSheet("color: rgb(46, 204, 113); font-weight: bold; background: transparent;");
+void MainWindow::onConstructClicked()
+{
+    if (m_selectedCardId == -1) {
+        QMessageBox::warning(this, "Eroare", "Selecteaza o carte din piramida!");
+        return;
+    }
+    QMessageBox::information(this, "Constructie", "Constructie initiata pentru cartea " + QString::number(m_selectedCardId));
 }
 
-// *** AICI E TRUCUL: IGNORĂM DATA REALA ȘI DESENĂM CEVA FIX ***
-void MainWindow::updatePlayerInventoryUI(Player* /*unused*/, QWidget* zone) {
-    // 1. Curățăm
-    QList<QPushButton*> oldCards = zone->findChildren<QPushButton*>();
-    for (auto c : oldCards) delete c;
+void MainWindow::updatePlayerInventories()
+{
+    if (!m_game) return;
 
-    // 2. Setăm Text Fals (Mock)
-    QLabel* nameLbl = zone->findChild<QLabel*>("nameLabel");
-    if (nameLbl) {
-        // Dacă e zona de jos (YOU), punem banii tăi fictivi
-        if (zone == bottomPlayerZone)
-            nameLbl->setText("YOU | Coins: 7 (Demo)");
-        else
-            nameLbl->setText("OPPONENT | Coins: 5 (Demo)");
-    }
+    const Player* player = m_game->getCurrentPlayer();
+    const Player* opponent = m_game->getOpponent();
 
-    // 3. Generăm cărți false ca să vezi layout-ul
-    // Culori: Maro, Gri, Galben, Albastru, Verde, Rosu, Mov
-    QString colors[] = {
-        "rgb(141, 110, 99)", "rgb(149, 165, 166)", "rgb(241, 196, 15)",
-        "rgb(41, 128, 185)", "rgb(39, 174, 96)", "rgb(192, 57, 43)", "rgb(142, 68, 173)"
+    if (!player || !opponent) return;
+
+    // --- Update Player and Opponent Labels (existing code) ---
+    QString playerText = QString("Jucator: %1 | Bani: %2").arg(QString::fromStdString(player->getName())).arg(player->getCoins());
+    m_playerLabel->setText(playerText);
+
+    QString opponentText = QString("Oponent: %1 | Bani: %2").arg(QString::fromStdString(opponent->getName())).arg(opponent->getCoins());
+    m_opponentLabel->setText(opponentText);
+
+    // --- NEW: Function to clear and draw wonders ---
+    auto setupWonders = [&](const Player* p, QFrame* zone) {
+        // Find the QHBoxLayout inside the zone's QVBoxLayout
+        QVBoxLayout* mainZoneLayout = qobject_cast<QVBoxLayout*>(zone->layout());
+        if (!mainZoneLayout || mainZoneLayout->count() < 2) return;
+        QHBoxLayout* wondersLayout = qobject_cast<QHBoxLayout*>(mainZoneLayout->itemAt(1)->layout());
+        if (!wondersLayout) return;
+
+        // Clear previous wonder widgets
+        QLayoutItem* item;
+        while ((item = wondersLayout->takeAt(0)) != nullptr) {
+            delete item->widget();
+            delete item;
+        }
+
+        // Get wonders and create new widgets
+        for (const auto& wonderPtr : p->getWonders()) {
+            CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), zone);
+            wonderWidget->setFixedSize(60, 80);
+            
+            QString name = QString::fromStdString(wonderPtr->getName());
+            QString color = wonderPtr->getIsBuilt() ? "#f1c40f" : "#bdc3c7"; // Yellow if built, gray otherwise
+            
+            wonderWidget->setupCard(name, color, true); // Wonders are always face up
+            wondersLayout->addWidget(wonderWidget);
+        }
     };
 
-    int startX = 20;
-    int startY = 30;
-    int cardW = 60;
-    int cardH = 80;
-    int gapX = 80;
-    int overlapY = 20;
+    // --- NEW: Call the function for both players ---
+    setupWonders(player, m_playerZone);
+    setupWonders(opponent, m_opponentZone);
 
-    // Pentru fiecare culoare, desenăm 2 cărți fictive
-    for (int colIdx = 0; colIdx < 7; ++colIdx) {
-        int currentX = startX + colIdx * gapX;
-        QString bgCol = colors[colIdx];
+    // --- NEW: Update Military Track and Progress Tokens ---
+    m_militaryTrackWidget->updatePawnPosition(m_game->getBoard().getMilitaryTrack().getPawnPosition());
 
-        // Facem 2 cărți suprapuse
-        for (int i = 0; i < 2; ++i) {
-            QPushButton* cardBtn = new QPushButton(zone);
-            cardBtn->setGeometry(currentX, startY + (i * overlapY), cardW, cardH);
+    // Clear old token widgets
+    QLayoutItem* item;
+    while ((item = m_progressTokensLayout->takeAt(0)) != nullptr) {
+        delete item->widget();
+        delete item;
+    }
 
-            cardBtn->setStyleSheet(QString(
-                "QPushButton { background-color: %1; border: 1px solid black; border-radius: 4px; }"
-                "QPushButton:hover { border: 1px solid white; margin-top: -5px; }"
-            ).arg(bgCol));
+    // Add tokens for both players
+    auto addPlayerTokens = [&](const Player* p) {
+        for (const auto& tokenPtr : p->getProgressTokens()) {
+            QLabel* tokenLabel = new QLabel(QString::fromStdString(tokenPtr->getName()), this);
+            tokenLabel->setStyleSheet("background-color: #2ecc71; color: black; padding: 5px; border-radius: 3px;");
+            tokenLabel->setAlignment(Qt::AlignCenter);
+            m_progressTokensLayout->addWidget(tokenLabel);
+        }
+    };
 
-            cardBtn->setToolTip("Carte Demo");
-            cardBtn->show();
+    addPlayerTokens(player);
+    addPlayerTokens(opponent);
+}
+
+QString MainWindow::getColorHex(Color c) {
+    switch (c) {
+    case Color::Blue:   return "#2980b9";
+    case Color::Red:    return "#c0392b";
+    case Color::Green:  return "#27ae60";
+    case Color::Yellow: return "#f1c40f";
+    case Color::Brown:  return "#d35400";
+    case Color::Gray:   return "#7f8c8d";
+    case Color::Purple: return "#8e44ad";
+    default: return "#95a5a6";
+    }
+}
+
+void MainWindow::renderGame() {
+    if (!m_boardWidget || !m_game) return;
+
+    m_boardWidget->clearBoard();
+    Board& boardData = m_game->getBoard();
+    const auto& rows = boardData.getPyramid().getRows();
+
+    for (int r = 0; r < rows.size(); ++r) {
+        const auto& row = rows[r];
+        int cardsInRow = row.size();
+        for (int c = 0; c < cardsInRow; ++c) {
+            const auto& node = row[c];
+
+            if (!node || node->isPlayed()) continue;
+            auto cardPtr = node->getCard();
+            if (!cardPtr) continue;
+
+            int id = cardPtr->getId();
+            QString name = QString::fromStdString(cardPtr->getName());
+            Color col = cardPtr->getColor();
+            bool isFaceUp = (node->getFace() == Face::Up);
+
+            m_boardWidget->placeCard(id, name, getColorHex(col), isFaceUp, r, c, cardsInRow);
         }
     }
-}
-
-// ---------------------------------------------------------
-// PIRAMIDA (Păstrăm logica de poziționare, scoatem logica de bani)
-// ---------------------------------------------------------
-void MainWindow::drawPyramid() {
-    clearPyramidUI();
-    Board& board = m_game.getBoard();
-
-    // Culori vizuale pentru piramida
-    int currentAge = 1; // Putem lua din label
-    if (ageLabel->text().contains("II")) currentAge = 2;
-    if (ageLabel->text().contains("III")) currentAge = 3;
-
-    QString themeColor = "rgb(120, 78, 23)"; // Maro default
-    if (currentAge == 2) themeColor = "rgb(93, 188, 207)";
-    if (currentAge == 3) themeColor = "rgb(134, 73, 171)";
-
-    int centerX = 1000 / 2;
-    int startY = 150;
-
-    for (int r = 0; r < 20; ++r) {
-        std::vector<CardNode*> rowNodes;
-        for (int c = 0; c < 20; ++c) {
-            CardNode* node = board.getNodeAt(r, c);
-            if (!node) break;
-            rowNodes.push_back(node);
-        }
-        if (rowNodes.empty()) break;
-
-        bool isSplitRow = (currentAge == 3 && r == 3);
-        int visualCount = isSplitRow ? 4 : rowNodes.size();
-        int totalW = visualCount * CARD_W + (visualCount - 1) * SPACING;
-
-        int currentX = centerX - (totalW / 2);
-        int currentY = startY + (r * (CARD_H - OVERLAP));
-
-        for (int c = 0; c < rowNodes.size(); ++c) {
-            CardNode* node = rowNodes[c];
-
-            if (isSplitRow) {
-                if (c == 0) currentX += (CARD_W + SPACING) / 2;
-                else if (c == 1) currentX += (CARD_W + SPACING);
-            }
-
-            if (!node->isPlayed()) {
-                QPushButton* btn = new QPushButton(centralWidget);
-                btn->setGeometry(currentX, currentY, CARD_W, CARD_H);
-
-                // Salvăm doar coordonatele, nu ne pasa de logica acum
-                btn->setProperty("row", r);
-                btn->setProperty("col", c);
-
-                if (node->getFace() == Face::Down) {
-                    btn->setText("");
-                    btn->setStyleSheet(QString(
-                        "QPushButton { background-color: %1; border: 2px solid rgb(0,0,0); border-radius: 8px; }"
-                    ).arg(themeColor));
-                }
-                else {
-                    // Afisam numele daca putem, altfel "Card"
-                    QString name = "Card";
-                    try { name = QString::fromStdString(node->getName()); }
-                    catch (...) {}
-                    if (name.length() > 10) name = name.left(8) + "..";
-                    btn->setText(name);
-
-                    if (node->isPlayable()) {
-                        // Stil Activ
-                        btn->setStyleSheet(QString(
-                            "QPushButton { background-color: rgb(255,255,255); color: black; font-weight: bold; border: 5px ridge %1; border-radius: 8px; }"
-                            "QPushButton:hover { background-color: rgb(236,240,241); }"
-                        ).arg(themeColor));
-
-                        // FARA LOGICA DE COST (Eliminam erorile)
-                        btn->setToolTip("Cost: ??? (Demo)");
-                        connect(btn, &QPushButton::clicked, this, &MainWindow::onCardClicked);
-                    }
-                    else {
-                        // Stil Blocat
-                        btn->setStyleSheet(QString(
-                            "QPushButton { background-color: rgb(240,240,240); color: gray; border: 2px dashed %1; border-radius: 8px; }"
-                        ).arg(themeColor));
-                    }
-                }
-                btn->show();
-                m_cardButtons.push_back(btn);
-            }
-            currentX += CARD_W + SPACING;
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// CLICK SIMPLIFICAT (DOAR MESAJ VIZUAL)
-// ---------------------------------------------------------
-void MainWindow::onCardClicked() {
-    // Doar un mesaj sa stim ca merge click-ul
-    QMessageBox::information(this, "UI Demo",
-        "Ai dat click pe o carte!\n\n"
-        "Logica de cumparare este dezactivata in acest demo vizual\n"
-        "pentru a evita erorile de compilare.");
-}
-
-// ---------------------------------------------------------
-// PANOUL DREAPTA (VISUAL ONLY)
-// ---------------------------------------------------------
-void MainWindow::setupRightPanel() {
-    rightPanel = new QWidget(centralWidget);
-    rightPanel->setGeometry(1280 - 280, 20, 260, 760);
-    rightPanel->setStyleSheet("background-color: transparent;");
-
-    // Conflict Track
-    int trackX = 30; int trackY = 60; int trackH = 640; int trackW = 50;
-    QLabel* milLabel = new QLabel("CONFLICT", rightPanel);
-    milLabel->setGeometry(trackX - 15, 20, 80, 30);
-    milLabel->setAlignment(Qt::AlignCenter);
-    milLabel->setStyleSheet("color: rgb(231, 76, 60); font-weight: bold;");
-
-    QLabel* trackVisual = new QLabel(rightPanel);
-    trackVisual->setGeometry(trackX, trackY, trackW, trackH);
-    trackVisual->setStyleSheet(
-        "border: 2px solid rgb(100,100,100); border-radius: 25px;"
-        "background: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
-        "  stop: 0 rgb(148,49,38), stop: 0.4 rgb(241,196,15), stop: 0.5 white, stop: 0.6 rgb(241,196,15), stop: 1 rgb(148,49,38));"
-    );
-
-    // Linii
-    int steps = 19; float stepH = (float)trackH / steps;
-    for (int i = 1; i < steps; ++i) {
-        if (i == 9) continue;
-        QWidget* line = new QWidget(trackVisual);
-        line->setGeometry(5, i * stepH, trackW - 10, 1);
-        line->setStyleSheet("background-color: rgba(0,0,0,50);");
-    }
-    QWidget* cLine = new QWidget(trackVisual);
-    cLine->setGeometry(0, 9 * stepH - 1, trackW, 3);
-    cLine->setStyleSheet("background-color: rgba(0,0,0,100);");
-
-    // Tokens
-    int tX = 140;
-    QLabel* tLabel = new QLabel("SCIENCE", rightPanel);
-    tLabel->setGeometry(tX - 20, 20, 90, 30);
-    tLabel->setAlignment(Qt::AlignCenter);
-    tLabel->setStyleSheet("color: rgb(46, 204, 113); font-weight: bold;");
-
-    int tSize = 60; int gap = 30; int startTY = trackY + 50;
-    QString sym[] = { "⚖️", "🔭", "📐", "⚗️", "⚙️" };
-    for (int i = 0; i < 5; ++i) {
-        QPushButton* t = new QPushButton(rightPanel);
-        t->setGeometry(tX, startTY + i * (tSize + gap), tSize, tSize);
-        t->setText(sym[i]);
-        t->setStyleSheet("QPushButton { background-color: qradialgradient(cx:0.4, cy:0.4, radius:0.8, fx:0.4, fy:0.4, stop:0 rgb(88,214,141), stop:1 rgb(25,111,61)); border: 2px solid rgb(241,196,15); border-radius: 30px; color: white; font-size: 24px; }");
-        t->show();
-        progressTokens.push_back(t);
-    }
-
-    // Pion
-    militaryPawn = new QPushButton(rightPanel);
-    militaryPawn->setText("⚔️");
-    militaryPawn->setStyleSheet("background: qradialgradient(cx:0.5, cy:0.5, radius:0.8, fx:0.5, fy:0.5, stop:0 rgb(231,76,60), stop:1 rgb(148,49,38)); border: 2px solid white; border-radius: 20px; font-size: 20px;");
-    militaryPawn->setGeometry(0, 0, 40, 40);
-    addShadow(militaryPawn, 5, 2);
-
-    updateMilitaryPawn();
-}
-
-void MainWindow::updateMilitaryPawn() {
-    int score = 0; // Hardcodat pt Demo
-    int vIndex = 9 - score;
-    int startY = 60; int h = 640; float step = (float)h / 19;
-
-    int y = startY + vIndex * step - 20 + step / 2 - 10;
-    int x = 35;
-    militaryPawn->move(x, y);
-}
-void MainWindow::clearPyramidUI() {}
+}           

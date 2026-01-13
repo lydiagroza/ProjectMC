@@ -1,13 +1,11 @@
 #pragma once
 #include <string>
-#include <vector>
 #include <functional>
-#include <memory>
-#include <ostream>
+#include "gameExport.h" // <-- 1. Include the export header
 
 class Player;
 
-class ProgressToken {
+class GAME_API ProgressToken {
     std::string  m_name;
     uint16_t id;
     std::vector<std::function<void(Player&, Player&)>> effects;

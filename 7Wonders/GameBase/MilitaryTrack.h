@@ -1,7 +1,8 @@
 #pragma once
 #include <cstdint>
+#include "gameExport.h"
 
-class MilitaryTrack
+class  GAME_API MilitaryTrack
 {
 private:
     

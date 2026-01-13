@@ -37,6 +37,7 @@
     <ClCompile Include="GuildLoader.cpp" />
     <ClCompile Include="MilitaryTrack.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ProgressToken.cpp" />
     <ClCompile Include="ProgressTokenLoader.cpp" />
     <ClCompile Include="ProgressTokens.cpp" />
     <ClCompile Include="WonderLoader.cpp" />

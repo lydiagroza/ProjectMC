@@ -151,12 +151,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoardWidget.cpp" />
     <ClCompile Include="CardWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="MainWindow.h" />
+    <ClCompile Include="MilitaryTrackWidget.cpp" />
+    <ClCompile Include="WonderSelectionWidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GameBase\GameBase.vcxproj">
@@ -165,6 +165,18 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CardWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="BoardWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="MainWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="WonderSelectionWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="MilitaryTrackWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(QtMsBuild)\qt.targets" Condition="Exists('$(QtMsBuild)\qt.targets')" />

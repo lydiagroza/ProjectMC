@@ -409,7 +409,7 @@ QString MainWindow::getColorHex(Color c) {
 void MainWindow::renderGame() {
     if (!m_boardWidget || !m_game) return;
 
-    m_boardWidget->clearBoard();
+    m_boardWidget->clearBoard();  // șterge toate cărțile existente de pe board
     Board& boardData = m_game->getBoard();
     const auto& rows = boardData.getPyramid().getRows();
 
@@ -420,7 +420,7 @@ void MainWindow::renderGame() {
         for (size_t c = 0; c < row.size(); ++c) {
             const auto& node = row[c];
 
-            if (!node || node->isPlayed()) continue;
+            if (!node || node->isPlayed()) continue; // skip dacă cartea a fost jucată
             auto cardPtr = node->getCard();
             if (!cardPtr) continue;
 
@@ -434,3 +434,5 @@ void MainWindow::renderGame() {
         }
     }
 }
+
+

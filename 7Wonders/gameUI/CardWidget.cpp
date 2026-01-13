@@ -80,3 +80,29 @@ void CardWidget::setSelected(bool selected)
         this->setStyleSheet(currentStyle);
     }
 }
+QString CardWidget::adjustBrightness(const QString& hexColor, double factor)
+{
+    // Elimină # din hex
+    QString hex = hexColor;
+    if (hex.startsWith("#")) {
+        hex = hex.mid(1);
+    }
+
+    // Convertește hex în RGB
+    bool ok;
+    int r = hex.mid(0, 2).toInt(&ok, 16);
+    int g = hex.mid(2, 2).toInt(&ok, 16);
+    int b = hex.mid(4, 2).toInt(&ok, 16);
+
+    // Ajustează luminozitatea
+    r = qBound(0, static_cast<int>(r * factor), 255);
+    g = qBound(0, static_cast<int>(g * factor), 255);
+    b = qBound(0, static_cast<int>(b * factor), 255);
+
+    // Returnează hex-ul nou
+    return QString("#%1%2%3")
+        .arg(r, 2, 16, QChar('0'))
+        .arg(g, 2, 16, QChar('0'))
+        .arg(b, 2, 16, QChar('0'))
+        .toUpper();
+}

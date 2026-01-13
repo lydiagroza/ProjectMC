@@ -94,6 +94,7 @@ std::optional<Symbol> CardLoader::parseSymbol(const string& s) {
     };
     auto it = map.find(s);
     if (it == map.end()) return nullopt; 
+    return it->second; // Adăugat: returnează simbolul găsit
 }
 
 std::optional<Symbol> CardLoader::parseUnlocks(const string& s) {
@@ -289,6 +290,18 @@ std::optional<std::function<void(Player&,Board &, Player&)>> CardLoader::parseDe
     std::cerr << "Unknown destroy effect: " << s << std::endl;
     return std::nullopt;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -17,39 +17,47 @@ void CardWidget::setupCard(const QString& name, const QString& colorCode, bool i
     m_isFaceUp = isFaceUp;
 
     if (m_isFaceUp) {
-        // --- CARTE VIZIBILĂ ---
         this->setText(name);
         this->setEnabled(true);
 
-        // ❌ PROBLEMA ERA AICI: "filter: brightness(110%)" NU EXISTĂ ÎN QT!
-        // ✅ SOLUȚIE: Calculează manual o culoare mai deschisă pentru hover
         QString style = QString(
             "QPushButton { "
-            "  background-color: %1; "
-            "  color: white; "
-            "  border: 2px solid #333; "
-            "  border-radius: 6px; "
+            "  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
+            "    stop:0 %1, stop:0.5 %2, stop:1 %1); "
+            "  color: #F5E6D3; "
+            "  border: 3px solid #8B4513; "
+            "  border-radius: 8px; "
+            "  padding: 5px; "
+            "  font-family: 'Times New Roman', serif; "
+            "  font-weight: bold; "
             "}"
             "QPushButton:hover { "
-            "  background-color: %1; "
-            "  border: 2px solid #f39c12; " // Border galben la hover
+            "  border: 3px solid #DAA520; "
             "}"
-        ).arg(colorCode);
+        ).arg(colorCode, adjustBrightness(colorCode, 0.7));
 
         this->setStyleSheet(style);
-
+        
+        // ADAUGĂ shadow effect programatic
+        QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
+        shadow->setBlurRadius(4);
+        shadow->setColor(QColor(0, 0, 0, 150));
+        shadow->setOffset(1, 1);
+        this->setGraphicsEffect(shadow);
     }
     else {
-        // --- CARTE ACOPERITĂ (SPATE) ---
         this->setText("?");
         this->setEnabled(false);
 
         this->setStyleSheet(
             "QPushButton { "
-            "  background-color: #7f8c8d; "
-            "  color: #bdc3c7; "
-            "  border: 2px dashed #95a5a6; "
-            "  border-radius: 6px; "
+            "  background: qlineargradient(x1:0, y1:0, x2:1, y2:1, "
+            "    stop:0 #8B7355, stop:0.5 #A0826D, stop:1 #8B7355); "
+            "  color: #3E2723; "
+            "  border: 3px solid #5D4037; "
+            "  border-radius: 8px; "
+            "  font-size: 20px; "
+            "  font-family: 'Times New Roman'; "
             "}"
         );
     }
@@ -57,16 +65,16 @@ void CardWidget::setupCard(const QString& name, const QString& colorCode, bool i
 
 void CardWidget::setSelected(bool selected)
 {
-    if (!m_isFaceUp) return; // Nu selecta cărți cu fața în jos
+    if (!m_isFaceUp) return; 
 
     if (selected) {
-        // Border galben gros pentru selecție
+   
         QString currentStyle = this->styleSheet();
         currentStyle.replace("border: 2px solid #333;", "border: 4px solid #f1c40f;");
         this->setStyleSheet(currentStyle);
     }
     else {
-        // Revino la border normal
+      
         QString currentStyle = this->styleSheet();
         currentStyle.replace("border: 4px solid #f1c40f;", "border: 2px solid #333;");
         this->setStyleSheet(currentStyle);

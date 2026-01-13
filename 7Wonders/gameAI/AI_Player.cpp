@@ -391,7 +391,9 @@ float AI_Player::calculateReward(const GameState& oldState,
     return reward;
 }
 
-
+// ============================================================================
+// HEURISTIC EVALUATION (pentru MEDIUM)
+// ============================================================================
 
 int AI_Player::evaluateMilitaryValue(const std::shared_ptr<CardBase>& card) const {
     int value = 0;

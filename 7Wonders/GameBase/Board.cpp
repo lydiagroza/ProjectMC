@@ -66,7 +66,7 @@ void Board::printTokens(std::ostream& os) const
 
 //tabla militara
 
-void Board::printMilitaryTrack(std::ostream& fout) const
+void Board::printMilitaryTrack([[maybe_unused]] std::ostream& fout) const
 {
 
 	int currentPos = m_militaryTrack.getPawnPosition();

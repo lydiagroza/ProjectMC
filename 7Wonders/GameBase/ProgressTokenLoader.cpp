@@ -15,19 +15,19 @@ std::vector<std::function<void(Player&, Player&)>> ProgressTokenLoader::parseEff
 
 
     static const std::unordered_map<std::string, std::function<void(Player&, Player&)>> effectMap = {
-        {"add_coins6", [](Player& p, Player& o) { p.addResource(Coin, 6); }},
-        {"add_VictoryPoint4", [](Player& p, Player& o) { p.add_Points(Points::Victory, 4); }},
-        {"WondersDiscount", [](Player& p, Player& o) { p.setWonderDiscount(true); }},
-        {"gainOpponentTradeCost", [](Player& p, Player& o) {p.setGainsOpponentTradeCost(true); }},
-        {"add_scientific_symbol_scales", [](Player& p, Player& o) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
+        {"add_coins6", [](Player& p, Player&) { p.addResource(Coin, 6); }},
+        {"add_VictoryPoint4", [](Player& p, Player&) { p.add_Points(Points::Victory, 4); }},
+        {"WondersDiscount", [](Player& p, Player&) { p.setWonderDiscount(true); }},
+        {"gainOpponentTradeCost", [](Player& p, Player&) {p.setGainsOpponentTradeCost(true); }},
+        {"add_scientific_symbol_scales", [](Player& p, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
         //aici trebuie cumva apelat la sfarsitul jocului nu in timpul jocului 
-        {"victoryPointsPerProgress", [](Player& p, Player& o) {p.setMathBonus(true); }},
-        {"BlueCardDiscount", [](Player& p, Player& o) { p.setBlueCardDiscount(true); }},
-        {"add_VictoryPoint7", [](Player& p, Player& o) { p.add_Points(Points::Victory, 7); }},
+        {"victoryPointsPerProgress", [](Player& p, Player&) {p.setMathBonus(true); }},
+        {"BlueCardDiscount", [](Player& p, Player&) { p.setBlueCardDiscount(true); }},
+        {"add_VictoryPoint7", [](Player& p, Player&) { p.add_Points(Points::Victory, 7); }},
         /* aici la MilitaryPoints trebuie sa vedem cum facem, daca returnam cumva nr de carti spre board sau le adaugam undeva*/
-        {"add_MilitaryPoint1PerRedCard", [](Player& p, Player& o) { p.setExtraMilitary(true); }},
-        {"WondersGetReplayTurn", [](Player& p, Player& o) { p.setTheologyBonus(true); }},
-        {"add_coins4PerFreeCard", [](Player& p, Player& o) {
+        {"add_MilitaryPoint1PerRedCard", [](Player& p, Player&) { p.setExtraMilitary(true); }},
+        {"WondersGetReplayTurn", [](Player& p, Player&) { p.setTheologyBonus(true); }},
+        {"add_coins4PerFreeCard", [](Player& p, Player&) {
 
             p.setGetsCoinsForFreeCards(true); }}
     };

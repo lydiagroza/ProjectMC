@@ -5,8 +5,10 @@
 #include <random>
 #include <map>
 #include <string>
+#include <cstdint>
 
 // Forward declarations
+class Player;
 class Board;
 class CardBase;
 class Wonder;

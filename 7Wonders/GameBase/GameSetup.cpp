@@ -83,7 +83,8 @@ GameSetup& GameSetup::startAge(int age)
         m_board.setupCards(2, m_deckAge2);
     else if (age == 3)
         m_board.setupCards(3, m_deckAge3);
-	return *this;
+
+    return *this;
 }
 
 Board& GameSetup::getBoard()

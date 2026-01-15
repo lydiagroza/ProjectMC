@@ -11,11 +11,13 @@ Player::Player(const std::string& playerName, int id)
     m_Resources{},
     m_pointsScore{},
     m_discountedResource{},
+    m_choiceResources{},
+    m_Inventory{},
     m_Wonders{},
     m_scientificSymbols{},
     m_chainSymbols{},
-    m_progressTokens{},
-    m_flags(0)
+    m_flags(0),
+    m_progressTokens{}
 {
 }
 
@@ -165,14 +167,39 @@ void Player::add_ChainSymbol(Symbol symbol)
 
 
 
-void Player:: addChoiceResources(std::vector<Resource> choices)
+void Player::addChoiceResources(std::vector<Resource> choices)
+
+
+
 {
+
+
+
     std::bitset<5> all_choices;
-    for (int i = 0; i < choices.size(); i++) {
+
+
+
+    for (int i = 0; i < (int)choices.size(); i++) {
+
+
+
         all_choices[getResourceDiscountIndex(choices[i])] = 1;
+
+
+
     }
+
+
+
     m_choiceResources.push_back(all_choices);
+
+
+
 }
+
+
+
+
 int Player::getResourceDiscountIndex(Resource r) const {
     switch (r) {
     case Resource::Wood: return 0;
@@ -240,7 +267,7 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
 
         // Iterăm prin cei 5 biți (0=Wood, 1=Clay, 2=Stone, 3=Glass, 4=Papyrus)
         for (int i = 0; i < 5; ++i) {
-            //if (flexibleSet[i] == 0) continue;   Acest bit = 0 → resursa nu e disponibilă
+            if (flexibleSet[i] == 0) continue; // Acest bit = 0 → resursa nu e disponibilă
 
             // Convertim index → Resource
             Resource resToCover = findResourceDiscountFromIndex(i);
@@ -354,8 +381,8 @@ bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
 
 
 
-//Functie in cazul in care jucatorul alege sa arda cartea pentru banuti
-void Player::discardCard(const CardBase& card) {
+// Functie in cazul in care jucatorul alege sa arda cartea pentru banuti
+void Player::discardCard([[maybe_unused]] const CardBase& card) {
 
     std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
     gainedCoins += static_cast<uint8_t>(m_Inventory[Color::Yellow].size()) * GameConstants::DISCARD_YELLOW_BONUS;

@@ -66,6 +66,7 @@ const std::string& CardBase::getEffectDescription() const {
 			case Resource::Stone: return "Stone";
 			case Resource::Glass: return "Glass";
 			case Resource::Papyrus: return "Papyrus";
+			case Resource::Coin: return "Coin";
 			}
 			return "Unknown";
 		}
@@ -85,18 +86,50 @@ const std::string& CardBase::getEffectDescription() const {
 		return "Unknown";
 	}
 
-	std::string to_string(Symbol s)
-		{
-			switch (s) {
-			case Symbol::Barrel: return "Barrel";
-			case Symbol::Gear: return "Gear";
-			case Symbol::Sword: return "Sword";
-			case Symbol::Horse: return "Horse";
-			case Symbol::Helmet: return "Helmet";
-			case Symbol::Mask: return "Mask";
-			case Symbol::Sun: return "Sun";
-			case Symbol::Moon: return "Moon";
-	
+		std::string to_string(Symbol s)
+
+			{
+
+				switch (s) {
+
+				case Symbol::Barrel: return "Barrel";
+
+				case Symbol::Gear: return "Gear";
+
+				case Symbol::Sword: return "Sword";
+
+				case Symbol::Horse: return "Horse";
+
+				case Symbol::Helmet: return "Helmet";
+
+				case Symbol::Mask: return "Mask";
+
+				case Symbol::Sun: return "Sun";
+
+				case Symbol::Moon: return "Moon";
+
+				case Symbol::Book: return "Book";
+
+				case Symbol::Temple: return "Temple";
+
+				case Symbol::Target: return "Target";
+
+				case Symbol::Lyre: return "Lyre";
+
+				case Symbol::Castle: return "Castle";
+
+				case Symbol::Droplet: return "Droplet";
+
+				case Symbol::Vase: return "Vase";
+
+				case Symbol::Column: return "Column";
+
+				case Symbol::Pot: return "Pot";
+
+				}
+
+				return "Unknown";
+
 			}
-			return "Unknown";
-		}
+
+	

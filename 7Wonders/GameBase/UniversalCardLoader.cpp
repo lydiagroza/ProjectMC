@@ -80,100 +80,100 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
 
     static const std::unordered_map<std::string, std::function<void(Player&, Board&, Player&)>> effectMap = {
         //Efectele pentru cele 3 age-uri
-         {"add_resource_wood", [](Player& p,Board& b, Player&) { p.addResource(Resource::Wood, 1); }},
-        {"add_resource_coin4", [](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, 4); }},
-        {"add_resource_coin6", [](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, 6); }},
-        {"add_resource_clay2", [](Player& p,Board& b, Player&) { p.addResource(Resource::Clay, 2); }},
-        {"add_resource_wood2", [](Player& p,Board& b, Player&) { p.addResource(Resource::Wood, 2); }},
-        {"add_resource_stone2", [](Player& p,Board& b, Player&) { p.addResource(Resource::Stone, 2); }},
-        {"add_resource_stone", [](Player& p,Board& b, Player&) { p.addResource(Resource::Stone, 1); }},
-        {"add_resource_clay", [](Player& p,Board& b, Player&) { p.addResource(Resource::Clay, 1); }},
-        {"add_resource_glass", [](Player& p,Board& b, Player&) { p.addResource(Resource::Glass, 1); }},
-        {"add_resource_papyrus", [](Player& p,Board& b, Player&) { p.addResource(Resource::Papyrus, 1); }},
-        {"add_scientific_symbol_ink", [](Player& p,Board& b,Player&) { p.add_ScientificSymbol(Scientific_Symbol::Ink); }},
-        {"add_scientific_symbol_scales", [](Player& p,Board& b, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
-        {"add_scientific_symbol_mortar", [](Player& p,Board& b, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Ink); }},
-        {"add_scientific_symbol_gyroscope", [](Player& p,Board& b, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Gyroscope); }},
-        {"add_scientific_symbol_sun_dial", [](Player& p,Board& b, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Sun_Dial); }},
-        {"add_scientific_symbol_wheel", [](Player& p,Board& b, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Wheel); }},
-        {"coin2Wonder",[](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, 2 * p.getWonders().size()); }},
-        {"coin2Brown",[](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, 2 * p.getInventory().at(Color::Brown).size()); }},
-        {"coin1Yellow",[](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, p.getInventory().at(Color::Yellow).size()); }},
-        {"coin3Gray",[](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, 3 * p.getInventory().at(Color::Gray).size()); }},
-        {"coin1Red",[](Player& p,Board& b, Player&) { p.addResource(Resource::Coin, p.getInventory().at(Color::Red).size()); }},
-        {"sale_stone1",[](Player& p,Board& b, Player&) { p.set_discountedResource(Stone); }},
-        {"sale_wood1",[](Player& p,Board& b, Player&) { p.set_discountedResource(Wood); }},
-        {"sale_clay1",[](Player& p,Board& b, Player&) { p.set_discountedResource(Clay); }},
-        {"add_resource_glass/papyrus",[](Player& p,Board& b, Player&) {
+         {"add_resource_wood", [](Player& p, Board&, Player&) { p.addResource(Resource::Wood, 1); }},
+        {"add_resource_coin4", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, 4); }},
+        {"add_resource_coin6", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, 6); }},
+        {"add_resource_clay2", [](Player& p, Board&, Player&) { p.addResource(Resource::Clay, 2); }},
+        {"add_resource_wood2", [](Player& p, Board&, Player&) { p.addResource(Resource::Wood, 2); }},
+        {"add_resource_stone2", [](Player& p, Board&, Player&) { p.addResource(Resource::Stone, 2); }},
+        {"add_resource_stone", [](Player& p, Board&, Player&) { p.addResource(Resource::Stone, 1); }},
+        {"add_resource_clay", [](Player& p, Board&, Player&) { p.addResource(Resource::Clay, 1); }},
+        {"add_resource_glass", [](Player& p, Board&, Player&) { p.addResource(Resource::Glass, 1); }},
+        {"add_resource_papyrus", [](Player& p, Board&, Player&) { p.addResource(Resource::Papyrus, 1); }},
+        {"add_scientific_symbol_ink", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Ink); }},
+        {"add_scientific_symbol_scales", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
+        {"add_scientific_symbol_mortar", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Mortar); }},
+        {"add_scientific_symbol_gyroscope", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Gyroscope); }},
+        {"add_scientific_symbol_sun_dial", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Sun_Dial); }},
+        {"add_scientific_symbol_wheel", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Wheel); }},
+        {"coin2Wonder", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)(2 * p.getWonders().size())); }},
+        {"coin2Brown", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)(2 * p.getInventory().at(Color::Brown).size())); }},
+        {"coin1Yellow", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)p.getInventory().at(Color::Yellow).size()); }},
+        {"coin3Gray", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)(3 * p.getInventory().at(Color::Gray).size())); }},
+        {"coin1Red", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)p.getInventory().at(Color::Red).size()); }},
+        {"sale_stone1", [](Player& p, Board&, Player&) { p.set_discountedResource(Stone); }},
+        {"sale_wood1", [](Player& p, Board&, Player&) { p.set_discountedResource(Wood); }},
+        {"sale_clay1", [](Player& p, Board&, Player&) { p.set_discountedResource(Clay); }},
+        {"add_resource_glass/papyrus", [](Player& p, Board&, Player&) {
             std::vector<Resource> choices = { Resource::Glass, Resource::Papyrus };
             p.addChoiceResources(choices);
         }},
-        {"add_resource_wood/clay/stone",[](Player& p,Board& b, Player&) {
+        {"add_resource_wood/clay/stone", [](Player& p, Board&, Player&) {
         std::vector<Resource> choices = { Resource::Wood, Resource::Clay, Resource::Stone };
         p.addChoiceResources(choices);
         }},
 
         //Efecte pentru guilds
-         {"coins_per_green", [](Player& p, Board& b, Player& o) {
+         {"coins_per_green", [](Player& p, Board&, Player& o) {
             auto countGreen = [](const Player& player) {
              return player.getInventory().count(Color::Green) ? player.getInventory().at(Color::Green).size() : 0;
             };
-        int maxGreen = std::max(countGreen(p), countGreen(o));
-            p.addResource(Coin, maxGreen);
+        int maxGreen = (int)std::max(countGreen(p), countGreen(o));
+            p.addResource(Coin, (uint8_t)maxGreen);
              cout << p.getName() << " gained " << maxGreen << " coins from Scientists Guild." << endl;
          }
         },
 
-        {"coins_per_brown_grey", [](Player& p, Board& b, Player& o) {
+        {"coins_per_brown_grey", [](Player& p, Board&, Player& o) {
             auto countBrownGrey = [](const Player& player) {
              int count = 0;
              if (player.getInventory().count(Color::Brown))
-                count += player.getInventory().at(Color::Brown).size();
+                count += (int)player.getInventory().at(Color::Brown).size();
             if (player.getInventory().count(Color::Gray))
-                count += player.getInventory().at(Color::Gray).size();
+                count += (int)player.getInventory().at(Color::Gray).size();
         return count;
          };
-    int maxCount = std::max(countBrownGrey(p), countBrownGrey(o));
-    p.addResource(Coin, maxCount);
+    int maxCount = (int)std::max(countBrownGrey(p), countBrownGrey(o));
+    p.addResource(Coin, (uint8_t)maxCount);
     cout << p.getName() << " gained " << maxCount
          << " coins from Shipowners Guild." << endl;
         }},
 
-        {"coins_per_yellow", [](Player& p, Board& b, Player& o) {
+        {"coins_per_yellow", [](Player& p, Board&, Player& o) {
             auto countYellow = [](const Player& player) {
             return player.getInventory().count(Color::Yellow) ? player.getInventory().at(Color::Yellow).size() : 0;
         };
-         int maxYellow = std::max(countYellow(p), countYellow(o));
-            p.addResource(Coin, maxYellow);
+         int maxYellow = (int)std::max(countYellow(p), countYellow(o));
+            p.addResource(Coin, (uint8_t)maxYellow);
     cout << p.getName() << " gained " << maxYellow << " coins from Traders Guild." << endl;
         }},
 
-        {"coins_per_blue", [](Player& p, Board& b, Player& o) {
+        {"coins_per_blue", [](Player& p, Board&, Player& o) {
             auto countBlue = [](const Player& player) {
         return player.getInventory().count(Color::Blue) ? player.getInventory().at(Color::Blue).size() : 0;
          };
-        int maxBlue = std::max(countBlue(p), countBlue(o));
-          p.addResource(Coin, maxBlue);
+        int maxBlue = (int)std::max(countBlue(p), countBlue(o));
+          p.addResource(Coin, (uint8_t)maxBlue);
           cout << p.getName() << " gained " << maxBlue << " coins from Magistrates Guild." << endl;
         }},
 
-    {"coins_per_red", [](Player& p, Board& b, Player& o) {
+    {"coins_per_red", [](Player& p, Board&, Player& o) {
         auto countRed = [](const Player& player) {
          return player.getInventory().count(Color::Red) ? player.getInventory().at(Color::Red).size() : 0;
     };
-    int maxRed = std::max(countRed(p), countRed(o));
-    p.addResource(Coin, maxRed);
+    int maxRed = (int)std::max(countRed(p), countRed(o));
+    p.addResource(Coin, (uint8_t)maxRed);
     cout << p.getName() << " gained " << maxRed
          << " coins from Tacticians Guild." << endl;
      }},
 
         //Efecte Wonders
-        {"add_coins3", [](Player& p,Board& b, Player& o) { p.addResource(Coin,3); }},
-        {"decreaseCoins3", [](Player& p,Board& b, Player& o) { o.decreaseCoins(3); }},
-        {"replayTurn", [](Player& p,Board& b, Player& o) { p.setHasExtraTurn(true); std::cout << "\n[EFECT] " << p.getName() << " a castigat o tura extra!\n"; }},
-        {"wood/stone/clay", [](Player& p,Board& b, Player& o) { p.addResource(Resource::Wood, 1); p.addResource(Resource::Stone, 1); p.addResource(Resource::Clay, 1); }},
-        {"add_coins12", [](Player& p,Board& b, Player& o) { p.addResource(Coin, 12); }},
-        {"discardOpponentGrayCard", [](Player& p,Board& b, Player& o) {
+        {"add_coins3", [](Player& p, Board&, Player&) { p.addResource(Coin,3); }},
+        {"decreaseCoins3", [](Player&, Board&, Player& o) { o.decreaseCoins(3); }},
+        {"replayTurn", [](Player& p, Board&, Player&) { p.setHasExtraTurn(true); std::cout << "\n[EFECT] " << p.getName() << " a castigat o tura extra!\n"; }},
+        {"wood/stone/clay", [](Player& p, Board&, Player&) { p.addResource(Resource::Wood, 1); p.addResource(Resource::Stone, 1); p.addResource(Resource::Clay, 1); }},
+        {"add_coins12", [](Player& p, Board&, Player&) { p.addResource(Coin, 12); }},
+        {"discardOpponentGrayCard", [](Player&, Board&, Player& o) {
             Board& board = Game::currentGame->getBoard();
             const auto& opponentInventory = o.getInventory();
             std::vector<std::shared_ptr<CardBase>> grayCards;
@@ -204,7 +204,7 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
 }
 }},
 
-{"buildDiscardedCard", [](Player& p,Board& b,Player& o) {
+{"buildDiscardedCard", [](Player&, Board&, Player&) {
             // Verificăm dacă există o instanță de joc activă
             if (Game::currentGame) {
                 // Apelăm funcția pe care ai scris-o deja în clasa Game
@@ -215,8 +215,8 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
       }
   }},
 
-{"papyrus/glass", [](Player& p,Board& b, Player& o) { p.addResource(Resource::Papyrus, 1); p.addResource(Resource::Glass, 1); }},
-{"chooseProgressToken", [](Player& p,Board& b, Player& o) {
+{"papyrus/glass", [](Player& p, Board&, Player&) { p.addResource(Resource::Papyrus, 1); p.addResource(Resource::Glass, 1); }},
+{"chooseProgressToken", [](Player& p, Board&, Player& o) {
     Board& board = Game::currentGame->getBoard();
     auto availableTokens = board.getAvailableProgressTokens();
 
@@ -245,8 +245,8 @@ else {
  std::cout << "No choice made (UI required) or invalid choice." << std::endl;
 }
 }},
-{"add_coins6", [](Player& p,Board& b, Player& o) { p.addResource(Coin,6); }},
-{"discardOpponentBrownCard", [](Player& p,Board& b, Player& o) {
+{"add_coins6", [](Player& p, Board&, Player&) { p.addResource(Coin,6); }},
+{"discardOpponentBrownCard", [](Player&, Board&, Player& o) {
     Board& board = Game::currentGame->getBoard();
     auto opponentInventory = o.getInventory();
     std::vector<std::shared_ptr<CardBase>> brownCards;

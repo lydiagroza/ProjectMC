@@ -23,7 +23,7 @@ void CardsPyramid::build(int age, std::vector<std::shared_ptr<CardBase>>& deck) 
         row.reserve(rowSize);
 
         for (int i = 0; i < rowSize; ++i) {
-            if (deckIndex >= deck.size()) 
+            if (deckIndex >= (int)deck.size()) 
                 break;
 
             auto newNode = std::make_unique<CardNode>();
@@ -66,7 +66,7 @@ void CardsPyramid::linkCards(int ageIndex)
             CardNode* parent = m_rows[r][i].get();
 
             for (int childIndex : linksForThisRow[i])
-                if (childIndex >= 0 && childIndex < m_rows[r + 1].size()) 
+                if (childIndex >= 0 && childIndex < (int)m_rows[r + 1].size()) 
                 {
                     CardNode* child = m_rows[r + 1][childIndex].get();
                     parent->addChild(child);

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>⚔️ 7 Wonders Duel - The Empire of the Ducks ⚔️</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow { 
+  background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+    stop:0 #2C1810, stop:0.5 #3E2723, stop:1 #2C1810); 
+}
+QLabel { 
+  font-family: 'Times New Roman', serif; 
+  color: #F5E6D3; 
+}
+QStatusBar { 
+  background-color: #3E2723; 
+  color: #DAA520; 
+  border-top: 2px solid #8B4513; 
+  font-family: 'Times New Roman'; 
+  font-weight: bold; 
+}</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>10</number>
+    </property>
+    <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="leftZone">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: transparent;</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayoutLeft">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="opponentZone">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>130</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>130</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QFrame#opponentZone { 
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
+    stop:0 #8B0000, stop:1 #5C0000); 
+  border: 3px solid #8B4513; 
+  border-radius: 10px; 
+  padding: 8px; 
+}</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayoutOpponent">
+          <item>
+           <widget class="QLabel" name="opponentLabel">
+            <property name="text">
+             <string>⚔️ OPPONENT DUCK EMPIRE ⚔️</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignHCenter|Qt::AlignTop</set>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFD700; 
+font-weight: bold; 
+font-size: 14px; 
+background: transparent; 
+border: none; 
+font-family: 'Times New Roman', serif;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="opponentWondersLayout">
+            <property name="spacing">
+             <number>5</number>
+            </property>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QStackedWidget" name="stack">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="SplashScreen" name="splashScreenPage"/>
+         <widget class="WonderSelectionWidget" name="wonderSelectionPage"/>
+         <widget class="BoardWidget" name="boardWidgetPage"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="playerZone">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>150</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>150</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QFrame#playerZone { 
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
+    stop:0 #1565C0, stop:1 #0D47A1); 
+  border: 3px solid #8B4513; 
+  border-radius: 10px; 
+  padding: 8px; 
+}</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayoutPlayer">
+          <item>
+           <widget class="QLabel" name="playerLabel">
+            <property name="text">
+             <string>🏛️ YOUR DUCK CIVILIZATION 🏛️</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignHCenter|Qt::AlignTop</set>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFD700; 
+font-weight: bold; 
+font-size: 14px; 
+background: transparent; 
+border: none; 
+font-family: 'Times New Roman', serif;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="playerWondersLayout">
+            <property name="spacing">
+             <number>5</number>
+            </property>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="rightZone">
+      <property name="minimumSize">
+       <size>
+        <width>280</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>280</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame#rightZone { 
+  background: qlineargradient(x1:0, y1:0, x2:1, y2:0, 
+    stop:0 #3E2723, stop:0.5 #4E342E, stop:1 #3E2723); 
+  border-left: 4px solid #8B4513; 
+}</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayoutRight">
+       <item>
+        <widget class="QLabel" name="panelTitle">
+         <property name="text">
+          <string>📜 DUCKS STATUS 📜</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: #DAA520; 
+font-weight: bold; 
+font-size: 16px; 
+background: transparent; 
+padding: 10px; 
+font-family: 'Times New Roman', serif;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="MilitaryTrackWidget" name="militaryTrackWidget" native="true"/>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblTok">
+         <property name="text">
+          <string>⚡ DIVINE DUCKS BLESSINGS ⚡</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: #FFD700; 
+font-weight: bold; 
+font-size: 13px; 
+padding: 5px; 
+font-family: 'Times New Roman';</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="progressTokensLayout"/>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnConstruct">
+         <property name="text">
+          <string>⚒️ BUILD ⚒️</string>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton { 
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
+    stop:0 #B8860B, stop:0.5 #DAA520, stop:1 #B8860B); 
+  color: #2C1810; 
+  border: 3px solid #8B4513; 
+  border-radius: 10px; 
+  font-weight: bold; 
+  font-size: 13px; 
+  font-family: 'Times New Roman', serif; 
+}
+QPushButton:hover { 
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
+    stop:0 #DAA520, stop:0.5 #FFD700, stop:1 #DAA520); 
+  border: 3px solid #FFD700; 
+}
+QPushButton:pressed { 
+  background: #8B6914; 
+}</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SplashScreen</class>
+   <extends>QWidget</extends>
+   <header>SplashScreen.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BoardWidget</class>
+   <extends>QWidget</extends>
+   <header>BoardWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>WonderSelectionWidget</class>
+   <extends>QWidget</extends>
+   <header>WonderSelectionWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MilitaryTrackWidget</class>
+   <extends>QWidget</extends>
+   <header>MilitaryTrackWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

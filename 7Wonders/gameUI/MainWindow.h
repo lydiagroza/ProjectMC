@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <QtWidgets/QMainWindow>
 #include <QStackedWidget>
 #include <QFrame>
@@ -9,6 +9,10 @@
 #include "WonderSelectionWidget.h" 
 #include "MilitaryTrackWidget.h"
 #include "SplashScreen.h"
+
+namespace Ui {
+class MainWindow;
+}
 
 class MainWindow : public QMainWindow
 {
@@ -25,21 +29,8 @@ private slots:
     void onSplashFinished();
 
 private:
+    Ui::MainWindow *ui;
     Game* m_game;
-
-    QStackedWidget* m_stack;
-    SplashScreen* m_splashScreen;
-    BoardWidget* m_boardWidget;
-    WonderSelectionWidget* m_wonderSelection;
-
-    MilitaryTrackWidget* m_militaryTrackWidget;
-    QFrame* m_opponentZone;
-    QFrame* m_playerZone;
-    QLabel* m_opponentLabel;
-    QLabel* m_playerLabel;
-    QFrame* m_rightZone;  // ✅ ADAUGĂ - pentru a controla vizibilitatea
-
-    QVBoxLayout* m_progressTokensLayout;
 
     int m_selectedCardId = -1;
     int m_draftPhase = 0;

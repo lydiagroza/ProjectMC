@@ -1,22 +1,18 @@
 #include "MilitaryTrackWidget.h"
+#include "ui_MilitaryTrackWidget.h"
 #include <QHBoxLayout>
 
 MilitaryTrackWidget::MilitaryTrackWidget(QWidget* parent)
     : QWidget(parent)
+    , ui(new Ui::MilitaryTrackWidget)
 {
-    m_mainLayout = new QVBoxLayout(this);
-    m_mainLayout->setSpacing(0);
-    m_mainLayout->setContentsMargins(10, 10, 10, 10);
-
-    // A container to allow the pawn to float over the track segments
-    QFrame* trackContainer = new QFrame(this);
-    trackContainer->setObjectName("trackContainer");
-    m_mainLayout->addWidget(trackContainer);
+    ui->setupUi(this);
 
     createTrack();
 
-    // Create the pawn
-    m_pawn = new QLabel(trackContainer);
+    // Create the pawn as a child of trackContainer but NOT added to its layout
+    // allowing absolute positioning.
+    m_pawn = new QLabel(ui->trackContainer);
     m_pawn->setFixedSize(18, 18);
     m_pawn->setStyleSheet(
         "background-color: #e74c3c;"
@@ -29,14 +25,16 @@ MilitaryTrackWidget::MilitaryTrackWidget(QWidget* parent)
     updatePawnPosition(0);
 }
 
+MilitaryTrackWidget::~MilitaryTrackWidget()
+{
+    delete ui;
+}
+
 void MilitaryTrackWidget::createTrack()
 {
-    QWidget* trackWidget = findChild<QWidget*>("trackContainer");
-    if (!trackWidget) return;
-
-    QVBoxLayout* trackLayout = new QVBoxLayout(trackWidget);
-    trackLayout->setSpacing(1);
-    trackLayout->setContentsMargins(0, 0, 0, 0);
+    // Access the layout already defined in .ui
+    QVBoxLayout* trackLayout = qobject_cast<QVBoxLayout*>(ui->trackContainer->layout());
+    if (!trackLayout) return;
 
     m_trackSegments.resize(m_totalSegments);
 

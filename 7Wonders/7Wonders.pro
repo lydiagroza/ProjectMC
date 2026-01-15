@@ -13,7 +13,8 @@ DEFINES += GAMEBASE_STATIC
 INCLUDEPATH += GameBase \
                gameAI \
                ConsoleGame \
-               gameUI
+               gameUI \
+               UI
 
 # ========================================
 # GameBase - toate clasele principale
@@ -89,6 +90,18 @@ SOURCES += gameUI/main.cpp \
            gameUI/BoardWidget.cpp \
            gameUI/MilitaryTrackWidget.cpp \
            gameUI/CardWidget.cpp
+
+# ========================================
+# UI - fișiere de design .ui (opțional)
+# ========================================
+HEADERS += UI/ui_globals.h
+OTHER_FILES += UI/README.txt
+FORMS += UI/WonderSelectionWidget.ui \
+         UI/MainWindow.ui \
+         UI/SplashScreen.ui \
+         UI/CardWidget.ui \
+         UI/BoardWidget.ui \
+         UI/MilitaryTrackWidget.ui
 
 # Dacă ai fișier .ui (design vizual)
 # Decomentează linia de mai jos dacă există MainWindow.ui

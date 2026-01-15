@@ -1,7 +1,11 @@
-﻿#pragma once
+#pragma once
 #include <QWidget>
 #include <QList>
 #include "CardWidget.h"
+
+namespace Ui {
+class BoardWidget;
+}
 
 class BoardWidget : public QWidget
 {
@@ -9,6 +13,7 @@ class BoardWidget : public QWidget
 
 public:
     explicit BoardWidget(QWidget* parent = nullptr);
+    ~BoardWidget();
 
     void clearBoard();
 
@@ -21,6 +26,7 @@ private slots:
     void handleInternalClick();
 
 private:
+    Ui::BoardWidget *ui;
     QList<CardWidget*> m_activeCards;
 
     // Constante geometrice

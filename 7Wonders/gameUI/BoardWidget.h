@@ -15,12 +15,15 @@ public:
     explicit BoardWidget(QWidget* parent = nullptr);
     ~BoardWidget();
 
-    void clearBoard();
+        void clearBoard();
 
-    void placeCard(int id, QString name, QString color, bool isFaceUp, int row, int col, int totalCardsInRow);
+        void placeCard(int id, QString name, QString color, bool isFaceUp, int row, int col, int totalCardsInRow, QString cost = "", QString effect = "");
 
-signals:
-    void cardClicked(int cardId);
+    
+
+    signals:
+
+        void cardClicked(int cardId);
 
 private slots:
     void handleInternalClick();
@@ -30,8 +33,8 @@ private:
     QList<CardWidget*> m_activeCards;
 
     // Constante geometrice
-    const int CARD_WIDTH = 70;
-    const int CARD_HEIGHT = 100;
-    const int H_SPACING = 10; 
-    const int V_OVERLAP = 25; 
+    const int CARD_WIDTH = 100;
+    const int CARD_HEIGHT = 140;
+    const int H_SPACING = 15; 
+    const int V_OVERLAP = 50; 
 };

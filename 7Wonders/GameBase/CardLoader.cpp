@@ -66,6 +66,33 @@ std::vector<std::shared_ptr<CardBase>> CardLoader::loadFromCSV(const std::string
         auto effects = parseEffects(effectsStr);
         for (auto& ef : effects) card->addEffect(ef);
 
+        // --- Generate Description ---
+        string desc = effectsStr;
+        // Basic cleanup
+        auto replaceAll = [](string& str, const string& from, const string& to) {
+            size_t start_pos = 0;
+            while ((start_pos = str.find(from, start_pos)) != string::npos) {
+                str.replace(start_pos, from.length(), to);
+                start_pos += to.length();
+            }
+        };
+        
+        replaceAll(desc, "\"", "");
+        replaceAll(desc, ";", ", ");
+        replaceAll(desc, "add_resource_", "");
+        replaceAll(desc, "add_VictoryPoint", " VP");
+        replaceAll(desc, "add_MilitaryPoint", " Shield");
+        replaceAll(desc, "add_scientific_symbol_", "");
+        
+        // Capitalize first letters if needed, but the resource names are usually lowercase in the CSV (e.g. "wood").
+        // Let's simple-capitalize words.
+        for(size_t i=0; i<desc.size(); ++i) {
+             if(i==0 || desc[i-1] == ' ') desc[i] = toupper(desc[i]);
+        }
+        
+        card->m_effectDescription = desc;
+        // -----------------------------
+
         card->m_destroy = parseDestroy(destroyStr);
 
         cards.push_back(card);

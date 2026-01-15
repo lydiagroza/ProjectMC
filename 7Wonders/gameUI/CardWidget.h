@@ -14,7 +14,7 @@ public:
     explicit CardWidget(int cardId, QWidget* parent = nullptr);
     ~CardWidget();
 
-    void setupCard(const QString& name, const QString& colorCode, bool isFaceUp);
+    void setupCard(const QString& name, const QString& colorCode, bool isFaceUp, const QString& cost = "", const QString& effect = "");
     void setSelected(bool selected);
     int getCardId() const { return m_cardId; }
 

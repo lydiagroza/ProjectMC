@@ -23,11 +23,11 @@ void BoardWidget::clearBoard()
     m_activeCards.clear();
 }
 
-void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, int row, int col, int totalCardsInRow)
+void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, int row, int col, int totalCardsInRow, QString cost, QString effect)
 {
     // 1. Instanțiem widget-ul
     CardWidget* newCard = new CardWidget(id, this);
-    newCard->setupCard(name, color, isFaceUp);
+    newCard->setupCard(name, color, isFaceUp, cost, effect);
 
     // 2. Conectăm semnalul
     connect(newCard, &CardWidget::clicked, this, &BoardWidget::handleInternalClick);

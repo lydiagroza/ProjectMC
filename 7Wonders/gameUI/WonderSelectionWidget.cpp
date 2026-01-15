@@ -13,7 +13,11 @@ WonderSelectionWidget::~WonderSelectionWidget()
     delete ui;
 }
 
-void WonderSelectionWidget::setWonders(const std::vector<int>& ids, const std::vector<QString>& names, const std::vector<QString>& colors)
+void WonderSelectionWidget::setWonders(const std::vector<int>& ids, 
+                                       const std::vector<QString>& names, 
+                                       const std::vector<QString>& colors,
+                                       const std::vector<QString>& costs,
+                                       const std::vector<QString>& effects)
 {
     qDeleteAll(m_currentCards);
     m_currentCards.clear();
@@ -23,7 +27,7 @@ void WonderSelectionWidget::setWonders(const std::vector<int>& ids, const std::v
 
         // Make cards larger for selection screen
         card->setFixedSize(140, 200);
-        card->setupCard(names[i], colors[i], true);
+        card->setupCard(names[i], colors[i], true, costs[i], effects[i]);
 
         connect(card, &CardWidget::clicked, this, &WonderSelectionWidget::onCardClicked);
 

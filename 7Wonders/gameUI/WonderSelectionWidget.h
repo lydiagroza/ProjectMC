@@ -16,7 +16,11 @@ public:
     ~WonderSelectionWidget();
 
     // Function to receive wonder data
-    void setWonders(const std::vector<int>& ids, const std::vector<QString>& names, const std::vector<QString>& colors);
+    void setWonders(const std::vector<int>& ids, 
+                    const std::vector<QString>& names, 
+                    const std::vector<QString>& colors,
+                    const std::vector<QString>& costs,
+                    const std::vector<QString>& effects);
 
 signals:
     void wonderChosen(int cardId);

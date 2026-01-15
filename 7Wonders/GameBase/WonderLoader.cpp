@@ -218,6 +218,32 @@ std::vector<std::shared_ptr<Wonder>> WonderLoader::loadWonders(const std::string
 
         auto wonder = std::make_shared<Wonder>(name, id, cost);
 
+        // --- Generate Description ---
+        std::string desc = effectsStr;
+        auto replaceAll = [](std::string& str, const std::string& from, const std::string& to) {
+            size_t start_pos = 0;
+            while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
+                str.replace(start_pos, from.length(), to);
+                start_pos += to.length();
+            }
+        };
+
+        replaceAll(desc, "\"", "");
+        replaceAll(desc, ";", ", ");
+        replaceAll(desc, "add_coins", " Coins "); // e.g. add_coins12 -> Coins 12
+        replaceAll(desc, "add_VictoryPoint", " VP");
+        replaceAll(desc, "add_MilitaryPoint", " Shield");
+        replaceAll(desc, "decreaseCoins", " Opponent Loses Coins ");
+        replaceAll(desc, "replayTurn", "Replay Turn");
+        
+        // Clean up numbers attached to words if needed, but "Coins 12" is fine.
+        // Let's capitalize
+        for(size_t i=0; i<desc.size(); ++i) {
+             if(i==0 || desc[i-1] == ' ') desc[i] = toupper(desc[i]);
+        }
+        wonder->setEffectDescription(desc);
+        // -----------------------------
+
         auto effects = parseWonderEffects(effectsStr);
         for (auto& ef : effects)
             wonder->addEffect(ef);

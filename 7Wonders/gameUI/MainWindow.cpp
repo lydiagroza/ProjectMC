@@ -161,17 +161,38 @@ void MainWindow::startWonderDraft()
     std::vector<int> ids;
     std::vector<QString> names;
     std::vector<QString> colors;
+    std::vector<QString> costs;
+    std::vector<QString> effects;
+
+    auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
+        QStringList parts;
+        for (auto const& [res, count] : costMap) {
+             QString rName;
+             switch(res) {
+                 case Resource::Wood: rName = "Wood"; break;
+                 case Resource::Clay: rName = "Clay"; break;
+                 case Resource::Stone: rName = "Stone"; break;
+                 case Resource::Glass: rName = "Glass"; break;
+                 case Resource::Papyrus: rName = "Papyrus"; break;
+                 case Resource::Coin: rName = "Coin"; break;
+             }
+             parts << QString("%1 %2").arg(count).arg(rName);
+        }
+        return parts.join("\n");
+    };
 
     for (const auto& wonderPtr : availableWonders) {
         ids.push_back(wonderPtr->getId());
         names.push_back(QString::fromStdString(wonderPtr->getName()));
         colors.push_back("#DAA520");
+        costs.push_back(formatCost(wonderPtr->getCost()));
+        effects.push_back(QString::fromStdString(wonderPtr->getEffectDescription()));
     }
 
     QString currentPlayerName = QString::fromStdString(m_game->getCurrentPlayer()->getName());
     ui->statusbar->showMessage("⚔️ " + currentPlayerName + " must choose a wonder! ⚔️", 5000);
 
-    ui->wonderSelectionPage->setWonders(ids, names, colors);
+    ui->wonderSelectionPage->setWonders(ids, names, colors, costs, effects);
 }
 
 void MainWindow::onWonderChosen(int wonderId)
@@ -473,6 +494,23 @@ void MainWindow::renderGame()
     ui->boardWidgetPage->clearBoard();
     Board& boardData = m_game->getBoard();
     const auto& rows = boardData.getPyramid().getRows();
+    
+    auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
+        QStringList parts;
+        for (auto const& [res, count] : costMap) {
+             QString rName;
+             switch(res) {
+                 case Resource::Wood: rName = "Wood"; break;
+                 case Resource::Clay: rName = "Clay"; break;
+                 case Resource::Stone: rName = "Stone"; break;
+                 case Resource::Glass: rName = "Glass"; break;
+                 case Resource::Papyrus: rName = "Papyrus"; break;
+                 case Resource::Coin: rName = "Coin"; break;
+             }
+             parts << QString("%1 %2").arg(count).arg(rName);
+        }
+        return parts.join("\n");
+    };
 
     for (size_t r = 0; r < rows.size(); ++r) {
         const auto& row = rows[r];
@@ -489,9 +527,11 @@ void MainWindow::renderGame()
             QString name = QString::fromStdString(cardPtr->getName());
             Color col = cardPtr->getColor();
             bool isFaceUp = (node->getFace() == Face::Up);
+            QString cost = formatCost(cardPtr->getCost());
+            QString effect = QString::fromStdString(cardPtr->getEffectDescription());
 
             ui->boardWidgetPage->placeCard(id, name, getColorHex(col), isFaceUp,
-                static_cast<int>(r), static_cast<int>(c), cardsInRow);
+                static_cast<int>(r), static_cast<int>(c), cardsInRow, cost, effect);
         }
     }
 }

@@ -77,12 +77,13 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins, 
     // Add new wonder widgets
     for (const auto& wonderPtr : wonders) {
         CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), ui->wondersContainer);
-        wonderWidget->setFixedSize(70, 95);
+        wonderWidget->setFixedSize(100, 140);
 
         QString wName = QString::fromStdString(wonderPtr->getName());
         QString color = wonderPtr->getIsBuilt() ? "#DAA520" : "#6D4C41";
+        QString effect = QString::fromStdString(wonderPtr->getEffectDescription());
 
-        wonderWidget->setupCard(wName, color, true);
+        wonderWidget->setupCard(wName, color, true, "", effect);
         ui->wondersLayout->addWidget(wonderWidget);
     }
     

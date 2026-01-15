@@ -55,7 +55,7 @@
         <item>
          <widget class="QLabel" name="costLabel">
           <property name="styleSheet">
-           <string>background-color: rgba(255, 255, 255, 180); border-radius: 4px; padding: 2px; font-weight: bold; color: black;</string>
+           <string>background-color: rgba(255, 255, 255, 210); border-radius: 4px; padding: 2px; font-weight: bold; color: black;</string>
           </property>
           <property name="text">
            <string/>
@@ -68,13 +68,16 @@
         <item>
          <widget class="QLabel" name="nameLabel">
           <property name="styleSheet">
-           <string>background-color: rgba(255, 255, 255, 150); border-radius: 4px; padding: 2px;</string>
+           <string>background-color: rgba(255, 255, 255, 210); border-radius: 4px; padding: 2px; color: black;</string>
           </property>
           <property name="text">
            <string>Name</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

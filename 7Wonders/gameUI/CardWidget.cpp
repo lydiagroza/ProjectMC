@@ -13,7 +13,7 @@ CardWidget::CardWidget(int cardId, QWidget* parent)
     // Initial font setup
     QFont font = ui->nameLabel->font();
     font.setBold(true);
-    font.setPointSize(8);
+    font.setPointSize(7); // Reduced to fit better
     ui->nameLabel->setFont(font);
 
     // Ensure overlay button is transparent

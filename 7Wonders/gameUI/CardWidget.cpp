@@ -1,5 +1,6 @@
 #include "CardWidget.h"
 #include "ui_CardWidget.h"
+#include <QVBoxLayout>
 
 CardWidget::CardWidget(int cardId, QWidget* parent)
     : QWidget(parent)
@@ -128,9 +129,16 @@ void CardWidget::setImage(const QString& imagePath)
         ).arg(imagePath);
         ui->cardFrame->setStyleSheet(style);
 
-        // Reset Layout Alignment to allow individual label alignments to work effectively
-        if (ui->cardFrame->layout()) {
-            ui->cardFrame->layout()->setAlignment(Qt::AlignTop);
+        // Fix Layout Order: Title First, then Cost
+        QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->cardFrame->layout());
+        if (layout) {
+            layout->setAlignment(Qt::AlignTop);
+            // Move nameLabel to top (index 0)
+            layout->removeWidget(ui->nameLabel);
+            layout->insertWidget(0, ui->nameLabel);
+            // Move costLabel to second (index 1)
+            layout->removeWidget(ui->costLabel);
+            layout->insertWidget(1, ui->costLabel);
         }
 
         // --- Antique Style ---
@@ -147,17 +155,19 @@ void CardWidget::setImage(const QString& imagePath)
                                      "  color: white; "
                                      "  font-family: 'Times New Roman', serif; "
                                      "  font-weight: bold; "
-                                     "  font-size: 26px; "
+                                     "  font-size: 16px; "
                                      "}");
         ui->nameLabel->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 
         // Info: Left, slightly smaller, Black
+        // No padding needed now as it's structurally below title
         QString infoStyle = "QLabel { "
                             "  background-color: transparent; "
                             "  color: black; "
                             "  font-family: 'Times New Roman', serif; "
                             "  font-weight: bold; "
                             "  font-size: 14px; "
+                            "  padding-left: 5px; "
                             "}";
         ui->costLabel->setStyleSheet(infoStyle);
         ui->costLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -168,8 +178,8 @@ void CardWidget::setImage(const QString& imagePath)
         // Dark shadow for White Title
         QGraphicsDropShadowEffect* titleShadow = new QGraphicsDropShadowEffect();
         titleShadow->setColor(QColor(0, 0, 0, 255));
-        titleShadow->setBlurRadius(8);
-        titleShadow->setOffset(2, 2);
+        titleShadow->setBlurRadius(4);
+        titleShadow->setOffset(1, 1);
         ui->nameLabel->setGraphicsEffect(titleShadow);
 
         // White glow for Black Info labels
@@ -187,11 +197,32 @@ void CardWidget::setImage(const QString& imagePath)
         // Ensure they are visible
         ui->nameLabel->setVisible(true);
         ui->costLabel->setVisible(!ui->costLabel->text().isEmpty());
-        ui->effectLabel->setVisible(true);
+        ui->effectLabel->setVisible(false);
 
     } else {
         ui->imageLabel->clear(); 
     }
+}
+
+QString CardWidget::getWonderImagePath(const QString& wonderName)
+{
+    QString normalized = wonderName.simplified().remove(' ').toUpper();
+    
+    // Fix typo in filename if necessary
+    if (normalized == "THEPYRAMIDS") normalized = "THEPIRAMIDS";
+    if (normalized == "HANGINGGARDENS") normalized = "HANGINGGARDEN"; // "The Hanging Gardens" -> HANGINGGARDEN.png check
+    if (normalized == "THEHANGINGGARDENS") normalized = "HANGINGGARDEN";
+    if (normalized == "THEHANGINGGARDEN") normalized = "HANGINGGARDEN";
+    
+    // Check for specific filename matches if normalization isn't exact
+    // But mostly it should match. 
+    
+    QString path = ":/wonders/UI/" + normalized + ".png";
+    QPixmap test(path);
+    if (!test.isNull()) {
+        return path;
+    }
+    return "";
 }
 
 QString CardWidget::adjustBrightness(const QString& hexColor, double factor)

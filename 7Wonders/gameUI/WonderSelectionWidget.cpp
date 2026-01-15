@@ -50,11 +50,11 @@ void WonderSelectionWidget::setWonders(const std::vector<int>& ids,
 
         card->setupCard(names[i], colors[i], true, costs[i], effects[i]);
 
-        // Restore the specific check for the wonder
-        if (names[i].trimmed().toLower() == "the statue of zeus") {
-            qDebug() << "MATCH FOUND. Applying image to:" << names[i];
-            card->setImage(":/wonders/UI/THESTATUEOFZEUS.png");
-        }
+    // Check for wonder image
+    QString imgPath = CardWidget::getWonderImagePath(names[i]);
+    if (!imgPath.isEmpty()) {
+        card->setImage(imgPath);
+    }
 
         connect(card, &CardWidget::clicked, this, &WonderSelectionWidget::onCardClicked);
         cardsLayout->addWidget(card);

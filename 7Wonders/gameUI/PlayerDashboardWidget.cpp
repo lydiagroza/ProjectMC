@@ -85,8 +85,9 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins, 
 
         wonderWidget->setupCard(wName, color, true, "", effect);
 
-        if (wName.trimmed().toLower() == "the statue of zeus") {
-            wonderWidget->setImage(":/wonders/UI/THESTATUEOFZEUS.png");
+        QString imgPath = CardWidget::getWonderImagePath(wName);
+        if (!imgPath.isEmpty()) {
+            wonderWidget->setImage(imgPath);
         }
 
         ui->wondersLayout->addWidget(wonderWidget);

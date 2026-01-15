@@ -51,9 +51,10 @@ void WonderChoiceDialog::setWonders(const std::vector<Wonder*>& wonders, Player*
         
         cw->setupCard(name, "#DAA520", true, costStr, effect); 
 
-        // Apply image for The Statue of Zeus
-        if (name.trimmed().toLower() == "the statue of zeus") {
-            cw->setImage(":/wonders/UI/THESTATUEOFZEUS.png");
+        // Check for wonder image
+        QString imgPath = CardWidget::getWonderImagePath(w->getName().c_str());
+        if (!imgPath.isEmpty()) {
+            cw->setImage(imgPath);
         }
         
         connect(cw, &CardWidget::clicked, this, &WonderChoiceDialog::onCardClicked);

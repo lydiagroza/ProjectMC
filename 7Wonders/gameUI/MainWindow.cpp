@@ -222,18 +222,20 @@ void MainWindow::startWonderDraft()
     auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
         QStringList parts;
         for (auto const& [res, count] : costMap) {
-             QString rName;
+             QString icon;
              switch(res) {
-                 case Resource::Wood: rName = "Wood"; break;
-                 case Resource::Clay: rName = "Clay"; break;
-                 case Resource::Stone: rName = "Stone"; break;
-                 case Resource::Glass: rName = "Glass"; break;
-                 case Resource::Papyrus: rName = "Papyrus"; break;
-                 case Resource::Coin: rName = "Coin"; break;
+                 case Resource::Wood: icon = "wood.png"; break;
+                 case Resource::Clay: icon = "clay.png"; break;
+                 case Resource::Stone: icon = "stone.png"; break;
+                 case Resource::Glass: icon = "glass.png"; break;
+                 case Resource::Papyrus: icon = "papyrus.png"; break;
+                 case Resource::Coin: icon = "coin.png"; break;
              }
-             parts << QString("%1 %2").arg(count).arg(rName);
+             if (!icon.isEmpty()) {
+                parts << QString("%1 x <img src=':/resources/UI/%2' height='14'>").arg(count).arg(icon);
+             }
         }
-        return parts.join("\n");
+        return parts.join("<br>");
     };
 
     for (const auto& wonderPtr : availableWonders) {
@@ -552,18 +554,20 @@ void MainWindow::renderGame()
     auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
         QStringList parts;
         for (auto const& [res, count] : costMap) {
-             QString rName;
+             QString icon;
              switch(res) {
-                 case Resource::Wood: rName = "Wood"; break;
-                 case Resource::Clay: rName = "Clay"; break;
-                 case Resource::Stone: rName = "Stone"; break;
-                 case Resource::Glass: rName = "Glass"; break;
-                 case Resource::Papyrus: rName = "Papyrus"; break;
-                 case Resource::Coin: rName = "Coin"; break;
+                 case Resource::Wood: icon = "wood.png"; break;
+                 case Resource::Clay: icon = "clay.png"; break;
+                 case Resource::Stone: icon = "stone.png"; break;
+                 case Resource::Glass: icon = "glass.png"; break;
+                 case Resource::Papyrus: icon = "papyrus.png"; break;
+                 case Resource::Coin: icon = "coin.png"; break;
              }
-             parts << QString("%1 %2").arg(count).arg(rName);
+             if (!icon.isEmpty()) {
+                parts << QString("%1 x <img src=':/resources/UI/%2' height='14'>").arg(count).arg(icon);
+             }
         }
-        return parts.join("\n");
+        return parts.join("<br>");
     };
 
     for (size_t r = 0; r < rows.size(); ++r) {

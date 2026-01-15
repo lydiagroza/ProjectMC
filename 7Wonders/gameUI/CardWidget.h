@@ -17,6 +17,7 @@ public:
     void setupCard(const QString& name, const QString& colorCode, bool isFaceUp, const QString& cost = "", const QString& effect = "");
     void setSelected(bool selected);
     void setImage(const QString& imagePath); // New method to set the image
+    static QString getWonderImagePath(const QString& wonderName); // Helper to find image path
     int getCardId() const { return m_cardId; }
 
 signals:

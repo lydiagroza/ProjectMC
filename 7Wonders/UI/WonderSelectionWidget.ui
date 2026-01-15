@@ -51,13 +51,7 @@
     </spacer>
    </item>
    <item>
-    <widget class="QWidget" name="cardsContainer" native="true">
-     <layout class="QGridLayout" name="gridLayout">
-      <property name="spacing">
-       <number>20</number>
-      </property>
-     </layout>
-    </widget>
+    <layout class="QVBoxLayout" name="containerLayout"/>
    </item>
   </layout>
  </widget>

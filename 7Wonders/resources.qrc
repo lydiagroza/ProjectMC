@@ -3,4 +3,7 @@
     <qresource prefix="/">
         <file>background.jpg</file>
     </qresource>
+    <qresource prefix="/wonders">
+        <file>UI/THESTATUEOFZEUS.png</file>
+    </qresource>
 </RCC>

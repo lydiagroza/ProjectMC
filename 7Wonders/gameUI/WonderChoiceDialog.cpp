@@ -27,7 +27,7 @@ void WonderChoiceDialog::setWonders(const std::vector<Wonder*>& wonders, Player*
 
     int row = 0;
     int col = 0;
-    int maxCols = 3;
+    int maxCols = 10; // Ensure horizontal layout
 
     for (auto* w : wonders) {
         CardWidget* cw = new CardWidget(w->getId(), this);
@@ -50,6 +50,11 @@ void WonderChoiceDialog::setWonders(const std::vector<Wonder*>& wonders, Player*
         QString name = QString::fromStdString(w->getName());
         
         cw->setupCard(name, "#DAA520", true, costStr, effect); 
+
+        // Apply image for The Statue of Zeus
+        if (name.trimmed().toLower() == "the statue of zeus") {
+            cw->setImage(":/wonders/UI/THESTATUEOFZEUS.png");
+        }
         
         connect(cw, &CardWidget::clicked, this, &WonderChoiceDialog::onCardClicked);
 

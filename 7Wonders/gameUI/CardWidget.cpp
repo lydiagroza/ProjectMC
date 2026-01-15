@@ -43,6 +43,7 @@ void CardWidget::setupCard(const QString& name, const QString& colorCode, bool i
         ui->costLabel->setVisible(!cost.isEmpty());
         ui->effectLabel->setText(effect);
         ui->effectLabel->setVisible(true);
+        ui->imageLabel->setVisible(true); // Make sure image label is visible
 
         QString borderStyle = QString(
             "QFrame#cardFrame { "
@@ -69,6 +70,8 @@ void CardWidget::setupCard(const QString& name, const QString& colorCode, bool i
         ui->costLabel->setVisible(false);
         ui->effectLabel->setText("?");
         ui->effectLabel->setStyleSheet("color: #3E2723; background: transparent; font-size: 30px; font-weight: bold; border: none;");
+        ui->imageLabel->clear(); // Clear image for face down card
+        ui->imageLabel->setVisible(false); // Hide image label
         
         ui->cardFrame->setStyleSheet(
             "QFrame#cardFrame { "
@@ -103,6 +106,17 @@ void CardWidget::setSelected(bool selected)
             currentStyle.replace("border: 4px solid #f1c40f", "border: 2px solid #333");
         }
         ui->cardFrame->setStyleSheet(currentStyle);
+    }
+}
+
+void CardWidget::setImage(const QString& imagePath)
+{
+    QPixmap pixmap(imagePath);
+    if (!pixmap.isNull()) {
+        ui->imageLabel->setPixmap(pixmap);
+        ui->imageLabel->setAlignment(Qt::AlignCenter);
+    } else {
+        ui->imageLabel->clear(); // Clear any existing pixmap if path is invalid
     }
 }
 

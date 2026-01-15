@@ -1,5 +1,7 @@
 #include "WonderSelectionWidget.h"
 #include "ui_WonderSelectionWidget.h"
+#include "CardWidget.h" // Required for full definition of CardWidget
+#include <QDebug> // For debugging
 
 WonderSelectionWidget::WonderSelectionWidget(QWidget* parent)
     : QWidget(parent)
@@ -13,32 +15,55 @@ WonderSelectionWidget::~WonderSelectionWidget()
     delete ui;
 }
 
-void WonderSelectionWidget::setWonders(const std::vector<int>& ids, 
-                                       const std::vector<QString>& names, 
+void WonderSelectionWidget::setWonders(const std::vector<int>& ids,
+                                       const std::vector<QString>& names,
                                        const std::vector<QString>& colors,
                                        const std::vector<QString>& costs,
                                        const std::vector<QString>& effects)
 {
-    qDeleteAll(m_currentCards);
+    // --- Forceful Layout & Image Debugging ---
+
+    // 1. Find and delete the old scroll area and all its children to ensure a clean slate.
+    QScrollArea* oldScrollArea = this->findChild<QScrollArea*>();
+    if (oldScrollArea) {
+        delete oldScrollArea;
+    }
     m_currentCards.clear();
 
-    for (int i = 0; i < ids.size(); ++i) {
-        CardWidget* card = new CardWidget(ids[i], this);
+    // 2. Create the scrollable area programmatically.
+    QScrollArea* scrollArea = new QScrollArea(this);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-        // Make cards larger for selection screen
-        card->setFixedSize(140, 200);
+    // 3. Create a container and a horizontal layout for the cards.
+    QWidget* cardsContainer = new QWidget();
+    QHBoxLayout* cardsLayout = new QHBoxLayout(cardsContainer);
+    cardsLayout->setSpacing(20);
+
+    // 3. Create and add cards to the horizontal layout
+    for (int i = 0; i < ids.size(); ++i) {
+        qDebug() << "Processing wonder:" << names[i].trimmed().toLower();
+        CardWidget* card = new CardWidget(ids[i], cardsContainer); // Parent to container
+        
+        card->setFixedSize(140, 200); // Restore original size
+
         card->setupCard(names[i], colors[i], true, costs[i], effects[i]);
 
+        // Restore the specific check for the wonder
+        if (names[i].trimmed().toLower() == "the statue of zeus") {
+            qDebug() << "MATCH FOUND. Applying image to:" << names[i];
+            card->setImage(":/wonders/UI/THESTATUEOFZEUS.png");
+        }
+
         connect(card, &CardWidget::clicked, this, &WonderSelectionWidget::onCardClicked);
-
-        int row = i / 2;
-        int col = i % 2;
-        
-        // Add to the grid layout defined in the .ui file
-        ui->gridLayout->addWidget(card, row, col);
-
+        cardsLayout->addWidget(card);
         m_currentCards.append(card);
     }
+    
+    // 5. Place the container in the scroll area and add it to the main layout.
+    scrollArea->setWidget(cardsContainer);
+    ui->verticalLayout->addWidget(scrollArea);
 }
 
 void WonderSelectionWidget::onCardClicked()

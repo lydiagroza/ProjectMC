@@ -1,7 +1,11 @@
 #pragma once
 #include <QWidget>
 #include <vector>
-#include "CardWidget.h" 
+#include <QString>
+#include <QScrollArea> // Required for QScrollArea
+#include <QHBoxLayout> // Required for QHBoxLayout
+
+class CardWidget; 
 
 namespace Ui {
 class WonderSelectionWidget;

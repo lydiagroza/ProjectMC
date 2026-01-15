@@ -214,6 +214,10 @@ QString CardWidget::getWonderImagePath(const QString& wonderName)
     if (normalized == "HANGINGGARDENS") normalized = "HANGINGGARDEN";
     if (normalized == "THEHANGINGGARDENS") normalized = "HANGINGGARDEN";
     if (normalized == "THEHANGINGGARDEN") normalized = "HANGINGGARDEN";
+    if (normalized == "THETEMPLEOFARTEMIS") normalized = "THEGREATTEMPLEOFARTEMIS";
+    if (normalized == "TEMPLEOFARTEMIS") normalized = "THEGREATTEMPLEOFARTEMIS";
+    if (normalized == "THEAPPIANWAY") normalized = "THEAPIANWAY"; // Handle filename typo (one P)
+    if (normalized == "APPIANWAY") normalized = "THEAPIANWAY";
     
     // Try to find the file in the "UI" folder relative to current working directory
     // (Usually project root when running from IDE)

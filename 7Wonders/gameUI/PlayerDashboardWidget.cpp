@@ -75,6 +75,25 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins, 
     }
 
     // Add new wonder widgets
+    auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
+        QStringList parts;
+        for (auto const& [res, count] : costMap) {
+             QString icon;
+             switch(res) {
+                 case Resource::Wood: icon = "wood.png"; break;
+                 case Resource::Clay: icon = "clay.png"; break;
+                 case Resource::Stone: icon = "stone.png"; break;
+                 case Resource::Glass: icon = "glass.png"; break;
+                 case Resource::Papyrus: icon = "papyrus.png"; break;
+                 case Resource::Coin: icon = "coin.png"; break;
+             }
+             if (!icon.isEmpty()) {
+                parts << QString("%1 x <img src=':/resources/UI/%2' height='14'>").arg(count).arg(icon);
+             }
+        }
+        return parts.join("<br>");
+    };
+
     for (const auto& wonderPtr : wonders) {
         CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), ui->wondersContainer);
         wonderWidget->setFixedSize(200, 100); // Mini Landscape for Dashboard
@@ -82,8 +101,9 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins, 
         QString wName = QString::fromStdString(wonderPtr->getName());
         QString color = wonderPtr->getIsBuilt() ? "#DAA520" : "#6D4C41";
         QString effect = QString::fromStdString(wonderPtr->getEffectDescription());
+        QString cost = formatCost(wonderPtr->getCost());
 
-        wonderWidget->setupCard(wName, color, true, "", effect);
+        wonderWidget->setupCard(wName, color, true, cost, effect);
 
         QString imgPath = CardWidget::getWonderImagePath(wName);
         if (!imgPath.isEmpty()) {

@@ -81,7 +81,8 @@ HEADERS += gameUI/MainWindow.h \
            gameUI/WonderSelectionWidget.h \
            gameUI/BoardWidget.h \
            gameUI/MilitaryTrackWidget.h \
-           gameUI/CardWidget.h
+           gameUI/CardWidget.h \
+           gameUI/PlayerDashboardWidget.h
 
 SOURCES += gameUI/main.cpp \
            gameUI/MainWindow.cpp \
@@ -89,7 +90,8 @@ SOURCES += gameUI/main.cpp \
            gameUI/WonderSelectionWidget.cpp \
            gameUI/BoardWidget.cpp \
            gameUI/MilitaryTrackWidget.cpp \
-           gameUI/CardWidget.cpp
+           gameUI/CardWidget.cpp \
+           gameUI/PlayerDashboardWidget.cpp
 
 # ========================================
 # UI - fișiere de design .ui (opțional)
@@ -101,7 +103,8 @@ FORMS += UI/WonderSelectionWidget.ui \
          UI/SplashScreen.ui \
          UI/CardWidget.ui \
          UI/BoardWidget.ui \
-         UI/MilitaryTrackWidget.ui
+         UI/MilitaryTrackWidget.ui \
+         UI/PlayerDashboardWidget.ui
 
 # Dacă ai fișier .ui (design vizual)
 # Decomentează linia de mai jos dacă există MainWindow.ui

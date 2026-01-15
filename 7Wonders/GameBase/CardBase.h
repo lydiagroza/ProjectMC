@@ -62,7 +62,7 @@ class Board;
           const std::optional<Symbol>& symbol = std::nullopt,
           const std::optional<Symbol>& unlocks = std::nullopt)
           : m_name(std::move(name)), m_id(id), m_color(color),
-          m_cost(cost), m_symbol(symbol), m_unlocks(unlocks) {
+           m_symbol(symbol), m_unlocks(unlocks), m_cost(cost) {
       }
 
 

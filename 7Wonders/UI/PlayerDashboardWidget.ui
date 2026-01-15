@@ -1,42 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MilitaryTrackWidget</class>
- <widget class="QWidget" name="MilitaryTrackWidget">
+ <class>PlayerDashboardWidget</class>
+ <widget class="QWidget" name="PlayerDashboardWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>100</width>
-    <height>600</height>
+    <width>600</width>
+    <height>150</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
-    <number>0</number>
+    <number>5</number>
    </property>
    <property name="leftMargin">
-    <number>10</number>
+    <number>8</number>
    </property>
    <property name="topMargin">
-    <number>10</number>
+    <number>8</number>
    </property>
    <property name="rightMargin">
-    <number>10</number>
+    <number>8</number>
    </property>
    <property name="bottomMargin">
-    <number>10</number>
+    <number>8</number>
    </property>
    <item>
-    <widget class="QFrame" name="trackContainer">
-     <property name="frameShape">
-      <enum>QFrame::Shape::NoFrame</enum>
+    <widget class="QLabel" name="infoLabel">
+     <property name="text">
+      <string>Player Name | 0 Coins</string>
      </property>
-     <property name="frameShadow">
-      <enum>QFrame::Shadow::Plain</enum>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
-     <layout class="QVBoxLayout" name="trackLayout">
+     <property name="styleSheet">
+      <string notr="true">color: #FFD700; 
+font-weight: bold; 
+font-size: 14px; 
+background: transparent; 
+border: none; 
+font-family: 'Times New Roman', serif;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="wondersContainer" native="true">
+     <layout class="QHBoxLayout" name="wondersLayout">
       <property name="spacing">
-       <number>1</number>
+       <number>5</number>
       </property>
       <property name="leftMargin">
        <number>0</number>

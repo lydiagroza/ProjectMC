@@ -7,7 +7,9 @@
 #include "WonderSelectionWidget.h"
 #include "MilitaryTrackWidget.h"
 #include "SplashScreen.h"
+#include "PlayerDashboardWidget.h"
 #include "Game.h"
+#include "GameConstants.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -19,6 +21,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QFrame>
 #include <QStackedWidget>
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -29,19 +32,7 @@ MainWindow::MainWindow(QWidget* parent)
 {
     ui->setupUi(this);
 
-    // Apply Shadows manually as they are tricky in .ui
-    QGraphicsDropShadowEffect* oppShadow = new QGraphicsDropShadowEffect();
-    oppShadow->setBlurRadius(8);
-    oppShadow->setColor(QColor(0, 0, 0, 180));
-    oppShadow->setOffset(2, 2);
-    ui->opponentLabel->setGraphicsEffect(oppShadow);
-
-    QGraphicsDropShadowEffect* playerShadow = new QGraphicsDropShadowEffect();
-    playerShadow->setBlurRadius(8);
-    playerShadow->setColor(QColor(0, 0, 0, 180));
-    playerShadow->setOffset(2, 2);
-    ui->playerLabel->setGraphicsEffect(playerShadow);
-
+    // Apply Shadows for Right Panel items
     QGraphicsDropShadowEffect* titleShadow = new QGraphicsDropShadowEffect();
     titleShadow->setBlurRadius(6);
     titleShadow->setColor(QColor(0, 0, 0, 200));
@@ -54,7 +45,7 @@ MainWindow::MainWindow(QWidget* parent)
     tokShadow->setOffset(1, 1);
     ui->lblTok->setGraphicsEffect(tokShadow);
 
-    // Apply style to BoardWidget manually if needed, or rely on .ui inheritance
+    // Apply style to BoardWidget
     ui->boardWidgetPage->setStyleSheet(
         "background: qradialgradient(cx:0.5, cy:0.5, radius:0.8, "
         "  fx:0.5, fy:0.5, stop:0 #4A3728, stop:1 #2C1810); "
@@ -62,22 +53,38 @@ MainWindow::MainWindow(QWidget* parent)
         "border-radius: 15px;"
     );
 
+    // Initialize Dashboard Themes
+    ui->opponentDashboard->setTheme(true);
+    ui->playerDashboard->setTheme(false);
+
     // Connect Signals
-    // Access widgets via ui pointer
     connect(ui->boardWidgetPage, &BoardWidget::cardClicked, this, &MainWindow::onCardSelected);
-    connect(ui->btnConstruct, &QPushButton::clicked, this, &MainWindow::onConstructClicked);
+    
+    // Action Buttons
+    connect(ui->btnBuild, &QPushButton::clicked, this, &MainWindow::onBuildClicked);
+    connect(ui->btnDiscard, &QPushButton::clicked, this, &MainWindow::onDiscardClicked);
+    connect(ui->btnWonder, &QPushButton::clicked, this, &MainWindow::onWonderClicked);
+    
     connect(ui->wonderSelectionPage, &WonderSelectionWidget::wonderChosen, this, &MainWindow::onWonderChosen);
     connect(ui->splashScreenPage, &SplashScreen::startGame, this, &MainWindow::onSplashFinished);
 
     ui->statusbar->showMessage("⚔️ Press ENTER to begin your conquest! ⚔️");
 
     // Hide zones initially
-    ui->opponentZone->setVisible(false);
-    ui->playerZone->setVisible(false);
+    ui->opponentDashboard->setVisible(false);
+    ui->playerDashboard->setVisible(false);
     ui->rightZone->setVisible(false);
 
-    // Start at Splash Screen (Index 0)
+    // Initial button state
+    ui->btnBuild->setEnabled(false);
+    ui->btnDiscard->setEnabled(false);
+    ui->btnWonder->setEnabled(false);
+
+    // Start at Splash Screen
     ui->stack->setCurrentIndex(0);
+
+    // Ensure the window fills the screen for the best game experience
+    this->showMaximized();
 }
 
 MainWindow::~MainWindow()
@@ -88,8 +95,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::onSplashFinished()
 {
-    ui->opponentZone->setVisible(true);
-    ui->playerZone->setVisible(true);
+    ui->opponentDashboard->setVisible(true);
+    ui->playerDashboard->setVisible(true);
     ui->rightZone->setVisible(true);
 
     ui->statusbar->showMessage("⚔️ Initializing the ancient world of ducks... ⚔️");
@@ -114,6 +121,19 @@ void MainWindow::updateGameState()
         renderGame();
     }
     updatePlayerInventories();
+    
+    // Reset selection state
+    m_selectedCardId = -1;
+    ui->lblCost->setText("Cost: -");
+    ui->btnBuild->setEnabled(false);
+    ui->btnDiscard->setEnabled(false);
+    ui->btnWonder->setEnabled(false);
+    
+    // Check for game over
+    if (m_game->isGameOver()) {
+        QMessageBox::information(this, "Game Over", "The game has ended!");
+        // TODO: Show nice game over screen
+    }
 }
 
 void MainWindow::startWonderDraft()
@@ -150,20 +170,187 @@ void MainWindow::onWonderChosen(int wonderId)
     }
 }
 
+// Helper to find node
+CardNode* findCardNode(Game* game, int cardId) {
+    if (!game) return nullptr;
+    const auto& rows = game->getBoard().getPyramid().getRows();
+    for (const auto& row : rows) {
+        for (const auto& node : row) {
+            if (node && node->getCard() && node->getCard()->getId() == cardId) {
+                return const_cast<CardNode*>(node.get());
+            }
+        }
+    }
+    return nullptr;
+}
+
 void MainWindow::onCardSelected(int cardId)
 {
     m_selectedCardId = cardId;
-    qDebug() << "Card selected:" << cardId;
-}
+    CardNode* node = findCardNode(m_game, cardId);
 
-void MainWindow::onConstructClicked()
-{
-    if (m_selectedCardId == -1) {
-        QMessageBox::warning(this, "Error", "Select a card from the pyramid!");
+    if (!node || !node->isPlayable() || node->isPlayed()) {
+        ui->lblCost->setText("Unavailable");
+        ui->btnBuild->setEnabled(false);
+        ui->btnDiscard->setEnabled(false);
+        ui->btnWonder->setEnabled(false);
         return;
     }
-    QMessageBox::information(this, "Construction", "Construction initiated for card " + QString::number(m_selectedCardId));
+
+    // Determine costs
+    Player* p = m_game->getCurrentPlayer();
+    Player* opp = m_game->getOpponent();
+    auto card = node->getCard();
+
+    // Check Build Cost
+    int cost = p->findTotalCost(*card, *opp);
+    
+    if (cost == GameConstants::IMPOSSIBLE_COST) {
+        ui->lblCost->setText("Cost: ❌");
+        ui->btnBuild->setEnabled(false);
+    } else {
+        ui->lblCost->setText("Cost: " + QString::number(cost));
+        ui->btnBuild->setEnabled(true);
+    }
+
+    // Always allowed to discard if card is playable
+    ui->btnDiscard->setEnabled(true);
+
+    // Check Wonder Construction
+    // Does player have any unbuilt wonders?
+    bool hasAvailableWonder = false;
+    for (const auto& w : p->getWonders()) {
+        if (!w->getIsBuilt()) {
+             // Check if we can afford the wonder using this card as material (card itself is free, we pay wonder cost)
+             int wCost = p->findTotalCost(*w, *opp);
+             if (wCost != GameConstants::IMPOSSIBLE_COST) {
+                 hasAvailableWonder = true;
+                 break;
+             }
+        }
+    }
+    ui->btnWonder->setEnabled(hasAvailableWonder);
 }
+
+void MainWindow::onBuildClicked()
+{
+    if (m_selectedCardId == -1) return;
+    CardNode* node = findCardNode(m_game, m_selectedCardId);
+    if (!node) return;
+
+    Player* p = m_game->getCurrentPlayer();
+    Player* opp = m_game->getOpponent();
+
+    bool success = p->buyCard(node->getCard(), *opp, m_game->getBoard());
+    if (success) {
+        node->updatePlayedStatus(true);
+        m_game->getBoard().updateVisibility();
+        
+        if (!p->hasExtraTurn()) {
+            m_game->switchTurn();
+        } else {
+            QMessageBox::information(this, "Divine Intervention", "You get an extra turn!");
+        }
+        updateGameState();
+    } else {
+        QMessageBox::warning(this, "Error", "Could not buy card (unknown error).");
+    }
+}
+
+void MainWindow::onDiscardClicked()
+{
+    if (m_selectedCardId == -1) return;
+    CardNode* node = findCardNode(m_game, m_selectedCardId);
+    if (!node) return;
+    
+    Player* p = m_game->getCurrentPlayer();
+    p->discardCard(*node->getCard());
+    
+    node->updatePlayedStatus(true);
+    m_game->getBoard().updateVisibility();
+    
+    // Discard rarely grants extra turns unless specific wonders/tokens effect?
+    // Usually discard passes turn.
+    if (!p->hasExtraTurn()) {
+        m_game->switchTurn();
+    }
+    updateGameState();
+}
+
+void MainWindow::onWonderClicked()
+{
+    if (m_selectedCardId == -1) return;
+    CardNode* node = findCardNode(m_game, m_selectedCardId);
+    if (!node) return;
+
+    Player* p = m_game->getCurrentPlayer();
+    Player* opp = m_game->getOpponent();
+
+    std::vector<Wonder*> availableWonders;
+    for (const auto& w : p->getWonders()) {
+        if (!w->getIsBuilt()) {
+            availableWonders.push_back(w.get());
+        }
+    }
+
+    if (availableWonders.empty()) return;
+
+    Wonder* selectedWonder = nullptr;
+    if (availableWonders.size() == 1) {
+        selectedWonder = availableWonders[0];
+    } else {
+        // Ask user to pick
+        QStringList items;
+        for (auto* w : availableWonders) {
+            int cost = p->findTotalCost(*w, *opp);
+            QString item = QString::fromStdString(w->getName());
+            if (cost == GameConstants::IMPOSSIBLE_COST) {
+                item += " (Too Expensive)";
+            } else {
+                item += " (Cost: " + QString::number(cost) + ")";
+            }
+            items << item;
+        }
+
+        bool ok;
+        QString item = QInputDialog::getItem(this, "Select Wonder", 
+                                             "Choose a Wonder to build:", items, 0, false, &ok);
+        if (ok && !item.isEmpty()) {
+            int index = items.indexOf(item);
+            if (index >= 0 && index < availableWonders.size()) {
+                selectedWonder = availableWonders[index];
+            }
+        } else {
+            return; // Cancelled
+        }
+    }
+
+    if (!selectedWonder) return;
+
+    // Check cost again
+    int cost = p->findTotalCost(*selectedWonder, *opp);
+    if (cost == GameConstants::IMPOSSIBLE_COST) {
+        QMessageBox::warning(this, "Too Expensive", "You cannot afford this wonder!");
+        return;
+    }
+
+    p->constructWonder(node->getCard(), *selectedWonder, *opp, m_game->getBoard());
+    
+    // Check 7 Wonders rule logic (game->handle7WondersRule is private, might need to reimplement or make public)
+    // For now, ignoring auto-discard of 8th wonder, but UI should ideally handle it.
+    
+    node->updatePlayedStatus(true);
+    m_game->getBoard().updateVisibility();
+
+    if (selectedWonder->hasExtraTurnEffect()) { // Assuming logic inside constructWonder sets flag
+         QMessageBox::information(this, "Divine Intervention", "Wonder Grant: Extra Turn!");
+    } else if (!p->hasExtraTurn()) {
+         m_game->switchTurn();
+    }
+    
+    updateGameState();
+}
+
 
 void MainWindow::updatePlayerInventories()
 {
@@ -174,42 +361,18 @@ void MainWindow::updatePlayerInventories()
 
     if (!player || !opponent) return;
 
-    QString playerText = QString("🏛️ %1 | 🦆 %2 ducks")
-        .arg(QString::fromStdString(player->getName()))
-        .arg(player->getCoins());
-    ui->playerLabel->setText(playerText);
+    // Use shared_ptr<Wonder> because Player usually holds shared_ptr
+    ui->playerDashboard->updateDashboard(
+        player->getName(), 
+        player->getCoins(), 
+        player->getWonders()
+    );
 
-    QString opponentText = QString("⚔️ %1 | 🦆 %2 ducks")
-        .arg(QString::fromStdString(opponent->getName()))
-        .arg(opponent->getCoins());
-    ui->opponentLabel->setText(opponentText);
-
-    // Logic to update wonder widgets in the placeholder layouts
-    auto setupWonders = [this](const Player* p, QHBoxLayout* wondersLayout) {
-        if (!wondersLayout) return;
-
-        QLayoutItem* item;
-        while ((item = wondersLayout->takeAt(0)) != nullptr) {
-            delete item->widget();
-            delete item;
-        }
-
-        for (const auto& wonderPtr : p->getWonders()) {
-            // We need a parent widget, use the layout's parent
-            QWidget* parent = wondersLayout->parentWidget();
-            CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), parent);
-            wonderWidget->setFixedSize(70, 95);
-
-            QString name = QString::fromStdString(wonderPtr->getName());
-            QString color = wonderPtr->getIsBuilt() ? "#DAA520" : "#6D4C41";
-
-            wonderWidget->setupCard(name, color, true);
-            wondersLayout->addWidget(wonderWidget);
-        }
-    };
-
-    setupWonders(player, ui->playerWondersLayout);
-    setupWonders(opponent, ui->opponentWondersLayout);
+    ui->opponentDashboard->updateDashboard(
+        opponent->getName(), 
+        opponent->getCoins(), 
+        opponent->getWonders()
+    );
 
     ui->militaryTrackWidget->updatePawnPosition(m_game->getBoard().getMilitaryTrack().getPawnPosition());
 

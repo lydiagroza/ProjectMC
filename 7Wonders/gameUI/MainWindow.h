@@ -24,7 +24,9 @@ public:
 
 private slots:
     void onCardSelected(int cardId);
-    void onConstructClicked();
+    void onBuildClicked();
+    void onDiscardClicked();
+    void onWonderClicked();
     void onWonderChosen(int cardId);
     void onSplashFinished();
 

@@ -30,6 +30,7 @@ HEADERS += GameBase/Board.h \
            GameBase/MilitaryTrack.h \
            GameBase/Player.h \
            GameBase/ProgressTokenLoader.h \
+           GameBase/GuildLoader.h \
            GameBase/ProgressTokens.h \
            GameBase/Wonder.h \
            GameBase/WonderLoader.h
@@ -45,6 +46,7 @@ SOURCES += GameBase/Board.cpp \           # ← ADAUGĂ
            GameBase/Player.cpp \
            GameBase/ProgressTokenLoader.cpp \
            GameBase/ProgressTokens.cpp \
+           GameBase/GuildLoader.cpp \
            GameBase/WonderLoader.cpp \
            GameBase/Wonders.cpp
 
@@ -73,8 +75,18 @@ SOURCES += ConsoleGame/testEngine.cpp
 # ========================================
 # gameUI - interfața grafică Qt
 # ========================================
-HEADERS += gameUI/MainWindow.h
+HEADERS +=gameUI/BoardWidget.h \
+           gameUI/CardWidget.h \
+           gameUI/MilitaryTrackWidget.h \
+           gameUI/SplashScreen.h \
+           gameUI/WonderSelectionWidget.h \
+           gameUI/MainWindow.h
 SOURCES += gameUI/main.cpp \
+           gameUI/BoardWidget.cpp \
+           gameUI/CardWidget.cpp \
+           gameUI/MilitaryTrackWidget.cpp \
+           gameUI/SplashScreen.cpp \
+           gameUI/WonderSelectionWidget.cpp \
            gameUI/MainWindow.cpp
 
 # Dacă ai fișier .ui (design vizual)

@@ -29,37 +29,32 @@
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="CardBase.cpp" />
-    <ClCompile Include="CardLoader.cpp" />
     <ClCompile Include="CardNode.cpp" />
     <ClCompile Include="CardsPyramid.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameSetup.cpp" />
-    <ClCompile Include="GuildLoader.cpp" />
     <ClCompile Include="MilitaryTrack.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="ProgressToken.cpp" />
     <ClCompile Include="ProgressTokenLoader.cpp" />
     <ClCompile Include="ProgressTokens.cpp" />
-    <ClCompile Include="WonderLoader.cpp" />
-    <ClCompile Include="Wonders.cpp" />
+    <ClCompile Include="UniversalCardLoader.cpp" />
+    <ClCompile Include="Wonder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="CardBase.h" />
-    <ClInclude Include="CardLoader.h" />
     <ClInclude Include="CardNode.h" />
     <ClInclude Include="CardsPyramid.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameConstants.h" />
     <ClInclude Include="gameExport.h" />
     <ClInclude Include="GameSetup.h" />
-    <ClInclude Include="GuildLoader.h" />
     <ClInclude Include="MilitaryTrack.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ProgressTokenLoader.h" />
     <ClInclude Include="ProgressTokens.h" />
+    <ClInclude Include="UniversalCardLoader.h" />
     <ClInclude Include="Wonder.h" />
-    <ClInclude Include="WonderLoader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

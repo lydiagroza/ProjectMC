@@ -1,12 +1,18 @@
-﻿#include "MainWindow.h"
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
 #include "CardBase.h"
 #include "Wonder.h"
 #include "CardWidget.h"
 #include "BoardWidget.h"
 #include "WonderSelectionWidget.h"
+#include "NameSelectionWidget.h"
+#include "WonderChoiceDialog.h"
+#include "AI_Player.h"
 #include "MilitaryTrackWidget.h"
 #include "SplashScreen.h"
+#include "PlayerDashboardWidget.h"
 #include "Game.h"
+#include "GameConstants.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -18,248 +24,130 @@
 #include <QGraphicsDropShadowEffect>
 #include <QFrame>
 #include <QStackedWidget>
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent), m_game(new Game()), m_selectedCardId(-1), m_draftPhase(0)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+    , m_game(new Game())
+    , m_selectedCardId(-1)
+    , m_draftPhase(0)
 {
-    this->setWindowTitle("⚔️ 7 Wonders Duel - The Empire of the Ducks ⚔️");
+    ui->setupUi(this);
 
-    this->setStyleSheet(
-        "QMainWindow { "
-        "  background: qlineargradient(x1:0, y1:0, x2:1, y2:1, "
-        "    stop:0 #2C1810, stop:0.5 #3E2723, stop:1 #2C1810); "
-        "}"
-        "QLabel { "
-        "  font-family: 'Times New Roman', serif; "
-        "  color: #F5E6D3; "
-        "}"
-        "QStatusBar { "
-        "  background-color: #3E2723; "
-        "  color: #DAA520; "
-        "  border-top: 2px solid #8B4513; "
-        "  font-family: 'Times New Roman'; "
-        "  font-weight: bold; "
-        "}"
-    );
-
-    QWidget* centralWidget = new QWidget(this);
-    this->setCentralWidget(centralWidget);
-
-    QHBoxLayout* mainLayout = new QHBoxLayout(centralWidget);
-    mainLayout->setSpacing(10);
-    mainLayout->setContentsMargins(10, 10, 10, 10);
-
-    QFrame* leftZone = new QFrame();
-    leftZone->setStyleSheet("background-color: transparent;");
-    QVBoxLayout* leftLayout = new QVBoxLayout(leftZone);
-    leftLayout->setContentsMargins(0, 0, 0, 0);
-
-    m_opponentZone = new QFrame();
-    m_opponentZone->setFixedHeight(130);
-    m_opponentZone->setStyleSheet(
-        "QFrame { "
-        "  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
-        "    stop:0 #8B0000, stop:1 #5C0000); "
-        "  border: 3px solid #8B4513; "
-        "  border-radius: 10px; "
-        "  padding: 8px; "
-        "}"
-    );
-    QVBoxLayout* oppLay = new QVBoxLayout(m_opponentZone);
-
-    m_opponentLabel = new QLabel("⚔️ OPPONENT DUCK EMPIRE ⚔️", m_opponentZone);
-    m_opponentLabel->setStyleSheet(
-        "color: #FFD700; "
-        "font-weight: bold; "
-        "font-size: 14px; "
-        "background: transparent; "
-        "border: none; "
-        "font-family: 'Times New Roman', serif;"
-    );
-    m_opponentLabel->setAlignment(Qt::AlignHCenter);
-
-    QGraphicsDropShadowEffect* oppShadow = new QGraphicsDropShadowEffect();
-    oppShadow->setBlurRadius(8);
-    oppShadow->setColor(QColor(0, 0, 0, 180));
-    oppShadow->setOffset(2, 2);
-    m_opponentLabel->setGraphicsEffect(oppShadow);
-
-    QHBoxLayout* opponentWondersLayout = new QHBoxLayout();
-    opponentWondersLayout->setSpacing(5);
-
-    oppLay->addWidget(m_opponentLabel);
-    oppLay->addLayout(opponentWondersLayout);
-
-    m_stack = new QStackedWidget();
-
-    m_splashScreen = new SplashScreen(this);
-    m_stack->addWidget(m_splashScreen);  // Index 0
-
-    m_wonderSelection = new WonderSelectionWidget(this);
-    m_stack->addWidget(m_wonderSelection);  // Index 1
-
-    m_boardWidget = new BoardWidget(this);
-    m_boardWidget->setStyleSheet(
-        "background: qradialgradient(cx:0.5, cy:0.5, radius:0.8, "
-        "  fx:0.5, fy:0.5, stop:0 #4A3728, stop:1 #2C1810); "
-        "border: 4px solid #8B4513; "
-        "border-radius: 15px;"
-    );
-    m_stack->addWidget(m_boardWidget);  // Index 2
-
-    m_playerZone = new QFrame();
-    m_playerZone->setFixedHeight(150);
-    m_playerZone->setStyleSheet(
-        "QFrame { "
-        "  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
-        "    stop:0 #1565C0, stop:1 #0D47A1); "
-        "  border: 3px solid #8B4513; "
-        "  border-radius: 10px; "
-        "  padding: 8px; "
-        "}"
-    );
-    QVBoxLayout* pLay = new QVBoxLayout(m_playerZone);
-
-    m_playerLabel = new QLabel("🏛️ YOUR DUCK CIVILIZATION 🏛️", m_playerZone);
-    m_playerLabel->setStyleSheet(
-        "color: #FFD700; "
-        "font-weight: bold; "
-        "font-size: 14px; "
-        "background: transparent; "
-        "border: none; "
-        "font-family: 'Times New Roman', serif;"
-    );
-    m_playerLabel->setAlignment(Qt::AlignHCenter);
-
-    QGraphicsDropShadowEffect* playerShadow = new QGraphicsDropShadowEffect();
-    playerShadow->setBlurRadius(8);
-    playerShadow->setColor(QColor(0, 0, 0, 180));
-    playerShadow->setOffset(2, 2);
-    m_playerLabel->setGraphicsEffect(playerShadow);
-
-    QHBoxLayout* playerWondersLayout = new QHBoxLayout();
-    playerWondersLayout->setSpacing(5);
-
-    pLay->addWidget(m_playerLabel);
-    pLay->addLayout(playerWondersLayout);
-
-    leftLayout->addWidget(m_opponentZone);
-    leftLayout->addWidget(m_stack, 1);
-    leftLayout->addWidget(m_playerZone);
-
-    // ✅ MENIUL DIN DREAPTA - salvat ca membru pentru a-l putea ascunde
-    m_rightZone = new QFrame();
-    m_rightZone->setFixedWidth(280);
-    m_rightZone->setStyleSheet(
-        "QFrame { "
-        "  background: qlineargradient(x1:0, y1:0, x2:1, y2:0, "
-        "    stop:0 #3E2723, stop:0.5 #4E342E, stop:1 #3E2723); "
-        "  border-left: 4px solid #8B4513; "
-        "}"
-    );
-    QVBoxLayout* rightLayout = new QVBoxLayout(m_rightZone);
-
-    QLabel* panelTitle = new QLabel("📜 DUCKS STATUS 📜", m_rightZone);
-    panelTitle->setStyleSheet(
-        "color: #DAA520; "
-        "font-weight: bold; "
-        "font-size: 16px; "
-        "background: transparent; "
-        "padding: 10px; "
-        "font-family: 'Times New Roman', serif;"
-    );
-    panelTitle->setAlignment(Qt::AlignCenter);
-
+    // Apply Shadows for Right Panel items
     QGraphicsDropShadowEffect* titleShadow = new QGraphicsDropShadowEffect();
     titleShadow->setBlurRadius(6);
     titleShadow->setColor(QColor(0, 0, 0, 200));
     titleShadow->setOffset(2, 2);
-    panelTitle->setGraphicsEffect(titleShadow);
-
-    m_militaryTrackWidget = new MilitaryTrackWidget(m_rightZone);
-
-    QLabel* lblTok = new QLabel("⚡ DIVINE DUCKS BLESSINGS ⚡", m_rightZone);
-    lblTok->setStyleSheet(
-        "color: #FFD700; "
-        "font-weight: bold; "
-        "font-size: 13px; "
-        "padding: 5px; "
-        "font-family: 'Times New Roman';"
-    );
-    lblTok->setAlignment(Qt::AlignCenter);
+    ui->panelTitle->setGraphicsEffect(titleShadow);
 
     QGraphicsDropShadowEffect* tokShadow = new QGraphicsDropShadowEffect();
     tokShadow->setBlurRadius(6);
     tokShadow->setColor(QColor(0, 0, 0, 200));
     tokShadow->setOffset(1, 1);
-    lblTok->setGraphicsEffect(tokShadow);
+    ui->lblTok->setGraphicsEffect(tokShadow);
 
-    m_progressTokensLayout = new QVBoxLayout();
-
-    QPushButton* btnConstruct = new QPushButton("⚒️ BUILD ⚒️", m_rightZone);
-    btnConstruct->setFixedHeight(60);
-    btnConstruct->setCursor(Qt::PointingHandCursor);
-    btnConstruct->setStyleSheet(
-        "QPushButton { "
-        "  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
-        "    stop:0 #B8860B, stop:0.5 #DAA520, stop:1 #B8860B); "
-        "  color: #2C1810; "
-        "  border: 3px solid #8B4513; "
-        "  border-radius: 10px; "
-        "  font-weight: bold; "
-        "  font-size: 13px; "
-        "  font-family: 'Times New Roman', serif; "
-        "}"
-        "QPushButton:hover { "
-        "  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
-        "    stop:0 #DAA520, stop:0.5 #FFD700, stop:1 #DAA520); "
-        "  border: 3px solid #FFD700; "
-        "}"
-        "QPushButton:pressed { "
-        "  background: #8B6914; "
-        "}"
+    // Apply style to BoardWidget
+    ui->boardWidgetPage->setStyleSheet(
+        "background: transparent; "
+        "border: 4px solid #8B4513; "
+        "border-radius: 15px;"
     );
 
-    rightLayout->addWidget(panelTitle);
-    rightLayout->addWidget(m_militaryTrackWidget);
-    rightLayout->addStretch();
-    rightLayout->addWidget(lblTok);
-    rightLayout->addLayout(m_progressTokensLayout);
-    rightLayout->addStretch();
-    rightLayout->addWidget(btnConstruct);
+    // Initialize Dashboard Themes
+    ui->opponentDashboard->setTheme(true);
+    ui->playerDashboard->setTheme(false);
 
-    mainLayout->addWidget(leftZone, 1);
-    mainLayout->addWidget(m_rightZone, 0);
+    // Connect Signals
+    connect(ui->boardWidgetPage, &BoardWidget::cardClicked, this, &MainWindow::onCardSelected);
+    
+    // Action Buttons
+    connect(ui->btnBuild, &QPushButton::clicked, this, &MainWindow::onBuildClicked);
+    connect(ui->btnDiscard, &QPushButton::clicked, this, &MainWindow::onDiscardClicked);
+    connect(ui->btnWonder, &QPushButton::clicked, this, &MainWindow::onWonderClicked);
+    
+    connect(ui->wonderSelectionPage, &WonderSelectionWidget::wonderChosen, this, &MainWindow::onWonderChosen);
+    connect(ui->splashScreenPage, &SplashScreen::gameModeSelected, this, &MainWindow::onSplashFinished);
+    connect(ui->nameSelectionPage, &NameSelectionWidget::namesConfirmed, this, &MainWindow::onNamesConfirmed);
 
-    connect(m_boardWidget, &BoardWidget::cardClicked, this, &MainWindow::onCardSelected);
-    connect(btnConstruct, &QPushButton::clicked, this, &MainWindow::onConstructClicked);
-    connect(m_wonderSelection, &WonderSelectionWidget::wonderChosen, this, &MainWindow::onWonderChosen);
-    connect(m_splashScreen, &SplashScreen::startGame, this, &MainWindow::onSplashFinished);
+    ui->statusbar->showMessage("⚔️ Welcome to 7 Wonders Duel! ⚔️");
 
-    this->statusBar()->showMessage("⚔️ Press ENTER to begin your conquest! ⚔️");
+    // Hide zones initially
+    ui->opponentDashboard->setVisible(false);
+    ui->playerDashboard->setVisible(false);
+    ui->rightZone->setVisible(false);
 
-    // ✅ ASCUNDE zona de jos (opponent/player) și meniul din dreapta pe splash screen
-    m_opponentZone->setVisible(false);
-    m_playerZone->setVisible(false);
-    m_rightZone->setVisible(false);
+    // Initial button state
+    ui->btnBuild->setEnabled(false);
+    ui->btnDiscard->setEnabled(false);
+    ui->btnWonder->setEnabled(false);
 
-    m_stack->setCurrentIndex(0);
+    // Start at Splash Screen
+    ui->stack->setCurrentIndex(0);
+
+    // Ensure the window fills the screen for the best game experience
+    this->showMaximized();
 }
 
 MainWindow::~MainWindow()
 {
     delete m_game;
+    delete ui;
 }
 
-void MainWindow::onSplashFinished()
+void MainWindow::onSplashFinished(SplashScreen::GameMode mode)
 {
-    // ✅ ARATĂ zonele când ieșim din splash screen
-    m_opponentZone->setVisible(true);
-    m_playerZone->setVisible(true);
-    m_rightZone->setVisible(true);
+    m_gameMode = mode;
+    if (mode == SplashScreen::AvAI) {
+        onNamesConfirmed("AI Player 1", "AI Player 2");
+    } else {
+        // Player 1 is always human in PvA and PvP
+        // Player 2 is only human in PvP
+        ui->nameSelectionPage->setMode(true, mode == SplashScreen::PvP);
+        ui->stack->setCurrentWidget(ui->nameSelectionPage);
+        ui->statusbar->showMessage("⚔️ Who dares to challenge the ducks? ⚔️");
+    }
+}
 
-    this->statusBar()->showMessage("⚔️ Initializing the ancient world of ducks... ⚔️");
-    QTimer::singleShot(100, this, &MainWindow::startGame);
+void MainWindow::onNamesConfirmed(const QString& p1, const QString& p2)
+{
+    if (m_game) {
+        m_game->getPlayer1().setName(p1.toStdString());
+        m_game->getPlayer2().setName(p2.toStdString());
+        
+        // Set Player Types:
+        // PvP: Both human
+        // PvA: P1 human, P2 AI
+        // AvA: Both AI
+        m_game->setPlayerTypes(m_gameMode == SplashScreen::AvAI, m_gameMode != SplashScreen::PvP);
+    }
+
+    ui->opponentDashboard->setVisible(true);
+    ui->playerDashboard->setVisible(true);
+    ui->rightZone->setVisible(true);
+
+    ui->statusbar->showMessage("⚔️ Initializing the ancient world of ducks... ⚔️");
+    startGame();
+}
+
+void MainWindow::processAITurn()
+{
+    AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
+    if (!ai || m_game->isGameOver()) return;
+
+    ui->statusbar->showMessage("🤖 " + QString::fromStdString(ai->getName()) + " is thinking...", 1000);
+
+    ai->makeDecision(m_game->getBoard(), *m_game->getOpponent(), m_game->getCurrentAge());
+
+    // After AI move, refresh game state
+    if (!ai->hasExtraTurn()) {
+        m_game->switchTurn();
+    } else {
+        ui->statusbar->showMessage("🤖 " + QString::fromStdString(ai->getName()) + " gets an extra turn!", 2000);
+    }
+    
+    updateGameState();
 }
 
 void MainWindow::startGame()
@@ -272,14 +160,49 @@ void MainWindow::updateGameState()
 {
     m_draftPhase = m_game->getDraftPhase();
     if (m_draftPhase > 0 && !m_game->getCurrentDraftSet().empty()) {
-        m_stack->setCurrentIndex(1);
+        ui->stack->setCurrentWidget(ui->wonderSelectionPage);
         startWonderDraft();
     }
     else {
-        m_stack->setCurrentIndex(2);
+        ui->stack->setCurrentWidget(ui->boardWidgetPage);
         renderGame();
     }
     updatePlayerInventories();
+    updateTurnIndicator();
+    
+    // Check for end of age
+    if (m_game->isEndOfAge()) {
+        QMessageBox::information(this, "Age Complete", "The current age has ended!");
+        m_game->startNextAge();
+        if (m_game->isGameOver()) {
+             QMessageBox::information(this, "Game Over", "The game has ended!");
+             // TODO: Show score screen
+             return;
+        }
+        // Refresh for new age
+        renderGame();
+    }
+
+    // Reset selection state
+    m_selectedCardId = -1;
+    ui->lblCost->setText("Cost: -");
+    ui->btnBuild->setEnabled(false);
+    ui->btnDiscard->setEnabled(false);
+    ui->btnWonder->setEnabled(false);
+    
+    // Check for game over
+    if (m_game->isGameOver()) {
+        QMessageBox::information(this, "Game Over", "The game has ended!");
+        // TODO: Show nice game over screen
+        return;
+    }
+
+    // Check for AI Turn
+    AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
+    if (ai) {
+        // Delay slightly so user can see what happened
+        QTimer::singleShot(800, this, &MainWindow::processAITurn);
+    }
 }
 
 void MainWindow::startWonderDraft()
@@ -293,17 +216,50 @@ void MainWindow::startWonderDraft()
     std::vector<int> ids;
     std::vector<QString> names;
     std::vector<QString> colors;
+    std::vector<QString> costs;
+    std::vector<QString> effects;
+
+    auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
+        QStringList parts;
+        for (auto const& [res, count] : costMap) {
+             QString rName;
+             switch(res) {
+                 case Resource::Wood: rName = "Wood"; break;
+                 case Resource::Clay: rName = "Clay"; break;
+                 case Resource::Stone: rName = "Stone"; break;
+                 case Resource::Glass: rName = "Glass"; break;
+                 case Resource::Papyrus: rName = "Papyrus"; break;
+                 case Resource::Coin: rName = "Coin"; break;
+             }
+             parts << QString("%1 %2").arg(count).arg(rName);
+        }
+        return parts.join("\n");
+    };
 
     for (const auto& wonderPtr : availableWonders) {
         ids.push_back(wonderPtr->getId());
         names.push_back(QString::fromStdString(wonderPtr->getName()));
         colors.push_back("#DAA520");
+        costs.push_back(formatCost(wonderPtr->getCost()));
+        effects.push_back(QString::fromStdString(wonderPtr->getEffectDescription()));
     }
 
     QString currentPlayerName = QString::fromStdString(m_game->getCurrentPlayer()->getName());
-    this->statusBar()->showMessage("⚔️ " + currentPlayerName + " must choose a wonder! ⚔️", 5000);
+    ui->statusbar->showMessage("⚔️ " + currentPlayerName + " must choose a wonder! ⚔️", 5000);
 
-    m_wonderSelection->setWonders(ids, names, colors);
+    // AI Check
+    AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
+    if (ai) {
+        auto chosen = ai->chooseWonderFromDraft(availableWonders);
+        if (chosen) {
+            QTimer::singleShot(1000, this, [this, chosen]() {
+                onWonderChosen(chosen->getId());
+            });
+            return;
+        }
+    }
+
+    ui->wonderSelectionPage->setWonders(ids, names, colors, costs, effects);
 }
 
 void MainWindow::onWonderChosen(int wonderId)
@@ -316,20 +272,174 @@ void MainWindow::onWonderChosen(int wonderId)
     }
 }
 
+// Helper to find node
+CardNode* findCardNode(Game* game, int cardId) {
+    if (!game) return nullptr;
+    const auto& rows = game->getBoard().getPyramid().getRows();
+    for (const auto& row : rows) {
+        for (const auto& node : row) {
+            if (node && node->getCard() && node->getCard()->getId() == cardId) {
+                return const_cast<CardNode*>(node.get());
+            }
+        }
+    }
+    return nullptr;
+}
+
 void MainWindow::onCardSelected(int cardId)
 {
     m_selectedCardId = cardId;
-    qDebug() << "Card selected:" << cardId;
-}
+    CardNode* node = findCardNode(m_game, cardId);
 
-void MainWindow::onConstructClicked()
-{
-    if (m_selectedCardId == -1) {
-        QMessageBox::warning(this, "Error", "Select a card from the pyramid!");
+    if (!node || !node->isPlayable() || node->isPlayed()) {
+        ui->lblCost->setText("Unavailable");
+        ui->btnBuild->setEnabled(false);
+        ui->btnDiscard->setEnabled(false);
+        ui->btnWonder->setEnabled(false);
         return;
     }
-    QMessageBox::information(this, "Construction", "Construction initiated for card " + QString::number(m_selectedCardId));
+
+    // Determine costs
+    Player* p = m_game->getCurrentPlayer();
+    Player* opp = m_game->getOpponent();
+    auto card = node->getCard();
+
+    // Check Build Cost
+    int cost = p->findTotalCost(*card, *opp);
+    
+    if (cost == GameConstants::IMPOSSIBLE_COST) {
+        ui->lblCost->setText("Cost: ❌");
+        ui->btnBuild->setEnabled(false);
+    } else {
+        ui->lblCost->setText("Cost: " + QString::number(cost));
+        ui->btnBuild->setEnabled(true);
+    }
+
+    // Always allowed to discard if card is playable
+    ui->btnDiscard->setEnabled(true);
+
+    // Check Wonder Construction
+    // Does player have any unbuilt wonders?
+    bool hasAvailableWonder = false;
+    for (const auto& w : p->getWonders()) {
+        if (!w->getIsBuilt()) {
+             // Check if we can afford the wonder using this card as material (card itself is free, we pay wonder cost)
+             int wCost = p->findTotalCost(*w, *opp);
+             if (wCost != GameConstants::IMPOSSIBLE_COST) {
+                 hasAvailableWonder = true;
+                 break;
+             }
+        }
+    }
+    ui->btnWonder->setEnabled(hasAvailableWonder);
 }
+
+void MainWindow::onBuildClicked()
+{
+    if (m_selectedCardId == -1) return;
+    CardNode* node = findCardNode(m_game, m_selectedCardId);
+    if (!node) return;
+
+    Player* p = m_game->getCurrentPlayer();
+    Player* opp = m_game->getOpponent();
+
+    bool success = p->buyCard(node->getCard(), *opp, m_game->getBoard());
+    if (success) {
+        node->updatePlayedStatus(true);
+        m_game->getBoard().updateVisibility();
+        
+        if (!p->hasExtraTurn()) {
+            m_game->switchTurn();
+        } else {
+            QMessageBox::information(this, "Divine Intervention", "You get an extra turn!");
+        }
+        updateGameState();
+    } else {
+        QMessageBox::warning(this, "Error", "Could not buy card (unknown error).");
+    }
+}
+
+void MainWindow::onDiscardClicked()
+{
+    if (m_selectedCardId == -1) return;
+    CardNode* node = findCardNode(m_game, m_selectedCardId);
+    if (!node) return;
+    
+    Player* p = m_game->getCurrentPlayer();
+    p->discardCard(*node->getCard());
+    
+    node->updatePlayedStatus(true);
+    m_game->getBoard().updateVisibility();
+    
+    // Discard rarely grants extra turns unless specific wonders/tokens effect?
+    // Usually discard passes turn.
+    if (!p->hasExtraTurn()) {
+        m_game->switchTurn();
+    }
+    updateGameState();
+}
+
+void MainWindow::onWonderClicked()
+{
+    if (m_selectedCardId == -1) return;
+    CardNode* node = findCardNode(m_game, m_selectedCardId);
+    if (!node) return;
+
+    Player* p = m_game->getCurrentPlayer();
+    Player* opp = m_game->getOpponent();
+
+    std::vector<Wonder*> availableWonders;
+    for (const auto& w : p->getWonders()) {
+        if (!w->getIsBuilt()) {
+            availableWonders.push_back(w.get());
+        }
+    }
+
+    if (availableWonders.empty()) return;
+
+    Wonder* selectedWonder = nullptr;
+    
+    WonderChoiceDialog dialog(this);
+    dialog.setWonders(availableWonders, p, opp);
+    
+    if (dialog.exec() == QDialog::Accepted) {
+        int wId = dialog.getSelectedWonderId();
+        for(auto* w : availableWonders) {
+            if(w->getId() == wId) {
+                selectedWonder = w;
+                break;
+            }
+        }
+    } else {
+        return; // Cancelled
+    }
+
+    if (!selectedWonder) return;
+
+    // Check cost again
+    int cost = p->findTotalCost(*selectedWonder, *opp);
+    if (cost == GameConstants::IMPOSSIBLE_COST) {
+        QMessageBox::warning(this, "Too Expensive", "You cannot afford this wonder!");
+        return;
+    }
+
+    p->constructWonder(node->getCard(), *selectedWonder, *opp, m_game->getBoard());
+    
+    // Check 7 Wonders rule logic (game->handle7WondersRule is private, might need to reimplement or make public)
+    // For now, ignoring auto-discard of 8th wonder, but UI should ideally handle it.
+    
+    node->updatePlayedStatus(true);
+    m_game->getBoard().updateVisibility();
+
+    if (p->hasExtraTurn()) { 
+         QMessageBox::information(this, "Divine Intervention", "Wonder Grant: Extra Turn!");
+    } else {
+         m_game->switchTurn();
+    }
+    
+    updateGameState();
+}
+
 
 void MainWindow::updatePlayerInventories()
 {
@@ -340,47 +450,24 @@ void MainWindow::updatePlayerInventories()
 
     if (!player || !opponent) return;
 
-    QString playerText = QString("🏛️ %1 | 🦆 %2 ducks")
-        .arg(QString::fromStdString(player->getName()))
-        .arg(player->getCoins());
-    m_playerLabel->setText(playerText);
+    // Use shared_ptr<Wonder> because Player usually holds shared_ptr
+    ui->playerDashboard->updateDashboard(
+        player->getName(), 
+        player->getCoins(), 
+        player->getWonders()
+    );
 
-    QString opponentText = QString("⚔️ %1 | 🦆 %2 ducks")
-        .arg(QString::fromStdString(opponent->getName()))
-        .arg(opponent->getCoins());
-    m_opponentLabel->setText(opponentText);
+    ui->opponentDashboard->updateDashboard(
+        opponent->getName(), 
+        opponent->getCoins(), 
+        opponent->getWonders()
+    );
 
-    auto setupWonders = [this](const Player* p, QFrame* zone) {
-        QVBoxLayout* mainZoneLayout = qobject_cast<QVBoxLayout*>(zone->layout());
-        if (!mainZoneLayout || mainZoneLayout->count() < 2) return;
-        QHBoxLayout* wondersLayout = qobject_cast<QHBoxLayout*>(mainZoneLayout->itemAt(1)->layout());
-        if (!wondersLayout) return;
+    ui->militaryTrackWidget->updatePawnPosition(m_game->getBoard().getMilitaryTrack().getPawnPosition());
 
-        QLayoutItem* item;
-        while ((item = wondersLayout->takeAt(0)) != nullptr) {
-            delete item->widget();
-            delete item;
-        }
-
-        for (const auto& wonderPtr : p->getWonders()) {
-            CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), zone);
-            wonderWidget->setFixedSize(70, 95);
-
-            QString name = QString::fromStdString(wonderPtr->getName());
-            QString color = wonderPtr->getIsBuilt() ? "#DAA520" : "#6D4C41";
-
-            wonderWidget->setupCard(name, color, true);
-            wondersLayout->addWidget(wonderWidget);
-        }
-        };
-
-    setupWonders(player, m_playerZone);
-    setupWonders(opponent, m_opponentZone);
-
-    m_militaryTrackWidget->updatePawnPosition(m_game->getBoard().getMilitaryTrack().getPawnPosition());
-
+    // Clear and rebuild tokens
     QLayoutItem* item;
-    while ((item = m_progressTokensLayout->takeAt(0)) != nullptr) {
+    while ((item = ui->progressTokensLayout->takeAt(0)) != nullptr) {
         delete item->widget();
         delete item;
     }
@@ -406,12 +493,38 @@ void MainWindow::updatePlayerInventories()
             tokenShadow->setOffset(2, 2);
             tokenLabel->setGraphicsEffect(tokenShadow);
 
-            m_progressTokensLayout->addWidget(tokenLabel);
+            ui->progressTokensLayout->addWidget(tokenLabel);
         }
-        };
+    };
 
     addPlayerTokens(player);
     addPlayerTokens(opponent);
+}
+
+void MainWindow::updateTurnIndicator()
+{
+    if (!m_game) return;
+
+    // Check if it is Player 1's turn (The human player, usually "Player 1")
+    bool isPlayer1Turn = (m_game->getCurrentPlayer()->getName() == m_game->getPlayer1().getName());
+    
+    // Player 1 = Blue (#1565C0), Opponent = Red (#8B0000)
+    QString borderColor = isPlayer1Turn ? "#1565C0" : "#8B0000"; 
+    
+    // We can also change the icon slightly or add an arrow
+    QString arrow = isPlayer1Turn ? "⬇️" : "⬆️"; // Pointing to Player (Bottom) or Opponent (Top)
+
+    ui->turnIndicator->setText("🦆 " + arrow);
+    
+    ui->turnIndicator->setStyleSheet(
+        QString("background-color: #FFD700; "
+                "border: 5px solid %1; "
+                "border-radius: 30px; "
+                "font-size: 16px; "
+                "font-weight: bold; "
+                "color: #2C1810;")
+        .arg(borderColor)
+    );
 }
 
 QString MainWindow::getColorHex(Color c)
@@ -430,11 +543,28 @@ QString MainWindow::getColorHex(Color c)
 
 void MainWindow::renderGame()
 {
-    if (!m_boardWidget || !m_game) return;
+    if (!m_game) return;
 
-    m_boardWidget->clearBoard();
+    ui->boardWidgetPage->clearBoard();
     Board& boardData = m_game->getBoard();
     const auto& rows = boardData.getPyramid().getRows();
+    
+    auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
+        QStringList parts;
+        for (auto const& [res, count] : costMap) {
+             QString rName;
+             switch(res) {
+                 case Resource::Wood: rName = "Wood"; break;
+                 case Resource::Clay: rName = "Clay"; break;
+                 case Resource::Stone: rName = "Stone"; break;
+                 case Resource::Glass: rName = "Glass"; break;
+                 case Resource::Papyrus: rName = "Papyrus"; break;
+                 case Resource::Coin: rName = "Coin"; break;
+             }
+             parts << QString("%1 %2").arg(count).arg(rName);
+        }
+        return parts.join("\n");
+    };
 
     for (size_t r = 0; r < rows.size(); ++r) {
         const auto& row = rows[r];
@@ -451,9 +581,11 @@ void MainWindow::renderGame()
             QString name = QString::fromStdString(cardPtr->getName());
             Color col = cardPtr->getColor();
             bool isFaceUp = (node->getFace() == Face::Up);
+            QString cost = formatCost(cardPtr->getCost());
+            QString effect = QString::fromStdString(cardPtr->getEffectDescription());
 
-            m_boardWidget->placeCard(id, name, getColorHex(col), isFaceUp,
-                static_cast<int>(r), static_cast<int>(c), cardsInRow);
+            ui->boardWidgetPage->placeCard(id, name, getColorHex(col), isFaceUp,
+                static_cast<int>(r), static_cast<int>(c), cardsInRow, cost, effect);
         }
     }
 }

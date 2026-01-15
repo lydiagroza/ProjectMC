@@ -52,6 +52,7 @@ class Board;
       std::map<Resource, std::uint8_t> m_cost;
       std::vector<std::function<void(Player&,Board&, Player&)>> m_effects;
       std::optional<std::function<void(Player&,Board&, Player &)>> m_destroy; 
+      std::string m_effectDescription;
 
 
 
@@ -62,11 +63,12 @@ class Board;
           const std::optional<Symbol>& symbol = std::nullopt,
           const std::optional<Symbol>& unlocks = std::nullopt)
           : m_name(std::move(name)), m_id(id), m_color(color),
-          m_cost(cost), m_symbol(symbol), m_unlocks(unlocks) {
+           m_symbol(symbol), m_unlocks(unlocks), m_cost(cost) {
       }
 
 
       const std::string& getName() const;
+      const std::string& getEffectDescription() const;
       std::uint16_t getId() const;
       Color getColor() const;
       const std::map<Resource, std::uint8_t>& getCost() const;

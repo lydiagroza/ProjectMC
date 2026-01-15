@@ -13,46 +13,44 @@ DEFINES += GAMEBASE_STATIC
 INCLUDEPATH += GameBase \
                gameAI \
                ConsoleGame \
-               gameUI
+               gameUI \
+               UI
 
 # ========================================
 # GameBase - toate clasele principale
 # ========================================
 HEADERS += GameBase/Board.h \
            GameBase/CardBase.h \
-           GameBase/CardLoader.h \
            GameBase/CardNode.h \
            GameBase/CardsPyramid.h \
            GameBase/Game.h \
            GameBase/GameConstants.h \
            GameBase/gameExport.h \
            GameBase/GameSetup.h \
-           GameBase/GuildLoader.h \
            GameBase/MilitaryTrack.h \
            GameBase/Player.h \
            GameBase/ProgressTokenLoader.h \
            GameBase/ProgressTokens.h \
-           GameBase/Wonder.h \
-           GameBase/WonderLoader.h
+           GameBase/UniversalCardLoader.h \
+           GameBase/Wonder.h
 
 SOURCES += GameBase/Board.cpp \
            GameBase/CardBase.cpp \
-           GameBase/CardLoader.cpp \
            GameBase/CardNode.cpp \
            GameBase/CardsPyramid.cpp \
            GameBase/Game.cpp \
            GameBase/GameSetup.cpp \
-           GameBase/GuildLoader.cpp \
            GameBase/MilitaryTrack.cpp \
            GameBase/Player.cpp \
+           GameBase/UniversalCardLoader.cpp \
            GameBase/ProgressTokenLoader.cpp \
            GameBase/ProgressTokens.cpp \
-           GameBase/WonderLoader.cpp \
-           GameBase/Wonders.cpp
+           GameBase/Wonder.cpp
 
 # CSV files din GameBase
 OTHER_FILES += GameBase/AgeI.csv \
                GameBase/AgeII.csv \
+               GameBase/AgeIII.csv \
                GameBase/Guilds.csv \
                GameBase/ProgressTokens.csv \
                GameBase/Wonders.csv
@@ -80,7 +78,10 @@ HEADERS += gameUI/MainWindow.h \
            gameUI/WonderSelectionWidget.h \
            gameUI/BoardWidget.h \
            gameUI/MilitaryTrackWidget.h \
-           gameUI/CardWidget.h
+           gameUI/CardWidget.h \
+           gameUI/PlayerDashboardWidget.h \
+           gameUI/NameSelectionWidget.h \
+           gameUI/WonderChoiceDialog.h
 
 SOURCES += gameUI/main.cpp \
            gameUI/MainWindow.cpp \
@@ -88,14 +89,31 @@ SOURCES += gameUI/main.cpp \
            gameUI/WonderSelectionWidget.cpp \
            gameUI/BoardWidget.cpp \
            gameUI/MilitaryTrackWidget.cpp \
-           gameUI/CardWidget.cpp
+           gameUI/CardWidget.cpp \
+           gameUI/PlayerDashboardWidget.cpp \
+           gameUI/NameSelectionWidget.cpp \
+           gameUI/WonderChoiceDialog.cpp
+
+# ========================================
+# UI - fișiere de design .ui (opțional)
+# ========================================
+HEADERS += UI/ui_globals.h
+OTHER_FILES += UI/README.txt
+FORMS += UI/WonderSelectionWidget.ui \
+         UI/MainWindow.ui \
+         UI/SplashScreen.ui \
+         UI/CardWidget.ui \
+         UI/BoardWidget.ui \
+         UI/MilitaryTrackWidget.ui \
+         UI/PlayerDashboardWidget.ui \
+         UI/NameSelectionWidget.ui \
+         UI/WonderChoiceDialog.ui
 
 # Dacă ai fișier .ui (design vizual)
 # Decomentează linia de mai jos dacă există MainWindow.ui
 # FORMS += gameUI/MainWindow.ui
 
 # ========================================
-# Resurse (imagini, icoane - optional)
+# Resurse
 # ========================================
-# Dacă adaugi mai târziu imagini/resurse:
-# RESOURCES += resources.qrc
+RESOURCES += resources.qrc

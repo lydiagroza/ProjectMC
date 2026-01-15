@@ -1,8 +1,10 @@
 #pragma once
 
 #include <QWidget>
-#include <QLabel>
-#include <QVBoxLayout>
+
+namespace Ui {
+class SplashScreen;
+}
 
 QT_BEGIN_NAMESPACE
 class QKeyEvent;
@@ -14,18 +16,17 @@ class SplashScreen : public QWidget
     Q_OBJECT
 
 public:
+    enum GameMode { PvP, PvAI, AvAI };
     explicit SplashScreen(QWidget* parent = nullptr);
+    ~SplashScreen();
 
 signals:
-    void startGame();
+    void gameModeSelected(GameMode mode);
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
     void paintEvent(QPaintEvent* event) override;
 
 private:
-    QLabel* m_titleLabel;
-    QLabel* m_subtitleLabel;
-    QLabel* m_pressEnterLabel;
+    Ui::SplashScreen *ui;
 };
-

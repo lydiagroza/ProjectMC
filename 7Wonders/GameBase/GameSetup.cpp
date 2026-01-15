@@ -1,7 +1,5 @@
 ﻿#include "GameSetup.h"
-#include "CardLoader.h"
-#include "GuildLoader.h"
-#include "WonderLoader.h"
+#include "UniversalCardLoader.h"
 #include "ProgressTokenLoader.h"
 #include <iostream>
 #include <random>
@@ -19,12 +17,12 @@ void GameSetup::loadAllResources()
 {
     m_allTokens = ProgressTokenLoader::loadProgressTokens("ProgressTokens.csv");
 
-    m_deckAge1 = CardLoader::loadFromCSV("AgeI.csv");
-    m_deckAge2 = CardLoader::loadFromCSV("AgeII.csv");
-    m_deckAge3 = CardLoader::loadFromCSV("AgeIII.csv");
-    m_deckGuilds = GuildLoader::loadFromCSV("Guilds.csv");
+    m_deckAge1 = UniversalCardLoader::loadAgeCards("AgeI.csv");
+    m_deckAge2 = UniversalCardLoader::loadAgeCards ("AgeII.csv");
+    m_deckAge3 = UniversalCardLoader::loadAgeCards("AgeIII.csv");
+    m_deckGuilds = UniversalCardLoader::loadGuilds("Guilds.csv");
     
-    m_allWonders = WonderLoader::loadWonders("Wonders.csv");
+    m_allWonders = UniversalCardLoader::loadWonders("Wonders.csv");
 }
 
 

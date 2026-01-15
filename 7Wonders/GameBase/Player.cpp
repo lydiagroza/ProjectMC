@@ -385,7 +385,7 @@ void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder &wonderT
 
     // Aplicăm efectul de la wonder
     for (const auto& effect : wonderToBuild.getEffects()) {
-        effect(*this, opponent);
+        effect(*this, board,opponent);
     }
 
     if (hasTheologyBonus()) {

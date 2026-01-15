@@ -1,14 +1,15 @@
-﻿#pragma once
+#pragma once
 #include "Player.h"
-#include "Board.h"
-#include "CardBase.h"
-#include "Wonder.h"
 #include <memory>
 #include <vector>
 #include <random>
 #include <map>
 #include <string>
-#include <fstream>
+
+// Forward declarations
+class Board;
+class CardBase;
+class Wonder;
 
 enum class AI_Difficulty {
     EASY,    // Decizii random

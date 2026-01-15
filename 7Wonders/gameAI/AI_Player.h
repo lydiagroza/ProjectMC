@@ -1,4 +1,4 @@
-﻿/*#pragma once
+﻿#pragma once
 #include "Player.h"
 #include "Board.h"
 #include "CardBase.h"
@@ -96,15 +96,15 @@ public:
 
     // Alege acțiunea optimă (sau explorează)
     Action selectAction(const GameState& state,
-        const std::vector<Action>& possibleActions,
-        bool explore = true);
+                        const std::vector<Action>& possibleActions,
+                        bool explore = true);
 
     // Update Q-value după o acțiune
     void updateQValue(const GameState& state,
-        const Action& action,
-        float reward,
-        const GameState& nextState,
-        const std::vector<Action>& nextActions);
+                      const Action& action,
+                      float reward,
+                      const GameState& nextState,
+                      const std::vector<Action>& nextActions);
 
     // După terminarea jocului
     void endEpisode(bool won, int finalScore);
@@ -120,7 +120,7 @@ public:
 private:
     float getQValue(const std::string& stateHash, const Action& action) const;
     float getMaxQValue(const std::string& stateHash,
-        const std::vector<Action>& actions) const;
+                       const std::vector<Action>& actions) const;
 };
 
 class AI_Player : public Player {
@@ -171,14 +171,14 @@ private:
 
     // Calculează reward
     float calculateReward(const GameState& oldState,
-        const GameState& newState,
-        const Action& action) const;
+                          const GameState& newState,
+                          const Action& action) const;
 
 public:
     AI_Player(const std::string& name,
-        int id,
-        AI_Difficulty difficulty = AI_Difficulty::MEDIUM,
-        AI_Strategy strategy = AI_Strategy::BALANCED);
+              int id,
+              AI_Difficulty difficulty = AI_Difficulty::MEDIUM,
+              AI_Strategy strategy = AI_Strategy::BALANCED);
 
     // Funcția principală de decizie
     void makeDecision(Board& board, Player& opponent, int currentAge);
@@ -206,4 +206,3 @@ public:
     void setDifficulty(AI_Difficulty difficulty) { m_difficulty = difficulty; }
     void setStrategy(AI_Strategy strategy) { m_strategy = strategy; }
 };
-*/

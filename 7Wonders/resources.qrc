@@ -3,17 +3,6 @@
     <qresource prefix="/">
         <file>background.jpg</file>
     </qresource>
-    <qresource prefix="/wonders">
-        <file>UI/THESTATUEOFZEUS.png</file>
-        <file>UI/HANGINGGARDEN.png</file>
-        <file>UI/PIRAEUS.png</file>
-        <file>UI/THECOLOSUS.png</file>
-        <file>UI/THEGREATLIGHTHOUSE.png</file>
-        <file>UI/THEGREATTEMPLEOFARTEMIS.png</file>
-        <file>UI/THEMAUSOLEUM.png</file>
-        <file>UI/THEPIRAMIDS.png</file>
-        <file>UI/THESPHINX.png</file>
-    </qresource>
     <qresource prefix="/resources">
         <file>UI/wood.png</file>
         <file>UI/stone.png</file>

@@ -1,6 +1,7 @@
 #include "CardWidget.h"
 #include "ui_CardWidget.h"
 #include <QVBoxLayout>
+#include <QFile>
 
 CardWidget::CardWidget(int cardId, QWidget* parent)
     : QWidget(parent)
@@ -210,18 +211,26 @@ QString CardWidget::getWonderImagePath(const QString& wonderName)
     
     // Fix typo in filename if necessary
     if (normalized == "THEPYRAMIDS") normalized = "THEPIRAMIDS";
-    if (normalized == "HANGINGGARDENS") normalized = "HANGINGGARDEN"; // "The Hanging Gardens" -> HANGINGGARDEN.png check
+    if (normalized == "HANGINGGARDENS") normalized = "HANGINGGARDEN";
     if (normalized == "THEHANGINGGARDENS") normalized = "HANGINGGARDEN";
     if (normalized == "THEHANGINGGARDEN") normalized = "HANGINGGARDEN";
     
-    // Check for specific filename matches if normalization isn't exact
-    // But mostly it should match. 
-    
-    QString path = ":/wonders/UI/" + normalized + ".png";
-    QPixmap test(path);
-    if (!test.isNull()) {
-        return path;
+    // Try to find the file in the "UI" folder relative to current working directory
+    // (Usually project root when running from IDE)
+    QString filename = normalized + ".png";
+    QStringList searchPaths = {
+        "UI/" + filename,           // Project root
+        "../UI/" + filename,        // One level up
+        "../../UI/" + filename,     // Two levels up (common for build folders)
+        ":/wonders/UI/" + filename  // Fallback to resource if any left
+    };
+
+    for (const QString& path : searchPaths) {
+        if (QFile::exists(path)) {
+            return path;
+        }
     }
+    
     return "";
 }
 

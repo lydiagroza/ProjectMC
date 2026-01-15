@@ -1,8 +1,8 @@
 name,id,cost,symbol,unlocks,effects
-BUILDERS_GUILD,70,"wood2";"clay1";"glass1",,,
-MONEYLENDERS_GUILD,71,"stone2";"wood1",,,
-SCIENTISTS_GUILD,72,"wood2";"clay1";"papyrus1",,,coins_per_green
-SHIPOWNERS_GUILD,73,"wood1";"clay1";"glass1";"papyrus1",,,coins_per_brown_grey
-TRADERS_GUILD,74,"glass1";"papyrus1",,,coins_per_yellow
-MAGISTRATES_GUILD,75,"wood1";"stone1";"clay1",,,coins_per_blue
-TACTICIANS_GUILD,76,"stone2";"clay1";"papyrus1",,,coins_per_red
+BUILDERS_GUILD,67,"wood2";"clay1";"glass1",,,
+MONEYLENDERS_GUILD,68,"stone2";"wood1",,,
+SCIENTISTS_GUILD,69,"wood2";"clay1";"papyrus1",,,coins_per_green
+SHIPOWNERS_GUILD,70,"wood1";"clay1";"glass1";"papyrus1",,,coins_per_brown_grey
+TRADERS_GUILD,71,"glass1";"papyrus1",,,coins_per_yellow
+MAGISTRATES_GUILD,72,"wood1";"stone1";"clay1",,,coins_per_blue
+TACTICIANS_GUILD,73,"stone2";"clay1";"papyrus1",,,coins_per_red

@@ -46,7 +46,7 @@ void WonderSelectionWidget::setWonders(const std::vector<int>& ids,
         qDebug() << "Processing wonder:" << names[i].trimmed().toLower();
         CardWidget* card = new CardWidget(ids[i], cardsContainer); // Parent to container
         
-        card->setFixedSize(140, 200); // Restore original size
+        card->setFixedSize(300, 150); // Landscape display for Wonders
 
         card->setupCard(names[i], colors[i], true, costs[i], effects[i]);
 

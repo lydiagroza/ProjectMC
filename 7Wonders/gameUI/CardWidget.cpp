@@ -113,10 +113,84 @@ void CardWidget::setImage(const QString& imagePath)
 {
     QPixmap pixmap(imagePath);
     if (!pixmap.isNull()) {
-        ui->imageLabel->setPixmap(pixmap);
-        ui->imageLabel->setAlignment(Qt::AlignCenter);
+        // Wonder Mode: Image as Background
+        
+        // Hide the explicit image label
+        ui->imageLabel->setVisible(false);
+
+        // Apply image to the frame background
+        QString style = QString(
+            "QFrame#cardFrame { "
+            "  border-image: url(%1) 0 0 0 0 stretch stretch; "
+            "  border: 3px solid #8B4513; "
+            "  border-radius: 8px; "
+            "}"
+        ).arg(imagePath);
+        ui->cardFrame->setStyleSheet(style);
+
+        // Reset Layout Alignment to allow individual label alignments to work effectively
+        if (ui->cardFrame->layout()) {
+            ui->cardFrame->layout()->setAlignment(Qt::AlignTop);
+        }
+
+        // --- Antique Style ---
+        QString baseStyle = "QLabel { "
+                            "  background-color: transparent; "
+                            "  color: black; "
+                            "  font-family: 'Times New Roman', serif; "
+                            "  font-weight: bold; "
+                            "}";
+
+        // Title: Top Center, Larger, Prominent White
+        ui->nameLabel->setStyleSheet("QLabel { "
+                                     "  background-color: transparent; "
+                                     "  color: white; "
+                                     "  font-family: 'Times New Roman', serif; "
+                                     "  font-weight: bold; "
+                                     "  font-size: 26px; "
+                                     "}");
+        ui->nameLabel->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+
+        // Info: Left, slightly smaller, Black
+        QString infoStyle = "QLabel { "
+                            "  background-color: transparent; "
+                            "  color: black; "
+                            "  font-family: 'Times New Roman', serif; "
+                            "  font-weight: bold; "
+                            "  font-size: 14px; "
+                            "}";
+        ui->costLabel->setStyleSheet(infoStyle);
+        ui->costLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+        
+        ui->effectLabel->setStyleSheet(infoStyle);
+        ui->effectLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+
+        // Dark shadow for White Title
+        QGraphicsDropShadowEffect* titleShadow = new QGraphicsDropShadowEffect();
+        titleShadow->setColor(QColor(0, 0, 0, 255));
+        titleShadow->setBlurRadius(8);
+        titleShadow->setOffset(2, 2);
+        ui->nameLabel->setGraphicsEffect(titleShadow);
+
+        // White glow for Black Info labels
+        auto addWhiteGlow = [](QWidget* w) {
+            QGraphicsDropShadowEffect* glow = new QGraphicsDropShadowEffect();
+            glow->setColor(QColor(255, 255, 255, 220));
+            glow->setBlurRadius(4);
+            glow->setOffset(0, 0);
+            w->setGraphicsEffect(glow);
+        };
+
+        addWhiteGlow(ui->costLabel);
+        addWhiteGlow(ui->effectLabel);
+
+        // Ensure they are visible
+        ui->nameLabel->setVisible(true);
+        ui->costLabel->setVisible(!ui->costLabel->text().isEmpty());
+        ui->effectLabel->setVisible(true);
+
     } else {
-        ui->imageLabel->clear(); // Clear any existing pixmap if path is invalid
+        ui->imageLabel->clear(); 
     }
 }
 

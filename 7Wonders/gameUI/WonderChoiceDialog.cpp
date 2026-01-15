@@ -31,7 +31,7 @@ void WonderChoiceDialog::setWonders(const std::vector<Wonder*>& wonders, Player*
 
     for (auto* w : wonders) {
         CardWidget* cw = new CardWidget(w->getId(), this);
-        cw->setFixedSize(140, 200); // Large display
+        cw->setFixedSize(300, 150); // Landscape display for Wonders
 
         int cost = player->findTotalCost(*w, *opponent);
         QString costStr;

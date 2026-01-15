@@ -77,7 +77,7 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins, 
     // Add new wonder widgets
     for (const auto& wonderPtr : wonders) {
         CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), ui->wondersContainer);
-        wonderWidget->setFixedSize(100, 140);
+        wonderWidget->setFixedSize(200, 100); // Mini Landscape for Dashboard
 
         QString wName = QString::fromStdString(wonderPtr->getName());
         QString color = wonderPtr->getIsBuilt() ? "#DAA520" : "#6D4C41";

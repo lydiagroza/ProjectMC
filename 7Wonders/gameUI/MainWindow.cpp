@@ -121,6 +121,7 @@ void MainWindow::updateGameState()
         renderGame();
     }
     updatePlayerInventories();
+    updateTurnIndicator();
     
     // Reset selection state
     m_selectedCardId = -1;
@@ -342,9 +343,9 @@ void MainWindow::onWonderClicked()
     node->updatePlayedStatus(true);
     m_game->getBoard().updateVisibility();
 
-    if (selectedWonder->hasExtraTurnEffect()) { // Assuming logic inside constructWonder sets flag
+    if (p->hasExtraTurn()) { 
          QMessageBox::information(this, "Divine Intervention", "Wonder Grant: Extra Turn!");
-    } else if (!p->hasExtraTurn()) {
+    } else {
          m_game->switchTurn();
     }
     
@@ -410,6 +411,32 @@ void MainWindow::updatePlayerInventories()
 
     addPlayerTokens(player);
     addPlayerTokens(opponent);
+}
+
+void MainWindow::updateTurnIndicator()
+{
+    if (!m_game) return;
+
+    // Check if it is Player 1's turn (The human player, usually "Player 1")
+    bool isPlayer1Turn = (m_game->getCurrentPlayer()->getName() == m_game->getPlayer1().getName());
+    
+    // Player 1 = Blue (#1565C0), Opponent = Red (#8B0000)
+    QString borderColor = isPlayer1Turn ? "#1565C0" : "#8B0000"; 
+    
+    // We can also change the icon slightly or add an arrow
+    QString arrow = isPlayer1Turn ? "⬇️" : "⬆️"; // Pointing to Player (Bottom) or Opponent (Top)
+
+    ui->turnIndicator->setText("🦆 " + arrow);
+    
+    ui->turnIndicator->setStyleSheet(
+        QString("background-color: #FFD700; "
+                "border: 5px solid %1; "
+                "border-radius: 30px; "
+                "font-size: 16px; "
+                "font-weight: bold; "
+                "color: #2C1810;")
+        .arg(borderColor)
+    );
 }
 
 QString MainWindow::getColorHex(Color c)

@@ -40,6 +40,7 @@ private:
     void renderGame();
     QString getColorHex(Color c);
     void updatePlayerInventories();
+    void updateTurnIndicator();
     void startGame();
     void updateGameState();
     void startWonderDraft();

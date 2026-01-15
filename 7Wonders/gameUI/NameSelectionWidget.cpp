@@ -27,6 +27,18 @@ NameSelectionWidget::~NameSelectionWidget()
     delete ui;
 }
 
+void NameSelectionWidget::setMode(bool p1Enabled, bool p2Enabled)
+{
+    ui->inputP1->setEnabled(p1Enabled);
+    ui->inputP2->setEnabled(p2Enabled);
+
+    if (!p1Enabled) ui->inputP1->setText("AI Player 1");
+    else ui->inputP1->setText("Player 1");
+
+    if (!p2Enabled) ui->inputP2->setText("AI Player 2");
+    else ui->inputP2->setText("Player 2");
+}
+
 QString NameSelectionWidget::getPlayer1Name() const
 {
     return ui->inputP1->text().trimmed();

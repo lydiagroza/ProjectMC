@@ -24,6 +24,10 @@ SplashScreen::SplashScreen(QWidget* parent)
     subtitleShadow->setOffset(2, 2);
     ui->subtitleLabel->setGraphicsEffect(subtitleShadow);
 
+    connect(ui->btnPvP, &QPushButton::clicked, [this]() { emit gameModeSelected(PvP); });
+    connect(ui->btnPvA, &QPushButton::clicked, [this]() { emit gameModeSelected(PvAI); });
+    connect(ui->btnAvA, &QPushButton::clicked, [this]() { emit gameModeSelected(AvAI); });
+
     // Focus to receive keyboard events
     this->setFocusPolicy(Qt::StrongFocus);
 }
@@ -35,9 +39,7 @@ SplashScreen::~SplashScreen()
 
 void SplashScreen::keyPressEvent(QKeyEvent* event)
 {
-    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
-        emit startGame();
-    }
+    // Key events disabled in favor of buttons
     QWidget::keyPressEvent(event);
 }
 

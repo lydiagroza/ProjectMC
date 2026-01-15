@@ -14,6 +14,7 @@ class GAME_API Wonder {
     uint16_t m_id;
     std::map<Resource, uint8_t> m_cost;
     std::vector<std::function<void(Player&, Board&, Player&)>> m_effects;
+    std::string m_effectDescription;
     bool m_isBuilt = false;
     bool m_isAvailable = true;
 
@@ -26,6 +27,8 @@ public:
      static std::vector<std::function<void(Player&, Player&)>> parseEffects(const std::string& s);*/
 
     const std::string& getName() const;
+    const std::string& getEffectDescription() const { return m_effectDescription; }
+    void setEffectDescription(const std::string& desc) { m_effectDescription = desc; }
     uint16_t getId() const;
     const std::map<Resource, uint8_t>& getCost() const;
     const std::vector<std::function<void(Player&,Board&,Player&)>>& getEffects() const;

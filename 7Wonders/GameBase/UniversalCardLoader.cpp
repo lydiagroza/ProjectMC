@@ -317,6 +317,7 @@ vector<shared_ptr<CardBase>> UniversalCardLoader::loadAgeCards(const string& fil
         getline(ss, eff, ','); getline(ss, dis, '\n');
 
         auto card = make_shared<CardBase>(trim(name), (uint16_t)stoi(trim(id)), parseColor(trim(color)), parseCost(trim(cost)), parseSymbol(trim(sym)), parseSymbol(trim(unl)));
+        card->m_effectDescription = trim(eff);
         for (auto& ef : parseEffects(trim(eff))) card->addEffect(ef);
         cards.push_back(card);
     }
@@ -356,6 +357,7 @@ vector<shared_ptr<Wonder>> UniversalCardLoader::loadWonders(const string& filena
         getline(ss, name, ','); getline(ss, id, ','); getline(ss, cost, ','); getline(ss, eff, '\n');
 
         auto w = make_shared<Wonder>(trim(name), (uint16_t)stoi(trim(id)), parseCost(trim(cost)));
+        w->setEffectDescription(trim(eff));
         for (auto& ef : parseEffects(trim(eff))) w->addEffect(ef);
         wonders.push_back(w);
     }

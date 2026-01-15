@@ -1,4 +1,9 @@
-﻿/*#include "AI_Player.h"
+#include "AI_Player.h"
+#include "Game.h"
+#include "Board.h"
+#include "CardBase.h"
+#include "Wonder.h"
+#include "CardNode.h"
 #include <algorithm>
 #include <chrono>
 #include <iostream>
@@ -6,6 +11,7 @@
 #include <iomanip>
 #include <cmath>
 #include <limits>
+#include <fstream>
 
 std::string GameState::toHash() const {
     std::ostringstream oss;
@@ -58,10 +64,10 @@ GameState GameState::extract(const Player& me, const Player& opponent, const Boa
 
     // Inventar
     const auto& inventory = me.getInventory();
-    state.myBlueCardCount = inventory.count(Color::Blue) ? inventory.at(Color::Blue).size() : 0;
-    state.myRedCardCount = inventory.count(Color::Red) ? inventory.at(Color::Red).size() : 0;
-    state.myGreenCardCount = inventory.count(Color::Green) ? inventory.at(Color::Green).size() : 0;
-    state.myYellowCardCount = inventory.count(Color::Yellow) ? inventory.at(Color::Yellow).size() : 0;
+    state.myBlueCardCount = inventory.count(Color::Blue) ? (int)inventory.at(Color::Blue).size() : 0;
+    state.myRedCardCount = inventory.count(Color::Red) ? (int)inventory.at(Color::Red).size() : 0;
+    state.myGreenCardCount = inventory.count(Color::Green) ? (int)inventory.at(Color::Green).size() : 0;
+    state.myYellowCardCount = inventory.count(Color::Yellow) ? (int)inventory.at(Color::Yellow).size() : 0;
 
     // Info despre oponent
     const auto& oppResources = opponent.getResources();
@@ -251,7 +257,7 @@ void QLearningAgent::loadModel(const std::string& filename) {
         else if (actionStr.find("WONDER_") == 0) {
             action.type = Action::BUILD_WONDER;
             size_t underscorePos = actionStr.find("_CARD_");
-            action.wonderId = static_cast<uint16_t>(std::stoi(actionStr.substr(7, underscorePos - 7)));
+            action.wonderId = static_cast<uint16_t>(std::stoi(actionStr.substr(7, (int)underscorePos - 7)));
             action.cardId = static_cast<uint16_t>(std::stoi(actionStr.substr(underscorePos + 6)));
         }
         else if (actionStr.find("DISCARD_") == 0) {
@@ -391,9 +397,9 @@ float AI_Player::calculateReward(const GameState& oldState,
     return reward;
 }
 
-// ============================================================================
+// ============================================================================ 
 // HEURISTIC EVALUATION (pentru MEDIUM)
-// ============================================================================
+// ============================================================================ 
 
 int AI_Player::evaluateMilitaryValue(const std::shared_ptr<CardBase>& card) const {
     int value = 0;
@@ -580,9 +586,9 @@ Wonder* AI_Player::chooseBestWonder(const std::vector<Wonder*>& availableWonders
     return bestWonder;
 }
 
-// ============================================================================
+// ============================================================================ 
 // ML DECISION MAKING
-// ============================================================================
+// ============================================================================ 
 
 std::shared_ptr<CardBase> AI_Player::chooseBestCardML(
     const std::vector<std::shared_ptr<CardBase>>& availableCards,
@@ -614,9 +620,9 @@ std::shared_ptr<CardBase> AI_Player::chooseBestCardML(
     return availableCards[0]; // Fallback
 }
 
-// ============================================================================
+// ============================================================================ 
 // MAIN DECISION FUNCTION
-// ============================================================================
+// ============================================================================ 
 
 void AI_Player::makeDecision(Board& board, Player& opponent, int currentAge) {
     m_currentAge = currentAge;
@@ -762,4 +768,4 @@ void AI_Player::loadModel(const std::string& filename) {
     if (m_learningAgent) {
         m_learningAgent->loadModel(filename);
     }
-}*/
+}

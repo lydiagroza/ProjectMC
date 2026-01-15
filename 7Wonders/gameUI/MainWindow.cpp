@@ -7,6 +7,7 @@
 #include "WonderSelectionWidget.h"
 #include "NameSelectionWidget.h"
 #include "WonderChoiceDialog.h"
+#include "AI_Player.h"
 #include "MilitaryTrackWidget.h"
 #include "SplashScreen.h"
 #include "PlayerDashboardWidget.h"
@@ -49,8 +50,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     // Apply style to BoardWidget
     ui->boardWidgetPage->setStyleSheet(
-        "background: qradialgradient(cx:0.5, cy:0.5, radius:0.8, "
-        "  fx:0.5, fy:0.5, stop:0 #4A3728, stop:1 #2C1810); "
+        "background: transparent; "
         "border: 4px solid #8B4513; "
         "border-radius: 15px;"
     );
@@ -68,10 +68,10 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->btnWonder, &QPushButton::clicked, this, &MainWindow::onWonderClicked);
     
     connect(ui->wonderSelectionPage, &WonderSelectionWidget::wonderChosen, this, &MainWindow::onWonderChosen);
-    connect(ui->splashScreenPage, &SplashScreen::startGame, this, &MainWindow::onSplashFinished);
+    connect(ui->splashScreenPage, &SplashScreen::gameModeSelected, this, &MainWindow::onSplashFinished);
     connect(ui->nameSelectionPage, &NameSelectionWidget::namesConfirmed, this, &MainWindow::onNamesConfirmed);
 
-    ui->statusbar->showMessage("⚔️ Press ENTER to begin your conquest! ⚔️");
+    ui->statusbar->showMessage("⚔️ Welcome to 7 Wonders Duel! ⚔️");
 
     // Hide zones initially
     ui->opponentDashboard->setVisible(false);
@@ -96,11 +96,18 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::onSplashFinished()
+void MainWindow::onSplashFinished(SplashScreen::GameMode mode)
 {
-    // Transition to Name Selection
-    ui->stack->setCurrentWidget(ui->nameSelectionPage);
-    ui->statusbar->showMessage("⚔️ Who dares to challenge the ducks? ⚔️");
+    m_gameMode = mode;
+    if (mode == SplashScreen::AvAI) {
+        onNamesConfirmed("AI Player 1", "AI Player 2");
+    } else {
+        // Player 1 is always human in PvA and PvP
+        // Player 2 is only human in PvP
+        ui->nameSelectionPage->setMode(true, mode == SplashScreen::PvP);
+        ui->stack->setCurrentWidget(ui->nameSelectionPage);
+        ui->statusbar->showMessage("⚔️ Who dares to challenge the ducks? ⚔️");
+    }
 }
 
 void MainWindow::onNamesConfirmed(const QString& p1, const QString& p2)
@@ -108,6 +115,12 @@ void MainWindow::onNamesConfirmed(const QString& p1, const QString& p2)
     if (m_game) {
         m_game->getPlayer1().setName(p1.toStdString());
         m_game->getPlayer2().setName(p2.toStdString());
+        
+        // Set Player Types:
+        // PvP: Both human
+        // PvA: P1 human, P2 AI
+        // AvA: Both AI
+        m_game->setPlayerTypes(m_gameMode == SplashScreen::AvAI, m_gameMode != SplashScreen::PvP);
     }
 
     ui->opponentDashboard->setVisible(true);
@@ -116,6 +129,25 @@ void MainWindow::onNamesConfirmed(const QString& p1, const QString& p2)
 
     ui->statusbar->showMessage("⚔️ Initializing the ancient world of ducks... ⚔️");
     startGame();
+}
+
+void MainWindow::processAITurn()
+{
+    AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
+    if (!ai || m_game->isGameOver()) return;
+
+    ui->statusbar->showMessage("🤖 " + QString::fromStdString(ai->getName()) + " is thinking...", 1000);
+
+    ai->makeDecision(m_game->getBoard(), *m_game->getOpponent(), m_game->getCurrentAge());
+
+    // After AI move, refresh game state
+    if (!ai->hasExtraTurn()) {
+        m_game->switchTurn();
+    } else {
+        ui->statusbar->showMessage("🤖 " + QString::fromStdString(ai->getName()) + " gets an extra turn!", 2000);
+    }
+    
+    updateGameState();
 }
 
 void MainWindow::startGame()
@@ -162,6 +194,14 @@ void MainWindow::updateGameState()
     if (m_game->isGameOver()) {
         QMessageBox::information(this, "Game Over", "The game has ended!");
         // TODO: Show nice game over screen
+        return;
+    }
+
+    // Check for AI Turn
+    AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
+    if (ai) {
+        // Delay slightly so user can see what happened
+        QTimer::singleShot(800, this, &MainWindow::processAITurn);
     }
 }
 
@@ -206,6 +246,18 @@ void MainWindow::startWonderDraft()
 
     QString currentPlayerName = QString::fromStdString(m_game->getCurrentPlayer()->getName());
     ui->statusbar->showMessage("⚔️ " + currentPlayerName + " must choose a wonder! ⚔️", 5000);
+
+    // AI Check
+    AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
+    if (ai) {
+        auto chosen = ai->chooseWonderFromDraft(availableWonders);
+        if (chosen) {
+            QTimer::singleShot(1000, this, [this, chosen]() {
+                onWonderChosen(chosen->getId());
+            });
+            return;
+        }
+    }
 
     ui->wonderSelectionPage->setWonders(ids, names, colors, costs, effects);
 }

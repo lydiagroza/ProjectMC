@@ -1,5 +1,6 @@
-﻿#include "Game.h"
+#include "Game.h"
 #include "MilitaryTrack.h"
+#include "AI_Player.h"
 #include <iostream>
 #include <optional> 
 #include <vector>
@@ -14,15 +15,32 @@ Game* Game::currentGame = nullptr;
 Game::Game()
     : m_board(),         
     m_setup(m_board),   
-    m_player1("Player 1"),
-    m_player2("Player 2"),
+    m_player1(std::make_shared<Player>("Player 1", 1)),
+    m_player2(std::make_shared<Player>("Player 2", 2)),
     m_currentAge(1),
     m_gameOver(false)
 {
     currentGame = this;
-    m_currentPlayer = &m_player1;
-    m_opponent = &m_player2;
+    m_currentPlayer = m_player1.get();
+    m_opponent = m_player2.get();
 }
+
+void Game::setPlayerTypes(bool p1IsAI, bool p2IsAI)
+{
+    std::string n1 = m_player1->getName();
+    std::string n2 = m_player2->getName();
+
+    if (p1IsAI) m_player1 = std::make_shared<AI_Player>(n1, 1);
+    else m_player1 = std::make_shared<Player>(n1, 1);
+
+    if (p2IsAI) m_player2 = std::make_shared<AI_Player>(n2, 2);
+    else m_player2 = std::make_shared<Player>(n2, 2);
+
+    // Reset pointers
+    m_currentPlayer = m_player1.get();
+    m_opponent = m_player2.get();
+}
+
 void Game::printPlayerInfo(const Player& player, std::ostream& os) const
 {
     os << player.getName() << "\n";
@@ -105,10 +123,10 @@ void Game::handle7WondersRule()
         }
         return nullptr;
         };
-    lastRemainingWonder = findUnbuiltAvailableWonder(m_player1);
+    lastRemainingWonder = findUnbuiltAvailableWonder(*m_player1);
 
     if (lastRemainingWonder == nullptr) {
-        lastRemainingWonder = findUnbuiltAvailableWonder(m_player2);
+        lastRemainingWonder = findUnbuiltAvailableWonder(*m_player2);
     }
 
     if (lastRemainingWonder != nullptr) {
@@ -121,7 +139,7 @@ void Game::handle7WondersRule()
     
 int Game::calculatePlayerVP(const Player& player) const {
     int totalVP = 0;
-    int playerId = (player.getName() == m_player1.getName()) ? 1 : 2;
+    int playerId = (player.getName() == m_player1->getName()) ? 1 : 2;
     
     // 1. Coins
     totalVP += player.getCoins() / 3;
@@ -136,11 +154,6 @@ int Game::calculatePlayerVP(const Player& player) const {
     totalVP += player.getVPFromBlueCards();
 
     // 5. Green Cards (Scientific) - handled via Progress Tokens usually, but cards themselves have VPs sometimes?
-    // In Duel, Green cards usually have symbols (6 pts for pairs) but the cards themselves generally provide points on the card face.
-    // However, the `CardBase` parsing for generic VPs isn't explicitly summed here. 
-    // Usually, VPs are stored in `m_pointsScore` map if they are flat VPs.
-    // Let's assume standard VPs are handled in `player.getPoints()`, but `getVPFromBlueCards` does a specific lookup.
-    // Let's add general flat VPs if they exist in `m_pointsScore`.
     if (player.getPoints().count(Points::Victory)) {
         totalVP += player.getPoints().at(Points::Victory);
     }
@@ -148,15 +161,12 @@ int Game::calculatePlayerVP(const Player& player) const {
     // 6. Wonders
     for (const auto& wonder : player.getWonders()) {
         if (wonder->getIsBuilt()) {
-            // Wonders usually have flat VP effects added to m_pointsScore or need specific handling
-            // If WonderLoader adds VPs to m_pointsScore, it's covered above.
-            // If not, we might need to check wonders. 
-            // For now, let's assume Wonder VPs are added to Player's points map upon construction.
+            // Wonder VPs are usually added to Points::Victory or handled here
         }
     }
 
     // 7. Guilds
-    const Player& opponent = (player.getName() == m_player1.getName()) ? m_player2 : m_player1;
+    const Player& opponent = (player.getName() == m_player1->getName()) ? *m_player2 : *m_player1;
     totalVP += player.getVPFromGuilds(opponent);
 
     return totalVP;
@@ -164,34 +174,34 @@ int Game::calculatePlayerVP(const Player& player) const {
 
 std::optional<Player> Game::determinateWinner()
 {
-    int vp1 = calculatePlayerVP(m_player1);
-    int vp2 = calculatePlayerVP(m_player2);
+    int vp1 = calculatePlayerVP(*m_player1);
+    int vp2 = calculatePlayerVP(*m_player2);
 
 	std::cout << "\n--- Rezultatele Finale ---\n";
-    std::cout << m_player1.getName() << " Total VP: " << vp1 << "\n";
-    std::cout << m_player2.getName() << " Total VP: " << vp2 << "\n";
+    std::cout << m_player1->getName() << " Total VP: " << vp1 << "\n";
+    std::cout << m_player2->getName() << " Total VP: " << vp2 << "\n";
     if (vp1 > vp2) {
-        std::cout << "\n Câștigătorul este: " << m_player1.getName() << "\n";
-        return m_player1;
+        std::cout << "\n Câștigătorul este: " << m_player1->getName() << "\n";
+        return *m_player1;
     }
     else if (vp2 > vp1) {
-        std::cout << "\n Câștigătorul este: " << m_player2.getName() << "\n";
-        return m_player2;
+        std::cout << "\n Câștigătorul este: " << m_player2->getName() << "\n";
+        return *m_player2;
     }
     else {
 
-        int blueVP1 = m_player1.getVPFromBlueCards();
-        int blueVP2 = m_player2.getVPFromBlueCards();
+        int blueVP1 = m_player1->getVPFromBlueCards();
+        int blueVP2 = m_player2->getVPFromBlueCards();
 
         if (blueVP1 > blueVP2) {
-            std::cout << "Jocul s-a terminat la egalitate, dar " << m_player1.getName()
+            std::cout << "Jocul s-a terminat la egalitate, dar " << m_player1->getName()
                 << " castiga la tie-breaker (Clădiri Civile - Albastre).\n";
-            return m_player1;
+            return *m_player1;
         }
         else if (blueVP2 > blueVP1) {
-            std::cout << "Jocul s-a terminat la egalitate, dar " << m_player2.getName()
+            std::cout << "Jocul s-a terminat la egalitate, dar " << m_player2->getName()
                 << " castiga la tie-breaker (Clădiri Civile - Albastre).\n";
-            return m_player2;
+            return *m_player2;
         }
         else {
             std::cout << "Jocul s-a terminat la egalitate perfectă. Este remiză.\n";
@@ -208,7 +218,6 @@ void Game::handlePlayerAction()
     std::cout << "Introdu ID-ul cartii de jos pe care vrei sa o iei: ";
 
     int cardId;
-    // Citire sigură (să nu crape dacă bagi litere)
     while (!(std::cin >> cardId)) {
         if (std::cin.eof()) {
             std::cerr << "Input stream ended. Exiting.\n";
@@ -224,19 +233,15 @@ void Game::handlePlayerAction()
 
     for (const auto& row : rows) {
         for (const auto& node : row) {
-            // Verificăm ID-ul
             if (node && node->getCard() && node->getCard()->getId() == cardId) {
-                // Hack mic: const_cast pentru că selectedNode va fi modificat
-                // (Ori faci o funcție în Board care returnează Node* ne-const)
                 selectedNode = const_cast<CardNode*>(node.get());
             }
         }
     }
 
-    //Validări
     if (!selectedNode) {
         std::cout << "Eroare: Nu exista carte cu ID-ul " << cardId << "! Incearca iar.\n";
-        handlePlayerAction(); // Recursivitate simplă pentru retry
+        handlePlayerAction();
         return;
     }
     if (selectedNode->isPlayed()) {
@@ -250,7 +255,6 @@ void Game::handlePlayerAction()
         return;
     }
 
-    // 3. Alegerea Acțiunii
     std::cout << "Ai ales: " << selectedNode->getCard()->getName() << "\n";
     std::cout << "Ce faci? [1]=Cumpara, [2]=Vinde, [3]=Construieste minune: ";
     int action;
@@ -279,7 +283,6 @@ void Game::handlePlayerAction()
     }
     if (success) {
         selectedNode->updatePlayedStatus(true);
-
         m_board.updateVisibility();
 
         if (!m_currentPlayer->hasExtraTurn()) {
@@ -300,13 +303,13 @@ void Game::printGameState() const {
     std::cout << "               STAREA JOCULUI (Age " << m_currentAge << ")      \n";
     std::cout << "============================================\n";
 
-    std::cout << "[P1] " << m_player1.getName()
-        << " | Bani: " << (int)m_player1.getCoins()
-        << " | Minuni: " << m_player1.getWonders().size() << "\n";
+    std::cout << "[P1] " << m_player1->getName()
+        << " | Bani: " << (int)m_player1->getCoins()
+        << " | Minuni: " << m_player1->getWonders().size() << "\n";
 
-    std::cout << "[P2] " << m_player2.getName()
-        << " | Bani: " << (int)m_player2.getCoins()
-        << " | Minuni: " << m_player2.getWonders().size() << "\n";
+    std::cout << "[P2] " << m_player2->getName()
+        << " | Bani: " << (int)m_player2->getCoins()
+        << " | Minuni: " << m_player2->getWonders().size() << "\n";
 
     std::cout << "\n--- Pista Militara ---\n";
     m_board.printMilitaryTrack();
@@ -316,14 +319,12 @@ void Game::printGameState() const {
 }
 
 void Game::draftWondersPhase() {
-    // Doar pregătim seturile de minuni. Logica de alegere va fi în UI.
     m_draftPhase = 1;
     m_draftSet1 = m_setup.drawWonders(4);
     m_draftSet2 = m_setup.drawWonders(4);
 
-    // Setăm jucătorul care începe draftul (Player 1)
-    m_currentPlayer = &m_player1;
-    m_opponent = &m_player2;
+    m_currentPlayer = m_player1.get();
+    m_opponent = m_player2.get();
 }
 
 void Game::startNextAge()
@@ -353,48 +354,38 @@ void Game::initialize()
     m_gameOver = false;
 	draftWondersPhase();
     m_setup.startAge(m_currentAge);
-    m_player1.addResource(Coin,7);
-    m_player2.addResource(Coin, 7);
+    m_player1->addResource(Coin,7);
+    m_player2->addResource(Coin, 7);
     m_board.updateVisibility();
-    std::cout << "[Game Logic] Initialization Complete. Age 1 Started. Players have 7 coins.\n";
 }
 
 bool Game::checkForInstantWin() {
 
     int militaryPosition = m_board.getMilitaryTrack().getPawnPosition();
 
-    // Player 1 atinge +9 (sau mai mult)
     if (militaryPosition >= 9) {
-		std::cout << "Victorie militara pt " << m_player1.getName() << "\n";
         m_gameOver = true;
         return true;
     }
 
-    // Player 2 atinge -9 (sau mai puțin)
     if (militaryPosition <=- 9) {
-        std::cout << "Victorie militara pt " << m_player2.getName() << "\n";
         m_gameOver = true;
         return true;
     }
 
-    //verif suprematie stiintifica
-
-	if (m_player1.getNrOfScientificSymbols() >= 6) //trebuie implementata fct in player
+	if (m_player1->getNrOfScientificSymbols() >= 6)
 	{
-		std::cout << "victorie stiintifica pt " << m_player1.getName() << "\n";
         m_gameOver = true;
         return true;
     }
 
-    if (m_player2.getNrOfScientificSymbols() >= 6) {
-		std::cout << "victorie stiintifica pt " << m_player2.getName() << "\n";
+    if (m_player2->getNrOfScientificSymbols() >= 6) {
+        m_gameOver = true;
         return true;
     }
 
     return false;
 }
-
-// --- Implementarea noilor funcții ---
 
 const std::vector<std::shared_ptr<Wonder>>& Game::getCurrentDraftSet() const {
     if (m_draftPhase == 1) {
@@ -413,11 +404,11 @@ bool Game::draftWonder(int wonderId)
         });
 
     if (it == currentDraftSet.end()) {
-        return false; // Wonder not found in the current draft set
+        return false; 
     }
 
     m_currentPlayer->addWonders(*it);
-    currentDraftSet.erase(it); // Remove from available wonders
+    currentDraftSet.erase(it); 
 
     bool shouldSwitch = (currentDraftSet.size() == 3 || currentDraftSet.size() == 1);
 
@@ -425,11 +416,9 @@ bool Game::draftWonder(int wonderId)
         switchTurn();
     }
 
-    // If the current draft set is empty, move to the next phase or end the draft
     if (currentDraftSet.empty()) {
-        m_draftPhase++; // Move to phase 2 or finish drafting
+        m_draftPhase++; 
         if (m_draftPhase == 2) {
-            // After the first draft is done, the player who went second now starts.
             switchTurn();
         }
     }

@@ -14,6 +14,7 @@ public:
     explicit NameSelectionWidget(QWidget *parent = nullptr);
     ~NameSelectionWidget();
 
+    void setMode(bool p1Enabled, bool p2Enabled);
     QString getPlayer1Name() const;
     QString getPlayer2Name() const;
 

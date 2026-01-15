@@ -13,7 +13,7 @@
   <property name="styleSheet">
    <string notr="true">
     QWidget#NameSelectionWidget {
-        background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2C1810, stop:1 #4E342E);
+        background: transparent;
     }
     QLabel {
         color: #F5E6D3;

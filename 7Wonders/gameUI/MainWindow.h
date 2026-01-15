@@ -29,12 +29,14 @@ private slots:
     void onDiscardClicked();
     void onWonderClicked();
     void onWonderChosen(int cardId);
-    void onSplashFinished();
+    void onSplashFinished(SplashScreen::GameMode mode);
     void onNamesConfirmed(const QString& p1, const QString& p2);
+    void processAITurn();
 
 private:
     Ui::MainWindow *ui;
     Game* m_game;
+    SplashScreen::GameMode m_gameMode;
 
     int m_selectedCardId = -1;
     int m_draftPhase = 0;

@@ -14,9 +14,11 @@
    <string>⚔️ 7 Wonders Duel - The Empire of the Ducks ⚔️</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QMainWindow { 
-  background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
-    stop:0 #2C1810, stop:0.5 #3E2723, stop:1 #2C1810); 
+   <string notr="true">QMainWindow {
+    background: #2C1810;
+}
+#centralWidget {
+    border-image: url(":/background.jpg") 0 0 0 0 stretch stretch;
 }
 QLabel { 
   font-family: 'Times New Roman', serif; 

@@ -89,6 +89,7 @@ public:
 	void set_discountedResource(Resource r);
 	Player(const std::string& playerName,int id); // constructor
 	Player(const std::string& name);
+    virtual ~Player() = default; // Added to make class polymorphic
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
 	//Gestioneaza resursele

@@ -16,11 +16,12 @@ class SplashScreen : public QWidget
     Q_OBJECT
 
 public:
+    enum GameMode { PvP, PvAI, AvAI };
     explicit SplashScreen(QWidget* parent = nullptr);
     ~SplashScreen();
 
 signals:
-    void startGame();
+    void gameModeSelected(GameMode mode);
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

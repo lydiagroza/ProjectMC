@@ -114,7 +114,6 @@ FORMS += UI/WonderSelectionWidget.ui \
 # FORMS += gameUI/MainWindow.ui
 
 # ========================================
-# Resurse (imagini, icoane - optional)
+# Resurse
 # ========================================
-# Dacă adaugi mai târziu imagini/resurse:
-# RESOURCES += resources.qrc
+RESOURCES += resources.qrc

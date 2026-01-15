@@ -20,8 +20,8 @@ private:
     GameSetup m_setup;
    
 
-    Player m_player1;
-    Player m_player2;
+    std::shared_ptr<Player> m_player1;
+    std::shared_ptr<Player> m_player2;
 
     Player* m_currentPlayer;
     Player* m_opponent;
@@ -38,7 +38,7 @@ private:
 	void handleProgressTokenChoice();
     void handle7WondersRule();
 
-    //fct care ma ajuta sa vad cine a castigat
+    //fct care ma ajuta sa voir cine a castigat
 	
 	std::optional<Player> determinateWinner();
 	int calculatePurpleGuilds(const Player& p) const;
@@ -61,6 +61,8 @@ private:
 public:
     Game();
     void initialize();
+    void setPlayerTypes(bool p1IsAI, bool p2IsAI);
+    int getCurrentAge() const { return m_currentAge; }
     void handlePlayerAction();
     void startNextAge();
     bool isEndOfAge();
@@ -72,8 +74,8 @@ public:
 	void printPlayerInfo(const Player& player, std::ostream& os = std::cout) const;
     int calculatePlayerVP(const Player& player) const;
 
-    Player& getPlayer1() { return m_player1; }
-    Player& getPlayer2() { return m_player2; }
+    Player& getPlayer1() { return *m_player1; }
+    Player& getPlayer2() { return *m_player2; }
     void handleBuildFromDiscard();
 
     // Funcții noi pentru a gestiona faza de draft din UI

@@ -36,6 +36,15 @@ void MilitaryTrackWidget::createTrack()
     QVBoxLayout* trackLayout = qobject_cast<QVBoxLayout*>(ui->trackContainer->layout());
     if (!trackLayout) return;
 
+    // Clear any design-time placeholders
+    QLayoutItem* item;
+    while ((item = trackLayout->takeAt(0)) != nullptr) {
+        if (item->widget()) {
+            delete item->widget();
+        }
+        delete item;
+    }
+
     m_trackSegments.resize(m_totalSegments);
 
     for (int i = m_totalSegments - 1; i >= 0; --i) {

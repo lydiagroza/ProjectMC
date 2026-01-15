@@ -123,6 +123,19 @@ void MainWindow::updateGameState()
     updatePlayerInventories();
     updateTurnIndicator();
     
+    // Check for end of age
+    if (m_game->isEndOfAge()) {
+        QMessageBox::information(this, "Age Complete", "The current age has ended!");
+        m_game->startNextAge();
+        if (m_game->isGameOver()) {
+             QMessageBox::information(this, "Game Over", "The game has ended!");
+             // TODO: Show score screen
+             return;
+        }
+        // Refresh for new age
+        renderGame();
+    }
+
     // Reset selection state
     m_selectedCardId = -1;
     ui->lblCost->setText("Cost: -");

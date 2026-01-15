@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1100</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -49,14 +49,14 @@ QStatusBar {
     </property>
     <item>
      <widget class="QFrame" name="leftZone">
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
       <property name="styleSheet">
        <string notr="true">background-color: transparent;</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Plain</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayoutLeft">
        <property name="leftMargin">
@@ -90,7 +90,7 @@ QStatusBar {
        <item>
         <widget class="QStackedWidget" name="stack">
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="SplashScreen" name="splashScreenPage"/>
          <widget class="WonderSelectionWidget" name="wonderSelectionPage"/>
@@ -137,7 +137,7 @@ QStatusBar {
        <string>🦆</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -165,12 +165,6 @@ QStatusBar {
       <layout class="QVBoxLayout" name="verticalLayoutRight">
        <item>
         <widget class="QLabel" name="panelTitle">
-         <property name="text">
-          <string>📜 DUCKS STATUS 📜</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
          <property name="styleSheet">
           <string notr="true">color: #DAA520; 
 font-weight: bold; 
@@ -178,6 +172,12 @@ font-size: 16px;
 background: transparent; 
 padding: 10px; 
 font-family: 'Times New Roman', serif;</string>
+         </property>
+         <property name="text">
+          <string>📜 DUCKS STATUS 📜</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -187,7 +187,7 @@ font-family: 'Times New Roman', serif;</string>
        <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Orientation::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -199,18 +199,18 @@ font-family: 'Times New Roman', serif;</string>
        </item>
        <item>
         <widget class="QLabel" name="lblTok">
-         <property name="text">
-          <string>⚡ DIVINE DUCKS BLESSINGS ⚡</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
          <property name="styleSheet">
           <string notr="true">color: #FFD700; 
 font-weight: bold; 
 font-size: 13px; 
 padding: 5px; 
 font-family: 'Times New Roman';</string>
+         </property>
+         <property name="text">
+          <string>⚡ DIVINE DUCKS BLESSINGS ⚡</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -220,7 +220,7 @@ font-family: 'Times New Roman';</string>
        <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Orientation::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -250,30 +250,27 @@ font-family: 'Times New Roman';</string>
           </property>
           <item>
            <widget class="QLabel" name="lblCost">
+            <property name="styleSheet">
+             <string notr="true">color: #FFF; font-weight: bold; font-size: 14px;</string>
+            </property>
             <property name="text">
              <string>Cost: -</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: #FFF; font-weight: bold; font-size: 14px;</string>
+             <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="btnBuild">
-            <property name="text">
-             <string>⚒️ BUILD ⚒️</string>
-            </property>
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
             <property name="minimumSize">
              <size>
               <width>0</width>
               <height>40</height>
              </size>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton { 
@@ -286,21 +283,21 @@ font-family: 'Times New Roman';</string>
 QPushButton:hover { background: #388E3C; }
 QPushButton:disabled { background: #555; color: #888; border: 2px solid #444; }</string>
             </property>
+            <property name="text">
+             <string>⚒️ BUILD ⚒️</string>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="btnDiscard">
-            <property name="text">
-             <string>💰 DISCARD 💰</string>
-            </property>
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
             <property name="minimumSize">
              <size>
               <width>0</width>
               <height>40</height>
              </size>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton { 
@@ -312,21 +309,21 @@ QPushButton:disabled { background: #555; color: #888; border: 2px solid #444; }<
 }
 QPushButton:hover { background: #F9A825; }</string>
             </property>
+            <property name="text">
+             <string>💰 DISCARD 💰</string>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="btnWonder">
-            <property name="text">
-             <string>🏛️ WONDER 🏛️</string>
-            </property>
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
             <property name="minimumSize">
              <size>
               <width>0</width>
               <height>40</height>
              </size>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton { 
@@ -338,6 +335,9 @@ QPushButton:hover { background: #F9A825; }</string>
 }
 QPushButton:hover { background: #7B1FA2; }
 QPushButton:disabled { background: #555; color: #888; border: 2px solid #444; }</string>
+            </property>
+            <property name="text">
+             <string>🏛️ WONDER 🏛️</string>
             </property>
            </widget>
           </item>

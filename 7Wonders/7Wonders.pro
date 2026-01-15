@@ -20,39 +20,36 @@ INCLUDEPATH += GameBase \
 # ========================================
 HEADERS += GameBase/Board.h \
            GameBase/CardBase.h \
-           GameBase/CardLoader.h \
            GameBase/CardNode.h \
            GameBase/CardsPyramid.h \
            GameBase/Game.h \
            GameBase/GameConstants.h \
            GameBase/gameExport.h \
            GameBase/GameSetup.h \
-           GameBase/GuildLoader.h \
            GameBase/MilitaryTrack.h \
            GameBase/Player.h \
            GameBase/ProgressTokenLoader.h \
            GameBase/ProgressTokens.h \
-           GameBase/Wonder.h \
-           GameBase/WonderLoader.h
+           GameBase/UniversalCardLoader.h \
+           GameBase/Wonder.h
 
 SOURCES += GameBase/Board.cpp \
            GameBase/CardBase.cpp \
-           GameBase/CardLoader.cpp \
            GameBase/CardNode.cpp \
            GameBase/CardsPyramid.cpp \
            GameBase/Game.cpp \
            GameBase/GameSetup.cpp \
-           GameBase/GuildLoader.cpp \
            GameBase/MilitaryTrack.cpp \
            GameBase/Player.cpp \
+           GameBase/UniversalCardLoader.cpp \
            GameBase/ProgressTokenLoader.cpp \
            GameBase/ProgressTokens.cpp \
-           GameBase/WonderLoader.cpp \
-           GameBase/Wonders.cpp
+           GameBase/Wonder.cpp
 
 # CSV files din GameBase
 OTHER_FILES += GameBase/AgeI.csv \
                GameBase/AgeII.csv \
+               GameBase/AgeIII.csv \
                GameBase/Guilds.csv \
                GameBase/ProgressTokens.csv \
                GameBase/Wonders.csv

@@ -27,6 +27,11 @@ void TestEngine::runWonderDraftLoop() {
             std::cout << "Alege numarul minunii (1-" << availableWonders.size() << "): ";
             std::cin >> choice;
 
+            if (std::cin.eof()) {
+                 std::cerr << "Input stream ended. Exiting.\n";
+                 exit(0);
+            }
+
             if (std::cin.fail() || choice < 1 || choice > static_cast<int>(availableWonders.size())) {
                 std::cout << "Selectie invalida. Te rog incearca din nou.\n";
                 std::cin.clear();

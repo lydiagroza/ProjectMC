@@ -81,6 +81,7 @@ public:
 	//VP for winner determination
 	int getVPFromMilitaryTokens() const;
 	int getVPFromBlueCards() const;
+	int getVPFromGuilds(const Player& opponent) const;
 
 	void addChoiceResources(std::vector<Resource> choices);
 
@@ -106,7 +107,7 @@ public:
 
 	template<typename T>
 	std::uint8_t findTotalCost(const T& buildable, const Player& opponent) const {
-		// Verific? dac? buildable are chain symbol ?i dac? îl avem (doar pentru CardBase)
+		// Verific? dac? buildable are chain symbol ?i dac? ï¿½l avem (doar pentru CardBase)
 		if constexpr (std::is_same_v<T, CardBase>) {
 			if (buildable.m_unlocks.has_value() && m_chainSymbols.count(buildable.m_unlocks.value())) {
 				return 0; // Costul este 0 (Gratuit prin chain)

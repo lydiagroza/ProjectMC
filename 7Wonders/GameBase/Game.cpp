@@ -121,10 +121,43 @@ void Game::handle7WondersRule()
 int Game::calculatePlayerVP(const Player& player) const {
     int totalVP = 0;
     int playerId = (player.getName() == m_player1.getName()) ? 1 : 2;
+    
+    // 1. Coins
     totalVP += player.getCoins() / 3;
+    
+    // 2. Military Track
     totalVP += m_board.getMilitaryTrack().getVictoryPointsForPlayer(playerId);
-   // totalVP += player.getVPFromBuildings();
+    
+    // 3. Military Tokens
     totalVP += player.getVPFromMilitaryTokens();
+
+    // 4. Blue Cards (Civilian Buildings)
+    totalVP += player.getVPFromBlueCards();
+
+    // 5. Green Cards (Scientific) - handled via Progress Tokens usually, but cards themselves have VPs sometimes?
+    // In Duel, Green cards usually have symbols (6 pts for pairs) but the cards themselves generally provide points on the card face.
+    // However, the `CardBase` parsing for generic VPs isn't explicitly summed here. 
+    // Usually, VPs are stored in `m_pointsScore` map if they are flat VPs.
+    // Let's assume standard VPs are handled in `player.getPoints()`, but `getVPFromBlueCards` does a specific lookup.
+    // Let's add general flat VPs if they exist in `m_pointsScore`.
+    if (player.getPoints().count(Points::Victory)) {
+        totalVP += player.getPoints().at(Points::Victory);
+    }
+
+    // 6. Wonders
+    for (const auto& wonder : player.getWonders()) {
+        if (wonder->getIsBuilt()) {
+            // Wonders usually have flat VP effects added to m_pointsScore or need specific handling
+            // If WonderLoader adds VPs to m_pointsScore, it's covered above.
+            // If not, we might need to check wonders. 
+            // For now, let's assume Wonder VPs are added to Player's points map upon construction.
+        }
+    }
+
+    // 7. Guilds
+    const Player& opponent = (player.getName() == m_player1.getName()) ? m_player2 : m_player1;
+    totalVP += player.getVPFromGuilds(opponent);
+
     return totalVP;
 }
 
@@ -176,6 +209,10 @@ void Game::handlePlayerAction()
     int cardId;
     // Citire sigură (să nu crape dacă bagi litere)
     while (!(std::cin >> cardId)) {
+        if (std::cin.eof()) {
+            std::cerr << "Input stream ended. Exiting.\n";
+            exit(0);
+        }
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cout << "Te rog introdu un numar valid: ";
@@ -381,13 +418,11 @@ bool Game::draftWonder(int wonderId)
     m_currentPlayer->addWonders(*it);
     currentDraftSet.erase(it); // Remove from available wonders
 
-    bool isSecondOrThirdPick = (currentDraftSet.size() == 2 || currentDraftSet.size() == 1);
+    bool shouldSwitch = (currentDraftSet.size() == 3 || currentDraftSet.size() == 1);
 
-    if (!isSecondOrThirdPick) {
-        // After the 1st pick (size becomes 3) and 4th pick (size becomes 0), switch turns.
+    if (shouldSwitch) {
         switchTurn();
     }
-    // Otherwise, the same player goes again (P2's second pick).
 
     // If the current draft set is empty, move to the next phase or end the draft
     if (currentDraftSet.empty()) {

@@ -1,4 +1,4 @@
-﻿#pragma once
+﻿/*#pragma once
 #include "Player.h"
 #include "Board.h"
 #include "CardBase.h"
@@ -206,3 +206,4 @@ public:
     void setDifficulty(AI_Difficulty difficulty) { m_difficulty = difficulty; }
     void setStrategy(AI_Strategy strategy) { m_strategy = strategy; }
 };
+*/

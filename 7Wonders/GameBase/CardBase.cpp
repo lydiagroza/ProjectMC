@@ -11,6 +11,9 @@ CardBase::CardBase()
 const std::string&CardBase::getName() const {
 		return m_name;
 	}
+const std::string& CardBase::getEffectDescription() const {
+    return m_effectDescription;
+}
 	std::uint16_t CardBase::getId() const {
 		return m_id;
 	}
@@ -97,4 +100,3 @@ const std::string&CardBase::getName() const {
 			}
 			return "Unknown";
 		}
-	

@@ -1,10 +1,18 @@
-﻿#include "BoardWidget.h"
+#include "BoardWidget.h"
+#include "ui_BoardWidget.h"
 
 BoardWidget::BoardWidget(QWidget* parent)
     : QWidget(parent)
+    , ui(new Ui::BoardWidget)
 {
+    ui->setupUi(this);
     // Mărime minimă să încapă piramida
     this->setMinimumSize(800, 600);
+}
+
+BoardWidget::~BoardWidget()
+{
+    delete ui;
 }
 
 void BoardWidget::clearBoard()
@@ -15,14 +23,14 @@ void BoardWidget::clearBoard()
     m_activeCards.clear();
 }
 
-void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, int row, int col, int totalCardsInRow)
+void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, int row, int col, int totalCardsInRow, QString cost, QString effect)
 {
     // 1. Instanțiem widget-ul
     CardWidget* newCard = new CardWidget(id, this);
-    newCard->setupCard(name, color, isFaceUp);
+    newCard->setupCard(name, color, isFaceUp, cost, effect);
 
     // 2. Conectăm semnalul
-    connect(newCard, &QPushButton::clicked, this, &BoardWidget::handleInternalClick);
+    connect(newCard, &CardWidget::clicked, this, &BoardWidget::handleInternalClick);
 
     // 3. Matematică pentru poziționare
     // Centrul widget-ului părinte

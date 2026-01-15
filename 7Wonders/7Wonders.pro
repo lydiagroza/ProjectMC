@@ -13,7 +13,8 @@ DEFINES += GAMEBASE_STATIC
 INCLUDEPATH += GameBase \
                gameAI \
                ConsoleGame \
-               gameUI
+               gameUI \
+               UI
 
 # ========================================
 # GameBase - toate clasele principale
@@ -77,7 +78,10 @@ HEADERS += gameUI/MainWindow.h \
            gameUI/WonderSelectionWidget.h \
            gameUI/BoardWidget.h \
            gameUI/MilitaryTrackWidget.h \
-           gameUI/CardWidget.h
+           gameUI/CardWidget.h \
+           gameUI/PlayerDashboardWidget.h \
+           gameUI/NameSelectionWidget.h \
+           gameUI/WonderChoiceDialog.h
 
 SOURCES += gameUI/main.cpp \
            gameUI/MainWindow.cpp \
@@ -85,7 +89,25 @@ SOURCES += gameUI/main.cpp \
            gameUI/WonderSelectionWidget.cpp \
            gameUI/BoardWidget.cpp \
            gameUI/MilitaryTrackWidget.cpp \
-           gameUI/CardWidget.cpp
+           gameUI/CardWidget.cpp \
+           gameUI/PlayerDashboardWidget.cpp \
+           gameUI/NameSelectionWidget.cpp \
+           gameUI/WonderChoiceDialog.cpp
+
+# ========================================
+# UI - fișiere de design .ui (opțional)
+# ========================================
+HEADERS += UI/ui_globals.h
+OTHER_FILES += UI/README.txt
+FORMS += UI/WonderSelectionWidget.ui \
+         UI/MainWindow.ui \
+         UI/SplashScreen.ui \
+         UI/CardWidget.ui \
+         UI/BoardWidget.ui \
+         UI/MilitaryTrackWidget.ui \
+         UI/PlayerDashboardWidget.ui \
+         UI/NameSelectionWidget.ui \
+         UI/WonderChoiceDialog.ui
 
 # Dacă ai fișier .ui (design vizual)
 # Decomentează linia de mai jos dacă există MainWindow.ui

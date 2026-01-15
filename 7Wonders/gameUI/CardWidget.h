@@ -1,18 +1,31 @@
-﻿#pragma once
-#include <QPushButton>
-#include <QGraphicsDropShadowEffect>  // ← ADAUGĂ
+#pragma once
+#include <QWidget>
+#include <QGraphicsDropShadowEffect>
 
-class CardWidget : public QPushButton
+namespace Ui {
+class CardWidget;
+}
+
+class CardWidget : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit CardWidget(int cardId, QWidget* parent = nullptr);
-    void setupCard(const QString& name, const QString& colorCode, bool isFaceUp);
+    ~CardWidget();
+
+    void setupCard(const QString& name, const QString& colorCode, bool isFaceUp, const QString& cost = "", const QString& effect = "");
     void setSelected(bool selected);
     int getCardId() const { return m_cardId; }
 
+signals:
+    void clicked();
+
+private slots:
+    void onButtonClicked();
+
 private:
+    Ui::CardWidget *ui;
     int m_cardId;
     bool m_isFaceUp;
     QString adjustBrightness(const QString& color, double factor);

@@ -9,6 +9,7 @@
 #include "WonderSelectionWidget.h" 
 #include "MilitaryTrackWidget.h"
 #include "SplashScreen.h"
+#include "NameSelectionWidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -29,6 +30,7 @@ private slots:
     void onWonderClicked();
     void onWonderChosen(int cardId);
     void onSplashFinished();
+    void onNamesConfirmed(const QString& p1, const QString& p2);
 
 private:
     Ui::MainWindow *ui;

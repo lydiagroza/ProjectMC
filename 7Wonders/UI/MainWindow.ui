@@ -93,6 +93,7 @@ QStatusBar {
           <number>2</number>
          </property>
          <widget class="SplashScreen" name="splashScreenPage"/>
+         <widget class="NameSelectionWidget" name="nameSelectionPage"/>
          <widget class="WonderSelectionWidget" name="wonderSelectionPage"/>
          <widget class="BoardWidget" name="boardWidgetPage"/>
         </widget>
@@ -362,6 +363,12 @@ QPushButton:disabled { background: #555; color: #888; border: 2px solid #444; }<
    <class>BoardWidget</class>
    <extends>QWidget</extends>
    <header>BoardWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>NameSelectionWidget</class>
+   <extends>QWidget</extends>
+   <header>NameSelectionWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

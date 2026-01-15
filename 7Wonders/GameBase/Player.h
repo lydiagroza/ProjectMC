@@ -59,6 +59,7 @@ public:
 	// getteri
 	unsigned int getId() const;
 	std::string getName() const;
+    void setName(const std::string& name) { m_name = name; }
 	std::vector<std::bitset<5>> getChoiceResources() const;	
 	const std::map<Resource, std::uint8_t>& getResources() const;
 	const std::map<Points, std::uint8_t>& getPoints() const;

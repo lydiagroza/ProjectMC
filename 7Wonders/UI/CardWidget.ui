@@ -51,37 +51,33 @@
        <number>4</number>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="headerLayout">
-        <item>
-         <widget class="QLabel" name="costLabel">
-          <property name="styleSheet">
-           <string>background-color: rgba(255, 255, 255, 210); border-radius: 4px; padding: 2px; font-weight: bold; color: black;</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="nameLabel">
-          <property name="styleSheet">
-           <string>background-color: rgba(255, 255, 255, 210); border-radius: 4px; padding: 2px; color: black;</string>
-          </property>
-          <property name="text">
-           <string>Name</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QLabel" name="costLabel">
+        <property name="styleSheet">
+         <string>background-color: rgba(255, 255, 255, 210); border-radius: 4px; padding: 2px; font-weight: bold; color: black;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="nameLabel">
+        <property name="styleSheet">
+         <string>background-color: rgba(255, 255, 255, 210); border-radius: 4px; padding: 2px; color: black;</string>
+        </property>
+        <property name="text">
+         <string>Name</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item>
        <spacer name="verticalSpacer">
@@ -99,7 +95,7 @@
       <item>
        <widget class="QLabel" name="effectLabel">
         <property name="styleSheet">
-         <string>background-color: rgba(255, 255, 255, 200); border: 1px solid #555; border-radius: 5px; padding: 4px; color: black;</string>
+         <string>background-color: rgba(255, 255, 255, 210); border: 1px solid #555; border-radius: 5px; padding: 4px; color: black;</string>
         </property>
         <property name="text">
          <string>Effect</string>

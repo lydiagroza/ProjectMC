@@ -36,5 +36,5 @@ private:
     const int CARD_WIDTH = 100;
     const int CARD_HEIGHT = 140;
     const int H_SPACING = 15; 
-    const int V_OVERLAP = 50; 
+    const int V_OVERLAP = 80; 
 };

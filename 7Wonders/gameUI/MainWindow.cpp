@@ -67,6 +67,7 @@ MainWindow::MainWindow(QWidget* parent)
     
     connect(ui->wonderSelectionPage, &WonderSelectionWidget::wonderChosen, this, &MainWindow::onWonderChosen);
     connect(ui->splashScreenPage, &SplashScreen::startGame, this, &MainWindow::onSplashFinished);
+    connect(ui->nameSelectionPage, &NameSelectionWidget::namesConfirmed, this, &MainWindow::onNamesConfirmed);
 
     ui->statusbar->showMessage("⚔️ Press ENTER to begin your conquest! ⚔️");
 
@@ -95,12 +96,24 @@ MainWindow::~MainWindow()
 
 void MainWindow::onSplashFinished()
 {
+    // Transition to Name Selection
+    ui->stack->setCurrentWidget(ui->nameSelectionPage);
+    ui->statusbar->showMessage("⚔️ Who dares to challenge the ducks? ⚔️");
+}
+
+void MainWindow::onNamesConfirmed(const QString& p1, const QString& p2)
+{
+    if (m_game) {
+        m_game->getPlayer1().setName(p1.toStdString());
+        m_game->getPlayer2().setName(p2.toStdString());
+    }
+
     ui->opponentDashboard->setVisible(true);
     ui->playerDashboard->setVisible(true);
     ui->rightZone->setVisible(true);
 
     ui->statusbar->showMessage("⚔️ Initializing the ancient world of ducks... ⚔️");
-    QTimer::singleShot(100, this, &MainWindow::startGame);
+    startGame();
 }
 
 void MainWindow::startGame()

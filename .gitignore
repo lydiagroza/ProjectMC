@@ -416,3 +416,22 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# =========================
+# Qt Creator specific rules
+# =========================
+*.pro.user
+*.pro.user.*
+CMakeLists.txt.user
+*.qm
+.qmake.stash
+
+# Qt Generated files
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+Makefile*
+*_plugin_import.cpp
+
+# Qt Shadow build directories
+build-*/

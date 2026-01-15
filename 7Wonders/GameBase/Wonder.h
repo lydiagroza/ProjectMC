@@ -13,7 +13,7 @@ class GAME_API Wonder {
     std::string m_name;
     uint16_t m_id;
     std::map<Resource, uint8_t> m_cost;
-    std::vector<std::function<void(Player&, Player&)>> m_effects;
+    std::vector<std::function<void(Player&, Board&, Player&)>> m_effects;
     bool m_isBuilt = false;
     bool m_isAvailable = true;
 
@@ -28,11 +28,11 @@ public:
     const std::string& getName() const;
     uint16_t getId() const;
     const std::map<Resource, uint8_t>& getCost() const;
-    const std::vector<std::function<void(Player&, Player&)>>& getEffects() const;
+    const std::vector<std::function<void(Player&,Board&,Player&)>>& getEffects() const;
 
     std::uint8_t getCostForResource(Resource r) const;
 
-    void addEffect(std::function<void(Player&, Player&)> e);
+    void addEffect(std::function<void(Player&, Board&, Player&)> e);
 
     bool getIsBuilt() const;
     void setIsBuilt();

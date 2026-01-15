@@ -1,0 +1,26 @@
+﻿#pragma once
+#include "CardBase.h"
+#include "Wonder.h"
+#include "Board.h"
+#include <vector>
+#include <string>
+#include <memory>
+#include <map>
+#include <functional>
+
+class UniversalCardLoader {
+public:
+    // Metode publice pentru a fi apelate în GameSetup
+    static std::vector<std::shared_ptr<CardBase>> loadAgeCards(const std::string& filename);
+    static std::vector<std::shared_ptr<CardBase>> loadGuilds(const std::string& filename);
+    static std::vector<std::shared_ptr<Wonder>> loadWonders(const std::string& filename);
+
+private:
+    static std::string trim(std::string s);
+    static std::map<Resource, uint8_t> parseCost(const std::string& s);
+    static Color parseColor(const std::string& s);
+    static std::optional<Symbol> parseSymbol(const std::string& s);
+
+    // Funcția care "traduce" string-urile de efect în logică de cod
+    static std::vector<std::function<void(Player&, Board&, Player&)>> parseEffects(const std::string& s);
+};

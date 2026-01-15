@@ -3,7 +3,6 @@
 #include <sstream>
 #include <unordered_map>
 #include <iostream>
-#include "CardLoader.h"
 #include "Game.h"
 
 #include <memory>
@@ -15,7 +14,10 @@ const std::string& Wonder::getName() const {
 }
 uint16_t Wonder::getId() const { return m_id; }
 const std::map<Resource, uint8_t>& Wonder::getCost() const { return m_cost; }
-const std::vector<std::function<void(Player&, Player&)>>& Wonder::getEffects() const { return m_effects; }
+// Wonder.cpp
+const std::vector<std::function<void(Player&, Board&, Player&)>>& Wonder::getEffects() const {
+    return m_effects;
+}
 
 std::uint8_t Wonder::getCostForResource(Resource r) const {
     auto it = m_cost.find(r);
@@ -24,7 +26,8 @@ std::uint8_t Wonder::getCostForResource(Resource r) const {
     }
     return 0;
 }
-void  Wonder::addEffect(std::function<void(Player&, Player&)> e) {
+// În Wonder.cpp
+void Wonder::addEffect(std::function<void(Player&, Board&, Player&)> e) {
     m_effects.push_back(e);
 }
 bool Wonder::getIsBuilt() const { return m_isBuilt; }

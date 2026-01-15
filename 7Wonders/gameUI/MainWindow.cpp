@@ -5,6 +5,8 @@
 #include "CardWidget.h"
 #include "BoardWidget.h"
 #include "WonderSelectionWidget.h"
+#include "NameSelectionWidget.h"
+#include "WonderChoiceDialog.h"
 #include "MilitaryTrackWidget.h"
 #include "SplashScreen.h"
 #include "PlayerDashboardWidget.h"
@@ -344,33 +346,20 @@ void MainWindow::onWonderClicked()
     if (availableWonders.empty()) return;
 
     Wonder* selectedWonder = nullptr;
-    if (availableWonders.size() == 1) {
-        selectedWonder = availableWonders[0];
+    
+    WonderChoiceDialog dialog(this);
+    dialog.setWonders(availableWonders, p, opp);
+    
+    if (dialog.exec() == QDialog::Accepted) {
+        int wId = dialog.getSelectedWonderId();
+        for(auto* w : availableWonders) {
+            if(w->getId() == wId) {
+                selectedWonder = w;
+                break;
+            }
+        }
     } else {
-        // Ask user to pick
-        QStringList items;
-        for (auto* w : availableWonders) {
-            int cost = p->findTotalCost(*w, *opp);
-            QString item = QString::fromStdString(w->getName());
-            if (cost == GameConstants::IMPOSSIBLE_COST) {
-                item += " (Too Expensive)";
-            } else {
-                item += " (Cost: " + QString::number(cost) + ")";
-            }
-            items << item;
-        }
-
-        bool ok;
-        QString item = QInputDialog::getItem(this, "Select Wonder", 
-                                             "Choose a Wonder to build:", items, 0, false, &ok);
-        if (ok && !item.isEmpty()) {
-            int index = items.indexOf(item);
-            if (index >= 0 && index < availableWonders.size()) {
-                selectedWonder = availableWonders[index];
-            }
-        } else {
-            return; // Cancelled
-        }
+        return; // Cancelled
     }
 
     if (!selectedWonder) return;

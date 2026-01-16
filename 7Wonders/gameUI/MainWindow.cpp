@@ -107,8 +107,182 @@ MainWindow::MainWindow(QWidget* parent)
     // Start at Splash Screen
     ui->stack->setCurrentIndex(0);
 
+    // Rebuild the right panel layout programmatically
+    rebuildRightPanel();
+
     // Ensure the window fills the screen for the best game experience
     this->showMaximized();
+}
+
+void MainWindow::rebuildRightPanel()
+{
+    // Access the rightZone layout
+    QVBoxLayout* rLayout = qobject_cast<QVBoxLayout*>(ui->rightZone->layout());
+    if (!rLayout) return;
+
+    // We want to keep 'militaryTrackWidget' and 'actionsContainer'.
+    // We will remove others and restructure.
+    
+    // Detach widgets we want to keep
+    ui->militaryTrackWidget->setParent(nullptr); 
+    ui->actionsContainer->setParent(nullptr);
+
+    // Clear the rest of the layout items
+    QLayoutItem* item;
+    while ((item = rLayout->takeAt(0)) != nullptr) {
+        if (item->widget() && item->widget() != ui->militaryTrackWidget && item->widget() != ui->actionsContainer) {
+            delete item->widget();
+        }
+        delete item;
+    }
+
+    // Now build the new structure
+    // [ Splitter: Military | Progress ]
+    QFrame* splitContainer = new QFrame(ui->rightZone);
+    QHBoxLayout* splitLayout = new QHBoxLayout(splitContainer);
+    splitLayout->setContentsMargins(0, 0, 0, 0);
+    splitLayout->setSpacing(5);
+
+    // --- Left Side: Military ---
+    // Make sure it has a width constraint? It has fixed width in UI usually, but we want it to fit.
+    ui->militaryTrackWidget->setParent(splitContainer);
+    splitLayout->addWidget(ui->militaryTrackWidget);
+
+    // --- Right Side: Progress ---
+    QFrame* progressContainer = new QFrame(splitContainer);
+    QVBoxLayout* progressCol = new QVBoxLayout(progressContainer);
+    progressCol->setContentsMargins(0, 0, 0, 0);
+    progressCol->setSpacing(5);
+
+    // Top: Player 2 (Opponent) Progress
+    QLabel* lblP2 = new QLabel("🦆 Opponent Progress", progressContainer);
+    lblP2->setStyleSheet("color: #B71C1C; font-weight: bold; font-size: 12px;");
+    lblP2->setAlignment(Qt::AlignCenter);
+    progressCol->addWidget(lblP2);
+
+    m_p2ProgressLayout = new QVBoxLayout();
+    progressCol->addLayout(m_p2ProgressLayout);
+
+    // Separator
+    QFrame* line = new QFrame(progressContainer);
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
+    line->setStyleSheet("color: #8B4513;");
+    progressCol->addWidget(line);
+
+    // Bottom: Player 1 (You) Progress
+    QLabel* lblP1 = new QLabel("🏛️ Your Progress", progressContainer);
+    lblP1->setStyleSheet("color: #1565C0; font-weight: bold; font-size: 12px;");
+    lblP1->setAlignment(Qt::AlignCenter);
+    progressCol->addWidget(lblP1);
+
+    m_p1ProgressLayout = new QVBoxLayout();
+    progressCol->addLayout(m_p1ProgressLayout);
+
+    // Info Button (?)
+    QPushButton* infoBtn = new QPushButton("?", progressContainer);
+    infoBtn->setFixedSize(30, 30);
+    infoBtn->setCursor(Qt::PointingHandCursor);
+    infoBtn->setStyleSheet(
+        "QPushButton { background: #FFD700; color: #2C1810; border-radius: 15px; font-weight: bold; border: 2px solid #DAA520; }"
+        "QPushButton:hover { background: #FFEA00; }"
+    );
+    connect(infoBtn, &QPushButton::clicked, this, &MainWindow::onProgressInfoClicked);
+    
+    // Add stretch to push button to bottom of progress column if needed, or center it
+    progressCol->addStretch();
+    progressCol->addWidget(infoBtn, 0, Qt::AlignCenter);
+
+    splitLayout->addWidget(progressContainer);
+
+    // Add Splitter to Main Right Layout
+    rLayout->addWidget(splitContainer, 1); // Stretch factor 1
+
+    // Add Actions Container at the bottom
+    ui->actionsContainer->setParent(ui->rightZone);
+    rLayout->addWidget(ui->actionsContainer, 0);
+}
+
+QString MainWindow::getTokenDescription(const QString& tokenName)
+{
+    // Romanian translations and descriptions
+    if (tokenName == "Agriculture") return "Agricultură: Câștigi 6 monede și 4 puncte de victorie.";
+    if (tokenName == "Architecture") return "Arhitectură: Construirea minunilor costă cu 2 resurse mai puțin.";
+    if (tokenName == "Economy") return "Economie: Câștigi bani când adversarul face comerț.";
+    if (tokenName == "Law") return "Lege: Acest jeton valorează un simbol științific.";
+    if (tokenName == "Masonry") return "Zidărie: Construirea cărților albastre costă cu 2 resurse mai puțin.";
+    if (tokenName == "Mathematics") return "Matematică: 3 puncte de victorie pentru fiecare jeton de progres (inclusiv acesta).";
+    if (tokenName == "Philosophy") return "Filozofie: Câștigi 7 puncte de victorie.";
+    if (tokenName == "Strategy") return "Strategie: Câștigi o clădire militară suplimentară.";
+    if (tokenName == "Theology") return "Teologie: Minunile tale primesc efectul de 'Tura Suplimentară'.";
+    if (tokenName == "Urbanism") return "Urbanism: Primești 6 monede. Construirea lanțurilor este gratuită (chiar dacă nu ai simbolul).";
+    return "Descriere indisponibilă.";
+}
+
+void MainWindow::onProgressInfoClicked()
+{
+    QDialog dialog(this);
+    dialog.setWindowTitle("Jetoane de Progres");
+    dialog.setStyleSheet("background: #3E2723; color: #F5E6D3; font-family: 'Times New Roman';");
+    dialog.setMinimumSize(400, 500);
+
+    QVBoxLayout* layout = new QVBoxLayout(&dialog);
+    QLabel* title = new QLabel("Toate Jetoanele de Progres", &dialog);
+    title->setStyleSheet("font-size: 18px; font-weight: bold; color: #FFD700; margin-bottom: 10px;");
+    title->setAlignment(Qt::AlignCenter);
+    layout->addWidget(title);
+
+    QScrollArea* scroll = new QScrollArea(&dialog);
+    QWidget* container = new QWidget();
+    QVBoxLayout* contentLayout = new QVBoxLayout(container);
+    
+    QStringList allTokens = { "Agriculture", "Architecture", "Economy", "Law", "Masonry", "Mathematics", "Philosophy", "Strategy", "Theology", "Urbanism" };
+    
+    for (const auto& name : allTokens) {
+        QPushButton* btn = new QPushButton();
+        btn->setStyleSheet(
+            "QPushButton { background: #4E342E; border: 1px solid #8B4513; border-radius: 5px; margin: 2px; text-align: left; padding: 5px; }"
+            "QPushButton:hover { background: #5D4037; }"
+        );
+        
+        QHBoxLayout* hLayout = new QHBoxLayout(btn);
+        
+        QLabel* icon = new QLabel("🟢");
+        icon->setStyleSheet("font-size: 18px; background: transparent; border: none;");
+        
+        QLabel* text = new QLabel("<b>" + name + "</b>");
+        text->setStyleSheet("font-size: 14px; color: #A5D6A7; background: transparent; border: none;");
+        
+        hLayout->addWidget(icon);
+        hLayout->addWidget(text);
+        hLayout->addStretch();
+        
+        btn->setToolTip(getTokenDescription(name));
+
+        connect(btn, &QPushButton::clicked, this, [this, name]() {
+            QMessageBox msgBox;
+            msgBox.setWindowTitle("Detalii Jeton");
+            msgBox.setText("<b>" + name + "</b>");
+            msgBox.setInformativeText(getTokenDescription(name));
+            msgBox.setStyleSheet("QMessageBox { background: #3E2723; color: #F5E6D3; } QLabel { color: #F5E6D3; } QPushButton { color: #2C1810; background: #FFD700; }");
+            msgBox.exec();
+        });
+
+        contentLayout->addWidget(btn);
+    }
+    
+    contentLayout->addStretch();
+    container->setLayout(contentLayout);
+    scroll->setWidget(container);
+    scroll->setWidgetResizable(true);
+    layout->addWidget(scroll);
+
+    QPushButton* closeBtn = new QPushButton("Închide", &dialog);
+    closeBtn->setStyleSheet("background: #8B0000; color: white; padding: 5px; border-radius: 5px; font-weight: bold;");
+    connect(closeBtn, &QPushButton::clicked, &dialog, &QDialog::accept);
+    layout->addWidget(closeBtn);
+
+    dialog.exec();
 }
 
 MainWindow::~MainWindow()
@@ -485,12 +659,43 @@ void MainWindow::updatePlayerInventories()
     std::cout << "[UI Update] P1 @" << &p1 << " (" << p1.getName() << ") has " << p1.getWonders().size() << " wonders.\n";
     std::cout << "[UI Update] P2 @" << &p2 << " (" << p2.getName() << ") has " << p2.getWonders().size() << " wonders.\n";
 
+    // Helper to calculate estimated VP (Visible)
+    auto calculateVP = [](const Player& p, const Player& opp) -> int {
+        int vp = 0;
+        // 1. Military
+        vp += p.getVPFromMilitaryTokens();
+        // 2. Blue Cards (and others if they have VP directly on them, e.g. Guilds)
+        vp += p.getVPFromBlueCards(); 
+        vp += p.getVPFromGuilds(opp);
+        // 3. Treasury (1 VP per 3 coins)
+        vp += (p.getCoins() / 3);
+        // 4. Wonders (if built)
+        for (const auto& w : p.getWonders()) {
+            if (w->getIsBuilt()) {
+                 // Wonder VP is not easily accessible via a simple getter in all implementations, 
+                 // but let's assume getEffectDescription or similar might hint, 
+                 // or we need to access specific Points map if available.
+                 // Checking 'm_pointsScore' via getPoints()
+                 // But Wonders usually add to Points::Victory immediately or at end.
+                 // We will check p.getPoints() for Victory points accumulated.
+            }
+        }
+        
+        // Sum from Points map
+        for (const auto& [type, val] : p.getPoints()) {
+            if (type == Points::Victory) vp += val;
+        }
+        
+        return vp;
+    };
+
     ui->playerDashboard->updateDashboard(
         p1.getName(), 
         p1.getCoins(), 
         p1.getResources(),
         p1.getWonders(),
-        p1.getInventory()
+        p1.getInventory(),
+        calculateVP(p1, p2)
     );
 
     ui->opponentDashboard->updateDashboard(
@@ -498,35 +703,48 @@ void MainWindow::updatePlayerInventories()
         p2.getCoins(), 
         p2.getResources(),
         p2.getWonders(),
-        p2.getInventory()
+        p2.getInventory(),
+        calculateVP(p2, p1)
     );
 
     ui->militaryTrackWidget->updatePawnPosition(m_game->getBoard().getMilitaryTrack().getPawnPosition());
 
-    QLayoutItem* item;
-    while ((item = ui->progressTokensLayout->takeAt(0)) != nullptr) {
-        if (item->widget()) delete item->widget();
-        delete item;
-    }
+    // Helper to clear layout
+    auto clearLayout = [](QLayout* layout) {
+        if (!layout) return;
+        QLayoutItem* item;
+        while ((item = layout->takeAt(0)) != nullptr) {
+            if (item->widget()) delete item->widget();
+            delete item;
+        }
+    };
 
-    auto addPlayerTokens = [this](const Player& p) {
+    clearLayout(m_p1ProgressLayout);
+    clearLayout(m_p2ProgressLayout);
+
+    auto addPlayerTokens = [this](const Player& p, QVBoxLayout* layout) {
+        if (!layout) return;
         for (const auto& tokenPtr : p.getProgressTokens()) {
             QLabel* tokenLabel = new QLabel(QString::fromStdString(tokenPtr->getName()), this);
             tokenLabel->setStyleSheet(
                 "QLabel { "
-                "  background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #FFD700, stop:0.8 #DAA520, stop:1 #B8860B); "
-                "  color: #3E2723; padding: 10px; border: 2px solid #8B4513; border-radius: 20px; font-weight: bold; font-family: 'Times New Roman'; font-size: 12px; margin: 5px; "
+                "  background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #A5D6A7, stop:0.8 #4CAF50, stop:1 #1B5E20); "
+                "  color: white; padding: 5px; border: 1px solid #2E7D32; border-radius: 10px; font-weight: bold; font-family: 'Times New Roman'; font-size: 10px; "
                 "}"
             );
             tokenLabel->setAlignment(Qt::AlignCenter);
             tokenLabel->setWordWrap(true);
-            tokenLabel->setFixedSize(120, 40);
-            ui->progressTokensLayout->addWidget(tokenLabel, 0, Qt::AlignHCenter);
+            tokenLabel->setFixedSize(100, 30);
+            
+            // Tooltip in Romanian
+            tokenLabel->setToolTip(getTokenDescription(QString::fromStdString(tokenPtr->getName())));
+            
+            layout->addWidget(tokenLabel, 0, Qt::AlignHCenter);
         }
     };
 
-    addPlayerTokens(p1);
-    addPlayerTokens(p2);
+    addPlayerTokens(p1, m_p1ProgressLayout);
+    addPlayerTokens(p2, m_p2ProgressLayout);
 }
 
 void MainWindow::updateTurnIndicator()
@@ -561,6 +779,32 @@ void MainWindow::renderGame()
     ui->boardWidgetPage->clearBoard();
     Board& boardData = m_game->getBoard();
     const auto& rows = boardData.getPyramid().getRows();
+    
+    // Dynamic Scaling Calculation
+    // Estimate total height required
+    // Base Height per row interaction: 140 - 80 = 60px effective height per row + last row 140.
+    int numRows = static_cast<int>(rows.size());
+    // Approximate calculation: (Rows-1)*60 + 140
+    // Age 3 might have more rows or different structure.
+    // Let's check available height in boardWidgetPage
+    int availableHeight = ui->boardWidgetPage->height();
+    if (availableHeight == 0) availableHeight = 600; // Fallback
+    
+    double estimatedHeight = (numRows - 1) * 60 + 140 + 60; // +60 padding
+    
+    double scale = 1.0;
+    if (estimatedHeight > availableHeight) {
+        scale = (double)availableHeight / estimatedHeight;
+        // Clamp scale to not be too tiny
+        if (scale < 0.6) scale = 0.6; 
+    }
+    
+    // If it's Age 3 specifically, maybe force a bit smaller just in case if layout is wide
+    if (m_game->getCurrentAge() == 3) {
+         if (scale > 0.8) scale = 0.8;
+    }
+
+    ui->boardWidgetPage->setScalingFactor(scale);
     
     auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
         QStringList parts;

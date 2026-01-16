@@ -28,13 +28,17 @@ public:
 private slots:
     void handleInternalClick(int cardId);
 
+public:
+    void setScalingFactor(double scale) { m_scaleFactor = scale; }
+
 private:
     Ui::BoardWidget *ui;
     QList<CardWidget*> m_activeCards;
+    double m_scaleFactor = 1.0;
 
-    // Constante geometrice
-    const int CARD_WIDTH = 100;
-    const int CARD_HEIGHT = 140;
-    const int H_SPACING = 15; 
-    const int V_OVERLAP = 80; 
+    // Constante geometrice (Base size)
+    const int BASE_CARD_WIDTH = 100;
+    const int BASE_CARD_HEIGHT = 140;
+    const int BASE_H_SPACING = 15; 
+    const int BASE_V_OVERLAP = 80; 
 };

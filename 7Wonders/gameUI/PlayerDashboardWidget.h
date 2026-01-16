@@ -26,7 +26,8 @@ public:
     void updateDashboard(const std::string& name, int coins, 
                          const std::map<Resource, std::uint8_t>& resources,
                          const std::vector<std::shared_ptr<Wonder>>& wonders,
-                         const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& inventory);
+                         const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& inventory,
+                         int victoryPoints);
 
 private:
     Ui::PlayerDashboardWidget *ui;

@@ -23,14 +23,13 @@ MilitaryTrackWidget::MilitaryTrackWidget(QWidget* parent)
     // Create the pawn
     m_pawn = new QLabel(ui->trackContainer);
     m_pawn->setFixedSize(30, 30); // Slightly larger
-    m_pawn->setText("⚔️");
+    m_pawn->setText("🗡️"); // Classical dagger/sword
     m_pawn->setAlignment(Qt::AlignCenter);
     m_pawn->setStyleSheet(
-        "background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #FFD700, stop:1 #B8860B);"
-        "border: 2px solid #5D4037;"
+        "background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #CFD8DC, stop:1 #90A4AE);" // Silver/Steel look
+        "border: 2px solid #455A64;"
         "border-radius: 15px;" // Circle
-        "font-size: 16px;"
-        "color: #3E2723;"
+        "font-size: 18px;"
     );
     
     // Add shadow to pawn for depth
@@ -75,41 +74,39 @@ void MilitaryTrackWidget::createTrack()
         segment->setMinimumHeight(m_segmentHeight);
         segment->setFrameShape(QFrame::StyledPanel);
         
-        // Base Style (Parchment)
-        QString style = 
-            "border: 1px solid #5D4037; "
-            "margin-left: 10px; margin-right: 10px; "; // Indent to look like a ladder
+        // Base Style (Ancient Stone / Parchment)
+        QString baseStyle = 
+            "border: 1px solid #3E2723; "
+            "margin-left: 5px; margin-right: 5px; "
+            "border-radius: 3px; "; 
 
         if (position == 0) {
-            // Neutral Center
-            style += "background: #8D6E63; border: 2px solid #3E2723;"; 
+            // Neutral Center (Gold/Brass)
+            baseStyle += "background: qlinear-gradient(x1:0, y1:0, x2:1, y2:0, stop:0 #F9A825, stop:0.5 #FDD835, stop:1 #F9A825); border: 2px solid #FFD700;"; 
         } 
         else if (abs(position) == 9) {
-             // Victory Zone
-            style += "background: #B71C1C; border: 2px solid #FFD700;";
+             // Victory Zone (Deep Red Velvet)
+            baseStyle += "background: qlinear-gradient(x1:0, y1:0, x2:1, y2:0, stop:0 #B71C1C, stop:0.5 #D32F2F, stop:1 #B71C1C); border: 2px solid #FFD700;";
         }
         else if (abs(position) >= 6) {
-             // Danger Zone (High)
-             style += "background: #E57373;";
+             // Danger Zone (Dark Stone/Red tint)
+             baseStyle += "background: #8D6E63;";
         }
         else if (abs(position) >= 3) {
-             // Danger Zone (Medium)
-             style += "background: #FFCCBC;";
+             // Medium (Worn Stone)
+             baseStyle += "background: #A1887F;";
         }
         else {
-             // Low Intensity
-             style += "background: #D7CCC8;";
+             // Low (Light Stone)
+             baseStyle += "background: #D7CCC8;";
         }
 
         // Add markings for Token Loss (2 and 5)
-        // These are boundaries. The segment itself is the space.
-        // Let's mark the segment that represents the threshold? 
-        // Or just change the border.
         if (abs(position) == 2 || abs(position) == 5) {
-            style += "border-bottom: 2px dashed #D32F2F;";
+            baseStyle += "border-bottom: 2px dashed #8B0000;";
         }
 
-        segment->setStyleSheet(style);
+        segment->setStyleSheet(baseStyle);
         trackLayout->addWidget(segment);
         m_trackSegments[i] = segment;
     }

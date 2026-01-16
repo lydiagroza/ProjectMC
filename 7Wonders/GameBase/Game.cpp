@@ -527,10 +527,54 @@ int Game::getDraftPhase() const {
     return m_draftPhase;
 }
 
+bool Game::isWaitingForDiscardChoice() const
+{
+    return m_isWaitingForDiscardChoice;
+}
+
+const std::vector<std::shared_ptr<CardBase>>& Game::getBuildFromDiscardChoices() const
+{
+    return m_buildFromDiscardChoices;
+}
+
 void Game::handleBuildFromDiscard()
 {
-    // TODO: Implement the logic for building from the discard pile.
+    const auto& discardPile = m_board.getDiscardPile();
+    if (discardPile.empty()) {
+        return;
+    }
+
+    m_buildFromDiscardChoices = discardPile;
+    m_isWaitingForDiscardChoice = true;
 }
+
+void Game::resolveBuildFromDiscard(int chosenCardId)
+{
+    if (!m_isWaitingForDiscardChoice) {
+        return;
+    }
+
+    std::shared_ptr<CardBase> chosenCard = nullptr;
+    for (const auto& card : m_buildFromDiscardChoices) {
+        if (card->getId() == chosenCardId) {
+            chosenCard = card;
+            break;
+        }
+    }
+
+    if (chosenCard) {
+        // Build the card for free
+        m_currentPlayer->addCardToInventory(chosenCard);
+        chosenCard->applyEffect(*m_currentPlayer, m_board, *m_opponent);
+        m_board.removeCardFromDiscardPile(chosenCard);
+    }
+
+    // Reset state
+    m_isWaitingForDiscardChoice = false;
+    m_buildFromDiscardChoices.clear();
+}
+
+
 
 const std::vector<std::shared_ptr<CardBase>>& Game::getDiscardedCards() const
 {

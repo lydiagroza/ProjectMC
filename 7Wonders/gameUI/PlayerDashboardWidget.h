@@ -25,7 +25,8 @@ public:
     // Updates the displayed data
     void updateDashboard(const std::string& name, int coins, 
                          const std::map<Resource, std::uint8_t>& resources,
-                         const std::vector<std::shared_ptr<Wonder>>& wonders);
+                         const std::vector<std::shared_ptr<Wonder>>& wonders,
+                         const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& inventory);
 
 private:
     Ui::PlayerDashboardWidget *ui;

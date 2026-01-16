@@ -57,7 +57,7 @@ void WonderChoiceDialog::setWonders(const std::vector<Wonder*>& wonders, Player*
             cw->setImage(imgPath);
         }
         
-        connect(cw, &CardWidget::clicked, this, &WonderChoiceDialog::onCardClicked);
+        connect(cw, &CardWidget::cardClicked, this, &WonderChoiceDialog::onCardClicked);
 
         ui->gridLayout->addWidget(cw, row, col);
         
@@ -69,11 +69,8 @@ void WonderChoiceDialog::setWonders(const std::vector<Wonder*>& wonders, Player*
     }
 }
 
-void WonderChoiceDialog::onCardClicked()
+void WonderChoiceDialog::onCardClicked(int cardId)
 {
-    CardWidget* cw = qobject_cast<CardWidget*>(sender());
-    if (cw) {
-        m_selectedWonderId = cw->getCardId();
-        accept(); // Close dialog with Accepted result
-    }
+    m_selectedWonderId = cardId;
+    accept(); // Close dialog with Accepted result
 }

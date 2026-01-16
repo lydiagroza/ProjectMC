@@ -56,7 +56,7 @@ void WonderSelectionWidget::setWonders(const std::vector<int>& ids,
         card->setImage(imgPath);
     }
 
-        connect(card, &CardWidget::clicked, this, &WonderSelectionWidget::onCardClicked);
+        connect(card, &CardWidget::cardClicked, this, &WonderSelectionWidget::onCardClicked);
         cardsLayout->addWidget(card);
         m_currentCards.append(card);
     }
@@ -66,10 +66,7 @@ void WonderSelectionWidget::setWonders(const std::vector<int>& ids,
     ui->verticalLayout->addWidget(scrollArea);
 }
 
-void WonderSelectionWidget::onCardClicked()
+void WonderSelectionWidget::onCardClicked(int cardId)
 {
-    CardWidget* senderCard = qobject_cast<CardWidget*>(sender());
-    if (senderCard) {
-        emit wonderChosen(senderCard->getCardId());
-    }
+    emit wonderChosen(cardId);
 }

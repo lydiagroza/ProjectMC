@@ -41,7 +41,8 @@ static QString formatCost(const std::map<Resource, uint8_t>& costMap)
 
 DiscardedCardsDialog::DiscardedCardsDialog(const std::vector<const CardBase*>& discardedCards, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui_DiscardedCardsDialog)
+    ui(new Ui_DiscardedCardsDialog),
+    m_selectedCardId(-1)
 {
     ui->setupUi(this);
     setupCards(discardedCards);
@@ -50,6 +51,18 @@ DiscardedCardsDialog::DiscardedCardsDialog(const std::vector<const CardBase*>& d
 DiscardedCardsDialog::~DiscardedCardsDialog()
 {
     delete ui;
+}
+
+int DiscardedCardsDialog::getSelectedCardId() const
+{
+    return m_selectedCardId;
+}
+
+void DiscardedCardsDialog::onCardClicked(int cardId)
+{
+    m_selectedCardId = cardId;
+    emit cardSelected(cardId);
+    accept();
 }
 
 void DiscardedCardsDialog::setupCards(const std::vector<const CardBase*>& discardedCards)
@@ -65,6 +78,7 @@ void DiscardedCardsDialog::setupCards(const std::vector<const CardBase*>& discar
         QString effect = QString::fromStdString(card->getEffectDescription());
 
         cardWidget->setupCard(name, color, true, cost, effect);
+        connect(cardWidget, &CardWidget::cardClicked, this, &DiscardedCardsDialog::onCardClicked);
         ui->gridLayout->addWidget(cardWidget, row, col);
 
         col++;

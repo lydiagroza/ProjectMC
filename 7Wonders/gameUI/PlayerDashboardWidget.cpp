@@ -58,7 +58,8 @@ void PlayerDashboardWidget::setTheme(bool isOpponent)
 
 void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins, 
                                          const std::map<Resource, std::uint8_t>& resources,
-                                         const std::vector<std::shared_ptr<Wonder>>& wonders)
+                                         const std::vector<std::shared_ptr<Wonder>>& wonders,
+                                         const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& inventory)
 {
     // Update Text
     QString icon = (this->styleSheet().contains("#8B0000")) ? "⚔️" : "🏛️";
@@ -87,8 +88,7 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
     
     ui->infoLabel->setText(text);
 
-    // Update Wonders
-    // Clear existing items in layout
+    // Update Wonders and Inventory
     QLayoutItem* item;
     while ((item = ui->wondersLayout->takeAt(0)) != nullptr) {
         if (item->widget()) {
@@ -97,7 +97,6 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
         delete item;
     }
 
-    // Add new wonder widgets
     auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
         QStringList parts;
         for (auto const& [res, count] : costMap) {
@@ -119,7 +118,7 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
 
     for (const auto& wonderPtr : wonders) {
         CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), ui->wondersContainer);
-        wonderWidget->setFixedSize(200, 100); // Mini Landscape for Dashboard
+        wonderWidget->setFixedSize(200, 100); 
 
         QString wName = QString::fromStdString(wonderPtr->getName());
         QString color = wonderPtr->getIsBuilt() ? "#DAA520" : "#6D4C41";
@@ -136,5 +135,14 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
         ui->wondersLayout->addWidget(wonderWidget);
     }
     
+    for (const auto& [color, cards] : inventory) {
+        for (const auto& card : cards) {
+            CardWidget* cardWidget = new CardWidget(card->getId(), this);
+            cardWidget->setFixedSize(100, 140);
+            cardWidget->setupCard(QString::fromStdString(card->getName()), "", true, "", "");
+            ui->wondersLayout->addWidget(cardWidget);
+        }
+    }
+
     ui->wondersLayout->addStretch();
 }

@@ -14,8 +14,17 @@ public:
     explicit DiscardedCardsDialog(const std::vector<const CardBase*>& discardedCards, QWidget *parent = nullptr);
     ~DiscardedCardsDialog();
 
+    int getSelectedCardId() const;
+
+signals:
+    void cardSelected(int cardId);
+
+private slots:
+    void onCardClicked(int cardId);
+
 private:
     void setupCards(const std::vector<const CardBase*>& discardedCards);
 
     Ui_DiscardedCardsDialog *ui;
+    int m_selectedCardId;
 };

@@ -21,7 +21,7 @@ public:
     int getCardId() const { return m_cardId; }
 
 signals:
-    void clicked();
+    void cardClicked(int cardId);
 
 private slots:
     void onButtonClicked();

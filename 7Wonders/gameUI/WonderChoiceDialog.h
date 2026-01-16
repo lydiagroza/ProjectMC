@@ -22,7 +22,7 @@ public:
     int getSelectedWonderId() const { return m_selectedWonderId; }
 
 private slots:
-    void onCardClicked();
+    void onCardClicked(int cardId);
 
 private:
     Ui::WonderChoiceDialog *ui;

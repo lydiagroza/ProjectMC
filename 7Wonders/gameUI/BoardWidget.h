@@ -26,7 +26,7 @@ public:
         void cardClicked(int cardId);
 
 private slots:
-    void handleInternalClick();
+    void handleInternalClick(int cardId);
 
 private:
     Ui::BoardWidget *ui;

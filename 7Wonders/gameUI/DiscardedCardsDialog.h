@@ -2,9 +2,11 @@
 
 #include <QDialog>
 #include <vector>
+#include "CardBase.h"
 
-class CardBase;
-class Ui_DiscardedCardsDialog;
+namespace Ui {
+class DiscardedCardsDialog;
+}
 
 class DiscardedCardsDialog : public QDialog
 {
@@ -17,5 +19,5 @@ public:
 private:
     void setupCards(const std::vector<const CardBase*>& discardedCards);
 
-    Ui_DiscardedCardsDialog *ui;
+    Ui::DiscardedCardsDialog *ui;
 };

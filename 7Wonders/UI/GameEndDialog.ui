@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GameEndDialog</class>
+ <widget class="QDialog" name="GameEndDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Game Results</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+    QDialog {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #2C1810, stop:1 #3E2723);
+        border: 3px solid #DAA520;
+        border-radius: 15px;
+    }
+    QLabel {
+        color: #F5E6D3;
+        font-family: 'Times New Roman';
+    }
+    #winnerLabel {
+        font-size: 28px;
+        font-weight: bold;
+        color: #FFD700;
+        margin-bottom: 10px;
+    }
+    QFrame#statsFrame {
+        background: rgba(0, 0, 0, 50);
+        border: 1px solid #8B4513;
+        border-radius: 10px;
+    }
+    QPushButton {
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #5D4037, stop:1 #3E2723);
+        color: #FFD700;
+        border: 2px solid #8B4513;
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-weight: bold;
+    }
+    QPushButton:hover {
+        background: #6D4C41;
+    }
+   </string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="winnerLabel">
+     <property name="text">
+      <string>THE WINNER IS: PLAYER 1</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QFrame" name="p1Frame">
+       <property name="styleSheet">
+        <string notr="true">QFrame { border: 1px solid #1565C0; background: rgba(21, 101, 192, 20); border-radius: 10px; }</string>
+       </property>
+       <layout class="QVBoxLayout" name="p1Layout">
+        <item>
+         <widget class="QLabel" name="p1NameLabel">
+          <property name="text">
+           <string>Player 1</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size: 18px; font-weight: bold; color: #90CAF9;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="p1StatsLabel">
+          <property name="text">
+           <string>Coins: 0
+Blue: 0
+Red: 0
+Green: 0
+Yellow: 0
+Brown: 0
+Gray: 0
+Guilds VP: 0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size: 14px; line-height: 1.5;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="p2Frame">
+       <property name="styleSheet">
+        <string notr="true">QFrame { border: 1px solid #C62828; background: rgba(198, 40, 40, 20); border-radius: 10px; }</string>
+       </property>
+       <layout class="QVBoxLayout" name="p2Layout">
+        <item>
+         <widget class="QLabel" name="p2NameLabel">
+          <property name="text">
+           <string>Player 2</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size: 18px; font-weight: bold; color: #EF9A9A;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="p2StatsLabel">
+          <property name="text">
+           <string>Coins: 0
+Blue: 0
+Red: 0
+Green: 0
+Yellow: 0
+Brown: 0
+Gray: 0
+Guilds VP: 0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size: 14px; line-height: 1.5;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnClose">
+     <property name="text">
+      <string>Return to Main Menu</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

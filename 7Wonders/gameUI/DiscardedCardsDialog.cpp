@@ -1,11 +1,11 @@
 #include "DiscardedCardsDialog.h"
 #include "ui_DiscardedCardsDialog.h"
 #include "CardWidget.h"
-#include "GameBase/CardBase.h"
+#include "CardBase.h"
 #include <QString>
 #include <QStringList>
 
-static QString getColorHex(Color c)
+static QString getColorHexInternal(Color c)
 {
     switch (c) {
     case Color::Blue:   return "#1565C0";
@@ -19,7 +19,7 @@ static QString getColorHex(Color c)
     }
 }
 
-static QString formatCost(const std::map<Resource, uint8_t>& costMap)
+static QString formatCostInternal(const std::map<Resource, uint8_t>& costMap)
 {
     QStringList parts;
     for (auto const& [res, count] : costMap) {
@@ -37,11 +37,11 @@ static QString formatCost(const std::map<Resource, uint8_t>& costMap)
          }
     }
     return parts.join("<br>");
-};
+}
 
 DiscardedCardsDialog::DiscardedCardsDialog(const std::vector<const CardBase*>& discardedCards, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui_DiscardedCardsDialog)
+    ui(new Ui::DiscardedCardsDialog)
 {
     ui->setupUi(this);
     setupCards(discardedCards);
@@ -58,10 +58,12 @@ void DiscardedCardsDialog::setupCards(const std::vector<const CardBase*>& discar
     int col = 0;
     for (const auto* card : discardedCards)
     {
+        if (!card) continue;
+        
         CardWidget* cardWidget = new CardWidget(card->getId(), this);
         QString name = QString::fromStdString(card->getName());
-        QString color = getColorHex(card->getColor());
-        QString cost = formatCost(card->getCost());
+        QString color = getColorHexInternal(card->getColor());
+        QString cost = formatCostInternal(card->getCost());
         QString effect = QString::fromStdString(card->getEffectDescription());
 
         cardWidget->setupCard(name, color, true, cost, effect);

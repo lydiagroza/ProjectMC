@@ -1,3 +1,4 @@
+# 7 Wonders Duel Project File
 QT += core gui widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -32,7 +33,8 @@ HEADERS += GameBase/Board.h \
            GameBase/ProgressTokenLoader.h \
            GameBase/ProgressTokens.h \
            GameBase/UniversalCardLoader.h \
-           GameBase/Wonder.h
+           GameBase/Wonder.h \
+           GameBase/GuildEffects.h
 
 SOURCES += GameBase/Board.cpp \
            GameBase/CardBase.cpp \
@@ -45,7 +47,8 @@ SOURCES += GameBase/Board.cpp \
            GameBase/UniversalCardLoader.cpp \
            GameBase/ProgressTokenLoader.cpp \
            GameBase/ProgressTokens.cpp \
-           GameBase/Wonder.cpp
+           GameBase/Wonder.cpp \
+           GameBase/GuildEffects.cpp
 
 # CSV files din GameBase
 OTHER_FILES += GameBase/AgeI.csv \
@@ -82,7 +85,8 @@ HEADERS += gameUI/MainWindow.h \
            gameUI/PlayerDashboardWidget.h \
            gameUI/NameSelectionWidget.h \
            gameUI/WonderChoiceDialog.h \
-           gameUI/DiscardedCardsDialog.h
+           gameUI/DiscardedCardsDialog.h \
+           gameUI/GameEndDialog.h
 
 SOURCES += gameUI/main.cpp \
            gameUI/MainWindow.cpp \
@@ -94,12 +98,12 @@ SOURCES += gameUI/main.cpp \
            gameUI/PlayerDashboardWidget.cpp \
            gameUI/NameSelectionWidget.cpp \
            gameUI/WonderChoiceDialog.cpp \
-           gameUI/DiscardedCardsDialog.cpp
+           gameUI/DiscardedCardsDialog.cpp \
+           gameUI/GameEndDialog.cpp
 
 # ========================================
 # UI - fișiere de design .ui (opțional)
 # ========================================
-HEADERS += UI/ui_globals.h
 OTHER_FILES += UI/README.txt
 FORMS += UI/WonderSelectionWidget.ui \
          UI/MainWindow.ui \
@@ -110,7 +114,8 @@ FORMS += UI/WonderSelectionWidget.ui \
          UI/PlayerDashboardWidget.ui \
          UI/NameSelectionWidget.ui \
          UI/WonderChoiceDialog.ui \
-         UI/DiscardedCardsDialog.ui
+         UI/DiscardedCardsDialog.ui \
+         UI/GameEndDialog.ui
 
 # Dacă ai fișier .ui (design vizual)
 # Decomentează linia de mai jos dacă există MainWindow.ui

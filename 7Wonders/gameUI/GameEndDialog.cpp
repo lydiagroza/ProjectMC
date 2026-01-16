@@ -1,0 +1,59 @@
+#include "GameEndDialog.h"
+#include "ui_GameEndDialog.h"
+#include "Player.h"
+#include <map>
+
+GameEndDialog::GameEndDialog(Game* game, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::GameEndDialog)
+{
+    ui->setupUi(this);
+    setupStats(game);
+    connect(ui->btnClose, &QPushButton::clicked, this, &QDialog::accept);
+}
+
+GameEndDialog::~GameEndDialog()
+{
+    delete ui;
+}
+
+void GameEndDialog::setupStats(Game* game)
+{
+    if (!game) return;
+
+    Player& p1 = game->getPlayer1();
+    Player& p2 = game->getPlayer2();
+
+    ui->p1NameLabel->setText(QString::fromStdString(p1.getName()));
+    ui->p2NameLabel->setText(QString::fromStdString(p2.getName()));
+
+    ui->p1StatsLabel->setText(formatStats(p1, p2));
+    ui->p2StatsLabel->setText(formatStats(p2, p1));
+
+    std::optional<Player> winner = game->determinateWinner();
+    if (winner) {
+        ui->winnerLabel->setText("🏆 THE WINNER IS: " + QString::fromStdString(winner->getName()) + " 🏆");
+    } else {
+        ui->winnerLabel->setText("🤝 IT'S A DRAW! 🤝");
+    }
+}
+
+QString GameEndDialog::formatStats(const Player& p, const Player& opp)
+{
+    auto getCount = [&](Color c) {
+        auto inv = p.getInventory();
+        return inv.count(c) ? (int)inv.at(c).size() : 0;
+    };
+
+    QString stats;
+    stats += QString("💰 Coins: %1\n").arg(p.getCoins());
+    stats += QString("🟦 Blue Cards: %1\n").arg(getCount(Color::Blue));
+    stats += QString("🟥 Red Cards: %1\n").arg(getCount(Color::Red));
+    stats += QString("🟩 Green Cards: %1\n").arg(getCount(Color::Green));
+    stats += QString("🟨 Yellow Cards: %1\n").arg(getCount(Color::Yellow));
+    stats += QString("🟫 Brown Cards: %1\n").arg(getCount(Color::Brown));
+    stats += QString("⬜ Gray Cards: %1\n").arg(getCount(Color::Gray));
+    stats += QString("🟪 Guilds VP: %1").arg(p.getVPFromGuilds(opp));
+
+    return stats;
+}

@@ -14,6 +14,7 @@
 #include "Game.h"
 #include "GameConstants.h"
 #include "DiscardedCardsDialog.h"
+#include "GameEndDialog.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -27,6 +28,20 @@
 #include <QFrame>
 #include <QStackedWidget>
 #include <QInputDialog>
+
+// Helper to find node (Only defined once here)
+static CardNode* findCardNodeInternal(Game* game, int cardId) {
+    if (!game) return nullptr;
+    const auto& rows = game->getBoard().getPyramid().getRows();
+    for (const auto& row : rows) {
+        for (const auto& node : row) {
+            if (node && node->getCard() && node->getCard()->getId() == cardId) {
+                return const_cast<CardNode*>(node.get());
+            }
+        }
+    }
+    return nullptr;
+}
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -83,7 +98,6 @@ MainWindow::MainWindow(QWidget* parent)
     ui->opponentDashboard->setVisible(false);
     ui->playerDashboard->setVisible(false);
     ui->rightZone->setVisible(false);
-    ui->turnContainer->setVisible(false);
 
     // Initial button state
     ui->btnBuild->setEnabled(false);
@@ -130,7 +144,6 @@ void MainWindow::onNamesConfirmed(const QString& p1, const QString& p2, int diff
     ui->opponentDashboard->setVisible(true);
     ui->playerDashboard->setVisible(true);
     ui->rightZone->setVisible(true);
-    ui->turnContainer->setVisible(true);
 
     ui->statusbar->showMessage("⚔️ Initializing the ancient world of ducks... ⚔️");
     startGame();
@@ -178,22 +191,15 @@ void MainWindow::updateGameState()
 
     // Check for INSTANT WIN (Military or Science)
     if (m_game->checkForInstantWin()) {
-        std::optional<Player> winner = m_game->determinateWinner();
-        if (winner) {
-            QString winnerName = QString::fromStdString(winner->getName());
-            QMessageBox::information(this, "Victory!", winnerName + " has won the game due to military or scientific supremacy!");
-        }
-        else {
-            // This case should ideally not happen if checkForInstantWin is true, but as a fallback:
-            QMessageBox::information(this, "Game Over", "The game has ended!");
-        }
+        GameEndDialog dialog(m_game, this);
+        dialog.exec();
         
-        // Disable all game interactions
-        ui->btnBuild->setEnabled(false);
-        ui->btnDiscard->setEnabled(false);
-        ui->btnWonder->setEnabled(false);
-        ui->boardWidgetPage->setEnabled(false);
-        return; // Stop further processing
+        // Return to main menu (Splash Screen)
+        ui->stack->setCurrentWidget(ui->splashScreenPage);
+        ui->opponentDashboard->setVisible(false);
+        ui->playerDashboard->setVisible(false);
+        ui->rightZone->setVisible(false);
+        return; 
     }
     
     // Check for end of age
@@ -201,7 +207,9 @@ void MainWindow::updateGameState()
         QMessageBox::information(this, "Age Complete", "The current age has ended!");
         m_game->startNextAge();
         if (m_game->isGameOver()) {
-             QMessageBox::information(this, "Game Over", "The game has ended!");
+             GameEndDialog dialog(m_game, this);
+             dialog.exec();
+             ui->stack->setCurrentWidget(ui->splashScreenPage);
              return;
         }
         renderGame();
@@ -214,9 +222,11 @@ void MainWindow::updateGameState()
     ui->btnDiscard->setEnabled(false);
     ui->btnWonder->setEnabled(false);
     
-    // Check for game over
+    // Check for game over (natural end)
     if (m_game->isGameOver()) {
-        QMessageBox::information(this, "Game Over", "The game has ended!");
+        GameEndDialog dialog(m_game, this);
+        dialog.exec();
+        ui->stack->setCurrentWidget(ui->splashScreenPage);
         return;
     }
 
@@ -301,24 +311,10 @@ void MainWindow::onWonderChosen(int wonderId)
     }
 }
 
-// Helper to find node
-CardNode* findCardNode(Game* game, int cardId) {
-    if (!game) return nullptr;
-    const auto& rows = game->getBoard().getPyramid().getRows();
-    for (const auto& row : rows) {
-        for (const auto& node : row) {
-            if (node && node->getCard() && node->getCard()->getId() == cardId) {
-                return const_cast<CardNode*>(node.get());
-            }
-        }
-    }
-    return nullptr;
-}
-
 void MainWindow::onCardSelected(int cardId)
 {
     m_selectedCardId = cardId;
-    CardNode* node = findCardNode(m_game, cardId);
+    CardNode* node = findCardNodeInternal(m_game, cardId);
 
     if (!node || !node->isPlayable() || node->isPlayed()) {
         ui->lblCost->setText("Unavailable");
@@ -360,7 +356,7 @@ void MainWindow::onCardSelected(int cardId)
 void MainWindow::onBuildClicked()
 {
     if (m_selectedCardId == -1) return;
-    CardNode* node = findCardNode(m_game, m_selectedCardId);
+    CardNode* node = findCardNodeInternal(m_game, m_selectedCardId);
     if (!node) return;
 
     Player* p = m_game->getCurrentPlayer();
@@ -385,7 +381,7 @@ void MainWindow::onBuildClicked()
 void MainWindow::onDiscardClicked()
 {
     if (m_selectedCardId == -1) return;
-    CardNode* node = findCardNode(m_game, m_selectedCardId);
+    CardNode* node = findCardNodeInternal(m_game, m_selectedCardId);
     if (!node) return;
     
     Player* p = m_game->getCurrentPlayer();
@@ -403,7 +399,7 @@ void MainWindow::onDiscardClicked()
 void MainWindow::onWonderClicked()
 {
     if (m_selectedCardId == -1) return;
-    CardNode* node = findCardNode(m_game, m_selectedCardId);
+    CardNode* node = findCardNodeInternal(m_game, m_selectedCardId);
     if (!node) return;
 
     Player* p = m_game->getCurrentPlayer();
@@ -454,7 +450,7 @@ void MainWindow::onDiscardedCardsClicked()
 {
     if (!m_game) return;
 
-    const auto& discardedCardsShared = m_game->getDiscardedCards();
+    const auto& discardedCardsShared = m_game->getBoard().getDiscardPile();
     std::vector<const CardBase*> discardedCards;
     for (const auto& cardPtr : discardedCardsShared)
     {
@@ -499,12 +495,17 @@ void MainWindow::updatePlayerInventories()
 
     auto addPlayerTokens = [this](const Player& p) {
         for (const auto& tokenPtr : p.getProgressTokens()) {
-            QLabel* tokenLabel = new QLabel("⚡ " + QString::fromStdString(tokenPtr->getName()), this);
+            QLabel* tokenLabel = new QLabel(QString::fromStdString(tokenPtr->getName()), this);
             tokenLabel->setStyleSheet(
-                "background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #FFD700, stop:0.5 #FFF9C4, stop:1 #FFD700); "
-                "color: #3E2723; padding: 8px; border: 2px solid #8B4513; border-radius: 6px; font-weight: bold; font-family: 'Times New Roman';"
+                "QLabel { "
+                "  background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #FFD700, stop:0.8 #DAA520, stop:1 #B8860B); "
+                "  color: #3E2723; padding: 10px; border: 2px solid #8B4513; border-radius: 20px; font-weight: bold; font-family: 'Times New Roman'; font-size: 12px; margin: 5px; "
+                "}"
             );
-            ui->progressTokensLayout->addWidget(tokenLabel);
+            tokenLabel->setAlignment(Qt::AlignCenter);
+            tokenLabel->setWordWrap(true);
+            tokenLabel->setFixedSize(120, 40);
+            ui->progressTokensLayout->addWidget(tokenLabel, 0, Qt::AlignHCenter);
         }
     };
 

@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "GameConstants.h"
+#include "GuildEffects.h"
 #include <iostream>
 #include <algorithm> // For std::max
 
@@ -440,82 +441,5 @@ void Player::addProgressToken(std::shared_ptr<ProgressToken> token) {
 }
 
 int Player::getVPFromGuilds(const Player& opponent) const {
-    int totalVP = 0;
-    if (m_Inventory.count(Color::Purple)) {
-        for (const auto& card : m_Inventory.at(Color::Purple)) {
-            int id = card->getId();
-            
-            // Helper lambdas for counting specific card types/resources
-            auto countColor = [](const Player& p, Color c) {
-                return p.getInventory().count(c) ? (int)p.getInventory().at(c).size() : 0;
-            };
-
-            auto countBrownGrey = [&](const Player& p) {
-                return countColor(p, Color::Brown) + countColor(p, Color::Gray);
-            };
-
-            auto countWonders = [](const Player& p) {
-                int built = 0;
-                for (const auto& w : p.getWonders()) {
-                    if (w->getIsBuilt()) built++;
-                }
-                return built;
-            };
-
-            switch (id) {
-                case 70: // Builders Guild: 2 VP per Wonder (max built in one city)
-                {
-                    int myCount = countWonders(*this);
-                    int oppCount = countWonders(opponent);
-                    totalVP += std::max(myCount, oppCount) * 2;
-                    break;
-                }
-                case 71: // Moneylenders Guild: 1 VP per 3 coins (richest city)
-                {
-                    int myCoins = this->getCoins();
-                    int oppCoins = opponent.getCoins();
-                    totalVP += std::max(myCoins, oppCoins) / 3;
-                    break;
-                }
-                case 72: // Scientists Guild: 1 VP per Green card (max count)
-                {
-                    int myCount = countColor(*this, Color::Green);
-                    int oppCount = countColor(opponent, Color::Green);
-                    totalVP += std::max(myCount, oppCount);
-                    break;
-                }
-                case 73: // Shipowners Guild: 1 VP per Brown/Grey card (max count)
-                {
-                    int myCount = countBrownGrey(*this);
-                    int oppCount = countBrownGrey(opponent);
-                    totalVP += std::max(myCount, oppCount);
-                    break;
-                }
-                case 74: // Traders Guild: 1 VP per Yellow card (max count)
-                {
-                    int myCount = countColor(*this, Color::Yellow);
-                    int oppCount = countColor(opponent, Color::Yellow);
-                    totalVP += std::max(myCount, oppCount);
-                    break;
-                }
-                case 75: // Magistrates Guild: 1 VP per Blue card (max count)
-                {
-                    int myCount = countColor(*this, Color::Blue);
-                    int oppCount = countColor(opponent, Color::Blue);
-                    totalVP += std::max(myCount, oppCount);
-                    break;
-                }
-                case 76: // Tacticians Guild: 1 VP per Red card (max count)
-                {
-                    int myCount = countColor(*this, Color::Red);
-                    int oppCount = countColor(opponent, Color::Red);
-                    totalVP += std::max(myCount, oppCount);
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
-    }
-    return totalVP;
+    return GuildEndGameEffects::calculateTotalGuildVP(*this, opponent);
 }

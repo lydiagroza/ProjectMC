@@ -156,10 +156,10 @@ void MainWindow::rebuildRightPanel()
     progressCol->setSpacing(2);
 
     // Top: Player 2 (Opponent) Progress
-    QLabel* lblP2 = new QLabel("🦆 Opponent", progressContainer);
-    lblP2->setStyleSheet("color: #B71C1C; font-weight: bold; font-size: 10px;");
-    lblP2->setAlignment(Qt::AlignCenter);
-    progressCol->addWidget(lblP2);
+    m_lblProgressP2 = new QLabel("Opponent", progressContainer);
+    m_lblProgressP2->setStyleSheet("color: #B71C1C; font-weight: bold; font-size: 10px;");
+    m_lblProgressP2->setAlignment(Qt::AlignCenter);
+    progressCol->addWidget(m_lblProgressP2);
 
     m_p2ProgressLayout = new QVBoxLayout(); // Will contain the vertical slots
     progressCol->addLayout(m_p2ProgressLayout);
@@ -172,10 +172,10 @@ void MainWindow::rebuildRightPanel()
     progressCol->addWidget(line);
 
     // Bottom: Player 1 (You) Progress
-    QLabel* lblP1 = new QLabel("🏛️ You", progressContainer);
-    lblP1->setStyleSheet("color: #1565C0; font-weight: bold; font-size: 10px;");
-    lblP1->setAlignment(Qt::AlignCenter);
-    progressCol->addWidget(lblP1);
+    m_lblProgressP1 = new QLabel("You", progressContainer);
+    m_lblProgressP1->setStyleSheet("color: #1565C0; font-weight: bold; font-size: 10px;");
+    m_lblProgressP1->setAlignment(Qt::AlignCenter);
+    progressCol->addWidget(m_lblProgressP1);
 
     m_p1ProgressLayout = new QVBoxLayout(); // Will contain the vertical slots
     progressCol->addLayout(m_p1ProgressLayout);
@@ -209,18 +209,22 @@ void MainWindow::rebuildRightPanel()
 
 QString MainWindow::getTokenDescription(const QString& tokenName)
 {
+    QString upperName = tokenName.toUpper().trimmed();
+    
     // Romanian translations and descriptions
-    if (tokenName == "Agriculture") return "Agricultură: Câștigi 6 monede și 4 puncte de victorie.";
-    if (tokenName == "Architecture") return "Arhitectură: Construirea minunilor costă cu 2 resurse mai puțin.";
-    if (tokenName == "Economy") return "Economie: Câștigi bani când adversarul face comerț.";
-    if (tokenName == "Law") return "Lege: Acest jeton valorează un simbol științific.";
-    if (tokenName == "Masonry") return "Zidărie: Construirea cărților albastre costă cu 2 resurse mai puțin.";
-    if (tokenName == "Mathematics") return "Matematică: 3 puncte de victorie pentru fiecare jeton de progres (inclusiv acesta).";
-    if (tokenName == "Philosophy") return "Filozofie: Câștigi 7 puncte de victorie.";
-    if (tokenName == "Strategy") return "Strategie: Câștigi o clădire militară suplimentară.";
-    if (tokenName == "Theology") return "Teologie: Minunile tale primesc efectul de 'Tura Suplimentară'.";
-    if (tokenName == "Urbanism") return "Urbanism: Primești 6 monede. Construirea lanțurilor este gratuită (chiar dacă nu ai simbolul).";
-    return "Descriere indisponibilă.";
+    if (upperName == "AGRICULTURE") return "Agricultură: Câștigi 6 monede și 4 puncte de victorie.";
+    if (upperName == "ARCHITECTURE") return "Arhitectură: Construirea minunilor costă cu 2 resurse mai puțin.";
+    if (upperName == "ECONOMY") return "Economie: Câștigi bani când adversarul face comerț.";
+    if (upperName == "LAW") return "Lege: Acest jeton valorează un simbol științific.";
+    if (upperName == "MASONRY") return "Zidărie: Construirea cărților albastre costă cu 2 resurse mai puțin.";
+    if (upperName == "MATHEMATICS") return "Matematică: 3 puncte de victorie pentru fiecare jeton de progres (inclusiv acesta).";
+    if (upperName == "PHILOSOPHY") return "Filozofie: Câștigi 7 puncte de victorie.";
+    if (upperName == "STRATEGY") return "Strategie: Câștigi o clădire militară suplimentară.";
+    if (upperName == "THEOLOGY") return "Teologie: Minunile tale primesc efectul de 'Tura Suplimentară'.";
+    if (upperName == "URBANISM") return "Urbanism: Primești 6 monede. Construirea lanțurilor este gratuită (chiar dacă nu ai simbolul).";
+    
+    qDebug() << "[UI] Warning: No description for token:" << tokenName;
+    return "Descriere indisponibilă (" + tokenName + ").";
 }
 
 void MainWindow::onProgressInfoClicked()
@@ -249,70 +253,69 @@ void MainWindow::onProgressInfoClicked()
     // Use available tokens from the board
     const auto& availableTokens = m_game->getBoard().getAvailableProgressTokens();
     
-    // Helper to get symbol (duplicated for self-contained logic, or could be a method)
-    auto getTokenSymbol = [](const QString& name) -> QString {
-        if (name == "Agriculture") return "🌾";
-        if (name == "Architecture") return "🏗️";
-        if (name == "Economy") return "💰";
-        if (name == "Law") return "⚖️";
-        if (name == "Masonry") return "🧱";
-        if (name == "Mathematics") return "🔢";
-        if (name == "Philosophy") return "📜";
-        if (name == "Strategy") return "⚔️";
-        if (name == "Theology") return "🛐";
-        if (name == "Urbanism") return "🏙️";
-        return "🟢";
-    };
-
-    if (availableTokens.empty()) {
-        QLabel* emptyLbl = new QLabel("Nu mai sunt jetoane disponibile.");
-        emptyLbl->setStyleSheet("font-size: 16px; color: #BBB;");
-        emptyLbl->setAlignment(Qt::AlignCenter);
-        gridLayout->addWidget(emptyLbl, 0, 0);
-    } else {
-        int row = 0;
-        int col = 0;
-        int maxCols = 2; // 2 columns for large icons
-
-        for (const auto& tokenPtr : availableTokens) {
-            QString name = QString::fromStdString(tokenPtr->getName());
-            
-            // Create a clickable widget for each token
-            QPushButton* tokenBtn = new QPushButton();
-            tokenBtn->setFixedSize(140, 160); // Large card-like button
-            tokenBtn->setCursor(Qt::PointingHandCursor);
-            tokenBtn->setStyleSheet(
-                "QPushButton { "
-                "  background: #4E342E; "
-                "  border: 2px solid #8B4513; "
-                "  border-radius: 15px; "
-                "}"
-                "QPushButton:hover { "
-                "  background: #5D4037; "
-                "  border-color: #FFD700; "
-                "}"
-            );
-
-            QVBoxLayout* btnLayout = new QVBoxLayout(tokenBtn);
-            btnLayout->setContentsMargins(10, 10, 10, 10);
-            
-            // 1. Large Green Coin
-            QLabel* coin = new QLabel(getTokenSymbol(name));
-            coin->setFixedSize(80, 80);
-            coin->setAlignment(Qt::AlignCenter);
-            coin->setStyleSheet(
-                "QLabel { "
-                "  background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #A5D6A7, stop:1 #1B5E20); "
-                "  color: #FFFFFF; "
-                "  border: 4px solid #2E7D32; "
-                "  border-radius: 40px; " // Circle
-                "  font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif; "
-                "  font-size: 40px; "     // Large Symbol
-                "  background-color: transparent;" 
-                "}"
-            );
-
-            // 2. Name Label
+            // Helper to get symbol (Abbreviated for compatibility)
+            auto getTokenSymbol = [](const QString& name) -> QString {
+                QString n = name.toUpper().trimmed();
+                if (n == "AGRICULTURE") return "Ag";
+                if (n == "ARCHITECTURE") return "Ar";
+                if (n == "ECONOMY") return "Ec";
+                if (n == "LAW") return "La";
+                if (n == "MASONRY") return "Ms";
+                if (n == "MATHEMATICS") return "Mt";
+                if (n == "PHILOSOPHY") return "Ph";
+                if (n == "STRATEGY") return "St";
+                if (n == "THEOLOGY") return "Th";
+                if (n == "URBANISM") return "Ur";
+                return "??";
+            };    
+        if (availableTokens.empty()) {
+            QLabel* emptyLbl = new QLabel("Nu mai sunt jetoane disponibile.");
+            emptyLbl->setStyleSheet("font-size: 16px; color: #BBB;");
+            emptyLbl->setAlignment(Qt::AlignCenter);
+            gridLayout->addWidget(emptyLbl, 0, 0);
+        } else {
+            int row = 0;
+            int col = 0;
+            int maxCols = 2; // 2 columns for large icons
+    
+            for (const auto& tokenPtr : availableTokens) {
+                QString name = QString::fromStdString(tokenPtr->getName());
+                
+                // Create a clickable widget for each token
+                QPushButton* tokenBtn = new QPushButton();
+                tokenBtn->setFixedSize(140, 160); // Large card-like button
+                tokenBtn->setCursor(Qt::PointingHandCursor);
+                tokenBtn->setStyleSheet(
+                    "QPushButton { "
+                    "  background: #4E342E; "
+                    "  border: 2px solid #8B4513; "
+                    "  border-radius: 15px; "
+                    "}"
+                    "QPushButton:hover { "
+                    "  background: #5D4037; "
+                    "  border-color: #FFD700; "
+                    "}"
+                );
+    
+                QVBoxLayout* btnLayout = new QVBoxLayout(tokenBtn);
+                btnLayout->setContentsMargins(10, 10, 10, 10);
+                
+                // 1. Large Green Coin
+                QLabel* coin = new QLabel(getTokenSymbol(name));
+                coin->setFixedSize(80, 80);
+                coin->setAlignment(Qt::AlignCenter);
+                coin->setStyleSheet(
+                    "QLabel { "
+                    "  background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #A5D6A7, stop:1 #1B5E20); "
+                    "  color: #FFFFFF; "
+                    "  border: 4px solid #2E7D32; "
+                    "  border-radius: 40px; " // Circle
+                    "  font-family: 'Arial', sans-serif; "
+                    "  font-size: 32px; font-weight: bold;" // Smaller font for text to fit
+                    "  background-color: transparent;"
+                    "}"
+                );
+                // 2. Name Label
             QLabel* nameLbl = new QLabel(name);
             nameLbl->setWordWrap(true);
             nameLbl->setAlignment(Qt::AlignCenter);
@@ -823,6 +826,18 @@ void MainWindow::updatePlayerInventories()
     std::cout << "[UI Update] P1 @" << &p1 << " (" << p1.getName() << ") has " << p1.getWonders().size() << " wonders.\n";
     std::cout << "[UI Update] P2 @" << &p2 << " (" << p2.getName() << ") has " << p2.getWonders().size() << " wonders.\n";
 
+    // Update Progress Labels with real names (Swapped as requested)
+    if (m_lblProgressP1) {
+        QString name = QString::fromStdString(p2.getName()); // Was p1
+        if (name.length() > 8) name = name.left(6) + "..";
+        m_lblProgressP1->setText(name);
+    }
+    if (m_lblProgressP2) {
+        QString name = QString::fromStdString(p1.getName()); // Was p2
+        if (name.length() > 8) name = name.left(6) + "..";
+        m_lblProgressP2->setText(name);
+    }
+
     // Helper to calculate estimated VP (Visible)
     auto calculateVP = [](const Player& p, const Player& opp) -> int {
         int vp = 0;
@@ -907,17 +922,18 @@ void MainWindow::updatePlayerInventories()
         
         // Helper for symbols (Ensure consistent with popup)
         auto getTokenSymbol = [](const QString& name) -> QString {
-            if (name == "Agriculture") return "🌾";
-            if (name == "Architecture") return "🏗️";
-            if (name == "Economy") return "💰";
-            if (name == "Law") return "⚖️";
-            if (name == "Masonry") return "🧱";
-            if (name == "Mathematics") return "🔢";
-            if (name == "Philosophy") return "📜";
-            if (name == "Strategy") return "⚔️";
-            if (name == "Theology") return "🛐";
-            if (name == "Urbanism") return "🏙️";
-            return "🟢";
+            QString n = name.toUpper().trimmed();
+            if (n == "AGRICULTURE") return "Ag";
+            if (n == "ARCHITECTURE") return "Ar";
+            if (n == "ECONOMY") return "Ec";
+            if (n == "LAW") return "La";
+            if (n == "MASONRY") return "Ms";
+            if (n == "MATHEMATICS") return "Mt";
+            if (n == "PHILOSOPHY") return "Ph";
+            if (n == "STRATEGY") return "St";
+            if (n == "THEOLOGY") return "Th";
+            if (n == "URBANISM") return "Ur";
+            return "??";
         };
 
         // Render slots (Total 5 slots usually)
@@ -936,8 +952,8 @@ void MainWindow::updatePlayerInventories()
                     "  color: white; "
                     "  border: 2px solid #2E7D32; "
                     "  border-radius: 18px; " 
-                    "  font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif; "
-                    "  font-size: 20px; font-weight: bold;"
+                    "  font-family: 'Arial', sans-serif; "
+                    "  font-size: 14px; font-weight: bold;"
                     "}"
                 );
                 tokenLabel->setToolTip(name + ": " + getTokenDescription(name));

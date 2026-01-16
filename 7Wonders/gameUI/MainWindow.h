@@ -61,4 +61,8 @@ private:
     void onProgressInfoClicked();
 
     void rebuildRightPanel();
+
+    // Labels for Progress Section
+    QLabel* m_lblProgressP1 = nullptr;
+    QLabel* m_lblProgressP2 = nullptr;
 };

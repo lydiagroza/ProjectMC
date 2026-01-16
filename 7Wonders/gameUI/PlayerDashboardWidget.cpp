@@ -90,31 +90,33 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
     
     ui->infoLabel->setText(text);
 
-    // Update Wonders and Inventory
-    // Wonders are now in a GRID for compact view
-    // Clean up existing grid items if it was already converted, but since ui->wondersLayout is defined as HBox in UI,
-    // we should have changed it or we need to repurpose the container.
-    // However, we cannot change the class of ui->wondersLayout easily if it's from UI.
-    // Use deleteLayout trick or just add a grid layout inside the existing layout.
+    // --- REFACTOR: SPLIT DASHBOARD ---
     
+    // Clear the main container layout
     QLayoutItem* item;
     while ((item = ui->wondersLayout->takeAt(0)) != nullptr) {
-        if (item->widget()) {
-            item->widget()->deleteLater();
-        }
+        if (item->widget()) item->widget()->deleteLater();
         delete item;
     }
-    
-    // Create a Grid Layout container if not already there, OR just handle the HBox.
-    // Since the request asks for 2x2 grid, and we have an HBox, we can add a widget that HAS a grid layout.
-    
-    QWidget* gridContainer = new QWidget();
-    QGridLayout* grid = new QGridLayout(gridContainer);
-    grid->setContentsMargins(0,0,0,0);
-    grid->setSpacing(2);
-    
-    ui->wondersLayout->addWidget(gridContainer);
 
+    // 1. Left Zone: Wonders (Fixed Grid)
+    QFrame* wonderZone = new QFrame();
+    wonderZone->setFixedWidth(420); // Wide enough for 2 columns of 200px cards
+    wonderZone->setStyleSheet("background: rgba(0,0,0,0.2); border-radius: 5px;");
+    
+    QVBoxLayout* wonderZoneLayout = new QVBoxLayout(wonderZone);
+    QLabel* wonderLabel = new QLabel("✨ WONDERS");
+    wonderLabel->setStyleSheet("color: #DAA520; font-weight: bold; font-size: 10px; margin-bottom: 2px;");
+    wonderLabel->setAlignment(Qt::AlignCenter);
+    wonderZoneLayout->addWidget(wonderLabel);
+
+    QGridLayout* wonderGrid = new QGridLayout();
+    wonderGrid->setSpacing(5);
+    wonderGrid->setContentsMargins(5,5,5,5);
+    wonderZoneLayout->addLayout(wonderGrid);
+    wonderZoneLayout->addStretch(); // Push to top
+
+    // Populate Wonders
     auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
         QStringList parts;
         for (auto const& [res, count] : costMap) {
@@ -136,9 +138,8 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
 
     int wIdx = 0;
     for (const auto& wonderPtr : wonders) {
-        CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), ui->wondersContainer);
-        // Larger size as requested
-        wonderWidget->setFixedSize(180, 90); 
+        CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), wonderZone);
+        wonderWidget->setFixedSize(200, 100); // Larger Size
 
         QString wName = QString::fromStdString(wonderPtr->getName());
         QString color = wonderPtr->getIsBuilt() ? "#DAA520" : "#6D4C41";
@@ -146,47 +147,49 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
         QString cost = formatCost(wonderPtr->getCost());
 
         wonderWidget->setupCard(wName, color, true, cost, effect);
-
         QString imgPath = CardWidget::getWonderImagePath(wName);
-        if (!imgPath.isEmpty()) {
-            wonderWidget->setImage(imgPath);
-        }
+        if (!imgPath.isEmpty()) wonderWidget->setImage(imgPath);
 
-        // 2 columns
-        grid->addWidget(wonderWidget, wIdx / 2, wIdx % 2);
+        wonderGrid->addWidget(wonderWidget, wIdx / 2, wIdx % 2);
         wIdx++;
     }
+
+    // 2. Separator
+    QFrame* vLine = new QFrame();
+    vLine->setFrameShape(QFrame::VLine);
+    vLine->setFrameShadow(QFrame::Sunken);
+    vLine->setStyleSheet("color: #8B4513; background: #8B4513; width: 2px;");
+
+    // 3. Right Zone: Inventory (Scrollable Row)
+    QFrame* inventoryZone = new QFrame();
+    QVBoxLayout* invZoneLayout = new QVBoxLayout(inventoryZone);
+    invZoneLayout->setContentsMargins(0,0,0,0);
     
-    // Add inventory cards
-    // We want them to look like real cards, not blank.
-    // We will use a separate horizontal layout or continue flow?
-    // User wants "move the whole grid more to the left edge of the screen".
-    // This implies the grid is maybe centered or has padding. 
-    // The grid is inside 'ui->wondersLayout' which is inside a scroll area.
-    // We should make sure alignment is Left.
-    ui->wondersLayout->setAlignment(Qt::AlignLeft);
+    QLabel* invLabel = new QLabel("🏛️ CIVILIZATION");
+    invLabel->setStyleSheet("color: #A5D6A7; font-weight: bold; font-size: 10px; margin-bottom: 2px;");
+    invLabel->setAlignment(Qt::AlignCenter);
+    invZoneLayout->addWidget(invLabel);
+
+    QScrollArea* invScroll = new QScrollArea();
+    invScroll->setWidgetResizable(true);
+    invScroll->setStyleSheet("background: transparent; border: none;");
+    invScroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    invScroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     
-    // Create a container for inventory cards if needed, or just add them to the main layout
-    // Since wonders are in a grid, let's put inventory in a HBox or Flow after the grid.
-    // But 'ui->wondersLayout' is an HBox. We added 'gridContainer' to it.
-    // We can add another container for inventory.
-    
-    QWidget* invContainer = new QWidget();
-    QHBoxLayout* invLayout = new QHBoxLayout(invContainer);
-    invLayout->setContentsMargins(10, 0, 0, 0); // Spacing from wonders
+    QWidget* invContent = new QWidget();
+    QHBoxLayout* invLayout = new QHBoxLayout(invContent);
     invLayout->setSpacing(5);
+    invLayout->setContentsMargins(5,5,5,5);
     invLayout->setAlignment(Qt::AlignLeft);
 
+    // Populate Inventory
     for (const auto& [color, cards] : inventory) {
         for (const auto& card : cards) {
-            CardWidget* cardWidget = new CardWidget(card->getId(), this);
-            cardWidget->setFixedSize(80, 110); // Keep inventory cards small but visible
+            CardWidget* cardWidget = new CardWidget(card->getId(), invContent);
+            cardWidget->setFixedSize(80, 110); 
             
             QString cName = QString::fromStdString(card->getName());
-            QString cColorHex = ""; // We need to convert Color enum to hex string.
-            // Helper locally or access global helper? 
-            // We can replicate simple switch or pass empty and let CardWidget handle it if it knew enum.
-            // CardWidget::setupCard takes a string color.
+            QString cColorHex;
             switch(color) {
                 case Color::Blue:   cColorHex = "#1565C0"; break;
                 case Color::Red:    cColorHex = "#B71C1C"; break;
@@ -198,7 +201,6 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
                 default: cColorHex = "#8B7355"; break;
             }
             
-            // Pass cost and effect to keep the look!
             QString cCost = formatCost(card->getCost());
             QString cEffect = QString::fromStdString(card->getEffectDescription());
 
@@ -206,7 +208,13 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
             invLayout->addWidget(cardWidget);
         }
     }
+    invLayout->addStretch();
     
-    ui->wondersLayout->addWidget(invContainer);
-    ui->wondersLayout->addStretch();
+    invScroll->setWidget(invContent);
+    invZoneLayout->addWidget(invScroll);
+
+    // Add everything to Main Layout
+    ui->wondersLayout->addWidget(wonderZone);
+    ui->wondersLayout->addWidget(vLine);
+    ui->wondersLayout->addWidget(inventoryZone, 1); // Expand to fill rest
 }

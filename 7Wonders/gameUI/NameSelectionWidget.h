@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QComboBox>
 
 namespace Ui {
 class NameSelectionWidget;
@@ -19,11 +20,12 @@ public:
     QString getPlayer2Name() const;
 
 signals:
-    void namesConfirmed(const QString& p1, const QString& p2);
+    void namesConfirmed(const QString& p1, const QString& p2, int difficulty);
 
 private slots:
     void onStartClicked();
 
 private:
     Ui::NameSelectionWidget *ui;
+    QComboBox* m_difficultyCombo;
 };

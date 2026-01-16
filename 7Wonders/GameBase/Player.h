@@ -130,7 +130,8 @@ public:
 			}
 		}
 
-		if (m_Resources.count(Resource::Coin) && m_Resources.at(Resource::Coin) >= totalCost) {
+		uint8_t availableCoins = m_Resources.count(Resource::Coin) ? m_Resources.at(Resource::Coin) : 0;
+		if (availableCoins >= totalCost) {
 			return totalCost;
 		}
 
@@ -142,7 +143,7 @@ public:
 	bool buyCard(std::shared_ptr<CardBase> card,  Player& opponent,  Board& board);
 
 	void discardCard(const CardBase& c);
-	void constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board);
+	bool constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board);
 	//chestii pentru gestionare inventar
 	void addCardToInventory(std::shared_ptr<CardBase> card);
 	bool removeCardFromInventory(std::shared_ptr<CardBase> card);

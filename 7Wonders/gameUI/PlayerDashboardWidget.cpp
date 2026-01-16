@@ -56,21 +56,44 @@ void PlayerDashboardWidget::setTheme(bool isOpponent)
     }
 }
 
-void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins, const std::vector<std::shared_ptr<Wonder>>& wonders)
+void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins, 
+                                         const std::map<Resource, std::uint8_t>& resources,
+                                         const std::vector<std::shared_ptr<Wonder>>& wonders)
 {
     // Update Text
     QString icon = (this->styleSheet().contains("#8B0000")) ? "⚔️" : "🏛️";
-    QString text = QString("%1 %2 | 🦆 %3 coins")
+    
+    auto getResCount = [&](Resource r) {
+        return resources.count(r) ? resources.at(r) : 0;
+    };
+
+    QString resString = QString(
+        "<img src=':/resources/UI/wood.png' height='16'> %1 "
+        "<img src=':/resources/UI/clay.png' height='16'> %2 "
+        "<img src=':/resources/UI/stone.png' height='16'> %3 "
+        "<img src=':/resources/UI/glass.png' height='16'> %4 "
+        "<img src=':/resources/UI/papyrus.png' height='16'> %5"
+    ).arg(getResCount(Resource::Wood))
+     .arg(getResCount(Resource::Clay))
+     .arg(getResCount(Resource::Stone))
+     .arg(getResCount(Resource::Glass))
+     .arg(getResCount(Resource::Papyrus));
+
+    QString text = QString(" %1 <b>%2</b> | <img src=':/resources/UI/coin.png' height='16'> <b>%3</b> | %4")
         .arg(icon)
         .arg(QString::fromStdString(name))
-        .arg(coins);
+        .arg(coins)
+        .arg(resString);
+    
     ui->infoLabel->setText(text);
 
     // Update Wonders
     // Clear existing items in layout
     QLayoutItem* item;
     while ((item = ui->wondersLayout->takeAt(0)) != nullptr) {
-        delete item->widget();
+        if (item->widget()) {
+            item->widget()->deleteLater();
+        }
         delete item;
     }
 
@@ -91,7 +114,7 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins, 
                 parts << QString("%1 x <img src=':/resources/UI/%2' height='14'>").arg(count).arg(icon);
              }
         }
-        return parts.join("<br>");
+        return parts.join(" ");
     };
 
     for (const auto& wonderPtr : wonders) {
@@ -113,6 +136,5 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins, 
         ui->wondersLayout->addWidget(wonderWidget);
     }
     
-    // Add stretch to keep them aligned left (or center if you prefer)
     ui->wondersLayout->addStretch();
 }

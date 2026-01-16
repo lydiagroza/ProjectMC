@@ -35,6 +35,9 @@ MainWindow::MainWindow(QWidget* parent)
 {
     ui->setupUi(this);
 
+    qDebug() << "PlayerDashboard Ptr:" << ui->playerDashboard << " Y:" << ui->playerDashboard->y();
+    qDebug() << "OpponentDashboard Ptr:" << ui->opponentDashboard << " Y:" << ui->opponentDashboard->y();
+
     // Apply Shadows for Right Panel items
     QGraphicsDropShadowEffect* titleShadow = new QGraphicsDropShadowEffect();
     titleShadow->setBlurRadius(6);
@@ -100,7 +103,7 @@ void MainWindow::onSplashFinished(SplashScreen::GameMode mode)
 {
     m_gameMode = mode;
     if (mode == SplashScreen::AvAI) {
-        onNamesConfirmed("AI Player 1", "AI Player 2");
+        onNamesConfirmed("AI Player 1", "AI Player 2", 1); // Default Medium for quick start
     } else {
         // Player 1 is always human in PvA and PvP
         // Player 2 is only human in PvP
@@ -110,7 +113,7 @@ void MainWindow::onSplashFinished(SplashScreen::GameMode mode)
     }
 }
 
-void MainWindow::onNamesConfirmed(const QString& p1, const QString& p2)
+void MainWindow::onNamesConfirmed(const QString& p1, const QString& p2, int difficulty)
 {
     if (m_game) {
         m_game->getPlayer1().setName(p1.toStdString());
@@ -120,7 +123,8 @@ void MainWindow::onNamesConfirmed(const QString& p1, const QString& p2)
         // PvP: Both human
         // PvA: P1 human, P2 AI
         // AvA: Both AI
-        m_game->setPlayerTypes(m_gameMode == SplashScreen::AvAI, m_gameMode != SplashScreen::PvP);
+        AI_Difficulty diff = static_cast<AI_Difficulty>(difficulty);
+        m_game->setPlayerTypes(m_gameMode == SplashScreen::AvAI, m_gameMode != SplashScreen::PvP, diff);
     }
 
     ui->opponentDashboard->setVisible(true);
@@ -144,6 +148,7 @@ void MainWindow::processAITurn()
     if (!ai->hasExtraTurn()) {
         m_game->switchTurn();
     } else {
+        ai->setHasExtraTurn(false);
         ui->statusbar->showMessage("🤖 " + QString::fromStdString(ai->getName()) + " gets an extra turn!", 2000);
     }
     
@@ -197,11 +202,13 @@ void MainWindow::updateGameState()
         return;
     }
 
-    // Check for AI Turn
-    AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
-    if (ai) {
-        // Delay slightly so user can see what happened
-        QTimer::singleShot(800, this, &MainWindow::processAITurn);
+    // Check for AI Turn (only if NOT in draft phase)
+    if (m_draftPhase == 0 || m_game->getCurrentDraftSet().empty()) {
+        AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
+        if (ai) {
+            // Delay slightly so user can see what happened
+            QTimer::singleShot(800, this, &MainWindow::processAITurn);
+        }
     }
 }
 
@@ -252,6 +259,7 @@ void MainWindow::startWonderDraft()
     // AI Check
     AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
     if (ai) {
+        ui->wonderSelectionPage->setEnabled(false);
         auto chosen = ai->chooseWonderFromDraft(availableWonders);
         if (chosen) {
             QTimer::singleShot(1000, this, [this, chosen]() {
@@ -259,6 +267,8 @@ void MainWindow::startWonderDraft()
             });
             return;
         }
+    } else {
+        ui->wonderSelectionPage->setEnabled(true);
     }
 
     ui->wonderSelectionPage->setWonders(ids, names, colors, costs, effects);
@@ -353,6 +363,7 @@ void MainWindow::onBuildClicked()
         if (!p->hasExtraTurn()) {
             m_game->switchTurn();
         } else {
+            p->setHasExtraTurn(false);
             QMessageBox::information(this, "Divine Intervention", "You get an extra turn!");
         }
         updateGameState();
@@ -425,21 +436,20 @@ void MainWindow::onWonderClicked()
         return;
     }
 
-    p->constructWonder(node->getCard(), *selectedWonder, *opp, m_game->getBoard());
-    
-    // Check 7 Wonders rule logic (game->handle7WondersRule is private, might need to reimplement or make public)
-    // For now, ignoring auto-discard of 8th wonder, but UI should ideally handle it.
-    
-    node->updatePlayedStatus(true);
-    m_game->getBoard().updateVisibility();
+    if (p->constructWonder(node->getCard(), *selectedWonder, *opp, m_game->getBoard())) {
+        node->updatePlayedStatus(true);
+        m_game->getBoard().updateVisibility();
 
-    if (p->hasExtraTurn()) { 
-         QMessageBox::information(this, "Divine Intervention", "Wonder Grant: Extra Turn!");
+        if (p->hasExtraTurn()) { 
+             p->setHasExtraTurn(false);
+             QMessageBox::information(this, "Divine Intervention", "Wonder Grant: Extra Turn!");
+        } else {
+             m_game->switchTurn();
+        }
+        updateGameState();
     } else {
-         m_game->switchTurn();
+        QMessageBox::warning(this, "Error", "Could not build wonder.");
     }
-    
-    updateGameState();
 }
 
 
@@ -447,22 +457,27 @@ void MainWindow::updatePlayerInventories()
 {
     if (!m_game) return;
 
-    const Player* player = m_game->getCurrentPlayer();
-    const Player* opponent = m_game->getOpponent();
+    // Fix: Always map Player 1 to Bottom Dashboard and Player 2 to Top Dashboard
+    // This prevents the dashboards from swapping every turn in PvAI or Hotseat.
+    const Player& p1 = m_game->getPlayer1();
+    const Player& p2 = m_game->getPlayer2();
 
-    if (!player || !opponent) return;
+    std::cout << "[UI Update] P1 @" << &p1 << " (" << p1.getName() << ") has " << p1.getWonders().size() << " wonders.\n";
+    std::cout << "[UI Update] P2 @" << &p2 << " (" << p2.getName() << ") has " << p2.getWonders().size() << " wonders.\n";
 
     // Use shared_ptr<Wonder> because Player usually holds shared_ptr
     ui->playerDashboard->updateDashboard(
-        player->getName(), 
-        player->getCoins(), 
-        player->getWonders()
+        p1.getName(), 
+        p1.getCoins(), 
+        p1.getResources(),
+        p1.getWonders()
     );
 
     ui->opponentDashboard->updateDashboard(
-        opponent->getName(), 
-        opponent->getCoins(), 
-        opponent->getWonders()
+        p2.getName(), 
+        p2.getCoins(), 
+        p2.getResources(),
+        p2.getWonders()
     );
 
     ui->militaryTrackWidget->updatePawnPosition(m_game->getBoard().getMilitaryTrack().getPawnPosition());
@@ -474,8 +489,8 @@ void MainWindow::updatePlayerInventories()
         delete item;
     }
 
-    auto addPlayerTokens = [this](const Player* p) {
-        for (const auto& tokenPtr : p->getProgressTokens()) {
+    auto addPlayerTokens = [this](const Player& p) {
+        for (const auto& tokenPtr : p.getProgressTokens()) {
             QLabel* tokenLabel = new QLabel("⚡ " + QString::fromStdString(tokenPtr->getName()), this);
             tokenLabel->setStyleSheet(
                 "background: qlineargradient(x1:0, y1:0, x2:1, y2:0, "
@@ -499,8 +514,8 @@ void MainWindow::updatePlayerInventories()
         }
     };
 
-    addPlayerTokens(player);
-    addPlayerTokens(opponent);
+    addPlayerTokens(p1);
+    addPlayerTokens(p2);
 }
 
 void MainWindow::updateTurnIndicator()

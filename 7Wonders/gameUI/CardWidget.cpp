@@ -198,7 +198,7 @@ void CardWidget::setImage(const QString& imagePath)
         // Ensure they are visible
         ui->nameLabel->setVisible(true);
         ui->costLabel->setVisible(!ui->costLabel->text().isEmpty());
-        ui->effectLabel->setVisible(false);
+        ui->effectLabel->setVisible(true); // Now visible for wonders too!
 
     } else {
         ui->imageLabel->clear(); 

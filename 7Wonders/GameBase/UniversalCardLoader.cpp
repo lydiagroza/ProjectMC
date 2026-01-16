@@ -301,65 +301,256 @@ else {
     return effects;
 }
 
+// --- TRANSLATION ---
+
+string UniversalCardLoader::translateEffect(const string& raw) {
+
+    if (raw.empty()) return "";
+
+    
+
+    stringstream ss(raw);
+
+    string token;
+
+    vector<string> results;
+
+
+
+    while (getline(ss, token, ';')) {
+
+        token = trim(token);
+
+        if (token.empty()) continue;
+
+
+
+        string trans = token;
+
+        if (token == "add_resource_wood") trans = "🌲 +1 Wood";
+
+        else if (token == "add_resource_clay") trans = "🧱 +1 Clay";
+
+        else if (token == "add_resource_stone") trans = "🪨 +1 Stone";
+
+        else if (token == "add_resource_glass") trans = "🍷 +1 Glass";
+
+        else if (token == "add_resource_papyrus") trans = "📜 +1 Papyrus";
+
+        else if (token == "add_resource_wood2") trans = "🌲 +2 Wood";
+
+        else if (token == "add_resource_clay2") trans = "🧱 +2 Clay";
+
+        else if (token == "add_resource_stone2") trans = "🪨 +2 Stone";
+
+        else if (token == "add_resource_coin4") trans = "💰 +4 Coins";
+
+        else if (token == "add_resource_coin6") trans = "💰 +6 Coins";
+
+        else if (token == "add_scientific_symbol_ink") trans = "✒️ Ink Symbol";
+
+        else if (token == "add_scientific_symbol_scales") trans = "⚖️ Scales Symbol";
+
+        else if (token == "add_scientific_symbol_mortar") trans = "🥣 Mortar Symbol";
+
+        else if (token == "add_scientific_symbol_gyroscope") trans = "🧭 Gyroscope Symbol";
+
+        else if (token == "add_scientific_symbol_sun_dial") trans = "☀️ Sundial Symbol";
+
+        else if (token == "add_scientific_symbol_wheel") trans = "⚙️ Wheel Symbol";
+
+        else if (token == "coin2Wonder") trans = "💰 +2/Wonder";
+
+        else if (token == "coin2Brown") trans = "💰 +2/Brown Card";
+
+        else if (token == "coin1Yellow") trans = "💰 +1/Yellow Card";
+
+        else if (token == "coin3Gray") trans = "💰 +3/Gray Card";
+
+        else if (token == "coin1Red") trans = "💰 +1/Red Card";
+
+        else if (token == "sale_stone1") trans = "💸 Stone Cost: 1";
+
+        else if (token == "sale_wood1") trans = "💸 Wood Cost: 1";
+
+        else if (token == "sale_clay1") trans = "💸 Clay Cost: 1";
+
+        else if (token == "add_resource_glass/papyrus") trans = "🔄 Glass or Papyrus";
+
+        else if (token == "add_resource_wood/clay/stone") trans = "🔄 Wood, Clay, or Stone";
+
+        else if (token.find("add_VictoryPoint") == 0) trans = "🏆 " + token.substr(16) + " VP";
+
+        else if (token.find("add_MilitaryPoint") == 0) trans = "🛡️ " + token.substr(17) + " Shields";
+
+        else if (token == "replayTurn") trans = "🔁 Replay Turn";
+
+        else if (token == "add_coins12") trans = "💰 +12 Coins";
+
+        else if (token == "add_coins6") trans = "💰 +6 Coins";
+
+        else if (token == "add_coins3") trans = "💰 +3 Coins";
+
+        else if (token == "decreaseCoins3") trans = "💸 Opponent -3 Coins";
+
+        else if (token == "wood/stone/clay") trans = "🌲🧱🪨 +1 Each";
+
+        else if (token == "chooseProgressToken") trans = "🧪 Pick Progress Token";
+
+        else if (token == "buildDiscardedCard") trans = "♻️ Build from Discard";
+
+        else if (token == "discardOpponentGrayCard") trans = "🔥 Discard Opp. Gray";
+
+        else if (token == "discardOpponentBrownCard") trans = "🔥 Discard Opp. Brown";
+
+        
+
+        results.push_back(trans);
+
+    }
+
+
+
+    string finalStr;
+
+    for (size_t i = 0; i < results.size(); ++i) {
+
+        finalStr += results[i];
+
+        if (i < results.size() - 1) finalStr += " | ";
+
+    }
+
+    return finalStr;
+
+}
+
+
+
 // --- LOADING ---
+
 vector<shared_ptr<CardBase>> UniversalCardLoader::loadAgeCards(const string& filename) {
+
     vector<shared_ptr<CardBase>> cards;
+
     ifstream file(filename);
+
     string line;
+
     getline(file, line); // header
 
+
+
     while (getline(file, line)) {
+
         if (line.empty()) continue;
+
         stringstream ss(line);
+
         string name, id, color, cost, sym, unl, eff, dis;
+
         getline(ss, name, ','); getline(ss, id, ','); getline(ss, color, ',');
+
         getline(ss, cost, ','); getline(ss, sym, ','); getline(ss, unl, ',');
+
         getline(ss, eff, ','); getline(ss, dis, '\n');
 
+
+
         auto card = make_shared<CardBase>(trim(name), (uint16_t)stoi(trim(id)), parseColor(trim(color)), parseCost(trim(cost)), parseSymbol(trim(sym)), parseSymbol(trim(unl)));
-        card->m_effectDescription = trim(eff);
+
+        card->m_effectDescription = translateEffect(trim(eff));
+
         for (auto& ef : parseEffects(trim(eff))) card->addEffect(ef);
+
         cards.push_back(card);
+
     }
+
     return cards;
+
 }
+
+
 
 vector<shared_ptr<CardBase>> UniversalCardLoader::loadGuilds(const string& filename) {
+
     // Gildele au structura: name,id,cost,symbol,unlocks,effects
+
     // Sunt mereu mov (Purple)
+
     vector<shared_ptr<CardBase>> guilds;
+
     ifstream file(filename);
+
     string line; getline(file, line);
 
+
+
     while (getline(file, line)) {
+
         if (line.empty()) continue;
+
         stringstream ss(line);
+
         string name, id, cost, sym, unl, eff;
+
         getline(ss, name, ','); getline(ss, id, ','); getline(ss, cost, ',');
+
         getline(ss, sym, ','); getline(ss, unl, ','); getline(ss, eff, '\n');
 
+
+
         auto guild = make_shared<CardBase>(trim(name), (uint16_t)stoi(trim(id)), Color::Purple, parseCost(trim(cost)), nullopt, nullopt);
+
+        guild->m_effectDescription = translateEffect(trim(eff));
+
         for (auto& ef : parseEffects(trim(eff))) guild->addEffect(ef);
+
         guilds.push_back(guild);
+
     }
+
     return guilds;
+
 }
 
+
+
 vector<shared_ptr<Wonder>> UniversalCardLoader::loadWonders(const string& filename) {
+
     vector<shared_ptr<Wonder>> wonders;
+
     ifstream file(filename);
+
     string line; getline(file, line);
 
+
+
     while (getline(file, line)) {
+
         if (line.empty()) continue;
+
         stringstream ss(line);
+
         string name, id, cost, eff;
-        getline(ss, name, ','); getline(ss, id, ','); getline(ss, cost, ','); getline(ss, eff, '\n');
+
+        getline(ss, name, ','); getline(ss, id, ','); getline(ss, cost, ',');
+
+        getline(ss, eff, '\n');
+
+
 
         auto w = make_shared<Wonder>(trim(name), (uint16_t)stoi(trim(id)), parseCost(trim(cost)));
-        w->setEffectDescription(trim(eff));
+
+        w->setEffectDescription(translateEffect(trim(eff)));
+
         for (auto& ef : parseEffects(trim(eff))) w->addEffect(ef);
+
         wonders.push_back(w);
+
     }
+
     return wonders;
+
 }

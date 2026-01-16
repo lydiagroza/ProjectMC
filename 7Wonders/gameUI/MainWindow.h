@@ -30,7 +30,7 @@ private slots:
     void onWonderClicked();
     void onWonderChosen(int cardId);
     void onSplashFinished(SplashScreen::GameMode mode);
-    void onNamesConfirmed(const QString& p1, const QString& p2);
+    void onNamesConfirmed(const QString& p1, const QString& p2, int difficulty = 1);
     void processAITurn();
 
 private:

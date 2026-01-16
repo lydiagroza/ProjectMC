@@ -269,7 +269,7 @@ font-family: 'Times New Roman';</string>
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>40</height>
+              <height>45</height>
              </size>
             </property>
             <property name="cursor">
@@ -277,13 +277,19 @@ font-family: 'Times New Roman';</string>
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton { 
-  background: #2E7D32; 
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #66BB6A, stop:1 #2E7D32); 
   color: white; 
   border: 2px solid #1B5E20; 
-  border-radius: 8px; 
+  border-radius: 10px; 
   font-weight: bold; 
+  font-family: 'Times New Roman';
+  font-size: 14px;
 }
-QPushButton:hover { background: #388E3C; }
+QPushButton:hover { 
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #81C784, stop:1 #388E3C); 
+  border-color: #A5D6A7;
+}
+QPushButton:pressed { background: #1B5E20; }
 QPushButton:disabled { background: #555; color: #888; border: 2px solid #444; }</string>
             </property>
             <property name="text">
@@ -296,7 +302,7 @@ QPushButton:disabled { background: #555; color: #888; border: 2px solid #444; }<
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>40</height>
+              <height>45</height>
              </size>
             </property>
             <property name="cursor">
@@ -304,13 +310,19 @@ QPushButton:disabled { background: #555; color: #888; border: 2px solid #444; }<
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton { 
-  background: #F57F17; 
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FFA726, stop:1 #EF6C00); 
   color: white; 
   border: 2px solid #E65100; 
-  border-radius: 8px; 
+  border-radius: 10px; 
   font-weight: bold; 
+  font-family: 'Times New Roman';
+  font-size: 14px;
 }
-QPushButton:hover { background: #F9A825; }</string>
+QPushButton:hover { 
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FFB74D, stop:1 #F57C00); 
+  border-color: #FFCC80;
+}
+QPushButton:pressed { background: #E65100; }</string>
             </property>
             <property name="text">
              <string>💰 DISCARD 💰</string>
@@ -322,7 +334,7 @@ QPushButton:hover { background: #F9A825; }</string>
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>40</height>
+              <height>45</height>
              </size>
             </property>
             <property name="cursor">
@@ -330,13 +342,19 @@ QPushButton:hover { background: #F9A825; }</string>
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton { 
-  background: #6A1B9A; 
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #AB47BC, stop:1 #6A1B9A); 
   color: white; 
   border: 2px solid #4A148C; 
-  border-radius: 8px; 
+  border-radius: 10px; 
   font-weight: bold; 
+  font-family: 'Times New Roman';
+  font-size: 14px;
 }
-QPushButton:hover { background: #7B1FA2; }
+QPushButton:hover { 
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #BA68C8, stop:1 #7B1FA2); 
+  border-color: #CE93D8;
+}
+QPushButton:pressed { background: #4A148C; }
 QPushButton:disabled { background: #555; color: #888; border: 2px solid #444; }</string>
             </property>
             <property name="text">

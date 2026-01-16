@@ -2,6 +2,7 @@
 #include "GameSetup.h"
 #include "Player.h"
 #include "Board.h"
+#include "AI_Player.h" // Needed for AI_Difficulty enum
 #include <memory>
 #include <optional>
 #include "gameExport.h"
@@ -61,7 +62,7 @@ private:
 public:
     Game();
     void initialize();
-    void setPlayerTypes(bool p1IsAI, bool p2IsAI);
+    void setPlayerTypes(bool p1IsAI, bool p2IsAI, AI_Difficulty difficulty = AI_Difficulty::MEDIUM);
     int getCurrentAge() const { return m_currentAge; }
     void handlePlayerAction();
     void startNextAge();

@@ -150,50 +150,54 @@ void MainWindow::rebuildRightPanel()
 
     // --- Right Side: Progress ---
     QFrame* progressContainer = new QFrame(splitContainer);
+    // Use Grid Layout for the entire progress panel to align things nicely or just VBox
     QVBoxLayout* progressCol = new QVBoxLayout(progressContainer);
     progressCol->setContentsMargins(0, 0, 0, 0);
-    progressCol->setSpacing(5);
+    progressCol->setSpacing(2);
 
     // Top: Player 2 (Opponent) Progress
-    QLabel* lblP2 = new QLabel("🦆 Opponent Progress", progressContainer);
-    lblP2->setStyleSheet("color: #B71C1C; font-weight: bold; font-size: 12px;");
+    QLabel* lblP2 = new QLabel("🦆 Opponent", progressContainer);
+    lblP2->setStyleSheet("color: #B71C1C; font-weight: bold; font-size: 10px;");
     lblP2->setAlignment(Qt::AlignCenter);
     progressCol->addWidget(lblP2);
 
-    m_p2ProgressLayout = new QVBoxLayout();
+    m_p2ProgressLayout = new QVBoxLayout(); // Will contain the vertical slots
     progressCol->addLayout(m_p2ProgressLayout);
 
     // Separator
     QFrame* line = new QFrame(progressContainer);
     line->setFrameShape(QFrame::HLine);
     line->setFrameShadow(QFrame::Sunken);
-    line->setStyleSheet("color: #8B4513;");
+    line->setStyleSheet("color: #8B4513; margin: 5px;");
     progressCol->addWidget(line);
 
     // Bottom: Player 1 (You) Progress
-    QLabel* lblP1 = new QLabel("🏛️ Your Progress", progressContainer);
-    lblP1->setStyleSheet("color: #1565C0; font-weight: bold; font-size: 12px;");
+    QLabel* lblP1 = new QLabel("🏛️ You", progressContainer);
+    lblP1->setStyleSheet("color: #1565C0; font-weight: bold; font-size: 10px;");
     lblP1->setAlignment(Qt::AlignCenter);
     progressCol->addWidget(lblP1);
 
-    m_p1ProgressLayout = new QVBoxLayout();
+    m_p1ProgressLayout = new QVBoxLayout(); // Will contain the vertical slots
     progressCol->addLayout(m_p1ProgressLayout);
 
     // Info Button (?)
     QPushButton* infoBtn = new QPushButton("?", progressContainer);
-    infoBtn->setFixedSize(30, 30);
+    infoBtn->setFixedSize(24, 24);
     infoBtn->setCursor(Qt::PointingHandCursor);
     infoBtn->setStyleSheet(
-        "QPushButton { background: #FFD700; color: #2C1810; border-radius: 15px; font-weight: bold; border: 2px solid #DAA520; }"
+        "QPushButton { background: #FFD700; color: #2C1810; border-radius: 12px; font-weight: bold; border: 2px solid #DAA520; font-size: 12px; }"
         "QPushButton:hover { background: #FFEA00; }"
     );
     connect(infoBtn, &QPushButton::clicked, this, &MainWindow::onProgressInfoClicked);
     
-    // Add stretch to push button to bottom of progress column if needed, or center it
     progressCol->addStretch();
     progressCol->addWidget(infoBtn, 0, Qt::AlignCenter);
 
+    // Set a fixed width for the progress container to be slim
+    progressContainer->setFixedWidth(60); 
+
     splitLayout->addWidget(progressContainer);
+
 
     // Add Splitter to Main Right Layout
     rLayout->addWidget(splitContainer, 1); // Stretch factor 1
@@ -227,7 +231,7 @@ void MainWindow::onProgressInfoClicked()
     dialog.setMinimumSize(400, 500);
 
     QVBoxLayout* layout = new QVBoxLayout(&dialog);
-    QLabel* title = new QLabel("Toate Jetoanele de Progres", &dialog);
+    QLabel* title = new QLabel("Jetoane de Progres Disponibile", &dialog);
     title->setStyleSheet("font-size: 18px; font-weight: bold; color: #FFD700; margin-bottom: 10px;");
     title->setAlignment(Qt::AlignCenter);
     layout->addWidget(title);
@@ -236,39 +240,48 @@ void MainWindow::onProgressInfoClicked()
     QWidget* container = new QWidget();
     QVBoxLayout* contentLayout = new QVBoxLayout(container);
     
-    QStringList allTokens = { "Agriculture", "Architecture", "Economy", "Law", "Masonry", "Mathematics", "Philosophy", "Strategy", "Theology", "Urbanism" };
+    // Use available tokens from the board instead of hardcoded list
+    const auto& availableTokens = m_game->getBoard().getAvailableProgressTokens();
     
-    for (const auto& name : allTokens) {
-        QPushButton* btn = new QPushButton();
-        btn->setStyleSheet(
-            "QPushButton { background: #4E342E; border: 1px solid #8B4513; border-radius: 5px; margin: 2px; text-align: left; padding: 5px; }"
-            "QPushButton:hover { background: #5D4037; }"
-        );
-        
-        QHBoxLayout* hLayout = new QHBoxLayout(btn);
-        
-        QLabel* icon = new QLabel("🟢");
-        icon->setStyleSheet("font-size: 18px; background: transparent; border: none;");
-        
-        QLabel* text = new QLabel("<b>" + name + "</b>");
-        text->setStyleSheet("font-size: 14px; color: #A5D6A7; background: transparent; border: none;");
-        
-        hLayout->addWidget(icon);
-        hLayout->addWidget(text);
-        hLayout->addStretch();
-        
-        btn->setToolTip(getTokenDescription(name));
+    if (availableTokens.empty()) {
+        QLabel* emptyLbl = new QLabel("Nu mai sunt jetoane disponibile.");
+        emptyLbl->setAlignment(Qt::AlignCenter);
+        contentLayout->addWidget(emptyLbl);
+    } else {
+        for (const auto& tokenPtr : availableTokens) {
+            QString name = QString::fromStdString(tokenPtr->getName());
+            
+            QPushButton* btn = new QPushButton();
+            btn->setStyleSheet(
+                "QPushButton { background: #4E342E; border: 1px solid #8B4513; border-radius: 5px; margin: 2px; text-align: left; padding: 5px; }"
+                "QPushButton:hover { background: #5D4037; }"
+            );
+            
+            QHBoxLayout* hLayout = new QHBoxLayout(btn);
+            
+            QLabel* icon = new QLabel("🟢");
+            icon->setStyleSheet("font-size: 18px; background: transparent; border: none;");
+            
+            QLabel* text = new QLabel("<b>" + name + "</b>");
+            text->setStyleSheet("font-size: 14px; color: #A5D6A7; background: transparent; border: none;");
+            
+            hLayout->addWidget(icon);
+            hLayout->addWidget(text);
+            hLayout->addStretch();
+            
+            btn->setToolTip(getTokenDescription(name));
 
-        connect(btn, &QPushButton::clicked, this, [this, name]() {
-            QMessageBox msgBox;
-            msgBox.setWindowTitle("Detalii Jeton");
-            msgBox.setText("<b>" + name + "</b>");
-            msgBox.setInformativeText(getTokenDescription(name));
-            msgBox.setStyleSheet("QMessageBox { background: #3E2723; color: #F5E6D3; } QLabel { color: #F5E6D3; } QPushButton { color: #2C1810; background: #FFD700; }");
-            msgBox.exec();
-        });
+            connect(btn, &QPushButton::clicked, this, [this, name]() {
+                QMessageBox msgBox;
+                msgBox.setWindowTitle("Detalii Jeton");
+                msgBox.setText("<b>" + name + "</b>");
+                msgBox.setInformativeText(getTokenDescription(name));
+                msgBox.setStyleSheet("QMessageBox { background: #3E2723; color: #F5E6D3; } QLabel { color: #F5E6D3; } QPushButton { color: #2C1810; background: #FFD700; }");
+                msgBox.exec();
+            });
 
-        contentLayout->addWidget(btn);
+            contentLayout->addWidget(btn);
+        }
     }
     
     contentLayout->addStretch();
@@ -763,29 +776,79 @@ void MainWindow::updatePlayerInventories()
     clearLayout(m_p1ProgressLayout);
     clearLayout(m_p2ProgressLayout);
 
-    auto addPlayerTokens = [this](const Player& p, QVBoxLayout* layout) {
-        if (!layout) return;
-        for (const auto& tokenPtr : p.getProgressTokens()) {
-            QLabel* tokenLabel = new QLabel(QString::fromStdString(tokenPtr->getName()), this);
-            tokenLabel->setStyleSheet(
-                "QLabel { "
-                "  background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #A5D6A7, stop:0.8 #4CAF50, stop:1 #1B5E20); "
-                "  color: white; padding: 5px; border: 1px solid #2E7D32; border-radius: 10px; font-weight: bold; font-family: 'Times New Roman'; font-size: 10px; "
-                "}"
-            );
+    // Using Grid Layouts for slots might be better, or just HBox with fixed spacing
+    // Since m_p1ProgressLayout is QVBoxLayout in current rebuildRightPanel logic, 
+    // we should add a horizontal container inside it for the slots.
+    
+    auto addPlayerTokenSlots = [this](const Player& p, QVBoxLayout* parentLayout) {
+        if (!parentLayout) return;
+        
+        // Container for slots
+        QWidget* slotContainer = new QWidget();
+        // Use Grid Layout for compact vertical arrangement (e.g. 2 columns)
+        QGridLayout* slotLayout = new QGridLayout(slotContainer);
+        slotLayout->setContentsMargins(0, 0, 0, 0);
+        slotLayout->setSpacing(5);
+        
+        const auto& ownedTokens = p.getProgressTokens();
+        
+        // Helper for symbols
+        auto getTokenSymbol = [](const QString& name) -> QString {
+            if (name == "Agriculture") return "🌾";
+            if (name == "Architecture") return "🏗️";
+            if (name == "Economy") return "💰";
+            if (name == "Law") return "⚖️";
+            if (name == "Masonry") return "🧱";
+            if (name == "Mathematics") return "🔢";
+            if (name == "Philosophy") return "📜";
+            if (name == "Strategy") return "⚔️";
+            if (name == "Theology") return "🛐";
+            if (name == "Urbanism") return "🏙️";
+            return "🟢";
+        };
+
+        // Render slots (Total 5 slots usually)
+        for (int i = 0; i < 5; ++i) {
+            QLabel* tokenLabel = new QLabel(this);
+            tokenLabel->setFixedSize(36, 36); 
             tokenLabel->setAlignment(Qt::AlignCenter);
-            tokenLabel->setWordWrap(true);
-            tokenLabel->setFixedSize(100, 30);
             
-            // Tooltip in Romanian
-            tokenLabel->setToolTip(getTokenDescription(QString::fromStdString(tokenPtr->getName())));
+            if (i < (int)ownedTokens.size()) {
+                // Active Token: Green Coin with Symbol
+                QString name = QString::fromStdString(ownedTokens[i]->getName());
+                tokenLabel->setText(getTokenSymbol(name));
+                tokenLabel->setStyleSheet(
+                    "QLabel { "
+                    "  background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #A5D6A7, stop:1 #1B5E20); "
+                    "  color: #FFFFFF; "
+                    "  border: 2px solid #2E7D32; "
+                    "  border-radius: 18px; " 
+                    "  font-size: 16px; "
+                    "}"
+                );
+                tokenLabel->setToolTip(name + ": " + getTokenDescription(name));
+            } else {
+                // Empty Slot: Dashed Brown Circle
+                tokenLabel->setStyleSheet(
+                    "QLabel { "
+                    "  background: transparent; "
+                    "  border: 2px dashed #5D4037; "
+                    "  border-radius: 18px; "
+                    "}"
+                );
+            }
             
-            layout->addWidget(tokenLabel, 0, Qt::AlignHCenter);
+            // Arrange in 2 columns to save vertical space too, or just 1 column if "vertically" means strictly one line.
+            // "place the brown circles vertically" -> likely means a vertical strip.
+            // Let's do 1 column to be safe and strictly vertical.
+            slotLayout->addWidget(tokenLabel, i, 0, Qt::AlignCenter); 
         }
+        
+        parentLayout->addWidget(slotContainer, 0, Qt::AlignHCenter);
     };
 
-    addPlayerTokens(p1, m_p1ProgressLayout);
-    addPlayerTokens(p2, m_p2ProgressLayout);
+    addPlayerTokenSlots(p1, m_p1ProgressLayout);
+    addPlayerTokenSlots(p2, m_p2ProgressLayout);
 }
 
 void MainWindow::updateTurnIndicator()

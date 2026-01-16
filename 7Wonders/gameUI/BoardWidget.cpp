@@ -28,6 +28,14 @@ void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, 
     // 1. Instanțiem widget-ul
     CardWidget* newCard = new CardWidget(id, this);
     newCard->setupCard(name, color, isFaceUp, cost, effect);
+    
+    // Apply Scale
+    int scaledWidth = static_cast<int>(BASE_CARD_WIDTH * m_scaleFactor);
+    int scaledHeight = static_cast<int>(BASE_CARD_HEIGHT * m_scaleFactor);
+    int scaledSpacing = static_cast<int>(BASE_H_SPACING * m_scaleFactor);
+    int scaledOverlap = static_cast<int>(BASE_V_OVERLAP * m_scaleFactor);
+
+    newCard->setFixedSize(scaledWidth, scaledHeight);
 
     // 2. Conectăm semnalul
     connect(newCard, &CardWidget::cardClicked, this, &BoardWidget::handleInternalClick);
@@ -35,17 +43,17 @@ void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, 
     // 3. Matematică pentru poziționare
     // Centrul widget-ului părinte
     int centerX = this->width() / 2;
-    int startY = 30;
+    int startY = 30 * m_scaleFactor;
 
     // Calculăm lățimea totală a rândului curent pentru centrare
-    double rowTotalWidth = totalCardsInRow * CARD_WIDTH + (totalCardsInRow - 1) * H_SPACING;
+    double rowTotalWidth = totalCardsInRow * scaledWidth + (totalCardsInRow - 1) * scaledSpacing;
 
     // Punctul de start X (stânga rândului)
     double startX = centerX - (rowTotalWidth / 2.0);
 
     // Coordonatele finale
-    int posX = startX + col * (CARD_WIDTH + H_SPACING);
-    int posY = startY + row * (CARD_HEIGHT - V_OVERLAP);
+    int posX = startX + col * (scaledWidth + scaledSpacing);
+    int posY = startY + row * (scaledHeight - scaledOverlap);
 
     newCard->move(posX, posY);
     newCard->show();

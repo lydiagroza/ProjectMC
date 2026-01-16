@@ -49,4 +49,16 @@ private:
     void startGame();
     void updateGameState();
     void startWonderDraft();
+
+    // New Right Panel Layouts
+    QVBoxLayout* m_p1ProgressLayout = nullptr;
+    QVBoxLayout* m_p2ProgressLayout = nullptr;
+    
+    // Helper to get token description
+    QString getTokenDescription(const QString& tokenName);
+    
+    // Slot for Info Button
+    void onProgressInfoClicked();
+
+    void rebuildRightPanel();
 };

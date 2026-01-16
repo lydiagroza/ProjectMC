@@ -47,6 +47,29 @@ void Board::removeAvailableProgressToken(std::shared_ptr<ProgressToken> token)
 	}
 }
 
+// Removed Progress Tokens
+void Board::setRemovedProgressTokens(const std::vector<std::shared_ptr<ProgressToken>>& tokens)
+{
+    m_removedProgressTokens = tokens; // Assuming m_removedProgressTokens is defined in header now
+}
+
+const std::vector<std::shared_ptr<ProgressToken>>& Board::getRemovedProgressTokens() const
+{
+    return m_removedProgressTokens;
+}
+
+void Board::removeRemovedProgressToken(std::shared_ptr<ProgressToken> token)
+{
+    for (auto it = m_removedProgressTokens.begin(); it != m_removedProgressTokens.end(); ++it)
+    {
+        if ((*it)->getId() == token->getId())
+        {
+            m_removedProgressTokens.erase(it);
+            return;
+        }
+    }
+}
+
 
 //tokenii aia verzi
 void Board::printTokens(std::ostream& os) const

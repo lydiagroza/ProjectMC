@@ -15,6 +15,7 @@ private:
 	int Age;
 	CardsPyramid m_pyramid;
 	std::vector<std::shared_ptr<ProgressToken>> m_availableProgressTokens;
+    std::vector<std::shared_ptr<ProgressToken>> m_removedProgressTokens;
 	std::vector<std::shared_ptr<CardBase>> m_discardPile;
 	MilitaryTrack m_militaryTrack;
 
@@ -40,6 +41,12 @@ public:
 	std::vector<std::shared_ptr<ProgressToken>> getAvailableProgressTokens() const;
 	void removeAvailableProgressToken(std::shared_ptr<ProgressToken> token);
 	void printTokens(std::ostream& fout = std::cout) const;
+	
+    // Removed/Set-aside tokens (for Great Library)
+    void setRemovedProgressTokens(const std::vector<std::shared_ptr<ProgressToken>>& tokens);
+    const std::vector<std::shared_ptr<ProgressToken>>& getRemovedProgressTokens() const;
+    void removeRemovedProgressToken(std::shared_ptr<ProgressToken> token);
+
 	void printMilitaryTrack(std::ostream& fout = std::cout) const;
 
 	//functii discard pile

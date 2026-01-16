@@ -102,7 +102,10 @@ void MilitaryTrackWidget::createTrack()
         }
 
         // Add markings for Token Loss (2 and 5)
-        if (abs(position) == 2 || abs(position) == 5) {
+        // Symmetric thresholds: Between 2 and 3, and between 5 and 6.
+        if (position == 2 || position == 5) {
+            baseStyle += "border-top: 2px dashed #8B0000;";
+        } else if (position == -2 || position == -5) {
             baseStyle += "border-bottom: 2px dashed #8B0000;";
         }
 

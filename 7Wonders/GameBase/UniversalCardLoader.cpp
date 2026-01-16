@@ -217,7 +217,10 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
 
 {"papyrus/glass", [](Player& p, Board&, Player&) { p.addResource(Resource::Papyrus, 1); p.addResource(Resource::Glass, 1); }},
 {"chooseProgressToken", [](Player&, Board&, Player&) {
-    Game::currentGame->handleProgressTokenChoice();
+    Game::currentGame->handleGreatLibraryChoice();
+}},
+{"chooseProgressTokenFromBox", [](Player&, Board&, Player&) {
+    Game::currentGame->handleGreatLibraryChoice();
 }},
 {"add_coins6", [](Player& p, Board&, Player&) { p.addResource(Coin,6); }},
 {"discardOpponentBrownCard", [](Player&, Board&, Player& o) {
@@ -370,6 +373,8 @@ string UniversalCardLoader::translateEffect(const string& raw) {
         else if (token == "wood/stone/clay") trans = "🌲🧱🪨 +1 Each";
 
         else if (token == "chooseProgressToken") trans = "🧪 Pick Progress Token";
+        
+        else if (token == "chooseProgressTokenFromBox") trans = "📦 Pick Progress (Box)";
 
         else if (token == "buildDiscardedCard") trans = "♻️ Build from Discard";
 

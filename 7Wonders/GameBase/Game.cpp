@@ -64,6 +64,44 @@ bool Game::isWaitingForProgressTokenChoice() const
     return m_isWaitingForProgressTokenChoice;
 }
 
+void Game::handleGreatLibraryChoice()
+{
+    if (m_board.getRemovedProgressTokens().empty()) {
+        std::cout << "[INFO] No set-aside tokens for Great Library.\n";
+        return;
+    }
+    m_isWaitingForGreatLibraryChoice = true;
+}
+
+bool Game::isWaitingForGreatLibraryChoice() const
+{
+    return m_isWaitingForGreatLibraryChoice;
+}
+
+void Game::resolveGreatLibraryChoice(int tokenId)
+{
+    if (!m_isWaitingForGreatLibraryChoice) return;
+
+    auto removed = m_board.getRemovedProgressTokens();
+    std::shared_ptr<ProgressToken> chosen = nullptr;
+    for (auto t : removed) {
+        if (t->getId() == tokenId) {
+            chosen = t;
+            break;
+        }
+    }
+
+    if (chosen) {
+        m_currentPlayer->addProgressToken(chosen);
+        for (const auto& effect : chosen->getEffects()) {
+            effect(*m_currentPlayer, *m_opponent);
+        }
+        m_board.removeRemovedProgressToken(chosen);
+    }
+
+    m_isWaitingForGreatLibraryChoice = false;
+}
+
 void Game::setPlayerTypes(bool p1IsAI, bool p2IsAI, AI_Difficulty difficulty)
 {
     std::string n1 = m_player1->getName();

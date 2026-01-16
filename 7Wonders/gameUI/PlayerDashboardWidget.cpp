@@ -137,8 +137,8 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
     int wIdx = 0;
     for (const auto& wonderPtr : wonders) {
         CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), ui->wondersContainer);
-        // Smaller size for compact grid
-        wonderWidget->setFixedSize(140, 70); 
+        // Larger size as requested
+        wonderWidget->setFixedSize(180, 90); 
 
         QString wName = QString::fromStdString(wonderPtr->getName());
         QString color = wonderPtr->getIsBuilt() ? "#DAA520" : "#6D4C41";
@@ -157,19 +157,56 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
         wIdx++;
     }
     
-    // Add inventory cards after (or separately?)
-    // Inventory cards (Blue/Green/etc) might clutter the wonder grid. 
-    // They usually go to the side. 
-    // We'll add them to the main layout after the grid container.
+    // Add inventory cards
+    // We want them to look like real cards, not blank.
+    // We will use a separate horizontal layout or continue flow?
+    // User wants "move the whole grid more to the left edge of the screen".
+    // This implies the grid is maybe centered or has padding. 
+    // The grid is inside 'ui->wondersLayout' which is inside a scroll area.
+    // We should make sure alignment is Left.
+    ui->wondersLayout->setAlignment(Qt::AlignLeft);
     
+    // Create a container for inventory cards if needed, or just add them to the main layout
+    // Since wonders are in a grid, let's put inventory in a HBox or Flow after the grid.
+    // But 'ui->wondersLayout' is an HBox. We added 'gridContainer' to it.
+    // We can add another container for inventory.
+    
+    QWidget* invContainer = new QWidget();
+    QHBoxLayout* invLayout = new QHBoxLayout(invContainer);
+    invLayout->setContentsMargins(10, 0, 0, 0); // Spacing from wonders
+    invLayout->setSpacing(5);
+    invLayout->setAlignment(Qt::AlignLeft);
+
     for (const auto& [color, cards] : inventory) {
         for (const auto& card : cards) {
             CardWidget* cardWidget = new CardWidget(card->getId(), this);
-            cardWidget->setFixedSize(80, 110); // Smaller inventory cards
-            cardWidget->setupCard(QString::fromStdString(card->getName()), "", true, "", "");
-            ui->wondersLayout->addWidget(cardWidget);
+            cardWidget->setFixedSize(80, 110); // Keep inventory cards small but visible
+            
+            QString cName = QString::fromStdString(card->getName());
+            QString cColorHex = ""; // We need to convert Color enum to hex string.
+            // Helper locally or access global helper? 
+            // We can replicate simple switch or pass empty and let CardWidget handle it if it knew enum.
+            // CardWidget::setupCard takes a string color.
+            switch(color) {
+                case Color::Blue:   cColorHex = "#1565C0"; break;
+                case Color::Red:    cColorHex = "#B71C1C"; break;
+                case Color::Green:  cColorHex = "#2E7D32"; break;
+                case Color::Yellow: cColorHex = "#F57F17"; break;
+                case Color::Brown:  cColorHex = "#5D4037"; break;
+                case Color::Gray:   cColorHex = "#616161"; break;
+                case Color::Purple: cColorHex = "#6A1B9A"; break;
+                default: cColorHex = "#8B7355"; break;
+            }
+            
+            // Pass cost and effect to keep the look!
+            QString cCost = formatCost(card->getCost());
+            QString cEffect = QString::fromStdString(card->getEffectDescription());
+
+            cardWidget->setupCard(cName, cColorHex, true, cCost, cEffect);
+            invLayout->addWidget(cardWidget);
         }
     }
-
+    
+    ui->wondersLayout->addWidget(invContainer);
     ui->wondersLayout->addStretch();
 }

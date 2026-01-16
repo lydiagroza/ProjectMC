@@ -63,10 +63,18 @@ void GameSetup::prepareTokens()
     std::shuffle(m_allTokens.begin(), m_allTokens.end(), e);
 
     std::vector<std::shared_ptr<ProgressToken>> selectedTokens;
-    for (size_t i = 0; i < 5 && i < m_allTokens.size(); ++i)
-        selectedTokens.push_back(m_allTokens[i]);
+    std::vector<std::shared_ptr<ProgressToken>> removedTokens;
+
+    for (size_t i = 0; i < m_allTokens.size(); ++i) {
+        if (i < 5) {
+            selectedTokens.push_back(m_allTokens[i]);
+        } else if (i < 8) { // Store next 3 as removed (Great Library target)
+            removedTokens.push_back(m_allTokens[i]);
+        }
+    }
 
     m_board.setAvailableProgressTokens(selectedTokens);
+    m_board.setRemovedProgressTokens(removedTokens);
 }
 
 void GameSetup::prepareDecks()

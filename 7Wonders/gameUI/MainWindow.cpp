@@ -228,72 +228,133 @@ void MainWindow::onProgressInfoClicked()
     QDialog dialog(this);
     dialog.setWindowTitle("Jetoane de Progres");
     dialog.setStyleSheet("background: #3E2723; color: #F5E6D3; font-family: 'Times New Roman';");
-    dialog.setMinimumSize(400, 500);
+    dialog.setMinimumSize(500, 600);
 
-    QVBoxLayout* layout = new QVBoxLayout(&dialog);
+    QVBoxLayout* mainLayout = new QVBoxLayout(&dialog);
     QLabel* title = new QLabel("Jetoane de Progres Disponibile", &dialog);
-    title->setStyleSheet("font-size: 18px; font-weight: bold; color: #FFD700; margin-bottom: 10px;");
+    title->setStyleSheet("font-size: 22px; font-weight: bold; color: #FFD700; margin-bottom: 15px;");
     title->setAlignment(Qt::AlignCenter);
-    layout->addWidget(title);
+    mainLayout->addWidget(title);
 
     QScrollArea* scroll = new QScrollArea(&dialog);
-    QWidget* container = new QWidget();
-    QVBoxLayout* contentLayout = new QVBoxLayout(container);
+    scroll->setWidgetResizable(true);
+    scroll->setStyleSheet("background: transparent; border: none;"); // Clean scroll area
     
-    // Use available tokens from the board instead of hardcoded list
+    QWidget* container = new QWidget();
+    container->setStyleSheet("background: transparent;");
+    QGridLayout* gridLayout = new QGridLayout(container);
+    gridLayout->setSpacing(20);
+    gridLayout->setContentsMargins(20, 20, 20, 20);
+
+    // Use available tokens from the board
     const auto& availableTokens = m_game->getBoard().getAvailableProgressTokens();
     
+    // Helper to get symbol (duplicated for self-contained logic, or could be a method)
+    auto getTokenSymbol = [](const QString& name) -> QString {
+        if (name == "Agriculture") return "🌾";
+        if (name == "Architecture") return "🏗️";
+        if (name == "Economy") return "💰";
+        if (name == "Law") return "⚖️";
+        if (name == "Masonry") return "🧱";
+        if (name == "Mathematics") return "🔢";
+        if (name == "Philosophy") return "📜";
+        if (name == "Strategy") return "⚔️";
+        if (name == "Theology") return "🛐";
+        if (name == "Urbanism") return "🏙️";
+        return "🟢";
+    };
+
     if (availableTokens.empty()) {
         QLabel* emptyLbl = new QLabel("Nu mai sunt jetoane disponibile.");
+        emptyLbl->setStyleSheet("font-size: 16px; color: #BBB;");
         emptyLbl->setAlignment(Qt::AlignCenter);
-        contentLayout->addWidget(emptyLbl);
+        gridLayout->addWidget(emptyLbl, 0, 0);
     } else {
+        int row = 0;
+        int col = 0;
+        int maxCols = 2; // 2 columns for large icons
+
         for (const auto& tokenPtr : availableTokens) {
             QString name = QString::fromStdString(tokenPtr->getName());
             
-            QPushButton* btn = new QPushButton();
-            btn->setStyleSheet(
-                "QPushButton { background: #4E342E; border: 1px solid #8B4513; border-radius: 5px; margin: 2px; text-align: left; padding: 5px; }"
-                "QPushButton:hover { background: #5D4037; }"
+            // Create a clickable widget for each token
+            QPushButton* tokenBtn = new QPushButton();
+            tokenBtn->setFixedSize(140, 160); // Large card-like button
+            tokenBtn->setCursor(Qt::PointingHandCursor);
+            tokenBtn->setStyleSheet(
+                "QPushButton { "
+                "  background: #4E342E; "
+                "  border: 2px solid #8B4513; "
+                "  border-radius: 15px; "
+                "}"
+                "QPushButton:hover { "
+                "  background: #5D4037; "
+                "  border-color: #FFD700; "
+                "}"
             );
-            
-            QHBoxLayout* hLayout = new QHBoxLayout(btn);
-            
-            QLabel* icon = new QLabel("🟢");
-            icon->setStyleSheet("font-size: 18px; background: transparent; border: none;");
-            
-            QLabel* text = new QLabel("<b>" + name + "</b>");
-            text->setStyleSheet("font-size: 14px; color: #A5D6A7; background: transparent; border: none;");
-            
-            hLayout->addWidget(icon);
-            hLayout->addWidget(text);
-            hLayout->addStretch();
-            
-            btn->setToolTip(getTokenDescription(name));
 
-            connect(btn, &QPushButton::clicked, this, [this, name]() {
+            QVBoxLayout* btnLayout = new QVBoxLayout(tokenBtn);
+            btnLayout->setContentsMargins(10, 10, 10, 10);
+            
+            // 1. Large Green Coin
+            QLabel* coin = new QLabel(getTokenSymbol(name));
+            coin->setFixedSize(80, 80);
+            coin->setAlignment(Qt::AlignCenter);
+            coin->setStyleSheet(
+                "QLabel { "
+                "  background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #A5D6A7, stop:1 #1B5E20); "
+                "  color: #FFFFFF; "
+                "  border: 4px solid #2E7D32; "
+                "  border-radius: 40px; " // Circle
+                "  font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif; "
+                "  font-size: 40px; "     // Large Symbol
+                "  background-color: transparent;" 
+                "}"
+            );
+
+            // 2. Name Label
+            QLabel* nameLbl = new QLabel(name);
+            nameLbl->setWordWrap(true);
+            nameLbl->setAlignment(Qt::AlignCenter);
+            nameLbl->setStyleSheet("color: #FFD700; font-weight: bold; font-size: 14px; background: transparent; border: none;");
+
+            btnLayout->addWidget(coin, 0, Qt::AlignCenter);
+            btnLayout->addWidget(nameLbl, 0, Qt::AlignCenter);
+
+            // Connect click
+            connect(tokenBtn, &QPushButton::clicked, this, [this, name]() {
                 QMessageBox msgBox;
                 msgBox.setWindowTitle("Detalii Jeton");
-                msgBox.setText("<b>" + name + "</b>");
-                msgBox.setInformativeText(getTokenDescription(name));
-                msgBox.setStyleSheet("QMessageBox { background: #3E2723; color: #F5E6D3; } QLabel { color: #F5E6D3; } QPushButton { color: #2C1810; background: #FFD700; }");
+                msgBox.setText("<h2 style='color:#FFD700'>" + name + "</h2>");
+                msgBox.setInformativeText("<span style='font-size:14px; color:#F5E6D3'>" + getTokenDescription(name) + "</span>");
+                msgBox.setStyleSheet("QMessageBox { background: #3E2723; } QLabel { color: #F5E6D3; } QPushButton { color: #2C1810; background: #FFD700; }");
                 msgBox.exec();
             });
 
-            contentLayout->addWidget(btn);
+            gridLayout->addWidget(tokenBtn, row, col);
+
+            col++;
+            if (col >= maxCols) {
+                col = 0;
+                row++;
+            }
         }
     }
     
-    contentLayout->addStretch();
-    container->setLayout(contentLayout);
+    container->setLayout(gridLayout);
     scroll->setWidget(container);
-    scroll->setWidgetResizable(true);
-    layout->addWidget(scroll);
+    mainLayout->addWidget(scroll);
 
     QPushButton* closeBtn = new QPushButton("Închide", &dialog);
-    closeBtn->setStyleSheet("background: #8B0000; color: white; padding: 5px; border-radius: 5px; font-weight: bold;");
+    closeBtn->setCursor(Qt::PointingHandCursor);
+    closeBtn->setStyleSheet(
+        "QPushButton { "
+        "  background: #8B0000; color: white; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 16px; border: 2px solid #B71C1C; "
+        "}"
+        "QPushButton:hover { background: #B71C1C; }"
+    );
     connect(closeBtn, &QPushButton::clicked, &dialog, &QDialog::accept);
-    layout->addWidget(closeBtn);
+    mainLayout->addWidget(closeBtn);
 
     dialog.exec();
 }
@@ -392,6 +453,7 @@ void MainWindow::updateGameState()
     // Check for Progress Token Choice (Pair of Science symbols)
     if (m_game->isWaitingForProgressTokenChoice()) {
         auto available = m_game->getBoard().getAvailableProgressTokens();
+        // ... (existing logic)
         if (!available.empty()) {
             AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
             if (ai) {
@@ -425,8 +487,56 @@ void MainWindow::updateGameState()
                 
                 if (dialog.exec() == QDialog::Accepted && chosenId != -1) {
                     m_game->resolveProgressTokenChoice(chosenId);
+                    updatePlayerInventories(); // Refresh UI to show new token
                 }
             }
+        }
+    }
+
+    // Check for Great Library Choice (Token from Box)
+    if (m_game->isWaitingForGreatLibraryChoice()) {
+        auto removed = m_game->getBoard().getRemovedProgressTokens();
+        if (!removed.empty()) {
+            // Check AI
+            AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
+            if (ai) {
+                auto chosen = ai->chooseProgressToken(removed); // Reuse logic
+                if (chosen) {
+                    m_game->resolveGreatLibraryChoice(chosen->getId());
+                    updatePlayerInventories(); // Refresh UI
+                    QTimer::singleShot(500, this, &MainWindow::updateGameState);
+                    return;
+                }
+            } else {
+                QDialog dialog(this);
+                dialog.setWindowTitle("Marea Bibliotecă");
+                dialog.setStyleSheet("background: #3E2723; color: #F5E6D3; font-family: 'Times New Roman';");
+                QVBoxLayout* layout = new QVBoxLayout(&dialog);
+                
+                QLabel* lbl = new QLabel("Marea Bibliotecă: Alege un jeton din cutie:", &dialog);
+                lbl->setStyleSheet("font-size: 16px; font-weight: bold; color: #FFD700;");
+                layout->addWidget(lbl);
+
+                int chosenId = -1;
+                for (auto t : removed) {
+                    QPushButton* btn = new QPushButton(QString::fromStdString(t->getName()), &dialog);
+                    btn->setStyleSheet("background: #4E342E; color: #A5D6A7; padding: 10px; border: 1px solid #8B4513; font-weight: bold;");
+                    btn->setToolTip(getTokenDescription(QString::fromStdString(t->getName())));
+                    connect(btn, &QPushButton::clicked, [&dialog, &chosenId, t]() {
+                        chosenId = t->getId();
+                        dialog.accept();
+                    });
+                    layout->addWidget(btn);
+                }
+                
+                if (dialog.exec() == QDialog::Accepted && chosenId != -1) {
+                    m_game->resolveGreatLibraryChoice(chosenId);
+                    updatePlayerInventories(); // Refresh UI
+                }
+            }
+        } else {
+             // If empty, force resolve to clear flag
+             m_game->resolveGreatLibraryChoice(-1);
         }
     }
     
@@ -785,6 +895,9 @@ void MainWindow::updatePlayerInventories()
         
         // Container for slots
         QWidget* slotContainer = new QWidget();
+        slotContainer->setFixedWidth(50); // Force width
+        slotContainer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
+
         // Use Grid Layout for compact vertical arrangement (e.g. 2 columns)
         QGridLayout* slotLayout = new QGridLayout(slotContainer);
         slotLayout->setContentsMargins(0, 0, 0, 0);
@@ -792,7 +905,7 @@ void MainWindow::updatePlayerInventories()
         
         const auto& ownedTokens = p.getProgressTokens();
         
-        // Helper for symbols
+        // Helper for symbols (Ensure consistent with popup)
         auto getTokenSymbol = [](const QString& name) -> QString {
             if (name == "Agriculture") return "🌾";
             if (name == "Architecture") return "🏗️";
@@ -820,10 +933,11 @@ void MainWindow::updatePlayerInventories()
                 tokenLabel->setStyleSheet(
                     "QLabel { "
                     "  background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #A5D6A7, stop:1 #1B5E20); "
-                    "  color: #FFFFFF; "
+                    "  color: white; "
                     "  border: 2px solid #2E7D32; "
                     "  border-radius: 18px; " 
-                    "  font-size: 16px; "
+                    "  font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif; "
+                    "  font-size: 20px; font-weight: bold;"
                     "}"
                 );
                 tokenLabel->setToolTip(name + ": " + getTokenDescription(name));
@@ -838,12 +952,11 @@ void MainWindow::updatePlayerInventories()
                 );
             }
             
-            // Arrange in 2 columns to save vertical space too, or just 1 column if "vertically" means strictly one line.
-            // "place the brown circles vertically" -> likely means a vertical strip.
-            // Let's do 1 column to be safe and strictly vertical.
+            // Arrange in 1 column (vertical)
             slotLayout->addWidget(tokenLabel, i, 0, Qt::AlignCenter); 
         }
         
+        slotContainer->setLayout(slotLayout);
         parentLayout->addWidget(slotContainer, 0, Qt::AlignHCenter);
     };
 

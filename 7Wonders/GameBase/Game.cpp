@@ -221,8 +221,8 @@ int Game::calculatePlayerVP(const Player& player) const {
     }
 
     // 7. Guilds
-    const Player& opponent = (player.getName() == m_player1->getName()) ? *m_player2 : *m_player1;
-    totalVP += player.getVPFromGuilds(opponent);
+    // const Player& opponent = (player.getName() == m_player1->getName()) ? *m_player2 : *m_player1;
+    // totalVP += player.getVPFromGuilds(opponent);
 
     return totalVP;
 }

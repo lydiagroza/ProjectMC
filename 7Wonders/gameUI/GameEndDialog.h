@@ -18,5 +18,5 @@ public:
 private:
     Ui::GameEndDialog *ui;
     void setupStats(Game* game);
-    QString formatStats(const Player& p, const Player& opp);
+    QString formatStats(const Player& p, const Player& opp, int totalVP);
 };

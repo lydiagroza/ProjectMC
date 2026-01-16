@@ -27,8 +27,11 @@ void GameEndDialog::setupStats(Game* game)
     ui->p1NameLabel->setText(QString::fromStdString(p1.getName()));
     ui->p2NameLabel->setText(QString::fromStdString(p2.getName()));
 
-    ui->p1StatsLabel->setText(formatStats(p1, p2));
-    ui->p2StatsLabel->setText(formatStats(p2, p1));
+    int vp1 = game->calculatePlayerVP(p1);
+    int vp2 = game->calculatePlayerVP(p2);
+
+    ui->p1StatsLabel->setText(formatStats(p1, p2, vp1));
+    ui->p2StatsLabel->setText(formatStats(p2, p1, vp2));
 
     std::optional<Player> winner = game->determinateWinner();
     if (winner) {
@@ -38,7 +41,7 @@ void GameEndDialog::setupStats(Game* game)
     }
 }
 
-QString GameEndDialog::formatStats(const Player& p, const Player& opp)
+QString GameEndDialog::formatStats(const Player& p, const Player& opp, int totalVP)
 {
     auto getCount = [&](Color c) {
         auto inv = p.getInventory();
@@ -46,6 +49,7 @@ QString GameEndDialog::formatStats(const Player& p, const Player& opp)
     };
 
     QString stats;
+    stats += QString("Total VP: %1\n\n").arg(totalVP);
     stats += QString("💰 Coins: %1\n").arg(p.getCoins());
     stats += QString("🟦 Blue Cards: %1\n").arg(getCount(Color::Blue));
     stats += QString("🟥 Red Cards: %1\n").arg(getCount(Color::Red));
@@ -53,7 +57,7 @@ QString GameEndDialog::formatStats(const Player& p, const Player& opp)
     stats += QString("🟨 Yellow Cards: %1\n").arg(getCount(Color::Yellow));
     stats += QString("🟫 Brown Cards: %1\n").arg(getCount(Color::Brown));
     stats += QString("⬜ Gray Cards: %1\n").arg(getCount(Color::Gray));
-    stats += QString("🟪 Guilds VP: %1").arg(p.getVPFromGuilds(opp));
+    // stats += QString("🟪 Guilds VP: %1").arg(p.getVPFromGuilds(opp));
 
     return stats;
 }

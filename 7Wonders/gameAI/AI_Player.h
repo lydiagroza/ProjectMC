@@ -190,10 +190,6 @@ public:
     std::shared_ptr<Wonder> chooseWonderFromDraft(
         const std::vector<std::shared_ptr<Wonder>>& availableWonders);
 
-    // Choose progress token
-    std::shared_ptr<ProgressToken> chooseProgressToken(
-        const std::vector<std::shared_ptr<ProgressToken>>& availableTokens);
-
     // Notificare sfârșitul jocului (pentru training)
     void onGameEnd(bool won, int finalScore);
 

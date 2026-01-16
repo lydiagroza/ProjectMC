@@ -747,36 +747,6 @@ std::shared_ptr<Wonder> AI_Player::chooseWonderFromDraft(
     return bestWonder;
 }
 
-std::shared_ptr<ProgressToken> AI_Player::chooseProgressToken(
-    const std::vector<std::shared_ptr<ProgressToken>>& availableTokens) {
-    if (availableTokens.empty()) return nullptr;
-
-    if (m_difficulty == AI_Difficulty::EASY) {
-        std::uniform_int_distribution<size_t> dist(0, availableTokens.size() - 1);
-        return availableTokens[dist(m_rng)];
-    }
-
-    // Heuristic: Some tokens are generally better
-    std::map<std::string, int> tokenValues = {
-        {"Strategy", 100}, {"Philosophy", 90}, {"Theology", 85}, 
-        {"Agriculture", 80}, {"Architecture", 75}, {"Economy", 70},
-        {"Mathematics", 65}, {"Law", 60}, {"Masonry", 55}, {"Urbanism", 50}
-    };
-
-    std::shared_ptr<ProgressToken> bestToken = availableTokens[0];
-    int bestValue = -1;
-
-    for (const auto& token : availableTokens) {
-        int val = tokenValues.count(token->getName()) ? tokenValues.at(token->getName()) : 0;
-        if (val > bestValue) {
-            bestValue = val;
-            bestToken = token;
-        }
-    }
-
-    return bestToken;
-}
-
 void AI_Player::onGameEnd(bool won, int finalScore) {
     if (m_learningAgent && m_isTraining) {
         m_learningAgent->endEpisode(won, finalScore);

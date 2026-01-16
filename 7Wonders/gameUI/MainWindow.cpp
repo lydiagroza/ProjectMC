@@ -375,47 +375,6 @@ void MainWindow::updateGameState()
         ui->rightZone->setVisible(false);
         return; 
     }
-
-    // Check for Progress Token Choice (Pair of Science symbols)
-    if (m_game->isWaitingForProgressTokenChoice()) {
-        auto available = m_game->getBoard().getAvailableProgressTokens();
-        if (!available.empty()) {
-            AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
-            if (ai) {
-                auto chosen = ai->chooseProgressToken(available);
-                if (chosen) {
-                    m_game->resolveProgressTokenChoice(chosen->getId());
-                    QTimer::singleShot(500, this, &MainWindow::updateGameState);
-                    return;
-                }
-            } else {
-                QDialog dialog(this);
-                dialog.setWindowTitle("Alege un Jeton de Progres");
-                dialog.setStyleSheet("background: #3E2723; color: #F5E6D3; font-family: 'Times New Roman';");
-                QVBoxLayout* layout = new QVBoxLayout(&dialog);
-                
-                QLabel* lbl = new QLabel("Ai obținut o pereche! Alege un jeton:", &dialog);
-                lbl->setStyleSheet("font-size: 16px; font-weight: bold; color: #FFD700;");
-                layout->addWidget(lbl);
-
-                int chosenId = -1;
-                for (auto t : available) {
-                    QPushButton* btn = new QPushButton(QString::fromStdString(t->getName()), &dialog);
-                    btn->setStyleSheet("background: #4E342E; color: #A5D6A7; padding: 10px; border: 1px solid #8B4513; font-weight: bold;");
-                    btn->setToolTip(getTokenDescription(QString::fromStdString(t->getName())));
-                    connect(btn, &QPushButton::clicked, [&dialog, &chosenId, t]() {
-                        chosenId = t->getId();
-                        dialog.accept();
-                    });
-                    layout->addWidget(btn);
-                }
-                
-                if (dialog.exec() == QDialog::Accepted && chosenId != -1) {
-                    m_game->resolveProgressTokenChoice(chosenId);
-                }
-            }
-        }
-    }
     
     // Check for end of age
     if (m_game->isEndOfAge()) {

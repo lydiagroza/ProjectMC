@@ -28,52 +28,40 @@ Game::Game()
 
 void Game::handleProgressTokenChoice()
 {
-    // 1. Get available tokens from the board
-    std::vector<std::shared_ptr<ProgressToken>> availableTokens = m_board.getAvailableProgressTokens();
-
-    if (availableTokens.empty()) {
-        std::cout << "\n[INFO] Ai obtinut o pereche de simboluri stiintifice, dar nu mai sunt jetoane de progres disponibile.\n";
+    // Check if there are tokens to choose from
+    if (m_board.getAvailableProgressTokens().empty()) {
         return;
     }
+    m_isWaitingForProgressTokenChoice = true;
+}
 
-    // 2. Display choices to the player
-    std::cout << "\n****************************************\n";
-    std::cout << ">>> " << m_currentPlayer->getName() << ", ai o pereche de simboluri stiintifice!\n";
-    std::cout << "Alege un jeton de progres:\n";
-    for (size_t i = 0; i < availableTokens.size(); ++i) {
-        std::cout << "  [" << i + 1 << "] " << availableTokens[i]->getName() << "\n";
-    }
-    std::cout << "****************************************\n";
+void Game::resolveProgressTokenChoice(int tokenId)
+{
+    if (!m_isWaitingForProgressTokenChoice) return;
 
-    // 3. Get player's choice
-    int choice = 0;
-    while (true) {
-        std::cout << "Introdu numarul jetonului dorit: ";
-        if (!(std::cin >> choice) || choice < 1 || choice > static_cast<int>(availableTokens.size())) {
-            std::cout << "Alegere invalida. Incearca din nou.\n";
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-        else {
+    auto available = m_board.getAvailableProgressTokens();
+    std::shared_ptr<ProgressToken> chosen = nullptr;
+    for (auto t : available) {
+        if (t->getId() == tokenId) {
+            chosen = t;
             break;
         }
     }
 
-    // 4. Process the choice
-    size_t chosenIndex = choice - 1;
-    std::shared_ptr<ProgressToken> chosenToken = availableTokens[chosenIndex];
-
-    std::cout << "[INFO] Ai ales jetonul: " << chosenToken->getName() << "\n";
-
-    // 5. Add token to player and apply effects
-    m_currentPlayer->addProgressToken(chosenToken);
-    for (const auto& effect : chosenToken->getEffects()) {
-        effect(*m_currentPlayer, *m_opponent);
+    if (chosen) {
+        m_currentPlayer->addProgressToken(chosen);
+        for (const auto& effect : chosen->getEffects()) {
+            effect(*m_currentPlayer, *m_opponent);
+        }
+        m_board.removeAvailableProgressToken(chosen);
     }
-    std::cout << "[INFO] Efectul jetonului a fost aplicat.\n";
 
-    // 6. Remove token from board
-    m_board.removeAvailableProgressToken(chosenToken);
+    m_isWaitingForProgressTokenChoice = false;
+}
+
+bool Game::isWaitingForProgressTokenChoice() const
+{
+    return m_isWaitingForProgressTokenChoice;
 }
 
 void Game::setPlayerTypes(bool p1IsAI, bool p2IsAI, AI_Difficulty difficulty)

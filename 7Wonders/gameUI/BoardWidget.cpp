@@ -30,7 +30,7 @@ void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, 
     newCard->setupCard(name, color, isFaceUp, cost, effect);
 
     // 2. Conectăm semnalul
-    connect(newCard, &CardWidget::clicked, this, &BoardWidget::handleInternalClick);
+    connect(newCard, &CardWidget::cardClicked, this, &BoardWidget::handleInternalClick);
 
     // 3. Matematică pentru poziționare
     // Centrul widget-ului părinte
@@ -53,9 +53,16 @@ void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, 
     m_activeCards.append(newCard);
 }
 
-void BoardWidget::handleInternalClick()
+void BoardWidget::handleInternalClick(int cardId)
 {
-    CardWidget* senderCard = qobject_cast<CardWidget*>(sender());
+    CardWidget* senderCard = nullptr;
+    for (auto card : m_activeCards) {
+        if (card->getCardId() == cardId) {
+            senderCard = card;
+            break;
+        }
+    }
+
     if (senderCard) {
         // Deselectăm vizual celelalte cărți
         for (auto c : m_activeCards) c->setSelected(false);
@@ -64,6 +71,6 @@ void BoardWidget::handleInternalClick()
         senderCard->setSelected(true);
 
         // Anunțăm MainWindow
-        emit cardClicked(senderCard->getCardId());
+        emit cardClicked(cardId);
     }
 }

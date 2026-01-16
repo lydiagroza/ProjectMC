@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <limits>
 #include "Wonder.h"
+#include "UniversalCardLoader.h"
 
 
 Game* Game::currentGame = nullptr;
@@ -23,6 +24,56 @@ Game::Game()
     currentGame = this;
     m_currentPlayer = m_player1.get();
     m_opponent = m_player2.get();
+}
+
+void Game::handleProgressTokenChoice()
+{
+    // 1. Get available tokens from the board
+    std::vector<std::shared_ptr<ProgressToken>> availableTokens = m_board.getAvailableProgressTokens();
+
+    if (availableTokens.empty()) {
+        std::cout << "\n[INFO] Ai obtinut o pereche de simboluri stiintifice, dar nu mai sunt jetoane de progres disponibile.\n";
+        return;
+    }
+
+    // 2. Display choices to the player
+    std::cout << "\n****************************************\n";
+    std::cout << ">>> " << m_currentPlayer->getName() << ", ai o pereche de simboluri stiintifice!\n";
+    std::cout << "Alege un jeton de progres:\n";
+    for (size_t i = 0; i < availableTokens.size(); ++i) {
+        std::cout << "  [" << i + 1 << "] " << availableTokens[i]->getName() << "\n";
+    }
+    std::cout << "****************************************\n";
+
+    // 3. Get player's choice
+    int choice = 0;
+    while (true) {
+        std::cout << "Introdu numarul jetonului dorit: ";
+        if (!(std::cin >> choice) || choice < 1 || choice > static_cast<int>(availableTokens.size())) {
+            std::cout << "Alegere invalida. Incearca din nou.\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        else {
+            break;
+        }
+    }
+
+    // 4. Process the choice
+    size_t chosenIndex = choice - 1;
+    std::shared_ptr<ProgressToken> chosenToken = availableTokens[chosenIndex];
+
+    std::cout << "[INFO] Ai ales jetonul: " << chosenToken->getName() << "\n";
+
+    // 5. Add token to player and apply effects
+    m_currentPlayer->addProgressToken(chosenToken);
+    for (const auto& effect : chosenToken->getEffects()) {
+        effect(*m_currentPlayer, *m_opponent);
+    }
+    std::cout << "[INFO] Efectul jetonului a fost aplicat.\n";
+
+    // 6. Remove token from board
+    m_board.removeAvailableProgressToken(chosenToken);
 }
 
 void Game::setPlayerTypes(bool p1IsAI, bool p2IsAI, AI_Difficulty difficulty)
@@ -223,7 +274,7 @@ std::optional<Player> Game::determinateWinner()
         int blueVP1 = m_player1->getVPFromBlueCards();
         int blueVP2 = m_player2->getVPFromBlueCards();
 
-        if (blueVP1 > blueVP2) {
+        if (blueVP1 > blueVP1) {
             std::cout << "Jocul s-a terminat la egalitate, dar " << m_player1->getName()
                 << " castiga la tie-breaker (Clădiri Civile - Albastre).\n";
             return *m_player1;
@@ -388,6 +439,8 @@ void Game::initialize()
     m_player1->addResource(Coin,7);
     m_player2->addResource(Coin, 7);
     m_board.updateVisibility();
+
+    // --- END TEMPORARY TEST CODE ---
 }
 
 bool Game::checkForInstantWin() {
@@ -474,10 +527,54 @@ int Game::getDraftPhase() const {
     return m_draftPhase;
 }
 
+bool Game::isWaitingForDiscardChoice() const
+{
+    return m_isWaitingForDiscardChoice;
+}
+
+const std::vector<std::shared_ptr<CardBase>>& Game::getBuildFromDiscardChoices() const
+{
+    return m_buildFromDiscardChoices;
+}
+
 void Game::handleBuildFromDiscard()
 {
-    // TODO: Implement the logic for building from the discard pile.
+    const auto& discardPile = m_board.getDiscardPile();
+    if (discardPile.empty()) {
+        return;
+    }
+
+    m_buildFromDiscardChoices = discardPile;
+    m_isWaitingForDiscardChoice = true;
 }
+
+void Game::resolveBuildFromDiscard(int chosenCardId)
+{
+    if (!m_isWaitingForDiscardChoice) {
+        return;
+    }
+
+    std::shared_ptr<CardBase> chosenCard = nullptr;
+    for (const auto& card : m_buildFromDiscardChoices) {
+        if (card->getId() == chosenCardId) {
+            chosenCard = card;
+            break;
+        }
+    }
+
+    if (chosenCard) {
+        // Build the card for free
+        m_currentPlayer->addCardToInventory(chosenCard);
+        chosenCard->applyEffect(*m_currentPlayer, m_board, *m_opponent);
+        m_board.removeCardFromDiscardPile(chosenCard);
+    }
+
+    // Reset state
+    m_isWaitingForDiscardChoice = false;
+    m_buildFromDiscardChoices.clear();
+}
+
+
 
 const std::vector<std::shared_ptr<CardBase>>& Game::getDiscardedCards() const
 {

@@ -31,7 +31,7 @@ CardWidget::~CardWidget()
 
 void CardWidget::onButtonClicked()
 {
-    emit clicked();
+    emit cardClicked(m_cardId);
 }
 
 void CardWidget::setupCard(const QString& name, const QString& colorCode, bool isFaceUp, const QString& cost, const QString& effect)

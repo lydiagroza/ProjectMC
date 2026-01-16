@@ -1,11 +1,11 @@
 #include "DiscardedCardsDialog.h"
 #include "ui_DiscardedCardsDialog.h"
 #include "CardWidget.h"
-#include "CardBase.h"
+#include "GameBase/CardBase.h"
 #include <QString>
 #include <QStringList>
 
-static QString getColorHexInternal(Color c)
+static QString getColorHex(Color c)
 {
     switch (c) {
     case Color::Blue:   return "#1565C0";
@@ -19,7 +19,7 @@ static QString getColorHexInternal(Color c)
     }
 }
 
-static QString formatCostInternal(const std::map<Resource, uint8_t>& costMap)
+static QString formatCost(const std::map<Resource, uint8_t>& costMap)
 {
     QStringList parts;
     for (auto const& [res, count] : costMap) {
@@ -37,11 +37,12 @@ static QString formatCostInternal(const std::map<Resource, uint8_t>& costMap)
          }
     }
     return parts.join("<br>");
-}
+};
 
 DiscardedCardsDialog::DiscardedCardsDialog(const std::vector<const CardBase*>& discardedCards, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::DiscardedCardsDialog)
+    ui(new Ui_DiscardedCardsDialog),
+    m_selectedCardId(-1)
 {
     ui->setupUi(this);
     setupCards(discardedCards);
@@ -52,21 +53,32 @@ DiscardedCardsDialog::~DiscardedCardsDialog()
     delete ui;
 }
 
+int DiscardedCardsDialog::getSelectedCardId() const
+{
+    return m_selectedCardId;
+}
+
+void DiscardedCardsDialog::onCardClicked(int cardId)
+{
+    m_selectedCardId = cardId;
+    emit cardSelected(cardId);
+    accept();
+}
+
 void DiscardedCardsDialog::setupCards(const std::vector<const CardBase*>& discardedCards)
 {
     int row = 0;
     int col = 0;
     for (const auto* card : discardedCards)
     {
-        if (!card) continue;
-        
         CardWidget* cardWidget = new CardWidget(card->getId(), this);
         QString name = QString::fromStdString(card->getName());
-        QString color = getColorHexInternal(card->getColor());
-        QString cost = formatCostInternal(card->getCost());
+        QString color = getColorHex(card->getColor());
+        QString cost = formatCost(card->getCost());
         QString effect = QString::fromStdString(card->getEffectDescription());
 
         cardWidget->setupCard(name, color, true, cost, effect);
+        connect(cardWidget, &CardWidget::cardClicked, this, &DiscardedCardsDialog::onCardClicked);
         ui->gridLayout->addWidget(cardWidget, row, col);
 
         col++;

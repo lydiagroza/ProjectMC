@@ -434,6 +434,20 @@ void MainWindow::onWonderClicked()
         node->updatePlayedStatus(true);
         m_game->getBoard().updateVisibility();
 
+        if (m_game->isWaitingForDiscardChoice()) {
+            const auto& discardedCardsShared = m_game->getBuildFromDiscardChoices();
+            std::vector<const CardBase*> discardedCards;
+            for (const auto& cardPtr : discardedCardsShared) {
+                discardedCards.push_back(cardPtr.get());
+            }
+
+            DiscardedCardsDialog dialog(discardedCards, this);
+            if (dialog.exec() == QDialog::Accepted) {
+                int selectedCardId = dialog.getSelectedCardId();
+                m_game->resolveBuildFromDiscard(selectedCardId);
+            }
+        }
+
         if (p->hasExtraTurn()) { 
              p->setHasExtraTurn(false);
              QMessageBox::information(this, "Divine Intervention", "Wonder Grant: Extra Turn!");
@@ -475,14 +489,16 @@ void MainWindow::updatePlayerInventories()
         p1.getName(), 
         p1.getCoins(), 
         p1.getResources(),
-        p1.getWonders()
+        p1.getWonders(),
+        p1.getInventory()
     );
 
     ui->opponentDashboard->updateDashboard(
         p2.getName(), 
         p2.getCoins(), 
         p2.getResources(),
-        p2.getWonders()
+        p2.getWonders(),
+        p2.getInventory()
     );
 
     ui->militaryTrackWidget->updatePawnPosition(m_game->getBoard().getMilitaryTrack().getPawnPosition());

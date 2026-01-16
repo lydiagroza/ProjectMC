@@ -30,7 +30,7 @@ signals:
     void wonderChosen(int cardId);
 
 private slots:
-    void onCardClicked();
+    void onCardClicked(int cardId);
 
 private:
     Ui::WonderSelectionWidget *ui;

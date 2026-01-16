@@ -156,31 +156,44 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="MilitaryTrackWidget.cpp" />
+    <ClCompile Include="NameSelectionWidget.cpp" />
+    <ClCompile Include="PlayerDashboardWidget.cpp" />
     <ClCompile Include="SplashScreen.cpp" />
+    <ClCompile Include="WonderChoiceDialog.cpp" />
     <ClCompile Include="WonderSelectionWidget.cpp" />
+    <ClCompile Include="DiscardedCardsDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GameBase\GameBase.vcxproj">
       <Project>{f1993dd2-fe03-447e-95bc-d88055a31078}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\gameAI\gameAI.vcxproj">
+      <Project>{1aa1ac11-1058-442d-8380-b28619f71057}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CardWidget.h" />
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="BoardWidget.h" />
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="MainWindow.h" />
-  </ItemGroup>
-  <ItemGroup>
+    <QtMoc Include="NameSelectionWidget.h" />
+    <QtMoc Include="PlayerDashboardWidget.h" />
+    <QtMoc Include="WonderChoiceDialog.h" />
     <QtMoc Include="WonderSelectionWidget.h" />
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="MilitaryTrackWidget.h" />
+    <QtMoc Include="SplashScreen.h" />
+    <QtMoc Include="DiscardedCardsDialog.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="SplashScreen.h" />
+    <QtUic Include="..\UI\BoardWidget.ui" />
+    <QtUic Include="..\UI\CardWidget.ui" />
+    <QtUic Include="..\UI\MainWindow.ui" />
+    <QtUic Include="..\UI\NameSelectionWidget.ui" />
+    <QtUic Include="..\UI\PlayerDashboardWidget.ui" />
+    <QtUic Include="..\UI\SplashScreen.ui" />
+    <QtUic Include="..\UI\WonderChoiceDialog.ui" />
+    <QtUic Include="..\UI\WonderSelectionWidget.ui" />
+    <QtUic Include="..\UI\MilitaryTrackWidget.ui" />
+    <QtUic Include="..\UI\DiscardedCardsDialog.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(QtMsBuild)\qt.targets" Condition="Exists('$(QtMsBuild)\qt.targets')" />

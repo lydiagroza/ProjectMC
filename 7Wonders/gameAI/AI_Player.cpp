@@ -686,7 +686,7 @@ void AI_Player::makeDecision(Board& board, Player& opponent, int currentAge) {
 
     // 3. Fallback: Vinde cartea
     if (!actionTaken) {
-        discardCard(*selectedCard);
+        discardCard(selectedCard, board);
         std::cout << "[AI] Discards card.\n";
         executedAction = { Action::DISCARD_CARD, selectedCard->getId(), 0 };
     }

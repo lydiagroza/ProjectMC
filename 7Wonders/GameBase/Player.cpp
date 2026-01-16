@@ -382,11 +382,12 @@ bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
 
 
 // Functie in cazul in care jucatorul alege sa arda cartea pentru banuti
-void Player::discardCard([[maybe_unused]] const CardBase& card) {
+void Player::discardCard(std::shared_ptr<CardBase> c, Board& board) {
 
     std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
     gainedCoins += static_cast<uint8_t>(m_Inventory[Color::Yellow].size()) * GameConstants::DISCARD_YELLOW_BONUS;
     addResource(Coin,gainedCoins);
+    board.addCardToDiscardPile(c);
 }
 
 bool Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder &wonderToBuild, Player& opponent, Board& board) {

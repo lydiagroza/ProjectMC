@@ -13,6 +13,7 @@
 #include "PlayerDashboardWidget.h"
 #include "Game.h"
 #include "GameConstants.h"
+#include "DiscardedCardsDialog.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -74,6 +75,7 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->wonderSelectionPage, &WonderSelectionWidget::wonderChosen, this, &MainWindow::onWonderChosen);
     connect(ui->splashScreenPage, &SplashScreen::gameModeSelected, this, &MainWindow::onSplashFinished);
     connect(ui->nameSelectionPage, &NameSelectionWidget::namesConfirmed, this, &MainWindow::onNamesConfirmed);
+    connect(ui->btnDiscardedCards, &QPushButton::clicked, this, &MainWindow::onDiscardedCardsClicked);
 
     ui->statusbar->showMessage("⚔️ Welcome to 7 Wonders Duel! ⚔️");
 
@@ -81,6 +83,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->opponentDashboard->setVisible(false);
     ui->playerDashboard->setVisible(false);
     ui->rightZone->setVisible(false);
+    ui->turnContainer->setVisible(false);
 
     // Initial button state
     ui->btnBuild->setEnabled(false);
@@ -127,6 +130,7 @@ void MainWindow::onNamesConfirmed(const QString& p1, const QString& p2, int diff
     ui->opponentDashboard->setVisible(true);
     ui->playerDashboard->setVisible(true);
     ui->rightZone->setVisible(true);
+    ui->turnContainer->setVisible(true);
 
     ui->statusbar->showMessage("⚔️ Initializing the ancient world of ducks... ⚔️");
     startGame();
@@ -385,7 +389,7 @@ void MainWindow::onDiscardClicked()
     if (!node) return;
     
     Player* p = m_game->getCurrentPlayer();
-    p->discardCard(*node->getCard());
+    p->discardCard(node->getCard(), m_game->getBoard());
     
     node->updatePlayedStatus(true);
     m_game->getBoard().updateVisibility();
@@ -444,6 +448,21 @@ void MainWindow::onWonderClicked()
     } else {
         QMessageBox::warning(this, "Error", "Could not build wonder.");
     }
+}
+
+void MainWindow::onDiscardedCardsClicked()
+{
+    if (!m_game) return;
+
+    const auto& discardedCardsShared = m_game->getDiscardedCards();
+    std::vector<const CardBase*> discardedCards;
+    for (const auto& cardPtr : discardedCardsShared)
+    {
+        discardedCards.push_back(cardPtr.get());
+    }
+
+    DiscardedCardsDialog dialog(discardedCards, this);
+    dialog.exec();
 }
 
 void MainWindow::updatePlayerInventories()

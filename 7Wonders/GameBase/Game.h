@@ -56,6 +56,7 @@ private:
     std::vector<std::shared_ptr<Wonder>> m_draftSet2;
     int m_draftPhase = 0; // 0 = înainte de draft, 1 = draft 1, 2 = draft 2
     bool m_isWaitingForDiscardChoice = false;
+    bool m_isWaitingForProgressTokenChoice = false;
     std::vector<std::shared_ptr<CardBase>> m_buildFromDiscardChoices;
 
 public:
@@ -103,6 +104,8 @@ public:
     const std::vector<std::shared_ptr<CardBase>>& getDiscardedCards() const;
 
     bool isWaitingForDiscardChoice() const;
+    bool isWaitingForProgressTokenChoice() const;
     const std::vector<std::shared_ptr<CardBase>>& getBuildFromDiscardChoices() const;
     void resolveBuildFromDiscard(int chosenCardId);
+    void resolveProgressTokenChoice(int tokenId);
 };

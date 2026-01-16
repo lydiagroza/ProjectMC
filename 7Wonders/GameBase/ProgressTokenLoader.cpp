@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include"Player.h"
+#include "Game.h"
 #include <algorithm>
 #include <cctype>
 std::vector<std::function<void(Player&, Player&)>> ProgressTokenLoader::parseEffects(const std::string& s) {
@@ -17,7 +18,11 @@ std::vector<std::function<void(Player&, Player&)>> ProgressTokenLoader::parseEff
         {"add_VictoryPoint4", [](Player& p, Player&) { p.add_Points(Points::Victory, 4); }},
         {"WondersDiscount", [](Player& p, Player&) { p.setWonderDiscount(true); }},
         {"gainOpponentTradeCost", [](Player& p, Player&) {p.setGainsOpponentTradeCost(true); }},
-        {"add_scientific_symbol_scales", [](Player& p, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
+        {"add_scientific_symbol_scales", [](Player& p, Player&) { 
+            if (p.add_ScientificSymbol(Scientific_Symbol::Scales)) {
+                if (Game::currentGame) Game::currentGame->handleProgressTokenChoice();
+            }
+        }},
         //aici trebuie cumva apelat la sfarsitul jocului nu in timpul jocului 
         {"victoryPointsPerProgress", [](Player& p, Player&) {p.setMathBonus(true); }},
         {"BlueCardDiscount", [](Player& p, Player&) { p.setBlueCardDiscount(true); }},

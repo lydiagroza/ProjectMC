@@ -174,10 +174,36 @@ int Game::calculatePlayerVP(const Player& player) const {
 
 std::optional<Player> Game::determinateWinner()
 {
+    // 1. Check for Military Supremacy
+    int militaryPosition = m_board.getMilitaryTrack().getPawnPosition();
+    if (militaryPosition >= MILITARY_VICTORY_THRESHOLD) {
+        std::cout << "\n--- Victorie Militara! ---\n";
+        std::cout << "Castigatorul este: " << m_player2->getName() << "\n";
+        return *m_player2;
+    }
+    if (militaryPosition <= -MILITARY_VICTORY_THRESHOLD) {
+        std::cout << "\n--- Victorie Militara! ---\n";
+        std::cout << "Castigatorul este: " << m_player1->getName() << "\n";
+        return *m_player1;
+    }
+
+    // 2. Check for Scientific Supremacy
+    if (m_player1->getNrOfScientificSymbols() >= SCIENCE_VICTORY_THRESHOLD) {
+        std::cout << "\n--- Victorie Stiintifica! ---\n";
+        std::cout << "Castigatorul este: " << m_player1->getName() << "\n";
+        return *m_player1;
+    }
+    if (m_player2->getNrOfScientificSymbols() >= SCIENCE_VICTORY_THRESHOLD) {
+        std::cout << "\n--- Victorie Stiintifica! ---\n";
+        std::cout << "Castigatorul este: " << m_player2->getName() << "\n";
+        return *m_player2;
+    }
+
+    // 3. If no instant winner, calculate Civilian (VP) victory
     int vp1 = calculatePlayerVP(*m_player1);
     int vp2 = calculatePlayerVP(*m_player2);
 
-	std::cout << "\n--- Rezultatele Finale ---\n";
+	std::cout << "\n--- Rezultatele Finale (Victorie Civila) ---\n";
     std::cout << m_player1->getName() << " Total VP: " << vp1 << "\n";
     std::cout << m_player2->getName() << " Total VP: " << vp2 << "\n";
     if (vp1 > vp2) {
@@ -189,7 +215,7 @@ std::optional<Player> Game::determinateWinner()
         return *m_player2;
     }
     else {
-
+        // Tie-breaker: Blue cards VP
         int blueVP1 = m_player1->getVPFromBlueCards();
         int blueVP2 = m_player2->getVPFromBlueCards();
 
@@ -208,7 +234,6 @@ std::optional<Player> Game::determinateWinner()
             return std::nullopt; // Return an empty optional for a draw
         }
     }
-
 }
 
 void Game::handlePlayerAction()
@@ -290,6 +315,7 @@ void Game::handlePlayerAction()
         }
         else {
             std::cout << "Ai primit o tura extra! Mai joci o data.\n";
+            m_currentPlayer->setHasExtraTurn(false);
         }
     }
     else {

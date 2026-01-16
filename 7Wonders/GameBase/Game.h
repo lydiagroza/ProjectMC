@@ -30,7 +30,6 @@ private:
     bool m_gameOver;
     int m_numberOfWondersBuilt=0;
    
-    bool checkForInstantWin();
     void printActionMenu() const;
     void draftWondersPhase();
 
@@ -40,7 +39,6 @@ private:
 
     //fct care ma ajuta sa voir cine a castigat
 	
-	std::optional<Player> determinateWinner();
 	int calculatePurpleGuilds(const Player& p) const;
     int getBuiltWondersCount(const Player& player) const;
 	int getCategoryCount(const Player& player, Color color) const;
@@ -62,6 +60,7 @@ public:
     Game();
     void initialize();
     void setPlayerTypes(bool p1IsAI, bool p2IsAI);
+    bool checkForInstantWin();
     int getCurrentAge() const { return m_currentAge; }
     void handlePlayerAction();
     void startNextAge();
@@ -84,4 +83,5 @@ public:
     Player* getCurrentPlayer();
     Player* getOpponent();
     int getDraftPhase() const;
+    std::optional<Player> determinateWinner();
 };

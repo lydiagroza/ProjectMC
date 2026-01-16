@@ -138,13 +138,18 @@ void MainWindow::processAITurn()
 
     ui->statusbar->showMessage("🤖 " + QString::fromStdString(ai->getName()) + " is thinking...", 1000);
 
+    bool hadExtraTurn = ai->hasExtraTurn();
+
     ai->makeDecision(m_game->getBoard(), *m_game->getOpponent(), m_game->getCurrentAge());
 
     // After AI move, refresh game state
-    if (!ai->hasExtraTurn()) {
+    if (hadExtraTurn) {
+        ai->setHasExtraTurn(false);
         m_game->switchTurn();
-    } else {
+    } else if (ai->hasExtraTurn()) {
         ui->statusbar->showMessage("🤖 " + QString::fromStdString(ai->getName()) + " gets an extra turn!", 2000);
+    } else {
+        m_game->switchTurn();
     }
     
     updateGameState();
@@ -158,6 +163,8 @@ void MainWindow::startGame()
 
 void MainWindow::updateGameState()
 {
+    m_game->checkForInstantWin();
+    
     m_draftPhase = m_game->getDraftPhase();
     if (m_draftPhase > 0 && !m_game->getCurrentDraftSet().empty()) {
         ui->stack->setCurrentWidget(ui->wonderSelectionPage);
@@ -192,8 +199,21 @@ void MainWindow::updateGameState()
     
     // Check for game over
     if (m_game->isGameOver()) {
-        QMessageBox::information(this, "Game Over", "The game has ended!");
-        // TODO: Show nice game over screen
+        std::optional<Player> winner = m_game->determinateWinner();
+        QString message;
+        if (winner.has_value()) {
+            message = QString::fromStdString(winner.value().getName()) + " a câștigat jocul!";
+        } else {
+            message = "Jocul s-a încheiat cu o remiză!";
+        }
+        QMessageBox::information(this, "Game Over", message);
+
+        // Disable further interaction
+        ui->btnBuild->setEnabled(false);
+        ui->btnDiscard->setEnabled(false);
+        ui->btnWonder->setEnabled(false);
+        ui->boardWidgetPage->setEnabled(false); // Disable card selection on the board
+
         return;
     }
 
@@ -344,16 +364,20 @@ void MainWindow::onBuildClicked()
 
     Player* p = m_game->getCurrentPlayer();
     Player* opp = m_game->getOpponent();
+    bool hadExtraTurn = p->hasExtraTurn();
 
     bool success = p->buyCard(node->getCard(), *opp, m_game->getBoard());
     if (success) {
         node->updatePlayedStatus(true);
         m_game->getBoard().updateVisibility();
         
-        if (!p->hasExtraTurn()) {
+        if (hadExtraTurn) {
+            p->setHasExtraTurn(false);
             m_game->switchTurn();
-        } else {
+        } else if (p->hasExtraTurn()) {
             QMessageBox::information(this, "Divine Intervention", "You get an extra turn!");
+        } else {
+            m_game->switchTurn();
         }
         updateGameState();
     } else {
@@ -368,14 +392,20 @@ void MainWindow::onDiscardClicked()
     if (!node) return;
     
     Player* p = m_game->getCurrentPlayer();
+    bool hadExtraTurn = p->hasExtraTurn();
+    
     p->discardCard(*node->getCard());
     
     node->updatePlayedStatus(true);
     m_game->getBoard().updateVisibility();
     
-    // Discard rarely grants extra turns unless specific wonders/tokens effect?
-    // Usually discard passes turn.
-    if (!p->hasExtraTurn()) {
+    if (hadExtraTurn) {
+        p->setHasExtraTurn(false);
+        m_game->switchTurn();
+    } else if (p->hasExtraTurn()) {
+        // This case is rare for discards, but we handle it for robustness
+        QMessageBox::information(this, "Divine Intervention", "You get an extra turn!");
+    } else {
         m_game->switchTurn();
     }
     updateGameState();
@@ -425,6 +455,8 @@ void MainWindow::onWonderClicked()
         return;
     }
 
+    bool hadExtraTurn = p->hasExtraTurn();
+
     p->constructWonder(node->getCard(), *selectedWonder, *opp, m_game->getBoard());
     
     // Check 7 Wonders rule logic (game->handle7WondersRule is private, might need to reimplement or make public)
@@ -433,7 +465,10 @@ void MainWindow::onWonderClicked()
     node->updatePlayedStatus(true);
     m_game->getBoard().updateVisibility();
 
-    if (p->hasExtraTurn()) { 
+    if (hadExtraTurn) {
+        p->setHasExtraTurn(false);
+        m_game->switchTurn();
+    } else if (p->hasExtraTurn()) { 
          QMessageBox::information(this, "Divine Intervention", "Wonder Grant: Extra Turn!");
     } else {
          m_game->switchTurn();

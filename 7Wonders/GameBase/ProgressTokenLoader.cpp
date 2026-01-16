@@ -7,8 +7,6 @@
 #include <cctype>
 std::vector<std::function<void(Player&, Player&)>> ProgressTokenLoader::parseEffects(const std::string& s) {
 
-    return{};
-    //#if 0
     std::vector<std::function<void(Player&, Player&)>> effects;
     std::stringstream ss(s);
     std::string effectStr;
@@ -46,7 +44,6 @@ std::vector<std::function<void(Player&, Player&)>> ProgressTokenLoader::parseEff
     }
 
     return effects;
-    //#endif
 }
 std::vector<std::shared_ptr<ProgressToken>> ProgressTokenLoader::loadProgressTokens(const std::string& filename) {
     using namespace std;

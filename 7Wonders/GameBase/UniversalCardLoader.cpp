@@ -90,12 +90,12 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
         {"add_resource_clay", [](Player& p, Board&, Player&) { p.addResource(Resource::Clay, 1); }},
         {"add_resource_glass", [](Player& p, Board&, Player&) { p.addResource(Resource::Glass, 1); }},
         {"add_resource_papyrus", [](Player& p, Board&, Player&) { p.addResource(Resource::Papyrus, 1); }},
-        {"add_scientific_symbol_ink", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Ink); }},
-        {"add_scientific_symbol_scales", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Scales); }},
-        {"add_scientific_symbol_mortar", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Mortar); }},
-        {"add_scientific_symbol_gyroscope", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Gyroscope); }},
-        {"add_scientific_symbol_sun_dial", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Sun_Dial); }},
-        {"add_scientific_symbol_wheel", [](Player& p, Board&, Player&) { p.add_ScientificSymbol(Scientific_Symbol::Wheel); }},
+        {"add_scientific_symbol_ink", [](Player& p, Board&, Player&) { if (p.add_ScientificSymbol(Scientific_Symbol::Ink)) { Game::currentGame->handleProgressTokenChoice(); } }},
+        {"add_scientific_symbol_scales", [](Player& p, Board&, Player&) { if (p.add_ScientificSymbol(Scientific_Symbol::Scales)) { Game::currentGame->handleProgressTokenChoice(); } }},
+        {"add_scientific_symbol_mortar", [](Player& p, Board&, Player&) { if (p.add_ScientificSymbol(Scientific_Symbol::Mortar)) { Game::currentGame->handleProgressTokenChoice(); } }},
+        {"add_scientific_symbol_gyroscope", [](Player& p, Board&, Player&) { if (p.add_ScientificSymbol(Scientific_Symbol::Gyroscope)) { Game::currentGame->handleProgressTokenChoice(); } }},
+        {"add_scientific_symbol_sun_dial", [](Player& p, Board&, Player&) { if (p.add_ScientificSymbol(Scientific_Symbol::Sun_Dial)) { Game::currentGame->handleProgressTokenChoice(); } }},
+        {"add_scientific_symbol_wheel", [](Player& p, Board&, Player&) { if (p.add_ScientificSymbol(Scientific_Symbol::Wheel)) { Game::currentGame->handleProgressTokenChoice(); } }},
         {"coin2Wonder", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)(2 * p.getWonders().size())); }},
         {"coin2Brown", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)(2 * p.getInventory().at(Color::Brown).size())); }},
         {"coin1Yellow", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)p.getInventory().at(Color::Yellow).size()); }},
@@ -216,34 +216,8 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
   }},
 
 {"papyrus/glass", [](Player& p, Board&, Player&) { p.addResource(Resource::Papyrus, 1); p.addResource(Resource::Glass, 1); }},
-{"chooseProgressToken", [](Player& p, Board&, Player& o) {
-    Board& board = Game::currentGame->getBoard();
-    auto availableTokens = board.getAvailableProgressTokens();
-
-    if (availableTokens.empty()) {
-        std::cout << "No available progress tokens." << std::endl;
-        return;
-    }
-
-    std::cout << "Choose a progress token:" << std::endl;
-    for (int i = 0; i < (int)availableTokens.size(); ++i) {
-        std::cout << i + 1 << ": " << *availableTokens[i] << std::endl;
-    }
-
-    int choice = -1;
-    // UI should provide choice; placeholder here
-
-    if (choice > 0 && choice <= (int)availableTokens.size()) {
-        auto selectedToken = availableTokens[choice - 1];
-        for (const auto& effect : selectedToken->getEffects()) {
-            effect(p, o);
-        }
-        board.removeAvailableProgressToken(selectedToken);
-        std::cout << "You chose the " << selectedToken->getName() << " token." << std::endl;
-    }
-else {
- std::cout << "No choice made (UI required) or invalid choice." << std::endl;
-}
+{"chooseProgressToken", [](Player&, Board&, Player&) {
+    Game::currentGame->handleProgressTokenChoice();
 }},
 {"add_coins6", [](Player& p, Board&, Player&) { p.addResource(Coin,6); }},
 {"discardOpponentBrownCard", [](Player&, Board&, Player& o) {

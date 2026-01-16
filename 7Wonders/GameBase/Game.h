@@ -37,7 +37,6 @@ private:
     void draftWondersPhase();
 
     bool handleWonderConstruction(std::shared_ptr<CardBase> cardUsed);
-    void handleProgressTokenChoice();
     void handle7WondersRule();
 
     // funcții care ajută la determinarea câștigătorului
@@ -59,6 +58,7 @@ private:
 
 public:
     Game();
+   
     void initialize();
 
     // păstrează modificarea colegei (dificultate AI)
@@ -87,6 +87,7 @@ public:
     Player& getPlayer2() { return *m_player2; }
 
     void handleBuildFromDiscard();
+    void handleProgressTokenChoice();
 
     // funcții pentru faza de draft din UI
     const std::vector<std::shared_ptr<Wonder>>& getCurrentDraftSet() const;

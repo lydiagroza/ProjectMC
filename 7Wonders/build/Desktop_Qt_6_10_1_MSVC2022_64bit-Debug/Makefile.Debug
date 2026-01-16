@@ -3638,7 +3638,8 @@ debug\Game.obj: ..\..\GameBase\Game.cpp ..\..\GameBase\Game.h \
 		..\..\GameBase\CardsPyramid.h \
 		..\..\GameBase\Player.h \
 		..\..\GameBase\GameConstants.h \
-		..\..\gameAI\AI_Player.h
+		..\..\gameAI\AI_Player.h \
+		..\..\GameBase\UniversalCardLoader.h
 
 debug\GameSetup.obj: ..\..\GameBase\GameSetup.cpp ..\..\GameBase\GameSetup.h \
 		..\..\GameBase\Wonder.h \

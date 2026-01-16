@@ -675,10 +675,11 @@ void AI_Player::makeDecision(Board& board, Player& opponent, int currentAge) {
         if (!availableWonders.empty()) {
             Wonder* chosenWonder = chooseBestWonder(availableWonders);
             if (chosenWonder) {
-                constructWonder(selectedCard, *chosenWonder, opponent, board);
-                std::cout << "[AI] Builds wonder: " << chosenWonder->getName() << "\n";
-                executedAction = { Action::BUILD_WONDER, selectedCard->getId(), chosenWonder->getId() };
-                actionTaken = true;
+                if (constructWonder(selectedCard, *chosenWonder, opponent, board)) {
+                    std::cout << "[AI] Builds wonder: " << chosenWonder->getName() << "\n";
+                    executedAction = { Action::BUILD_WONDER, selectedCard->getId(), chosenWonder->getId() };
+                    actionTaken = true;
+                }
             }
         }
     }

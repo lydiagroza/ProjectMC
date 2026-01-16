@@ -30,17 +30,23 @@
         font-weight: bold;
     }
     QPushButton {
-        background: #2E7D32;
-        color: white;
-        border: 2px solid #1B5E20;
-        border-radius: 8px;
-        padding: 10px;
-        font-size: 18px;
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #5D4037, stop:1 #3E2723);
+        color: #FFD700;
+        border: 2px solid #8B4513;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-size: 20px;
         font-weight: bold;
         font-family: 'Times New Roman';
     }
     QPushButton:hover {
-        background: #388E3C;
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #6D4C41, stop:1 #4E342E);
+        border: 2px solid #DAA520;
+        color: #FFF;
+    }
+    QPushButton:pressed {
+        background: #2C1810;
+        border: 2px solid #5D4037;
     }
     QPushButton:disabled {
         background: #555;

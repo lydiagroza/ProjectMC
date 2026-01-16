@@ -1,5 +1,5 @@
 name,id,cost,effects
-THE APPIAN WAY		 ,74,"1payrus";"2clay";"2stone"			 ,"add_coins3";"decreaseCoins3";"replayTurn";"add_VictoryPoint3"
+THE APPIAN WAY		 ,74,"1papyrus";"2clay";"2stone"			 ,"add_coins3";"decreaseCoins3";"replayTurn";"add_VictoryPoint3"
 THE SPHINX			 ,75,"2glass";"1clay";"1stone"			 ,"replayTurn";"add_VictoryPoint3"
 THE GREAT LIGHTHOUSE ,76,"2papyrus";"1stone";"1wood"		 ,"wood/stone/clay";"add_VictoryPoint4"
 THE TEMPLE OF ARTEMIS,77,"1papyrus";"1glass";"1stone";"1wood","replayTurn";"add_coins12"

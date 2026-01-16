@@ -5,6 +5,32 @@
 #include <random>
 #include <chrono>
 #include "Game.h"
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
+static std::string resolvePath(const std::string& filename) {
+    // List of directories to check
+    std::vector<std::string> searchPaths = {
+        "GameBase/",             // From project root
+        "../GameBase/",          // From one level down (e.g. build dir)
+        "../../GameBase/",       // From two levels down (e.g. x64/Debug)
+        "../../../GameBase/",    // Extreme case
+        "./"                     // Current directory
+    };
+
+    for (const auto& prefix : searchPaths) {
+        std::string fullPath = prefix + filename;
+        if (fs::exists(fullPath)) {
+            std::cout << "[ResourceLoader] Found " << filename << " at: " << fs::absolute(fullPath) << std::endl;
+            return fullPath;
+        }
+    }
+
+    std::cerr << "[ResourceLoader] CRITICAL: Could not find " << filename << "!" << std::endl;
+    std::cout << "Current working directory: " << fs::current_path() << std::endl;
+    return filename; // Fail gracefully by returning original
+}
 
 GameSetup::GameSetup(Board& board) : m_board(board) 
 {
@@ -15,14 +41,14 @@ GameSetup::GameSetup(Board& board) : m_board(board)
 
 void GameSetup::loadAllResources()
 {
-    m_allTokens = ProgressTokenLoader::loadProgressTokens("ProgressTokens.csv");
+    m_allTokens = ProgressTokenLoader::loadProgressTokens(resolvePath("ProgressTokens.csv"));
 
-    m_deckAge1 = UniversalCardLoader::loadAgeCards("AgeI.csv");
-    m_deckAge2 = UniversalCardLoader::loadAgeCards ("AgeII.csv");
-    m_deckAge3 = UniversalCardLoader::loadAgeCards("AgeIII.csv");
-    m_deckGuilds = UniversalCardLoader::loadGuilds("Guilds.csv");
+    m_deckAge1 = UniversalCardLoader::loadAgeCards(resolvePath("AgeI.csv"));
+    m_deckAge2 = UniversalCardLoader::loadAgeCards(resolvePath("AgeII.csv"));
+    m_deckAge3 = UniversalCardLoader::loadAgeCards(resolvePath("AgeIII.csv"));
+    m_deckGuilds = UniversalCardLoader::loadGuilds(resolvePath("Guilds.csv"));
     
-    m_allWonders = UniversalCardLoader::loadWonders("Wonders.csv");
+    m_allWonders = UniversalCardLoader::loadWonders(resolvePath("Wonders.csv"));
 }
 
 

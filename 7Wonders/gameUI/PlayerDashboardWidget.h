@@ -20,7 +20,9 @@ public:
     void setTheme(bool isOpponent);
 
     // Updates the displayed data
-    void updateDashboard(const std::string& name, int coins, const std::vector<std::shared_ptr<Wonder>>& wonders);
+    void updateDashboard(const std::string& name, int coins, 
+                         const std::map<Resource, std::uint8_t>& resources,
+                         const std::vector<std::shared_ptr<Wonder>>& wonders);
 
 private:
     Ui::PlayerDashboardWidget *ui;

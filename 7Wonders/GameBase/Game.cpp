@@ -25,15 +25,15 @@ Game::Game()
     m_opponent = m_player2.get();
 }
 
-void Game::setPlayerTypes(bool p1IsAI, bool p2IsAI)
+void Game::setPlayerTypes(bool p1IsAI, bool p2IsAI, AI_Difficulty difficulty)
 {
     std::string n1 = m_player1->getName();
     std::string n2 = m_player2->getName();
 
-    if (p1IsAI) m_player1 = std::make_shared<AI_Player>(n1, 1);
+    if (p1IsAI) m_player1 = std::make_shared<AI_Player>(n1, 1, difficulty);
     else m_player1 = std::make_shared<Player>(n1, 1);
 
-    if (p2IsAI) m_player2 = std::make_shared<AI_Player>(n2, 2);
+    if (p2IsAI) m_player2 = std::make_shared<AI_Player>(n2, 2, difficulty);
     else m_player2 = std::make_shared<Player>(n2, 2);
 
     // Reset pointers
@@ -48,10 +48,14 @@ void Game::printPlayerInfo(const Player& player, std::ostream& os) const
 
 void Game::switchTurn()
 {
-    // Schimbăm pointerii între ei
-    Player* temp = m_currentPlayer;
-    m_currentPlayer = m_opponent;
-    m_opponent = temp;
+    if (m_currentPlayer == m_player1.get()) {
+        m_currentPlayer = m_player2.get();
+        m_opponent = m_player1.get();
+    } else {
+        m_currentPlayer = m_player1.get();
+        m_opponent = m_player2.get();
+    }
+    std::cout << "[Turn] Switched to " << m_currentPlayer->getName() << " (ptr: " << m_currentPlayer << ")\n";
 }
 
 bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
@@ -351,6 +355,7 @@ void Game::draftWondersPhase() {
 
     m_currentPlayer = m_player1.get();
     m_opponent = m_player2.get();
+    std::cout << "[Draft] Phase 1 Started. First player: " << m_currentPlayer->getName() << "\n";
 }
 
 void Game::startNextAge()
@@ -433,6 +438,8 @@ bool Game::draftWonder(int wonderId)
         return false; 
     }
 
+    std::cout << "[Draft] " << m_currentPlayer->getName() << " (ptr: " << m_currentPlayer << ") drafts wonder ID " << wonderId << "\n";
+    std::cout << "        P1: " << m_player1.get() << ", P2: " << m_player2.get() << "\n";
     m_currentPlayer->addWonders(*it);
     currentDraftSet.erase(it); 
 
@@ -445,7 +452,10 @@ bool Game::draftWonder(int wonderId)
     if (currentDraftSet.empty()) {
         m_draftPhase++; 
         if (m_draftPhase == 2) {
-            switchTurn();
+            // Phase 2 starts with Player 2
+            m_currentPlayer = m_player2.get();
+            m_opponent = m_player1.get();
+            std::cout << "[Draft] Phase 2 Started. First player: " << m_currentPlayer->getName() << "\n";
         }
     }
 

@@ -1,128 +1,115 @@
-// ConsoleGame/main.cpp
 #include <iostream>
-#include <cassert>
-#include <map>
 #include <memory>
+#include <chrono>
+#include <filesystem> // For absolute path
 #include "Game.h"
-#include "testEngine.h"
-#include "CardBase.h" 
+#include "AI_Player.h"
+#include "CardBase.h"
 #include "Wonder.h"
 
-// Unit Tests
-void runUnitTests() {
-    std::cout << "\n=== RUNNING UNIT TESTS ===\n";
+namespace fs = std::filesystem;
 
-    // 1. Setup Game
-    Game game;
-    game.initialize();
-    Player* p1 = game.getCurrentPlayer();
-    Player* p2 = game.getOpponent();
+// --- AI TRAINING LOOP ---
+void trainAI(int episodes) {
+    std::cout << "=== STARTING AI TRAINING (" << episodes << " episodes) ===\n";
+    auto startTime = std::chrono::high_resolution_clock::now();
 
-    // Clear initial resources for clean testing
-    // p1->removeResource(Coin, 7); // Cannot remove if not enough, but they start with 7
-    // Actually, let's just assert they have 7
-    assert(p1->getCoins() == 7);
-    assert(p2->getCoins() == 7);
+    int p1Wins = 0;
+    int p2Wins = 0;
+    
+    // Stats for the last played game
+    int lastVP1 = 0;
+    int lastVP2 = 0;
+    std::string lastWinner = "Draw";
 
-    // --- TEST 1: Resource Trading Costs ---
-    std::cout << "Test 1: Resource Trading... ";
-    
-    // P2 generates 1 Wood. Cost for P1 to buy Wood should be 2 (base) + 1 (opp) = 3
-    p2->addResource(Resource::Wood, 1);
-    
-    // Create a dummy card requiring 1 Wood
-    std::map<Resource, uint8_t> costWood1;
-    costWood1[Resource::Wood] = 1;
-    
-    // Check cost for P1
-    uint8_t tradeCost = p1->findTotalCost(CardBase("Dummy", 999, Color::Blue, costWood1, std::nullopt, std::nullopt), *p2);
-    // Base 2 + 1 (opp production) = 3 coins. P1 has 0 wood.
-    // Wait, CardBase constructor signature: string, id, color, cost, symbol, unlocks
-    // findTotalCost includes the card's coin cost (0 here) + trade cost. 
-    
-    if (tradeCost == 3) std::cout << "PASS\n";
-    else std::cout << "FAIL (Expected 3, got " << (int)tradeCost << ")\n";
+    for (int i = 0; i < episodes; ++i) {
+        Game game;
+        
+        // 1. Setup AI vs AI (Adaptive/Hard for training)
+        game.setPlayerTypes(true, true, AI_Difficulty::ADAPTIVE); 
+        game.initialize();
 
-    // --- TEST 2: Victory Points Calculation ---
-    std::cout << "Test 2: Victory Points... ";
-    
-    // P1 has 7 coins -> 2 VP (7/3 = 2)
-    // Add a Blue Card worth 5 VP (hypothetically)
-    // We need to manipulate points directly since we can't easily create a card with VP effects without the loader
-    p1->add_Points(Points::BlueCards, 5);
-    
-    int vp = game.calculatePlayerVP(*p1);
-    // 2 (coins) + 5 (blue) = 7
-    if (vp == 7) std::cout << "PASS\n";
-    else std::cout << "FAIL (Expected 7, got " << vp << ")\n";
+        auto p1 = std::dynamic_pointer_cast<AI_Player>(std::shared_ptr<Player>(std::shared_ptr<Player>(), &game.getPlayer1()));
+        auto p2 = std::dynamic_pointer_cast<AI_Player>(std::shared_ptr<Player>(std::shared_ptr<Player>(), &game.getPlayer2()));
 
-    // --- TEST 3: Guild VP Logic ---
-    std::cout << "Test 3: Guild VP (Magistrates)... ";
-    // Magistrates Guild (ID 75): 1 VP per Blue Card (max of self/opp)
-    // P1 has 1 Blue Card (from Test 2 mock, wait, I added points directly, not to inventory)
-    // Need to add actual cards to inventory for Guild Logic to work
-    
-    // Create Mock Blue Card
-    auto blueCard = std::make_shared<CardBase>("BlueTemple", 100, Color::Blue, std::map<Resource, uint8_t>{}, std::nullopt, std::nullopt);
-    p1->addCardToInventory(blueCard); 
-    p1->addCardToInventory(blueCard); // Add twice. P1 has 2 Blue cards.
-    
-    // P2 has 0 Blue cards.
-    
-    // Add Magistrates Guild to P1
-    auto magistrates = std::make_shared<CardBase>("Magistrates", 75, Color::Purple, std::map<Resource, uint8_t>{}, std::nullopt, std::nullopt);
-    p1->addCardToInventory(magistrates);
-    
-    // Calculate VP. Should be:
-    // Coins: 7/3 = 2
-    // Blue Points: 5 (from manual add) -> wait, manual add persists.
-    // Guild: Max(2, 0) = 2 VP.
-    // Total: 2 + 5 + 2 = 9.
-    
-    vp = game.calculatePlayerVP(*p1);
-    
-    if (vp == 9) std::cout << "PASS\n";
-    else std::cout << "FAIL (Expected 9, got " << vp << ")\n";
+        if (p1) p1->enableTraining(true);
+        if (p2) p2->enableTraining(true);
 
-    // --- TEST 4: Military Victory Check ---
-    std::cout << "Test 4: Military Victory... ";
-    // Force pawn to 9
-    // Access military track via Board? Board is private in Game... but Game has checkForInstantWin
-    // We can't easily force pawn position via public API of Game without playing cards.
-    // We can use Board from Setup? m_setup is private.
-    // We can use p1 to buy Red cards? 
-    // Let's assume MilitaryTrack logic works if unit tests pass. 
-    // We'll skip deep integration test for Military for now due to access restrictions.
-    std::cout << "SKIPPED (Access restrictions)\n";
+        // 2. Draft Phase Simulation
+        while (game.getDraftPhase() > 0 && !game.getCurrentDraftSet().empty()) {
+            AI_Player* currentAI = dynamic_cast<AI_Player*>(game.getCurrentPlayer());
+            if (currentAI) {
+                auto chosenWonder = currentAI->chooseWonderFromDraft(game.getCurrentDraftSet());
+                if (chosenWonder) {
+                    game.draftWonder(chosenWonder->getId());
+                } else {
+                    game.draftWonder(game.getCurrentDraftSet()[0]->getId());
+                }
+            }
+        }
 
-    std::cout << "=== END UNIT TESTS ===\n\n";
+        // 3. Gameplay Loop
+        while (!game.isGameOver()) {
+            AI_Player* currentAI = dynamic_cast<AI_Player*>(game.getCurrentPlayer());
+            Player* opponent = game.getOpponent();
+
+            if (currentAI && opponent) {
+                currentAI->makeDecision(game.getBoard(), *opponent, game.getCurrentAge());
+
+                if (currentAI->hasExtraTurn()) {
+                    currentAI->setHasExtraTurn(false); 
+                } else {
+                    game.switchTurn();
+                }
+            }
+
+            if (game.isEndOfAge()) {
+                game.startNextAge();
+            }
+        }
+
+        // 4. End Game & Reward
+        lastVP1 = game.calculatePlayerVP(game.getPlayer1());
+        lastVP2 = game.calculatePlayerVP(game.getPlayer2());
+        bool p1Won = (lastVP1 > lastVP2); 
+        
+        if (lastVP1 > lastVP2) lastWinner = "Player 1 (AI)";
+        else if (lastVP2 > lastVP1) lastWinner = "Player 2 (AI)";
+        else lastWinner = "Draw";
+
+        if (p1) p1->onGameEnd(p1Won, lastVP1);
+        if (p2) p2->onGameEnd(!p1Won, lastVP2);
+
+        if (p1Won) p1Wins++; else if (lastVP2 > lastVP1) p2Wins++;
+
+        if ((i + 1) % 100 == 0) {
+            std::cout << "Episode " << i + 1 << "/" << episodes 
+                      << " | P1 Wins: " << p1Wins << " | P2 Wins: " << p2Wins << "\r" << std::flush;
+        }
+    }
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = endTime - startTime;
+
+    std::cout << "\n\n=== TRAINING COMPLETE ===\n";
+    std::cout << "Time Elapsed: " << elapsed.count() << "s\n";
+    std::cout << "Total Games: " << episodes << "\n";
+    std::cout << "Player 1 Wins: " << p1Wins << " (" << (p1Wins * 100.0 / episodes) << "%)\n";
+    std::cout << "Player 2 Wins: " << p2Wins << " (" << (p2Wins * 100.0 / episodes) << "%)\n";
+    
+    std::cout << "\n=== LAST MATCH RESULT ===\n";
+    std::cout << "Winner: " << lastWinner << "\n";
+    std::cout << "Player 1 VP: " << lastVP1 << "\n";
+    std::cout << "Player 2 VP: " << lastVP2 << "\n";
+
+    fs::path modelPath = fs::absolute("ai_model.txt");
+    std::cout << "\n[System] AI Model saved to: " << modelPath.string() << "\n";
 }
 
 int main() {
-    // Run tests first
-    try {
-        runUnitTests();
-    } catch (const std::exception& e) {
-        std::cerr << "Tests crashed: " << e.what() << "\n";
-    }
+    trainAI(1000);
 
-    std::cout << "=== 7 WONDERS DUEL - CONSOLE EDITION ===\n";
-
-    try {
-        Game game;
-
-        // 1. Creează și pornește controlerul
-        TestEngine runner(game);
-
-        // 2. Rulează tot jocul
-        runner.runGameLoop();
-
-    }
-    catch (const std::exception& e) {
-        std::cerr << "CRASH: " << e.what() << std::endl;
-    }
-
-    std::cout << "Joc terminat. Apasa Enter.";
+    std::cout << "\nPress Enter to exit...";
     std::cin.ignore();
     std::cin.get();
     return 0;

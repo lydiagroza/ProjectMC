@@ -20,6 +20,7 @@ private:
     static std::map<Resource, uint8_t> parseCost(const std::string& s);
     static Color parseColor(const std::string& s);
     static std::optional<Symbol> parseSymbol(const std::string& s);
+    static std::string translateEffect(const std::string& raw);
 
     // Funcția care "traduce" string-urile de efect în logică de cod
     static std::vector<std::function<void(Player&, Board&, Player&)>> parseEffects(const std::string& s);

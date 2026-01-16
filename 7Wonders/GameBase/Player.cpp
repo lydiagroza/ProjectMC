@@ -389,12 +389,12 @@ void Player::discardCard([[maybe_unused]] const CardBase& card) {
     addResource(Coin,gainedCoins);
 }
 
-void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder &wonderToBuild, Player& opponent, Board& board) {
+bool Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder &wonderToBuild, Player& opponent, Board& board) {
     std::uint8_t totalCoinCost = this->findTotalCost(wonderToBuild, opponent); // TEMPLATE! 
 
     if (totalCoinCost == static_cast<std::uint8_t>(-1)) {
         std::cout << "Wonder " << wonderToBuild.getName() << " can't be built: Insufficient funds or resource trading cost is too high." << std::endl;
-        return;
+        return false;
     }
 
     if (totalCoinCost > 0) {
@@ -424,6 +424,7 @@ void Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder &wonderT
     board.addCardToDiscardPile(cardUsed);
 
     std::cout << "Wonder " << wonderToBuild.getName() << " constructed successfully. Cost paid: " << static_cast<int>(totalCoinCost) << " coins." << std::endl;
+    return true;
 }
 
 // Progress token funcitons

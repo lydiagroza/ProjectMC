@@ -2,6 +2,9 @@
 
 #include <QWidget>
 #include <vector>
+#include <map>
+#include <cstdint>
+#include "CardBase.h"
 #include "Wonder.h"
 
 namespace Ui {

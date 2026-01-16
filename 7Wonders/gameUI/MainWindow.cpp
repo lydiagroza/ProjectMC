@@ -984,12 +984,31 @@ void MainWindow::updateTurnIndicator()
 {
     if (!m_game) return;
     bool isPlayer1Turn = (m_game->getCurrentPlayer()->getName() == m_game->getPlayer1().getName());
+    
+    // 1. Update Text (Duck only)
+    ui->turnIndicator->setText("🦆");
+    
+    // 2. Update Style (Border Color)
     QString borderColor = isPlayer1Turn ? "#1565C0" : "#8B0000"; 
-    QString arrow = isPlayer1Turn ? "⬇️" : "⬆️";
-    ui->turnIndicator->setText("🦆 " + arrow);
     ui->turnIndicator->setStyleSheet(
-        QString("background-color: #FFD700; border: 5px solid %1; border-radius: 30px; font-size: 16px; font-weight: bold; color: #2C1810;").arg(borderColor)
+        QString("background-color: #FFD700; border: 5px solid %1; border-radius: 30px; font-size: 30px;").arg(borderColor)
     );
+
+    // 3. Move Indicator (Top vs Bottom)
+    // Access the layout of turnContainer
+    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->turnContainer->layout());
+    if (layout) {
+        // Remove from current position
+        layout->removeWidget(ui->turnIndicator);
+        
+        if (isPlayer1Turn) {
+            // Player 1 (Bottom) -> Add to bottom
+            layout->addWidget(ui->turnIndicator, 0, Qt::AlignBottom | Qt::AlignHCenter);
+        } else {
+            // Player 2 (Top) -> Insert at top
+            layout->insertWidget(0, ui->turnIndicator, 0, Qt::AlignTop | Qt::AlignHCenter);
+        }
+    }
 }
 
 QString MainWindow::getColorHex(Color c)

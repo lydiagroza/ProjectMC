@@ -171,6 +171,26 @@ void MainWindow::updateGameState()
     }
     updatePlayerInventories();
     updateTurnIndicator();
+
+    // Check for INSTANT WIN (Military or Science)
+    if (m_game->checkForInstantWin()) {
+        std::optional<Player> winner = m_game->determinateWinner();
+        if (winner) {
+            QString winnerName = QString::fromStdString(winner->getName());
+            QMessageBox::information(this, "Victory!", winnerName + " has won the game due to military or scientific supremacy!");
+        }
+        else {
+            // This case should ideally not happen if checkForInstantWin is true, but as a fallback:
+            QMessageBox::information(this, "Game Over", "The game has ended!");
+        }
+        
+        // Disable all game interactions
+        ui->btnBuild->setEnabled(false);
+        ui->btnDiscard->setEnabled(false);
+        ui->btnWonder->setEnabled(false);
+        ui->boardWidgetPage->setEnabled(false);
+        return; // Stop further processing
+    }
     
     // Check for end of age
     if (m_game->isEndOfAge()) {

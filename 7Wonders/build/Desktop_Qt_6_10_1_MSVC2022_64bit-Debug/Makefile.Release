@@ -583,6 +583,7 @@ release\moc_MainWindow.cpp: ..\..\gameUI\MainWindow.h \
 		..\..\GameBase\CardsPyramid.h \
 		..\..\GameBase\Player.h \
 		..\..\GameBase\GameConstants.h \
+		..\..\gameAI\AI_Player.h \
 		..\..\gameUI\BoardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
 		..\..\gameUI\CardWidget.h \
@@ -597,6 +598,19 @@ release\moc_MainWindow.cpp: ..\..\gameUI\MainWindow.h \
 		..\..\gameUI\MilitaryTrackWidget.h \
 		..\..\gameUI\SplashScreen.h \
 		..\..\gameUI\NameSelectionWidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QComboBox \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qcombobox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyleoption.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvalidator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qregularexpression.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyle.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtabbar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qrubberband.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
 	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\MainWindow.h -o release\moc_MainWindow.cpp
@@ -1841,7 +1855,6 @@ release\moc_PlayerDashboardWidget.cpp: ..\..\gameUI\PlayerDashboardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
-		..\..\GameBase\Wonder.h \
 		..\..\GameBase\CardBase.h \
 		..\..\GameBase\Board.h \
 		..\..\GameBase\CardNode.h \
@@ -1849,6 +1862,7 @@ release\moc_PlayerDashboardWidget.cpp: ..\..\gameUI\PlayerDashboardWidget.h \
 		..\..\GameBase\ProgressTokens.h \
 		..\..\GameBase\MilitaryTrack.h \
 		..\..\GameBase\CardsPyramid.h \
+		..\..\GameBase\Wonder.h \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
 	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\PlayerDashboardWidget.h -o release\moc_PlayerDashboardWidget.cpp
@@ -2052,6 +2066,21 @@ release\moc_NameSelectionWidget.cpp: ..\..\gameUI\NameSelectionWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QComboBox \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qcombobox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyleoption.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvalidator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qregularexpression.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyle.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtabbar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtabwidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qrubberband.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qframe.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
 	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\NameSelectionWidget.h -o release\moc_NameSelectionWidget.cpp
@@ -2884,6 +2913,21 @@ ui_MainWindow.h: ..\..\UI\MainWindow.ui \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QComboBox \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qcombobox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyleoption.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvalidator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qregularexpression.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyle.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtabbar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtabwidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qrubberband.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qframe.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qwidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgetsglobal.h \
@@ -3499,14 +3543,14 @@ ui_MainWindow.h: ..\..\UI\MainWindow.ui \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
-		..\..\GameBase\Wonder.h \
 		..\..\GameBase\CardBase.h \
 		..\..\GameBase\Board.h \
 		..\..\GameBase\CardNode.h \
 		..\..\GameBase\gameExport.h \
 		..\..\GameBase\ProgressTokens.h \
 		..\..\GameBase\MilitaryTrack.h \
-		..\..\GameBase\CardsPyramid.h
+		..\..\GameBase\CardsPyramid.h \
+		..\..\GameBase\Wonder.h
 	C:\Qt\6.10.1\msvc2022_64\bin\uic.exe ..\..\UI\MainWindow.ui -o ui_MainWindow.h
 
 ui_SplashScreen.h: ..\..\UI\SplashScreen.ui \
@@ -3608,7 +3652,8 @@ release\GameSetup.obj: ..\..\GameBase\GameSetup.cpp ..\..\GameBase\GameSetup.h \
 		..\..\GameBase\ProgressTokenLoader.h \
 		..\..\GameBase\Game.h \
 		..\..\GameBase\Player.h \
-		..\..\GameBase\GameConstants.h
+		..\..\GameBase\GameConstants.h \
+		..\..\gameAI\AI_Player.h
 
 release\MilitaryTrack.obj: ..\..\GameBase\MilitaryTrack.cpp ..\..\GameBase\MilitaryTrack.h \
 		..\..\GameBase\gameExport.h
@@ -3636,7 +3681,8 @@ release\UniversalCardLoader.obj: ..\..\GameBase\UniversalCardLoader.cpp ..\..\Ga
 		..\..\GameBase\Game.h \
 		..\..\GameBase\GameSetup.h \
 		..\..\GameBase\Player.h \
-		..\..\GameBase\GameConstants.h
+		..\..\GameBase\GameConstants.h \
+		..\..\gameAI\AI_Player.h
 
 release\ProgressTokenLoader.obj: ..\..\GameBase\ProgressTokenLoader.cpp ..\..\GameBase\ProgressTokenLoader.h \
 		..\..\GameBase\ProgressTokens.h \
@@ -3669,7 +3715,8 @@ release\Wonder.obj: ..\..\GameBase\Wonder.cpp ..\..\GameBase\Wonder.h \
 		..\..\GameBase\Player.h \
 		..\..\GameBase\GameConstants.h \
 		..\..\GameBase\Game.h \
-		..\..\GameBase\GameSetup.h
+		..\..\GameBase\GameSetup.h \
+		..\..\gameAI\AI_Player.h
 
 release\AI_Player.obj: ..\..\gameAI\AI_Player.cpp ..\..\gameAI\AI_Player.h \
 		..\..\GameBase\Player.h \
@@ -3697,7 +3744,8 @@ release\testEngine.obj: ..\..\ConsoleGame\testEngine.cpp ..\..\ConsoleGame\testE
 		..\..\GameBase\MilitaryTrack.h \
 		..\..\GameBase\CardsPyramid.h \
 		..\..\GameBase\Player.h \
-		..\..\GameBase\GameConstants.h
+		..\..\GameBase\GameConstants.h \
+		..\..\gameAI\AI_Player.h
 
 release\main.obj: ..\..\gameUI\main.cpp ..\..\gameUI\MainWindow.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QMainWindow \
@@ -3925,6 +3973,7 @@ release\main.obj: ..\..\gameUI\main.cpp ..\..\gameUI\MainWindow.h \
 		..\..\GameBase\CardsPyramid.h \
 		..\..\GameBase\Player.h \
 		..\..\GameBase\GameConstants.h \
+		..\..\gameAI\AI_Player.h \
 		..\..\gameUI\BoardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
 		..\..\gameUI\CardWidget.h \
@@ -3939,6 +3988,19 @@ release\main.obj: ..\..\gameUI\main.cpp ..\..\gameUI\MainWindow.h \
 		..\..\gameUI\MilitaryTrackWidget.h \
 		..\..\gameUI\SplashScreen.h \
 		..\..\gameUI\NameSelectionWidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QComboBox \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qcombobox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyleoption.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvalidator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qregularexpression.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyle.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtabbar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qrubberband.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QApplication \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qapplication.h
 
@@ -4168,6 +4230,7 @@ release\MainWindow.obj: ..\..\gameUI\MainWindow.cpp ..\..\gameUI\MainWindow.h \
 		..\..\GameBase\CardsPyramid.h \
 		..\..\GameBase\Player.h \
 		..\..\GameBase\GameConstants.h \
+		..\..\gameAI\AI_Player.h \
 		..\..\gameUI\BoardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
 		..\..\gameUI\CardWidget.h \
@@ -4182,11 +4245,23 @@ release\MainWindow.obj: ..\..\gameUI\MainWindow.cpp ..\..\gameUI\MainWindow.h \
 		..\..\gameUI\MilitaryTrackWidget.h \
 		..\..\gameUI\SplashScreen.h \
 		..\..\gameUI\NameSelectionWidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QComboBox \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qcombobox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyleoption.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvalidator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qregularexpression.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyle.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtabbar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qrubberband.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
 		ui_MainWindow.h \
 		..\..\gameUI\WonderChoiceDialog.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QDialog \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qdialog.h \
-		..\..\gameAI\AI_Player.h \
 		..\..\gameUI\PlayerDashboardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QPushButton \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qpushbutton.h \
@@ -5461,7 +5536,6 @@ release\PlayerDashboardWidget.obj: ..\..\gameUI\PlayerDashboardWidget.cpp ..\..\
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
-		..\..\GameBase\Wonder.h \
 		..\..\GameBase\CardBase.h \
 		..\..\GameBase\Board.h \
 		..\..\GameBase\CardNode.h \
@@ -5469,6 +5543,7 @@ release\PlayerDashboardWidget.obj: ..\..\gameUI\PlayerDashboardWidget.cpp ..\..\
 		..\..\GameBase\ProgressTokens.h \
 		..\..\GameBase\MilitaryTrack.h \
 		..\..\GameBase\CardsPyramid.h \
+		..\..\GameBase\Wonder.h \
 		ui_PlayerDashboardWidget.h \
 		..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
@@ -5673,9 +5748,33 @@ release\NameSelectionWidget.obj: ..\..\gameUI\NameSelectionWidget.cpp ..\..\game
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QComboBox \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qcombobox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyleoption.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvalidator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qregularexpression.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyle.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtabbar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtabwidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qrubberband.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qframe.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
 		ui_NameSelectionWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
-		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QVBoxLayout \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qboxlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayoutitem.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgridlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QLabel \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlabel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpicture.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextdocument.h
 
 release\WonderChoiceDialog.obj: ..\..\gameUI\WonderChoiceDialog.cpp ..\..\GameBase\Player.h \
 		..\..\GameBase\CardBase.h \

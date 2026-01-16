@@ -295,7 +295,7 @@ void Game::handlePlayerAction()
         success = m_currentPlayer->buyCard(selectedNode->getCard(), *m_opponent, m_board);
     }
     else if (action == 2) {
-        m_currentPlayer->discardCard(*selectedNode->getCard());
+        m_currentPlayer->discardCard(selectedNode->getCard(), m_board);
         std::cout << "Carte vanduta pentru bani.\n";
         success = true;
     }
@@ -477,4 +477,9 @@ int Game::getDraftPhase() const {
 void Game::handleBuildFromDiscard()
 {
     // TODO: Implement the logic for building from the discard pile.
+}
+
+const std::vector<std::shared_ptr<CardBase>>& Game::getDiscardedCards() const
+{
+    return m_board.getDiscardPile();
 }

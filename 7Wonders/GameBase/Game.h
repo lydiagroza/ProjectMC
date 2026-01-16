@@ -96,4 +96,6 @@ public:
     int getDraftPhase() const;
 
     std::optional<Player> determinateWinner();
+
+    const std::vector<std::shared_ptr<CardBase>>& getDiscardedCards() const;
 };

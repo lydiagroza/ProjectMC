@@ -102,6 +102,8 @@ MainWindow::MainWindow(QWidget* parent)
     ui->opponentDashboard->setVisible(false);
     ui->playerDashboard->setVisible(false);
     ui->rightZone->setVisible(false);
+    ui->btnDiscardedCards->setVisible(false);
+    ui->turnContainer->setVisible(false);
 
     // Initial button state
     ui->btnBuild->setEnabled(false);
@@ -409,6 +411,8 @@ void MainWindow::onSplashFinished(SplashScreen::GameMode mode)
                         ui->opponentDashboard->setVisible(true);
                         ui->playerDashboard->setVisible(true);
                         ui->rightZone->setVisible(true);
+                        ui->btnDiscardedCards->setVisible(true);
+                        ui->turnContainer->setVisible(true);
                         
                         // We need to refresh the UI fully
                         updateGameState(); 
@@ -448,6 +452,8 @@ void MainWindow::onNamesConfirmed(const QString& p1, const QString& p2, int diff
     ui->opponentDashboard->setVisible(true);
     ui->playerDashboard->setVisible(true);
     ui->rightZone->setVisible(true);
+    ui->btnDiscardedCards->setVisible(true);
+    ui->turnContainer->setVisible(true);
 
     ui->statusbar->showMessage("⚔️ Initializing the ancient world of ducks... ⚔️");
     startGame();
@@ -503,6 +509,8 @@ void MainWindow::updateGameState()
         ui->opponentDashboard->setVisible(false);
         ui->playerDashboard->setVisible(false);
         ui->rightZone->setVisible(false);
+        ui->btnDiscardedCards->setVisible(false);
+        ui->turnContainer->setVisible(false);
         return; 
     }
 
@@ -621,6 +629,8 @@ void MainWindow::updateGameState()
         GameEndDialog dialog(m_game, this);
         dialog.exec();
         ui->stack->setCurrentWidget(ui->splashScreenPage);
+        ui->btnDiscardedCards->setVisible(false);
+        ui->turnContainer->setVisible(false);
         return;
     }
 

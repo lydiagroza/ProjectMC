@@ -67,7 +67,7 @@ void CardWidget::setupCard(const QString& name, const QString& colorCode, bool i
         ui->costLabel->setVisible(!cost.isEmpty());
         ui->effectLabel->setText(effect);
         ui->effectLabel->setVisible(true);
-        ui->imageLabel->setVisible(true); // Make sure image label is visible
+        
         ui->symbolLabel->setText(getSymbolEmoji(unlocks));
         ui->symbolLabel->setVisible(!unlocks.isEmpty());
 
@@ -97,8 +97,7 @@ void CardWidget::setupCard(const QString& name, const QString& colorCode, bool i
         ui->symbolLabel->setVisible(false);
         ui->effectLabel->setText("?");
         ui->effectLabel->setStyleSheet("color: #3E2723; background: transparent; font-size: 30px; font-weight: bold; border: none;");
-        ui->imageLabel->clear(); // Clear image for face down card
-        ui->imageLabel->setVisible(false); // Hide image label
+        
         
         ui->cardFrame->setStyleSheet(
             "QFrame#cardFrame { "
@@ -142,8 +141,7 @@ void CardWidget::setImage(const QString& imagePath)
     if (!pixmap.isNull()) {
         // Wonder Mode: Image as Background
         
-        // Hide the explicit image label
-        ui->imageLabel->setVisible(false);
+        
 
         // Apply image to the frame background
         QString style = QString(
@@ -225,8 +223,6 @@ void CardWidget::setImage(const QString& imagePath)
         ui->costLabel->setVisible(!ui->costLabel->text().isEmpty());
         ui->effectLabel->setVisible(true); // Now visible for wonders too!
 
-    } else {
-        ui->imageLabel->clear(); 
     }
 }
 

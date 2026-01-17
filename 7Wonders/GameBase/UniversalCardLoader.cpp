@@ -60,13 +60,17 @@ Color UniversalCardLoader::parseColor(const string& s) {
 
 optional<Symbol> UniversalCardLoader::parseSymbol(const string& s) {
     if (s.empty()) return nullopt;
+    string lower_s = s;
+    std::transform(lower_s.begin(), lower_s.end(), lower_s.begin(),
+                   [](unsigned char c){ return std::tolower(c); });
+
     static const unordered_map<string, Symbol> symMap = {
         {"barrel", Barrel}, {"gear", Gear}, {"book", Book}, {"temple", Temple},
         {"target", Target}, {"lyre", Lyre}, {"castle", Castle}, {"droplet", Droplet},
         {"vase", Vase}, {"column", Column}, {"sword", Sword}, {"pot", Pot},
         {"horse", Horse}, {"helmet", Helmet}, {"mask", Mask}, {"sun", Sun}, {"moon", Moon}
     };
-    auto it = symMap.find(s);
+    auto it = symMap.find(lower_s);
     return (it != symMap.end()) ? make_optional(it->second) : nullopt;
 }
 
@@ -381,13 +385,51 @@ vector<shared_ptr<CardBase>> UniversalCardLoader::loadAgeCards(const string& fil
 
 
 
-        auto card = make_shared<CardBase>(trim(name), (uint16_t)stoi(trim(id)), parseColor(trim(color)), parseCost(trim(cost)), parseSymbol(trim(sym)), parseSymbol(trim(unl)));
+                auto card = make_shared<CardBase>(trim(name), (uint16_t)stoi(trim(id)), parseColor(trim(color)), parseCost(trim(cost)), parseSymbol(trim(sym)), parseSymbol(trim(unl)));
 
-        card->m_effectDescription = translateEffect(trim(eff));
 
-        for (auto& ef : parseEffects(trim(eff))) card->addEffect(ef);
 
-        cards.push_back(card);
+                card->m_effectDescription = translateEffect(trim(eff));
+
+
+
+                for (auto& ef : parseEffects(trim(eff))) card->addEffect(ef);
+
+
+
+        
+
+
+
+                if (card->getUnlocks().has_value()) {
+
+
+
+                    Symbol unlock_symbol = card->getUnlocks().value();
+
+
+
+                    card->addEffect([unlock_symbol](Player& p, Board&, Player&) {
+
+
+
+                        p.add_ChainSymbol(unlock_symbol);
+
+
+
+                    });
+
+
+
+                }
+
+
+
+        
+
+
+
+                cards.push_back(card);
 
     }
 

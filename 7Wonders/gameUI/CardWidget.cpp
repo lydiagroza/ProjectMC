@@ -34,7 +34,29 @@ void CardWidget::onButtonClicked()
     emit cardClicked(m_cardId);
 }
 
-void CardWidget::setupCard(const QString& name, const QString& colorCode, bool isFaceUp, const QString& cost, const QString& effect)
+QString getSymbolEmoji(const QString& symbolName) {
+    QString lowerSymbolName = symbolName.toLower();
+    if (lowerSymbolName == "moon") return "🌙";
+    if (lowerSymbolName == "sun") return "☀️";
+    if (lowerSymbolName == "mask") return "🎭";
+    if (lowerSymbolName == "column") return "🏛️";
+    if (lowerSymbolName == "droplet") return "💧";
+    if (lowerSymbolName == "temple") return "⛩️";
+    if (lowerSymbolName == "book") return "📖";
+    if (lowerSymbolName == "gear") return "⚙️";
+    if (lowerSymbolName == "lyre") return "🪕";
+    if (lowerSymbolName == "pot") return "🏺";
+    if (lowerSymbolName == "horse") return "🐎";
+    if (lowerSymbolName == "sword") return "⚔️";
+    if (lowerSymbolName == "castle") return "🏰";
+    if (lowerSymbolName == "target") return "🎯";
+    if (lowerSymbolName == "helmet") return "🪖";
+    if (lowerSymbolName == "vase") return "🏺";
+    if (lowerSymbolName == "barrel") return "🛢️";
+    return "";
+}
+
+void CardWidget::setupCard(const QString& name, const QString& colorCode, bool isFaceUp, const QString& cost, const QString& effect, const QString& unlocks)
 {
     m_isFaceUp = isFaceUp;
 
@@ -46,6 +68,8 @@ void CardWidget::setupCard(const QString& name, const QString& colorCode, bool i
         ui->effectLabel->setText(effect);
         ui->effectLabel->setVisible(true);
         ui->imageLabel->setVisible(true); // Make sure image label is visible
+        ui->symbolLabel->setText(getSymbolEmoji(unlocks));
+        ui->symbolLabel->setVisible(!unlocks.isEmpty());
 
         QString borderStyle = QString(
             "QFrame#cardFrame { "
@@ -70,6 +94,7 @@ void CardWidget::setupCard(const QString& name, const QString& colorCode, bool i
         // Face down (Back of card)
         ui->nameLabel->setVisible(false);
         ui->costLabel->setVisible(false);
+        ui->symbolLabel->setVisible(false);
         ui->effectLabel->setText("?");
         ui->effectLabel->setStyleSheet("color: #3E2723; background: transparent; font-size: 30px; font-weight: bold; border: none;");
         ui->imageLabel->clear(); // Clear image for face down card

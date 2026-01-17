@@ -14,7 +14,7 @@ public:
     explicit CardWidget(int cardId, QWidget* parent = nullptr);
     ~CardWidget();
 
-    void setupCard(const QString& name, const QString& colorCode, bool isFaceUp, const QString& cost = "", const QString& effect = "");
+        void setupCard(const QString& name, const QString& colorCode, bool isFaceUp, const QString& cost = "", const QString& effect = "", const QString& unlocks = "");
     void setSelected(bool selected);
     void setImage(const QString& imagePath); // New method to set the image
     static QString getWonderImagePath(const QString& wonderName); // Helper to find image path

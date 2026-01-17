@@ -934,18 +934,31 @@ void MainWindow::updatePlayerInventories()
         m_lblProgressP2->setText(name);
     }
 
-    // Helper to calculate estimated VP (Visible)
-    auto calculateVP = [](const Player& p, const Player& opp) -> int {
-        int vp = 0;
-        // 1. Military
-        vp += p.getVPFromMilitaryTokens();
-        // 2. Blue Cards (and others if they have VP directly on them, e.g. Guilds)
-        vp += p.getVPFromBlueCards(); 
-        vp += p.getVPFromGuilds(opp);
-        // 3. Treasury (1 VP per 3 coins)
-        vp += (p.getCoins() / 3);
-        // 4. Wonders (if built)
-        for (const auto& w : p.getWonders()) {
+        // Helper to calculate estimated VP (Visible)
+
+        auto calculateVP = [](const Player& p, const Player& opp) -> int {
+
+            int vp = 0;
+
+            // 1. Military
+
+            vp += p.getVPFromMilitaryTokens();
+
+            // 2. Blue Cards (and others if they have VP directly on them, e.g. Guilds)
+
+            vp += p.getVPFromBlueCards(); 
+
+            vp += p.getVPFromGuilds(opp);
+
+            // 3. Treasury - REMOVED for live display to start at 0 VP
+
+            // vp += (p.getCoins() / 3);
+
+            
+
+            // 4. Wonders (if built)
+
+            for (const auto& w : p.getWonders()) {
             if (w->getIsBuilt()) {
                  // Wonder VP is not easily accessible via a simple getter in all implementations, 
                  // but let's assume getEffectDescription or similar might hint, 

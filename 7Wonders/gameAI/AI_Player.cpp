@@ -290,6 +290,19 @@ AI_Player::AI_Player(const std::string& name, int id,
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     m_rng.seed(static_cast<unsigned int>(seed));
 
+    // Dacă strategia este BALANCED (default), alegem una random pentru a diversifica gameplay-ul (activăm logica "moartă")
+    if (m_strategy == AI_Strategy::BALANCED && m_difficulty != AI_Difficulty::EASY) {
+        std::uniform_int_distribution<int> dist(0, 3);
+        int val = dist(m_rng);
+        switch (val) {
+        case 0: m_strategy = AI_Strategy::MILITARY; break;
+        case 1: m_strategy = AI_Strategy::SCIENCE; break;
+        case 2: m_strategy = AI_Strategy::ECONOMY; break;
+        default: m_strategy = AI_Strategy::BALANCED; break;
+        }
+        std::cout << "[AI] " << name << " adopted strategy: " << (int)m_strategy << "\n";
+    }
+
     // Creează agent doar pentru HARD/ADAPTIVE
     if (m_difficulty == AI_Difficulty::HARD || m_difficulty == AI_Difficulty::ADAPTIVE) {
         m_learningAgent = std::make_unique<QLearningAgent>();
@@ -431,7 +444,7 @@ int AI_Player::evaluateEconomyValue(const std::shared_ptr<CardBase>& card) const
         value += getCoins() / 2;
     }
     if (card->getColor() == Color::Brown || card->getColor() == Color::Gray) {
-        value += 30;
+        value += 45;
     }
     return value;
 }
@@ -465,6 +478,13 @@ int AI_Player::evaluateCard(const std::shared_ptr<CardBase>& card, const Player&
     // Bonus pentru cărți blue (VP)
     if (card->getColor() == Color::Blue) value += 35;
 
+    // Bonus pentru Ghilde (Purple) - CRITICAL UPDATE
+    if (card->getColor() == Color::Purple) {
+        value += 60; // Base high value for guilds
+        // Add subtle bias based on strategy
+        if (m_strategy == AI_Strategy::ECONOMY) value += 10;
+    }
+
     // Bonus pentru chain symbols
     if (card->getSymbol().has_value()) value += 25;
 
@@ -481,16 +501,42 @@ int AI_Player::evaluateCard(const std::shared_ptr<CardBase>& card, const Player&
 }
 
 int AI_Player::evaluateWonder(const Wonder& wonder) const {
-    int value = 50;
-    const auto& effects = wonder.getEffects();
-    value += static_cast<int>(effects.size()) * 30;
+    int value = 60; // Base value
+    std::string name = wonder.getName();
+    std::transform(name.begin(), name.end(), name.begin(), ::toupper);
 
-    uint8_t totalCost = 0;
-    for (const auto& [res, amount] : wonder.getCost()) {
-        if (res == Resource::Coin) continue;
-        totalCost += amount;
+    // Strategie: MILITARY
+    if (m_strategy == AI_Strategy::MILITARY) {
+        if (name.find("ZEUS") != std::string::npos || 
+            name.find("CIRCUS") != std::string::npos ||
+            name.find("COLOSSUS") != std::string::npos) {
+            value += 50;
+        }
     }
-    if (totalCost <= 3) value += 20;
+    // Strategie: SCIENCE
+    else if (m_strategy == AI_Strategy::SCIENCE) {
+        if (name.find("LIBRARY") != std::string::npos || 
+            name.find("TEMPLE") != std::string::npos) {
+            value += 50;
+        }
+    }
+    // Strategie: ECONOMY
+    else if (m_strategy == AI_Strategy::ECONOMY) {
+        if (name.find("LIGHTHOUSE") != std::string::npos || 
+            name.find("PIRAEUS") != std::string::npos ||
+            name.find("GARDENS") != std::string::npos) {
+            value += 50;
+        }
+    }
+
+    // Bonus general pentru numărul de efecte
+    value += static_cast<int>(wonder.getEffects().size()) * 20;
+
+    // Penalizare ușoară pentru cost mare în resurse rare
+    uint8_t rareCost = 0;
+    rareCost += wonder.getCostForResource(Resource::Glass);
+    rareCost += wonder.getCostForResource(Resource::Papyrus);
+    value -= rareCost * 10;
 
     return value;
 }
@@ -504,8 +550,16 @@ bool AI_Player::shouldBuyCard(const std::shared_ptr<CardBase>& card, const Playe
     }
 
     int cardValue = evaluateCard(card, opponent);
-    int costThreshold = (m_difficulty == AI_Difficulty::MEDIUM) ? 30 : 50;
-    return cardValue > costThreshold;
+    
+    // Threshold-ul depinde de dificultate
+    int costThreshold = (m_difficulty == AI_Difficulty::MEDIUM) ? 35 : 55;
+    
+    // Dacă e ADAPTIVE/HARD, suntem mai selectivi cu banii
+    if (m_difficulty >= AI_Difficulty::HARD && getCoins() < 4) {
+        costThreshold += 20;
+    }
+
+    return cardValue >= costThreshold;
 }
 
 bool AI_Player::shouldConstructWonder(const std::shared_ptr<CardBase>& card, const Player& opponent) {
@@ -634,75 +688,107 @@ void AI_Player::makeDecision(Board& board, Player& opponent, int currentAge) {
         return;
     }
 
-    // Alege carte
-    std::shared_ptr<CardBase> selectedCard;
+    std::shared_ptr<CardBase> selectedCard = nullptr;
+    bool isMLChoice = false;
+
+    // ---------------------------------------------------------
+    // BRANCH 1: HARD / ADAPTIVE MODE (ML DRIVEN)
+    // ---------------------------------------------------------
     if (m_difficulty == AI_Difficulty::HARD || m_difficulty == AI_Difficulty::ADAPTIVE) {
         selectedCard = chooseBestCardML(playableCards, opponent, board);
-    }
-    else {
-        selectedCard = chooseBestCardHeuristic(playableCards, opponent, board);
-    }
+        if (selectedCard) {
+            isMLChoice = true;
+            std::cout << "[AI-ML] Selected Action: " << m_lastAction.toString() << "\n";
+            
+            Action executedAction = m_lastAction;
+            bool actionSuccess = false;
 
-    if (!selectedCard) {
-        std::cout << "[AI] Error choosing card.\n";
-        return;
-    }
+            if (executedAction.type == Action::BUY_CARD) {
+                if (buyCard(selectedCard, opponent, board)) {
+                    std::cout << "[AI-ML] Buys card " << selectedCard->getName() << "\n";
+                    actionSuccess = true;
+                }
+            }
+            else if (executedAction.type == Action::BUILD_WONDER) {
+                 Wonder* targetWonder = nullptr;
+                 for(const auto& w : getWonders()) {
+                     if(w->getId() == executedAction.wonderId) {
+                         targetWonder = w.get();
+                         break;
+                     }
+                 }
 
-    std::cout << "[AI] Selected: " << selectedCard->getName() << "\n";
+                 if (targetWonder && !targetWonder->getIsBuilt()) {
+                     if (constructWonder(selectedCard, *targetWonder, opponent, board)) {
+                         std::cout << "[AI-ML] Builds Wonder " << targetWonder->getName() << "\n";
+                         actionSuccess = true;
+                     }
+                 }
+            }
+            
+            if (!actionSuccess) {
+                 discardCard(selectedCard, board);
+                 std::cout << "[AI-ML] Discards card " << selectedCard->getName() << "\n";
+                 executedAction.type = Action::DISCARD_CARD; 
+            }
 
-    // Decide acțiunea
-    bool actionTaken = false;
-    Action executedAction;
-
-    // 1. Încearcă să cumpere cartea
-    if (shouldBuyCard(selectedCard, opponent)) {
-        if (buyCard(selectedCard, opponent, board)) {
-            std::cout << "[AI] Buys card.\n";
-            executedAction = { Action::BUY_CARD, selectedCard->getId(), 0 };
-            actionTaken = true;
+            // ML Update
+            if (m_learningAgent && m_isTraining) {
+                GameState newState = GameState::extract(*this, opponent, board, m_currentAge);
+                float reward = calculateReward(m_lastState, newState, executedAction);
+                auto nextCards = getPlayableCards(board);
+                auto nextActions = getPossibleActions(nextCards, opponent);
+                m_learningAgent->updateQValue(m_lastState, executedAction, reward, newState, nextActions);
+            }
         }
     }
 
-    // 2. Încearcă să construiască wonder
-    if (!actionTaken && shouldConstructWonder(selectedCard, opponent)) {
-        std::vector<Wonder*> availableWonders;
-        for (const auto& wonder : getWonders()) {
-            if (!wonder->getIsBuilt()) {
-                availableWonders.push_back(const_cast<Wonder*>(wonder.get()));
+    // ---------------------------------------------------------
+    // BRANCH 2: EASY / MEDIUM MODE OR ML FALLBACK (HEURISTIC)
+    // ---------------------------------------------------------
+    if (!isMLChoice) {
+        selectedCard = chooseBestCardHeuristic(playableCards, opponent, board);
+        if (!selectedCard) {
+            std::cout << "[AI] Error choosing card.\n";
+            return;
+        }
+
+        std::cout << "[AI] Selected: " << selectedCard->getName() << "\n";
+        bool actionTaken = false;
+
+        if (shouldBuyCard(selectedCard, opponent)) {
+            if (buyCard(selectedCard, opponent, board)) {
+                std::cout << "[AI] Buys card.\n";
+                actionTaken = true;
             }
         }
 
-        if (!availableWonders.empty()) {
-            Wonder* chosenWonder = chooseBestWonder(availableWonders);
-            if (chosenWonder) {
-                if (constructWonder(selectedCard, *chosenWonder, opponent, board)) {
-                    std::cout << "[AI] Builds wonder: " << chosenWonder->getName() << "\n";
-                    executedAction = { Action::BUILD_WONDER, selectedCard->getId(), chosenWonder->getId() };
-                    actionTaken = true;
+        if (!actionTaken && shouldConstructWonder(selectedCard, opponent)) {
+            std::vector<Wonder*> availableWonders;
+            for (const auto& wonder : getWonders()) {
+                if (!wonder->getIsBuilt()) {
+                    availableWonders.push_back(const_cast<Wonder*>(wonder.get()));
+                }
+            }
+
+            if (!availableWonders.empty()) {
+                Wonder* chosenWonder = chooseBestWonder(availableWonders);
+                if (chosenWonder) {
+                    if (constructWonder(selectedCard, *chosenWonder, opponent, board)) {
+                        std::cout << "[AI] Builds wonder: " << chosenWonder->getName() << "\n";
+                        actionTaken = true;
+                    }
                 }
             }
         }
+
+        if (!actionTaken) {
+            discardCard(selectedCard, board);
+            std::cout << "[AI] Discards card.\n";
+        }
     }
 
-    // 3. Fallback: Vinde cartea
-    if (!actionTaken) {
-        discardCard(selectedCard, board);
-        std::cout << "[AI] Discards card.\n";
-        executedAction = { Action::DISCARD_CARD, selectedCard->getId(), 0 };
-    }
-
-    // ML: Update Q-value
-    if (m_learningAgent && m_isTraining) {
-        GameState newState = GameState::extract(*this, opponent, board, m_currentAge);
-        float reward = calculateReward(m_lastState, newState, executedAction);
-
-        auto nextCards = getPlayableCards(board);
-        auto nextActions = getPossibleActions(nextCards, opponent);
-
-        m_learningAgent->updateQValue(m_lastState, executedAction, reward, newState, nextActions);
-    }
-
-    // Update board - marchează cartea ca jucată
+    // Update board visibility and played status
     const auto& rows = board.getPyramid().getRows();
     for (const auto& row : rows) {
         for (const auto& node : row) {
@@ -712,7 +798,6 @@ void AI_Player::makeDecision(Board& board, Player& opponent, int currentAge) {
             }
         }
     }
-
     board.updateVisibility();
 }
 
@@ -756,18 +841,31 @@ std::shared_ptr<ProgressToken> AI_Player::chooseProgressToken(
         return availableTokens[dist(m_rng)];
     }
 
-    // Heuristic: Some tokens are generally better
+    // Valori de bază
     std::map<std::string, int> tokenValues = {
-        {"Strategy", 100}, {"Philosophy", 90}, {"Theology", 85}, 
-        {"Agriculture", 80}, {"Architecture", 75}, {"Economy", 70},
-        {"Mathematics", 65}, {"Law", 60}, {"Masonry", 55}, {"Urbanism", 50}
+        {"Strategy", 60}, {"Philosophy", 60}, {"Theology", 50}, 
+        {"Agriculture", 50}, {"Architecture", 50}, {"Economy", 50},
+        {"Mathematics", 50}, {"Law", 40}, {"Masonry", 40}, {"Urbanism", 40}
     };
 
+    // Ajustăm valorile în funcție de strategie
+    if (m_strategy == AI_Strategy::MILITARY) {
+        tokenValues["Strategy"] += 60;
+    } else if (m_strategy == AI_Strategy::SCIENCE) {
+        tokenValues["Philosophy"] += 50;
+        tokenValues["Mathematics"] += 50;
+        tokenValues["Law"] += 40;
+    } else if (m_strategy == AI_Strategy::ECONOMY) {
+        tokenValues["Agriculture"] += 40;
+        tokenValues["Economy"] += 50;
+        tokenValues["Urbanism"] += 30;
+    }
+
     std::shared_ptr<ProgressToken> bestToken = availableTokens[0];
-    int bestValue = -1;
+    int bestValue = -100;
 
     for (const auto& token : availableTokens) {
-        int val = tokenValues.count(token->getName()) ? tokenValues.at(token->getName()) : 0;
+        int val = tokenValues.count(token->getName()) ? tokenValues.at(token->getName()) : 30;
         if (val > bestValue) {
             bestValue = val;
             bestToken = token;

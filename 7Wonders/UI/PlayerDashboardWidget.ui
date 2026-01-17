@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>150</height>
+    <width>800</width>
+    <height>200</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>180</height>
+   </size>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -29,7 +35,7 @@
    <item>
     <widget class="QLabel" name="infoLabel">
      <property name="text">
-      <string>Player Name | 0 Coins</string>
+      <string>Player Name | 0 Coins | VP: 0</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -45,47 +51,143 @@ font-family: 'Times New Roman', serif;</string>
     </widget>
    </item>
    <item>
-    <widget class="QScrollArea" name="scrollArea">
-     <property name="styleSheet">
-      <string notr="true">background: transparent; border: none;</string>
+    <layout class="QHBoxLayout" name="mainContentLayout">
+     <property name="spacing">
+      <number>10</number>
      </property>
-     <property name="widgetResizable">
-      <bool>true</bool>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="verticalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
-     </property>
-     <widget class="QWidget" name="wondersContainer">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>584</width>
-        <height>107</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="wondersLayout">
-       <property name="spacing">
-        <number>5</number>
+     <item>
+      <widget class="QFrame" name="wondersZone">
+       <property name="minimumSize">
+        <size>
+         <width>420</width>
+         <height>0</height>
+        </size>
        </property>
-       <property name="leftMargin">
-        <number>0</number>
+       <property name="styleSheet">
+        <string notr="true">background: rgba(0,0,0,0.2); border-radius: 5px;</string>
        </property>
-       <property name="topMargin">
-        <number>0</number>
+       <layout class="QVBoxLayout" name="wondersZoneLayout">
+        <item>
+         <widget class="QLabel" name="label_wonders">
+          <property name="text">
+           <string>✨ WONDERS</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #DAA520; font-weight: bold; font-size: 10px;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="wondersGrid">
+          <property name="spacing">
+           <number>5</number>
+          </property>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="lineSeparator">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
        </property>
-       <property name="rightMargin">
-        <number>0</number>
+       <property name="styleSheet">
+        <string notr="true">color: #8B4513; background: #8B4513; width: 2px;</string>
        </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-      </layout>
-     </widget>
-    </widget>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="inventoryZone">
+       <layout class="QVBoxLayout" name="invZoneLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_civ">
+          <property name="text">
+           <string>🏛️ CIVILIZATION</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #A5D6A7; font-weight: bold; font-size: 10px;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="styleSheet">
+           <string notr="true">background: transparent; border: none;</string>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>330</width>
+             <height>100</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="invLayout">
+            <property name="spacing">
+             <number>5</number>
+            </property>
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
+             <number>5</number>
+            </property>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

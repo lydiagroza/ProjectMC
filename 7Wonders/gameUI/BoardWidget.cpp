@@ -21,10 +21,18 @@ void BoardWidget::clearBoard()
         card->deleteLater();
     }
     m_activeCards.clear();
+    
+    // Show placeholder if needed, though usually immediately repopulated
+    if(ui->placeholderLabel) ui->placeholderLabel->setVisible(true);
 }
 
 void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, int row, int col, int totalCardsInRow, QString cost, QString effect, QString unlocks)
 {
+    // Hide placeholder on first card placement
+    if (ui->placeholderLabel && ui->placeholderLabel->isVisible()) {
+        ui->placeholderLabel->setVisible(false);
+    }
+
     // 1. Instanțiem widget-ul
     CardWidget* newCard = new CardWidget(id, this);
     newCard->setupCard(name, color, isFaceUp, cost, effect, unlocks);

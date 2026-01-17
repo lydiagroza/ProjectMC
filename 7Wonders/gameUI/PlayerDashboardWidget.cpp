@@ -98,33 +98,14 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
     
     ui->infoLabel->setText(text);
 
-    // --- REFACTOR: SPLIT DASHBOARD ---
-    
-    // Clear the main container layout
+    // --- POPULATE WONDERS (Grid) ---
+    // Clear existing wonders
     QLayoutItem* item;
-    while ((item = ui->wondersLayout->takeAt(0)) != nullptr) {
+    while ((item = ui->wondersGrid->takeAt(0)) != nullptr) {
         if (item->widget()) item->widget()->deleteLater();
         delete item;
     }
 
-    // 1. Left Zone: Wonders (Fixed Grid)
-    QFrame* wonderZone = new QFrame();
-    wonderZone->setFixedWidth(420); // Wide enough for 2 columns of 200px cards
-    wonderZone->setStyleSheet("background: rgba(0,0,0,0.2); border-radius: 5px;");
-    
-    QVBoxLayout* wonderZoneLayout = new QVBoxLayout(wonderZone);
-    QLabel* wonderLabel = new QLabel("✨ WONDERS");
-    wonderLabel->setStyleSheet("color: #DAA520; font-weight: bold; font-size: 10px; margin-bottom: 2px;");
-    wonderLabel->setAlignment(Qt::AlignCenter);
-    wonderZoneLayout->addWidget(wonderLabel);
-
-    QGridLayout* wonderGrid = new QGridLayout();
-    wonderGrid->setSpacing(5);
-    wonderGrid->setContentsMargins(5,5,5,5);
-    wonderZoneLayout->addLayout(wonderGrid);
-    wonderZoneLayout->addStretch(); // Push to top
-
-    // Populate Wonders
     auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
         QStringList parts;
         for (auto const& [res, count] : costMap) {
@@ -146,8 +127,9 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
 
     int wIdx = 0;
     for (const auto& wonderPtr : wonders) {
-        CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), wonderZone);
-        wonderWidget->setFixedSize(200, 100); // Larger Size
+        // Use ui->wondersZone as parent so it's part of the frame structure
+        CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), ui->wondersZone);
+        wonderWidget->setFixedSize(200, 100); 
 
         QString wName = QString::fromStdString(wonderPtr->getName());
         QString color = wonderPtr->getIsBuilt() ? "#DAA520" : "#6D4C41";
@@ -158,42 +140,24 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
         QString imgPath = CardWidget::getWonderImagePath(wName);
         if (!imgPath.isEmpty()) wonderWidget->setImage(imgPath);
 
-        wonderGrid->addWidget(wonderWidget, wIdx / 2, wIdx % 2);
+        ui->wondersGrid->addWidget(wonderWidget, wIdx / 2, wIdx % 2);
         wIdx++;
     }
 
-    // 2. Separator
-    QFrame* vLine = new QFrame();
-    vLine->setFrameShape(QFrame::VLine);
-    vLine->setFrameShadow(QFrame::Sunken);
-    vLine->setStyleSheet("color: #8B4513; background: #8B4513; width: 2px;");
-
-    // 3. Right Zone: Inventory (Scrollable Row)
-    QFrame* inventoryZone = new QFrame();
-    QVBoxLayout* invZoneLayout = new QVBoxLayout(inventoryZone);
-    invZoneLayout->setContentsMargins(0,0,0,0);
-    
-    QLabel* invLabel = new QLabel("🏛️ CIVILIZATION");
-    invLabel->setStyleSheet("color: #A5D6A7; font-weight: bold; font-size: 10px; margin-bottom: 2px;");
-    invLabel->setAlignment(Qt::AlignCenter);
-    invZoneLayout->addWidget(invLabel);
-
-    QScrollArea* invScroll = new QScrollArea();
-    invScroll->setWidgetResizable(true);
-    invScroll->setStyleSheet("background: transparent; border: none;");
-    invScroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    invScroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    
-    QWidget* invContent = new QWidget();
-    QHBoxLayout* invLayout = new QHBoxLayout(invContent);
-    invLayout->setSpacing(5);
-    invLayout->setContentsMargins(5,5,5,5);
-    invLayout->setAlignment(Qt::AlignLeft);
+    // --- POPULATE INVENTORY (HBox) ---
+    // Clear existing inventory
+    while ((item = ui->invLayout->takeAt(0)) != nullptr) {
+        if (item->widget()) item->widget()->deleteLater();
+        delete item;
+    }
 
     // Populate Inventory
+    // Note: Use scrollAreaWidgetContents as parent
+    QWidget* invContainer = ui->scrollAreaWidgetContents;
+
     for (const auto& [color, cards] : inventory) {
         for (const auto& card : cards) {
-            CardWidget* cardWidget = new CardWidget(card->getId(), invContent);
+            CardWidget* cardWidget = new CardWidget(card->getId(), invContainer);
             cardWidget->setFixedSize(80, 110); 
             
             QString cName = QString::fromStdString(card->getName());
@@ -213,13 +177,13 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
             QString cEffect = QString::fromStdString(card->getEffectDescription());
 
             cardWidget->setupCard(cName, cColorHex, true, cCost, cEffect);
-            invLayout->addWidget(cardWidget);
+            ui->invLayout->addWidget(cardWidget);
         }
     }
     
     // Add Effects Button at the end of inventory
     m_effectsBtn = new QPushButton("🔮 Active\nEffects");
-    m_effectsBtn->setFixedSize(80, 110); // Match card size
+    m_effectsBtn->setFixedSize(80, 110); 
     m_effectsBtn->setCursor(Qt::PointingHandCursor);
     m_effectsBtn->setStyleSheet(
         "QPushButton { "
@@ -237,16 +201,8 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
     );
     connect(m_effectsBtn, &QPushButton::clicked, this, &PlayerDashboardWidget::onEffectsClicked);
     
-    invLayout->addWidget(m_effectsBtn);
-    invLayout->addStretch();
-    
-    invScroll->setWidget(invContent);
-    invZoneLayout->addWidget(invScroll);
-
-    // Add everything to Main Layout
-    ui->wondersLayout->addWidget(wonderZone);
-    ui->wondersLayout->addWidget(vLine);
-    ui->wondersLayout->addWidget(inventoryZone, 1); // Expand to fill rest
+    ui->invLayout->addWidget(m_effectsBtn);
+    ui->invLayout->addStretch();
 }
 
 // Simple Helper for Token Descriptions (Duplicated from MainWindow, ideally should be static/common)

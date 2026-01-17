@@ -19,9 +19,34 @@ static QString getColorHex(Color c)
     }
 }
 
-static QString formatCost(const std::map<Resource, uint8_t>& costMap)
+static QString getSymbolEmoji(const QString& symbolName) {
+    QString lowerSymbolName = symbolName.toLower();
+    if (lowerSymbolName == "moon") return "🌙";
+    if (lowerSymbolName == "sun") return "☀️";
+    if (lowerSymbolName == "mask") return "🎭";
+    if (lowerSymbolName == "column") return "🏛️";
+    if (lowerSymbolName == "droplet") return "💧";
+    if (lowerSymbolName == "temple") return "⛩️";
+    if (lowerSymbolName == "book") return "📖";
+    if (lowerSymbolName == "gear") return "⚙️";
+    if (lowerSymbolName == "lyre") return "🪕";
+    if (lowerSymbolName == "pot") return "🏺";
+    if (lowerSymbolName == "horse") return "🐎";
+    if (lowerSymbolName == "sword") return "⚔️";
+    if (lowerSymbolName == "castle") return "🏰";
+    if (lowerSymbolName == "target") return "🎯";
+    if (lowerSymbolName == "helmet") return "🪖";
+    if (lowerSymbolName == "vase") return "🏺";
+    if (lowerSymbolName == "barrel") return "🛢️";
+    return "";
+}
+
+static QString formatCost(const std::map<Resource, uint8_t>& costMap, std::optional<Symbol> symbol)
 {
     QStringList parts;
+    if (symbol.has_value()) {
+        parts << getSymbolEmoji(QString::fromStdString(to_string(symbol.value())));
+    }
     for (auto const& [res, count] : costMap) {
          QString icon;
          switch(res) {
@@ -74,10 +99,14 @@ void DiscardedCardsDialog::setupCards(const std::vector<const CardBase*>& discar
         CardWidget* cardWidget = new CardWidget(card->getId(), this);
         QString name = QString::fromStdString(card->getName());
         QString color = getColorHex(card->getColor());
-        QString cost = formatCost(card->getCost());
+        QString cost = formatCost(card->getCost(), card->getSymbol());
         QString effect = QString::fromStdString(card->getEffectDescription());
+        QString unlocks_string;
+        if(card->getUnlocks().has_value()){
+            unlocks_string = QString::fromStdString(to_string(card->getUnlocks().value()));
+        }
 
-        cardWidget->setupCard(name, color, true, cost, effect);
+        cardWidget->setupCard(name, color, true, cost, effect, unlocks_string);
         connect(cardWidget, &CardWidget::cardClicked, this, &DiscardedCardsDialog::onCardClicked);
         ui->gridLayout->addWidget(cardWidget, row, col);
 

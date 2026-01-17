@@ -862,6 +862,29 @@ void MainWindow::onWonderClicked()
             }
         }
 
+        // Handle Circus Maximus / Zeus effect
+        if (m_game->isWaitingForOpponentCardDiscard()) {
+            const auto& choices = m_game->getOpponentCardDiscardChoices();
+            if (!choices.empty()) {
+                std::vector<const CardBase*> cardPtrs;
+                for (const auto& c : choices) { cardPtrs.push_back(c.get()); }
+
+                DiscardedCardsDialog dialog(cardPtrs, this);
+                dialog.setWindowTitle("Discard Opponent's Card");
+
+                if (dialog.exec() == QDialog::Accepted) {
+                    int selectedId = dialog.getSelectedCardId();
+                    if (selectedId != -1) {
+                        m_game->resolveDiscardOpponentCard(selectedId);
+                    }
+                }
+                else {
+                    // Player closed dialog without choosing, resolve with no choice.
+                    m_game->resolveDiscardOpponentCard(-1);
+                }
+            }
+        }
+
         if (p->hasExtraTurn()) { 
              p->setHasExtraTurn(false);
              QMessageBox::information(this, "Divine Intervention", "Wonder Grant: Extra Turn!");
@@ -1133,40 +1156,69 @@ void MainWindow::renderGame()
 
     ui->boardWidgetPage->setScalingFactor(scale);
     
-    auto formatCost = [](const std::map<Resource, uint8_t>& costMap) -> QString {
-        QStringList parts;
-        for (auto const& [res, count] : costMap) {
-             QString icon;
-             switch(res) {
-                 case Resource::Wood: icon = "wood.png"; break;
-                 case Resource::Clay: icon = "clay.png"; break;
-                 case Resource::Stone: icon = "stone.png"; break;
-                 case Resource::Glass: icon = "glass.png"; break;
-                 case Resource::Papyrus: icon = "papyrus.png"; break;
-                 case Resource::Coin: icon = "coin.png"; break;
-             }
-             if (!icon.isEmpty()) {
-                parts << QString("%1 x <img src=':/resources/UI/%2' height='14'>").arg(count).arg(icon);
-             }
-        }
-        return parts.join("<br>");
-    };
-
-    for (size_t r = 0; r < rows.size(); ++r) {
-        const auto& row = rows[r];
-        int cardsInRow = static_cast<int>(row.size());
-        for (size_t c = 0; c < row.size(); ++c) {
-            const auto& node = row[c];
-            if (!node || node->isPlayed()) continue;
-            auto cardPtr = node->getCard();
-            if (!cardPtr) continue;
-            int id = cardPtr->getId();
-            QString name = QString::fromStdString(cardPtr->getName());
-            Color col = cardPtr->getColor();
-            bool isFaceUp = (node->getFace() == Face::Up);
-            QString cost = formatCost(cardPtr->getCost());
-            QString effect = QString::fromStdString(cardPtr->getEffectDescription());
-            ui->boardWidgetPage->placeCard(id, name, getColorHex(col), isFaceUp, static_cast<int>(r), static_cast<int>(c), cardsInRow, cost, effect);
-        }
-    }
-}
+        auto getSymbolEmoji = [](const QString& symbolName) -> QString {
+            QString lowerSymbolName = symbolName.toLower();
+            if (lowerSymbolName == "moon") return "🌙";
+            if (lowerSymbolName == "sun") return "☀️";
+            if (lowerSymbolName == "mask") return "🎭";
+            if (lowerSymbolName == "column") return "🏛️";
+            if (lowerSymbolName == "droplet") return "💧";
+            if (lowerSymbolName == "temple") return "⛩️";
+            if (lowerSymbolName == "book") return "📖";
+            if (lowerSymbolName == "gear") return "⚙️";
+            if (lowerSymbolName == "lyre") return "🪕";
+            if (lowerSymbolName == "pot") return "🏺";
+            if (lowerSymbolName == "horse") return "🐎";
+            if (lowerSymbolName == "sword") return "⚔️";
+            if (lowerSymbolName == "castle") return "🏰";
+            if (lowerSymbolName == "target") return "🎯";
+            if (lowerSymbolName == "helmet") return "🪖";
+            if (lowerSymbolName == "vase") return "🏺";
+            if (lowerSymbolName == "barrel") return "🛢️";
+            return "";
+        };
+    
+        auto formatCost = [&](const std::map<Resource, uint8_t>& costMap, std::optional<Symbol> symbol) -> QString {
+            QStringList parts;
+            if (symbol.has_value()) {
+                parts << getSymbolEmoji(QString::fromStdString(to_string(symbol.value())));
+            }
+    
+            for (auto const& [res, count] : costMap) {
+                 QString icon;
+                 switch(res) {
+                     case Resource::Wood: icon = "wood.png"; break;
+                     case Resource::Clay: icon = "clay.png"; break;
+                     case Resource::Stone: icon = "stone.png"; break;
+                     case Resource::Glass: icon = "glass.png"; break;
+                     case Resource::Papyrus: icon = "papyrus.png"; break;
+                     case Resource::Coin: icon = "coin.png"; break;
+                 }
+                 if (!icon.isEmpty()) {
+                    parts << QString("%1 x <img src=':/resources/UI/%2' height='14'>").arg(count).arg(icon);
+                 }
+            }
+            return parts.join("<br>");
+        };
+    
+        for (size_t r = 0; r < rows.size(); ++r) {
+            const auto& row = rows[r];
+            int cardsInRow = static_cast<int>(row.size());
+            for (size_t c = 0; c < row.size(); ++c) {
+                const auto& node = row[c];
+                if (!node || node->isPlayed()) continue;
+                auto cardPtr = node->getCard();
+                if (!cardPtr) continue;
+                int id = cardPtr->getId();
+                QString name = QString::fromStdString(cardPtr->getName());
+                Color col = cardPtr->getColor();
+                bool isFaceUp = (node->getFace() == Face::Up);
+                QString cost = formatCost(cardPtr->getCost(), cardPtr->getSymbol());
+                QString effect = QString::fromStdString(cardPtr->getEffectDescription());
+                QString unlocks_string;
+                if(cardPtr->getUnlocks().has_value()){
+                    unlocks_string = QString::fromStdString(to_string(cardPtr->getUnlocks().value()));
+                }
+                ui->boardWidgetPage->placeCard(id, name, getColorHex(col), isFaceUp, static_cast<int>(r), static_cast<int>(c), cardsInRow, cost, effect, unlocks_string);
+            }
+        }}

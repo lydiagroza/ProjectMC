@@ -4141,7 +4141,10 @@ release\ProgressTokenLoader.obj: ..\..\GameBase\ProgressTokenLoader.cpp ..\..\Ga
 		..\..\GameBase\MilitaryTrack.h \
 		..\..\GameBase\CardsPyramid.h \
 		..\..\GameBase\Wonder.h \
-		..\..\GameBase\GameConstants.h
+		..\..\GameBase\GameConstants.h \
+		..\..\GameBase\Game.h \
+		..\..\GameBase\GameSetup.h \
+		..\..\gameAI\AI_Player.h
 
 release\ProgressTokens.obj: ..\..\GameBase\ProgressTokens.cpp ..\..\GameBase\ProgressTokens.h \
 		..\..\GameBase\gameExport.h \

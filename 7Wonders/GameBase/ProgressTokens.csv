@@ -1,5 +1,5 @@
 name,id,effects
-AGRICULTURE,	86,"add_resources_coin6";"add_VictoryPoint4"
+AGRICULTURE,	86,"add_coins6";"add_VictoryPoint4"
 ARCHITECTURE,	87,"WondersDiscount"
 ECONOMY,		88,"gainOpponentTradeCost"
 LAW,			89,"add_scientific_symbol_scales"

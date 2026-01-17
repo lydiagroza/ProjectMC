@@ -60,13 +60,17 @@ Color UniversalCardLoader::parseColor(const string& s) {
 
 optional<Symbol> UniversalCardLoader::parseSymbol(const string& s) {
     if (s.empty()) return nullopt;
+    string lower_s = s;
+    std::transform(lower_s.begin(), lower_s.end(), lower_s.begin(),
+                   [](unsigned char c){ return std::tolower(c); });
+
     static const unordered_map<string, Symbol> symMap = {
         {"barrel", Barrel}, {"gear", Gear}, {"book", Book}, {"temple", Temple},
         {"target", Target}, {"lyre", Lyre}, {"castle", Castle}, {"droplet", Droplet},
         {"vase", Vase}, {"column", Column}, {"sword", Sword}, {"pot", Pot},
         {"horse", Horse}, {"helmet", Helmet}, {"mask", Mask}, {"sun", Sun}, {"moon", Moon}
     };
-    auto it = symMap.find(s);
+    auto it = symMap.find(lower_s);
     return (it != symMap.end()) ? make_optional(it->second) : nullopt;
 }
 
@@ -174,34 +178,7 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
         {"wood/stone/clay", [](Player& p, Board&, Player&) { p.addResource(Resource::Wood, 1); p.addResource(Resource::Stone, 1); p.addResource(Resource::Clay, 1); }},
         {"add_coins12", [](Player& p, Board&, Player&) { p.addResource(Coin, 12); }},
         {"discardOpponentGrayCard", [](Player&, Board&, Player& o) {
-            Board& board = Game::currentGame->getBoard();
-            const auto& opponentInventory = o.getInventory();
-            std::vector<std::shared_ptr<CardBase>> grayCards;
-            if (opponentInventory.count(Color::Gray)) {
-                grayCards = opponentInventory.at(Color::Gray);
-            }
-
-            if (grayCards.empty()) {
-                std::cout << "Opponent has no gray cards to discard." << std::endl;
-                return;
-            }
-
-            std::cout << "Choose a gray card to discard from your opponent:" << std::endl;
-            for (int i = 0; i < (int)grayCards.size(); ++i) {
-                std::cout << i + 1 << ": " << *grayCards[i] << std::endl;
-            }
-
-            int choice = -1;
-            // UI should provide choice; placeholder here
-            if (choice > 0 && choice <= (int)grayCards.size()) {
-                auto selectedCard = grayCards[choice - 1];
-                o.removeCardFromInventory(selectedCard);
-                board.addCardToDiscardPile(selectedCard);
-                std::cout << "Discarded " << selectedCard->getName() << " from opponent." << std::endl;
-            }
- else {
-  std::cout << "No choice made (UI required) or invalid choice." << std::endl;
-}
+            Game::currentGame->handleDiscardOpponentCardChoice(o, Color::Gray);
 }},
 
 {"buildDiscardedCard", [](Player&, Board&, Player&) {
@@ -224,35 +201,7 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
 }},
 {"add_coins6", [](Player& p, Board&, Player&) { p.addResource(Coin,6); }},
 {"discardOpponentBrownCard", [](Player&, Board&, Player& o) {
-    Board& board = Game::currentGame->getBoard();
-    auto opponentInventory = o.getInventory();
-    std::vector<std::shared_ptr<CardBase>> brownCards;
-    if (opponentInventory.count(Color::Brown)) {
-        brownCards = opponentInventory.at(Color::Brown);
-    }
-
-    if (brownCards.empty()) {
-        std::cout << "Opponent has no brown cards to discard." << std::endl;
-        return;
-    }
-
-    std::cout << "Choose a brown card to discard from your opponent:" << std::endl;
-    for (int i = 0; i < (int)brownCards.size(); ++i) {
-        std::cout << i + 1 << ": " << *brownCards[i] << std::endl;
-    }
-
-    int choice = -1;
-    // UI should provide choice; placeholder here
-
-    if (choice > 0 && choice <= (int)brownCards.size()) {
-        auto selectedCard = brownCards[choice - 1];
-        o.removeCardFromInventory(selectedCard);
-        board.addCardToDiscardPile(selectedCard);
-        std::cout << "Discarded " << selectedCard->getName() << " from opponent." << std::endl;
-    }
-else {
- std::cout << "No choice made (UI required) or invalid choice." << std::endl;
-    }
+    Game::currentGame->handleDiscardOpponentCardChoice(o, Color::Brown);
   }}
 };
 
@@ -436,13 +385,51 @@ vector<shared_ptr<CardBase>> UniversalCardLoader::loadAgeCards(const string& fil
 
 
 
-        auto card = make_shared<CardBase>(trim(name), (uint16_t)stoi(trim(id)), parseColor(trim(color)), parseCost(trim(cost)), parseSymbol(trim(sym)), parseSymbol(trim(unl)));
+                auto card = make_shared<CardBase>(trim(name), (uint16_t)stoi(trim(id)), parseColor(trim(color)), parseCost(trim(cost)), parseSymbol(trim(sym)), parseSymbol(trim(unl)));
 
-        card->m_effectDescription = translateEffect(trim(eff));
 
-        for (auto& ef : parseEffects(trim(eff))) card->addEffect(ef);
 
-        cards.push_back(card);
+                card->m_effectDescription = translateEffect(trim(eff));
+
+
+
+                for (auto& ef : parseEffects(trim(eff))) card->addEffect(ef);
+
+
+
+        
+
+
+
+                if (card->getUnlocks().has_value()) {
+
+
+
+                    Symbol unlock_symbol = card->getUnlocks().value();
+
+
+
+                    card->addEffect([unlock_symbol](Player& p, Board&, Player&) {
+
+
+
+                        p.add_ChainSymbol(unlock_symbol);
+
+
+
+                    });
+
+
+
+                }
+
+
+
+        
+
+
+
+                cards.push_back(card);
 
     }
 

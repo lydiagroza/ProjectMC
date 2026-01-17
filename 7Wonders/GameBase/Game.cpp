@@ -644,3 +644,60 @@ const std::vector<std::shared_ptr<CardBase>>& Game::getDiscardedCards() const
 {
     return m_board.getDiscardPile();
 }
+
+bool Game::isWaitingForOpponentCardDiscard() const
+{
+    return m_isWaitingForOpponentCardDiscard;
+}
+
+const std::vector<std::shared_ptr<CardBase>>& Game::getOpponentCardDiscardChoices() const
+{
+    return m_opponentCardDiscardChoices;
+}
+
+void Game::handleDiscardOpponentCardChoice(Player& opponent, Color cardColor)
+{
+    m_opponentCardDiscardChoices.clear();
+    const auto& opponentInventory = opponent.getInventory();
+    if (opponentInventory.count(cardColor)) {
+        m_opponentCardDiscardChoices = opponentInventory.at(cardColor);
+    }
+
+    if (m_opponentCardDiscardChoices.empty()) {
+        // No cards of that color, so the effect does nothing.
+        return;
+    }
+
+    m_targetOpponent = &opponent;
+    m_isWaitingForOpponentCardDiscard = true;
+    // The UI will now detect this state and show the dialog.
+}
+
+void Game::resolveDiscardOpponentCard(int chosenCardId)
+{
+    if (!m_isWaitingForOpponentCardDiscard || !m_targetOpponent) {
+        return;
+    }
+
+    std::shared_ptr<CardBase> chosenCard = nullptr;
+    for (const auto& card : m_opponentCardDiscardChoices) {
+        if (card->getId() == chosenCardId) {
+            chosenCard = card;
+            break;
+        }
+    }
+
+    if (chosenCard) {
+        m_targetOpponent->removeCardFromInventory(chosenCard);
+        m_board.addCardToDiscardPile(chosenCard);
+        std::cout << "[Effect] " << m_currentPlayer->getName() << " discarded " << chosenCard->getName() << " from " << m_targetOpponent->getName() << "." << std::endl;
+    }
+
+    // Reset state
+    m_isWaitingForOpponentCardDiscard = false;
+    m_opponentCardDiscardChoices.clear();
+    m_targetOpponent = nullptr;
+
+    // After resolving, we might need to re-trigger a UI update or continue the game flow.
+    // For now, we assume the main game loop will handle it.
+}

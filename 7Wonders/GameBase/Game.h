@@ -39,22 +39,22 @@ private:
     bool handleWonderConstruction(std::shared_ptr<CardBase> cardUsed);
     void handle7WondersRule();
 
-    // funcții care ajută la determinarea câștigătorului
+    // Funcții ajutătoare pentru determinarea câștigătorului
     int calculatePurpleGuilds(const Player& p) const;
     int getBuiltWondersCount(const Player& player) const;
     int getCategoryCount(const Player& player, Color color) const;
 
-    // era management
+    // Gestionare ere
     void determinateWhoStartsNextAge();
 
-    // turn management
+    // Gestionare ture
     void processTurnTransition();
     CardNode* findNodeById(int cardId) const;
 
-    // membri pentru gestionarea fazei de draft
+    // Gestionare fază de draft
     std::vector<std::shared_ptr<Wonder>> m_draftSet1;
     std::vector<std::shared_ptr<Wonder>> m_draftSet2;
-    int m_draftPhase = 0; // 0 = înainte de draft, 1 = draft 1, 2 = draft 2
+    int m_draftPhase = 0; // 0 = pre-draft, 1 = draft 1, 2 = draft 2
     bool m_isWaitingForDiscardChoice = false;
     bool m_isWaitingForProgressTokenChoice = false;
     bool m_isWaitingForGreatLibraryChoice = false;
@@ -70,11 +70,9 @@ public:
    
     void initialize();
 
-    // păstrează modificarea colegei (dificultate AI)
     void setPlayerTypes(bool p1IsAI, bool p2IsAI,
         AI_Difficulty difficulty = AI_Difficulty::MEDIUM);
 
-    // păstrează funcția ta
     bool checkForInstantWin();
 
     int getCurrentAge() const { return m_currentAge; }

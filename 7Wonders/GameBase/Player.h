@@ -21,14 +21,14 @@ class GAME_API Player {
 private:
 	unsigned int m_Id:2;
 	std::string m_name;
-	std::map<Resource, std::uint8_t> m_Resources; // All resources
-	std::map<Points, std::uint8_t>m_pointsScore; // All points
-	std::bitset<5>m_discountedResource; // discounted resources from yellow cards
+	std::map<Resource, std::uint8_t> m_Resources; // Toate resursele
+	std::map<Points, std::uint8_t>m_pointsScore; // Toate punctele
+	std::bitset<5>m_discountedResource; // resurse reduse din cărți galbene
 	std::vector<std::bitset<5>>m_choiceResources; 
-	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // all cards
-	std::vector<std::shared_ptr<Wonder>> m_Wonders; // all wonders
-	std::unordered_map<Scientific_Symbol, int> m_scientificSymbols; // all scientific symbols
-	std::unordered_set<Symbol>m_chainSymbols; // all chain symbols accumulated
+	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // toate cărțile
+	std::vector<std::shared_ptr<Wonder>> m_Wonders; // toate minunile
+	std::unordered_map<Scientific_Symbol, int> m_scientificSymbols; // toate simbolurile științifice
+	std::unordered_set<Symbol>m_chainSymbols; // toate simbolurile de lanț acumulate
 	enum PlayerFlags {
 		ExtraTurn = 0,
 		WonderDiscount = 1,
@@ -79,7 +79,7 @@ public:
 	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens() const;
 
 
-	//VP for winner determination
+	// VP pentru determinarea câștigătorului
 	int getVPFromMilitaryTokens() const;
 	int getVPFromBlueCards() const;
 	int getVPFromGuilds(const Player& opponent) const;
@@ -89,7 +89,7 @@ public:
 	void set_discountedResource(Resource r);
 	Player(const std::string& playerName,int id); // constructor
 	Player(const std::string& name);
-    virtual ~Player() = default; // Added to make class polymorphic
+    virtual ~Player() = default; // Adăugat pentru polimorfism
 	//Gestioneaza monede
 	bool decreaseCoins(std::uint8_t amount); //
 	//Gestioneaza resursele
@@ -151,7 +151,7 @@ public:
 	void addWonders(const std::shared_ptr<Wonder>& wonder);
 	
 
-	// Progress Token Effects
+	// Efecte Jetoane de Progres
 	inline bool hasExtraTurn() const { return m_flags.test(ExtraTurn); }
 	inline void setHasExtraTurn(bool v) { m_flags.set(ExtraTurn, v); }
 

@@ -67,11 +67,9 @@ bool SaveManager::saveGame(Game* game, const QString& filePath) {
     QDataStream out(&file);
     out.setVersion(QDataStream::Qt_6_0);
 
-    // Header
     out << QString("7WD_SAVE");
-    out << (qint32)1; // Version
+    out << (qint32)1; 
 
-    // Game Globals
     out << (qint32)game->m_currentAge;
     out << (qint32)game->m_draftPhase;
     out << game->m_gameOver;
@@ -80,13 +78,11 @@ bool SaveManager::saveGame(Game* game, const QString& filePath) {
     int currentPlayerId = (game->m_currentPlayer == game->m_player1.get()) ? 1 : 2;
     out << (qint32)currentPlayerId;
 
-    // Flags
     out << game->m_isWaitingForDiscardChoice;
     out << game->m_isWaitingForProgressTokenChoice;
     out << game->m_isWaitingForGreatLibraryChoice;
-    out << game->m_isWaitingForOpponentCardDiscard; // Added
+    out << game->m_isWaitingForOpponentCardDiscard;
 
-    // Draft Sets
     auto serializeWonderList = [&](const std::vector<std::shared_ptr<Wonder>>& list) {
         out << (qint32)list.size();
         for(const auto& w : list) {
@@ -96,11 +92,9 @@ bool SaveManager::saveGame(Game* game, const QString& filePath) {
     serializeWonderList(game->m_draftSet1);
     serializeWonderList(game->m_draftSet2);
 
-    // Players
     serializePlayer(out, *game->m_player1);
     serializePlayer(out, *game->m_player2);
 
-    // Board
     serializeBoard(out, game->m_board);
 
     return true;
@@ -123,7 +117,6 @@ Game* SaveManager::loadGame(const QString& filePath) {
     Game* game = new Game(); 
     GameRegistry reg = buildRegistry();
 
-    // Game Globals
     qint32 age, draftPhase, numWonders, cpId;
     bool gameOver;
     in >> age >> draftPhase >> gameOver >> numWonders >> cpId;
@@ -136,9 +129,8 @@ Game* SaveManager::loadGame(const QString& filePath) {
     in >> game->m_isWaitingForDiscardChoice;
     in >> game->m_isWaitingForProgressTokenChoice;
     in >> game->m_isWaitingForGreatLibraryChoice;
-    in >> game->m_isWaitingForOpponentCardDiscard; // Added
+    in >> game->m_isWaitingForOpponentCardDiscard;
 
-    // Draft Sets
     auto deserializeWonderList = [&](std::vector<std::shared_ptr<Wonder>>& list) {
         qint32 size;
         in >> size;
@@ -154,11 +146,9 @@ Game* SaveManager::loadGame(const QString& filePath) {
     deserializeWonderList(game->m_draftSet1);
     deserializeWonderList(game->m_draftSet2);
 
-    // Players
     deserializePlayer(in, *game->m_player1, reg);
     deserializePlayer(in, *game->m_player2, reg);
 
-    // Restore Pointers
     if (cpId == 1) {
         game->m_currentPlayer = game->m_player1.get();
         game->m_opponent = game->m_player2.get();
@@ -167,7 +157,6 @@ Game* SaveManager::loadGame(const QString& filePath) {
         game->m_opponent = game->m_player1.get();
     }
 
-    // Board
     deserializeBoard(in, game->m_board, reg, game->m_currentAge);
     
     return game;
@@ -376,10 +365,8 @@ void SaveManager::deserializeBoard(QDataStream& in, Board& b, const GameRegistry
     // Overwrite with real data
     const auto& rows = b.getPyramid().getRows();
     
-    // We expect numRows == rows.size(). If mismatch, saved age != passed age.
     if((size_t)numRows != rows.size()) {
         qDebug() << "SaveManager: Pyramid mismatch! Saved rows:" << numRows << " Actual:" << rows.size();
-        // Try to consume stream to avoid crash? Or just fail?
         return; 
     }
 

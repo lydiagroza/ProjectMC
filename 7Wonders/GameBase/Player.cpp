@@ -258,26 +258,25 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
         }
     }
 
-    // ✅ NOU: Folosim bitset în loc de map<string, vector>
+    // Use bitset instead of map<string, vector>
     for (const auto& flexibleSet : m_choiceResources) {
-        //                ^^^^^^^^^^^
-        //                Fiecare bitset = un set de opțiuni
+        // Each bitset represents a set of options
 
         Resource bestResourceToCover = Resource::Coin;
         std::uint8_t maxCost = 0;
 
-        // Iterăm prin cei 5 biți (0=Wood, 1=Clay, 2=Stone, 3=Glass, 4=Papyrus)
+        // Iterate through the 5 bits (0=Wood, 1=Clay, 2=Stone, 3=Glass, 4=Papyrus)
         for (int i = 0; i < 5; ++i) {
-            if (flexibleSet[i] == 0) continue; // Acest bit = 0 → resursa nu e disponibilă
+            if (flexibleSet[i] == 0) continue; // Bit = 0 -> resource not available
 
-            // Convertim index → Resource
+            // Convert index -> Resource
             Resource resToCover = findResourceDiscountFromIndex(i);
 
-            // Verificăm dacă avem nevoie de această resursă
+            // Check if we need this resource
             if (missingResources.count(resToCover) && missingResources.at(resToCover) > 0) {
                 std::uint8_t currentCost = this->findUnitTradeCost(resToCover, opponent);
 
-                // Alegem cea mai scumpă resursă
+                // Choose the most expensive resource
                 if (currentCost > maxCost) {
                     maxCost = currentCost;
                     bestResourceToCover = resToCover;
@@ -285,7 +284,7 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
             }
         }
 
-        // Dacă s-a găsit o alocare optimă
+        // If an optimal allocation was found
         if (bestResourceToCover != Resource::Coin) {
             missingResources.at(bestResourceToCover)--;
 
@@ -297,10 +296,6 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
     return missingResources; 
 }
 
-
-
-
-//Functia care ne zice cati banuti trebuie sa dea pentru resursele lipsa (excludem banutii pentru ca ei nu fac parte din logica de comert)
 std::uint8_t Player::calculateTradeCost(const std::map<Resource, std::uint8_t>& requiredResources, const Player& opponent) const {
 
     const auto missingResources = this->MissingResources(requiredResources, opponent);
@@ -316,10 +311,6 @@ std::uint8_t Player::calculateTradeCost(const std::map<Resource, std::uint8_t>& 
 
     return totalTradeCost;
 }
-
-
-
-//Functie care cumpara cartea 
 
 bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, Board& board) {
 
@@ -363,7 +354,6 @@ bool Player::buyCard(std::shared_ptr<CardBase> card, Player& opponent, Board& bo
 
 }
 
-// gestionare inventar
 void Player::addCardToInventory(std::shared_ptr<CardBase> card) {
     m_Inventory[card->m_color].push_back(card);
 }
@@ -379,10 +369,6 @@ bool Player::removeCardFromInventory(std::shared_ptr<CardBase> card) {
     return false;
 }
 
-
-
-
-// Functie in cazul in care jucatorul alege sa arda cartea pentru banuti
 void Player::discardCard(std::shared_ptr<CardBase> c, Board& board) {
 
     std::uint8_t gainedCoins = GameConstants::DISCARD_BASE_COINS;
@@ -409,10 +395,10 @@ bool Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder &wonderT
         m_Resources[Resource::Coin] -= totalCoinCost;
     }
 
-    // Marcăm wonder ca built
+    // Mark wonder as built
     wonderToBuild.setIsBuilt();
 
-    // Aplicăm efectul de la wonder
+    // Apply wonder effect
     for (const auto& effect : wonderToBuild.getEffects()) {
         effect(*this, board,opponent);
     }
@@ -422,14 +408,13 @@ bool Player::constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder &wonderT
         std::cout << "[Theology] gave an extra round bonus!\n";
     }
 
-    // Discard la cartea care o folosim să activăm wonder
+    // Discard used card
     board.addCardToDiscardPile(cardUsed);
 
     std::cout << "Wonder " << wonderToBuild.getName() << " constructed successfully. Cost paid: " << static_cast<int>(totalCoinCost) << " coins." << std::endl;
     return true;
 }
 
-// Progress token funcitons
 void Player::addWonders(const std::shared_ptr<Wonder>& wonder)
 {
     m_Wonders.push_back(wonder);

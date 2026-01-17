@@ -15,9 +15,6 @@ private:
     std::vector<std::shared_ptr<CardBase>> m_deckAge3;
     std::vector<std::shared_ptr<CardBase>> m_deckGuilds;
 
-    //cartile unique pointer -> si restul aplicatiei ar face referile la ele cu * <- mai ok asa
-    //mai usor shared pointer?
-
     std::vector<std::shared_ptr<ProgressToken>> m_allTokens;
 
     std::vector<std::shared_ptr<Wonder>> m_allWonders;
@@ -37,7 +34,7 @@ public:
 
     std::vector<std::shared_ptr<Wonder>> drawWonders(int count);
 
-    // Getters for serialization
+    // Getteri pentru serializare
     const std::vector<std::shared_ptr<CardBase>>& getAllAge1Cards() const { return m_deckAge1; }
     const std::vector<std::shared_ptr<CardBase>>& getAllAge2Cards() const { return m_deckAge2; }
     const std::vector<std::shared_ptr<CardBase>>& getAllAge3Cards() const { return m_deckAge3; }

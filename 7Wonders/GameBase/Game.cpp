@@ -159,13 +159,10 @@ bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
         return false;
     }
 
-    //ii dam minunile disp
     std::cout << "\n--- Minuni Neconstruite Disponibile ---\n";
     for (size_t i = 0; i < availableWonders.size(); ++i)
         std::cout << "[" << i + 1 << "] "<< availableWonders[i]->getName()<< "\n";
    
-
-	//alegem minunea
     std::cout << "Alege numarul Minunii pe care vrei sa o construiesti: ";
     int choice;
     if (!(std::cin >> choice)) {
@@ -206,7 +203,6 @@ void Game::handle7WondersRule()
 	Wonder* lastRemainingWonder = nullptr;
     auto findUnbuiltAvailableWonder = [](Player& p) -> Wonder* {
         for (const auto& wonderPtr : p.getWonders()) {
-            // Access Wonder methods via the pointer
             if (wonderPtr && !wonderPtr->getIsBuilt() && wonderPtr->getIsAvailable()) {
                 return wonderPtr.get();
             }
@@ -221,7 +217,6 @@ void Game::handle7WondersRule()
 
     if (lastRemainingWonder != nullptr) {
         std::cout<< lastRemainingWonder->getName() << "' este scoasa din joc (returnata la cutie).\n";
-        // Marchează Minunea ca indisponibilă, astfel încât să nu mai apară în meniu.
         lastRemainingWonder->returnToBox();
     }
 }

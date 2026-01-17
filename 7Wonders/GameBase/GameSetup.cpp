@@ -10,13 +10,13 @@
 namespace fs = std::filesystem;
 
 static std::string resolvePath(const std::string& filename) {
-    // List of directories to check
+    // Listă de directoare de verificat
     std::vector<std::string> searchPaths = {
-        "GameBase/",             // From project root
-        "../GameBase/",          // From one level down (e.g. build dir)
-        "../../GameBase/",       // From two levels down (e.g. x64/Debug)
-        "../../../GameBase/",    // Extreme case
-        "./"                     // Current directory
+        "GameBase/",             // Din rădăcina proiectului
+        "../GameBase/",          // De la un nivel mai jos (e.g. directorul build)
+        "../../GameBase/",       // De la două nivele mai jos (e.g. x64/Debug)
+        "../../../GameBase/",    // Caz extrem
+        "./"                     // Directorul curent
     };
 
     for (const auto& prefix : searchPaths) {
@@ -29,7 +29,7 @@ static std::string resolvePath(const std::string& filename) {
 
     std::cerr << "[ResourceLoader] CRITICAL: Could not find " << filename << "!" << std::endl;
     std::cout << "Current working directory: " << fs::current_path() << std::endl;
-    return filename; // Fail gracefully by returning original
+    return filename; // Eșuăm grațios returnând originalul
 }
 
 GameSetup::GameSetup(Board& board) : m_board(board) 
@@ -68,7 +68,7 @@ void GameSetup::prepareTokens()
     for (size_t i = 0; i < m_allTokens.size(); ++i) {
         if (i < 5) {
             selectedTokens.push_back(m_allTokens[i]);
-        } else if (i < 8) { // Store next 3 as removed (Great Library target)
+        } else if (i < 8) { // Stocăm următoarele 3 ca eliminate (țintă pentru Marea Bibliotecă)
             removedTokens.push_back(m_allTokens[i]);
         }
     }
@@ -101,7 +101,7 @@ void GameSetup::prepareDecks()
     if (m_deckAge3.size() > 20) 
         m_deckAge3.resize(20);
 
-	//facem suffle si la minuni
+	//amestecăm și minunile
     std::shuffle(m_allWonders.begin(), m_allWonders.end(), e);
 
 }
@@ -163,7 +163,7 @@ std::vector<std::shared_ptr<Wonder>> GameSetup::drawWonders(int count)
         m_allWonders.begin(),
         m_allWonders.begin() + actualCount);
 
-    //le sterg din pachetul cu toate
+    // le ștergem din pachetul cu toate
     m_allWonders.erase(m_allWonders.begin(), m_allWonders.begin() + actualCount);
 
     return selectedWonders;

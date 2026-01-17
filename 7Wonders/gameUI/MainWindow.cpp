@@ -120,18 +120,12 @@ MainWindow::MainWindow(QWidget* parent)
 
 void MainWindow::rebuildRightPanel()
 {
-    // Access the rightZone layout
     QVBoxLayout* rLayout = qobject_cast<QVBoxLayout*>(ui->rightZone->layout());
     if (!rLayout) return;
 
-    // We want to keep 'militaryTrackWidget' and 'actionsContainer'.
-    // We will remove others and restructure.
-    
-    // Detach widgets we want to keep
     ui->militaryTrackWidget->setParent(nullptr); 
     ui->actionsContainer->setParent(nullptr);
 
-    // Clear the rest of the layout items
     QLayoutItem* item;
     while ((item = rLayout->takeAt(0)) != nullptr) {
         if (item->widget() && item->widget() != ui->militaryTrackWidget && item->widget() != ui->actionsContainer) {
@@ -140,51 +134,41 @@ void MainWindow::rebuildRightPanel()
         delete item;
     }
 
-    // Now build the new structure
-    // [ Splitter: Military | Progress ]
     QFrame* splitContainer = new QFrame(ui->rightZone);
     QHBoxLayout* splitLayout = new QHBoxLayout(splitContainer);
     splitLayout->setContentsMargins(0, 0, 0, 0);
     splitLayout->setSpacing(5);
 
-    // --- Left Side: Military ---
-    // Make sure it has a width constraint? It has fixed width in UI usually, but we want it to fit.
     ui->militaryTrackWidget->setParent(splitContainer);
     splitLayout->addWidget(ui->militaryTrackWidget);
 
-    // --- Right Side: Progress ---
     QFrame* progressContainer = new QFrame(splitContainer);
-    // Use Grid Layout for the entire progress panel to align things nicely or just VBox
     QVBoxLayout* progressCol = new QVBoxLayout(progressContainer);
     progressCol->setContentsMargins(0, 0, 0, 0);
     progressCol->setSpacing(2);
 
-    // Top: Player 2 (Opponent) Progress
     m_lblProgressP2 = new QLabel("Opponent", progressContainer);
     m_lblProgressP2->setStyleSheet("color: #B71C1C; font-weight: bold; font-size: 10px;");
     m_lblProgressP2->setAlignment(Qt::AlignCenter);
     progressCol->addWidget(m_lblProgressP2);
 
-    m_p2ProgressLayout = new QVBoxLayout(); // Will contain the vertical slots
+    m_p2ProgressLayout = new QVBoxLayout(); 
     progressCol->addLayout(m_p2ProgressLayout);
 
-    // Separator
     QFrame* line = new QFrame(progressContainer);
     line->setFrameShape(QFrame::HLine);
     line->setFrameShadow(QFrame::Sunken);
     line->setStyleSheet("color: #8B4513; margin: 5px;");
     progressCol->addWidget(line);
 
-    // Bottom: Player 1 (You) Progress
     m_lblProgressP1 = new QLabel("You", progressContainer);
     m_lblProgressP1->setStyleSheet("color: #1565C0; font-weight: bold; font-size: 10px;");
     m_lblProgressP1->setAlignment(Qt::AlignCenter);
     progressCol->addWidget(m_lblProgressP1);
 
-    m_p1ProgressLayout = new QVBoxLayout(); // Will contain the vertical slots
+    m_p1ProgressLayout = new QVBoxLayout(); 
     progressCol->addLayout(m_p1ProgressLayout);
 
-    // Info Button (?)
     QPushButton* infoBtn = new QPushButton("?", progressContainer);
     infoBtn->setFixedSize(24, 24);
     infoBtn->setCursor(Qt::PointingHandCursor);
@@ -197,16 +181,12 @@ void MainWindow::rebuildRightPanel()
     progressCol->addStretch();
     progressCol->addWidget(infoBtn, 0, Qt::AlignCenter);
 
-    // Set a fixed width for the progress container to be slim
     progressContainer->setFixedWidth(60); 
 
     splitLayout->addWidget(progressContainer);
 
+    rLayout->addWidget(splitContainer, 1); 
 
-    // Add Splitter to Main Right Layout
-    rLayout->addWidget(splitContainer, 1); // Stretch factor 1
-
-    // Add Actions Container at the bottom
     ui->actionsContainer->setParent(ui->rightZone);
     rLayout->addWidget(ui->actionsContainer, 0);
 
@@ -922,54 +902,29 @@ void MainWindow::updatePlayerInventories()
     std::cout << "[UI Update] P1 @" << &p1 << " (" << p1.getName() << ") has " << p1.getWonders().size() << " wonders.\n";
     std::cout << "[UI Update] P2 @" << &p2 << " (" << p2.getName() << ") has " << p2.getWonders().size() << " wonders.\n";
 
-    // Update Progress Labels with real names (Swapped as requested)
     if (m_lblProgressP1) {
-        QString name = QString::fromStdString(p2.getName()); // Was p1
+        QString name = QString::fromStdString(p2.getName());
         if (name.length() > 8) name = name.left(6) + "..";
         m_lblProgressP1->setText(name);
     }
     if (m_lblProgressP2) {
-        QString name = QString::fromStdString(p1.getName()); // Was p2
+        QString name = QString::fromStdString(p1.getName());
         if (name.length() > 8) name = name.left(6) + "..";
         m_lblProgressP2->setText(name);
     }
 
-        // Helper to calculate estimated VP (Visible)
-
-        auto calculateVP = [](const Player& p, const Player& opp) -> int {
-
-            int vp = 0;
-
-            // 1. Military
-
-            vp += p.getVPFromMilitaryTokens();
-
-            // 2. Blue Cards (and others if they have VP directly on them, e.g. Guilds)
-
-            vp += p.getVPFromBlueCards(); 
-
-            vp += p.getVPFromGuilds(opp);
-
-            // 3. Treasury - REMOVED for live display to start at 0 VP
-
-            // vp += (p.getCoins() / 3);
-
-            
-
-            // 4. Wonders (if built)
-
-            for (const auto& w : p.getWonders()) {
+    auto calculateVP = [](const Player& p, const Player& opp) -> int {
+        int vp = 0;
+        vp += p.getVPFromMilitaryTokens();
+        vp += p.getVPFromBlueCards(); 
+        vp += p.getVPFromGuilds(opp);
+        
+        for (const auto& w : p.getWonders()) {
             if (w->getIsBuilt()) {
-                 // Wonder VP is not easily accessible via a simple getter in all implementations, 
-                 // but let's assume getEffectDescription or similar might hint, 
-                 // or we need to access specific Points map if available.
-                 // Checking 'm_pointsScore' via getPoints()
-                 // But Wonders usually add to Points::Victory immediately or at end.
-                 // We will check p.getPoints() for Victory points accumulated.
+                 // Wonder VP logic handled internally or via Points
             }
         }
         
-        // Sum from Points map
         for (const auto& [type, val] : p.getPoints()) {
             if (type == Points::Victory) vp += val;
         }
@@ -984,7 +939,7 @@ void MainWindow::updatePlayerInventories()
         p1.getWonders(),
         p1.getInventory(),
         calculateVP(p1, p2),
-        p1.getProgressTokens() // Pass tokens
+        p1.getProgressTokens() 
     );
 
     ui->opponentDashboard->updateDashboard(

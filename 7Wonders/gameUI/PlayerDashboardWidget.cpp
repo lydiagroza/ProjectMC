@@ -98,8 +98,6 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
     
     ui->infoLabel->setText(text);
 
-    // --- POPULATE WONDERS (Grid) ---
-    // Clear existing wonders
     QLayoutItem* item;
     while ((item = ui->wondersGrid->takeAt(0)) != nullptr) {
         if (item->widget()) item->widget()->deleteLater();
@@ -127,7 +125,6 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
 
     int wIdx = 0;
     for (const auto& wonderPtr : wonders) {
-        // Use ui->wondersZone as parent so it's part of the frame structure
         CardWidget* wonderWidget = new CardWidget(wonderPtr->getId(), ui->wondersZone);
         wonderWidget->setFixedSize(200, 100); 
 
@@ -144,15 +141,11 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
         wIdx++;
     }
 
-    // --- POPULATE INVENTORY (HBox) ---
-    // Clear existing inventory
     while ((item = ui->invLayout->takeAt(0)) != nullptr) {
         if (item->widget()) item->widget()->deleteLater();
         delete item;
     }
 
-    // Populate Inventory
-    // Note: Use scrollAreaWidgetContents as parent
     QWidget* invContainer = ui->scrollAreaWidgetContents;
 
     for (const auto& [color, cards] : inventory) {
@@ -181,7 +174,6 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
         }
     }
     
-    // Add Effects Button at the end of inventory
     m_effectsBtn = new QPushButton("🔮 Active\nEffects");
     m_effectsBtn->setFixedSize(80, 110); 
     m_effectsBtn->setCursor(Qt::PointingHandCursor);
@@ -205,7 +197,7 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
     ui->invLayout->addStretch();
 }
 
-// Simple Helper for Token Descriptions (Duplicated from MainWindow, ideally should be static/common)
+// Funcție ajutătoare simplă pentru descrierile jetoanelor (Duplicat din MainWindow, ar trebui să fie static/comun)
 static QString getLocalTokenDesc(const QString& tokenName) {
     QString n = tokenName.toUpper().trimmed();
     if (n == "AGRICULTURE") return "Agricultură: +6 monede, +4 VP.";
@@ -223,12 +215,12 @@ static QString getLocalTokenDesc(const QString& tokenName) {
 
 void PlayerDashboardWidget::onEffectsClicked()
 {
-    // Build list of effects
+    // Construiește lista de efecte
     QStringList effectsHtml;
 
-    // 1. Progress Tokens
+    // 1. Jetoane de Progres
     if (!m_activeEffectsTokens.empty()) {
-        effectsHtml << "<h3 style='color:#66BB6A'>✅ Progress Tokens</h3><ul>";
+        effectsHtml << "<h3 style='color:#66BB6A'>✅ Jetoane de Progres</h3><ul>";
         for (const auto& t : m_activeEffectsTokens) {
              QString name = QString::fromStdString(t->getName());
              effectsHtml << "<li><b>" + name + ":</b> " + getLocalTokenDesc(name) + "</li>";
@@ -236,12 +228,12 @@ void PlayerDashboardWidget::onEffectsClicked()
         effectsHtml << "</ul>";
     }
 
-    // 2. Built Wonders
+    // 2. Minuni Construite
     bool hasBuiltWonder = false;
     for (const auto& w : m_activeEffectsWonders) {
         if (w->getIsBuilt()) {
             if (!hasBuiltWonder) {
-                effectsHtml << "<h3 style='color:#FFCA28'>✨ Built Wonders</h3><ul>";
+                effectsHtml << "<h3 style='color:#FFCA28'>✨ Minuni Construite</h3><ul>";
                 hasBuiltWonder = true;
             }
             QString name = QString::fromStdString(w->getName());
@@ -251,14 +243,14 @@ void PlayerDashboardWidget::onEffectsClicked()
     }
     if (hasBuiltWonder) effectsHtml << "</ul>";
 
-    // 3. No effects?
+    // 3. Fără efecte?
     if (effectsHtml.isEmpty()) {
-        effectsHtml << "<i>No active permanent effects.</i>";
+        effectsHtml << "<i>Niciun efect permanent activ.</i>";
     }
 
-    // Show Dialog
+    // Afișează Dialog
     QMessageBox msgBox(this);
-    msgBox.setWindowTitle("Active Effects");
+    msgBox.setWindowTitle("Efecte Active");
     msgBox.setTextFormat(Qt::RichText);
     msgBox.setText(effectsHtml.join(""));
     msgBox.setStyleSheet(

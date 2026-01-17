@@ -84,6 +84,7 @@ bool SaveManager::saveGame(Game* game, const QString& filePath) {
     out << game->m_isWaitingForDiscardChoice;
     out << game->m_isWaitingForProgressTokenChoice;
     out << game->m_isWaitingForGreatLibraryChoice;
+    out << game->m_isWaitingForOpponentCardDiscard; // Added
 
     // Draft Sets
     auto serializeWonderList = [&](const std::vector<std::shared_ptr<Wonder>>& list) {
@@ -135,6 +136,7 @@ Game* SaveManager::loadGame(const QString& filePath) {
     in >> game->m_isWaitingForDiscardChoice;
     in >> game->m_isWaitingForProgressTokenChoice;
     in >> game->m_isWaitingForGreatLibraryChoice;
+    in >> game->m_isWaitingForOpponentCardDiscard; // Added
 
     // Draft Sets
     auto deserializeWonderList = [&](std::vector<std::shared_ptr<Wonder>>& list) {
@@ -375,7 +377,7 @@ void SaveManager::deserializeBoard(QDataStream& in, Board& b, const GameRegistry
     const auto& rows = b.getPyramid().getRows();
     
     // We expect numRows == rows.size(). If mismatch, saved age != passed age.
-    if(numRows != rows.size()) {
+    if((size_t)numRows != rows.size()) {
         qDebug() << "SaveManager: Pyramid mismatch! Saved rows:" << numRows << " Actual:" << rows.size();
         // Try to consume stream to avoid crash? Or just fail?
         return; 

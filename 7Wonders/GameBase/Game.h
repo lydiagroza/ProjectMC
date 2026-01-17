@@ -123,4 +123,6 @@ public:
     void resolveProgressTokenChoice(int tokenId);
     void resolveGreatLibraryChoice(int tokenId); // NEW
     void resolveDiscardOpponentCard(int chosenCardId);
+
+    friend class SaveManager;
 };

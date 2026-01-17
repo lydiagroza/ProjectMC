@@ -2,6 +2,7 @@
 #include "ui_MilitaryTrackWidget.h"
 #include <QHBoxLayout>
 #include <QGraphicsDropShadowEffect>
+#include <QResizeEvent>
 
 MilitaryTrackWidget::MilitaryTrackWidget(QWidget* parent)
     : QWidget(parent)
@@ -111,6 +112,8 @@ void MilitaryTrackWidget::createTrack()
 
 void MilitaryTrackWidget::updatePawnPosition(int position)
 {
+    m_currentPosition = position;
+
     // Clamp position to be within -9 and 9
     position = std::max(-9, std::min(9, position));
 
@@ -119,37 +122,28 @@ void MilitaryTrackWidget::updatePawnPosition(int position)
 
     // The layout is reversed, so we calculate from the bottom
     // We target the center of the segment
-    // Using simple geometry
-    
-    // Calculate total height of the track container
-    // It's safer to map directly to the segment widget's geometry if possible,
-    // but they are in a layout.
-    // However, since we stored m_trackSegments, we can use their geometry!
-    
-    // NOTE: We need to wait for layout to apply to get correct coordinates?
-    // updatePawnPosition might be called before show().
-    // Fallback to calculation if geometry is 0.
     
     QFrame* targetSegment = m_trackSegments[index];
     int targetY = 0;
     
-    if (targetSegment && targetSegment->y() > 0) {
-        // Use actual widget position
+    if (targetSegment && targetSegment->height() > 0) {
+        // Use actual widget position relative to trackContainer
+        // targetSegment->y() is relative to ui->trackContainer because it's in the layout
         targetY = targetSegment->y() + (targetSegment->height() / 2) - (m_pawn->height() / 2);
     } else {
         // Fallback calculation
-        // Total segments: 19.
         int layoutIndex = m_totalSegments - 1 - index;
-        targetY = layoutIndex * (m_segmentHeight + 2) + 10; // +2 for spacing/border approx
-        // This fallback is brittle, but standard behavior in Qt creates usually handles this.
-        // Better fallback: Just assume centered in the slot.
-        int contentHeight = ui->trackContainer->height();
-        if (contentHeight < 100) contentHeight = m_totalSegments * m_segmentHeight; // estimating
-        
         targetY = (layoutIndex * m_segmentHeight) + (m_segmentHeight/2) - (m_pawn->height()/2);
     }
     
     int xPos = (ui->trackContainer->width() / 2) - (m_pawn->width() / 2);
 
     m_pawn->move(xPos, targetY);
+}
+
+void MilitaryTrackWidget::resizeEvent(QResizeEvent* event)
+{
+    QWidget::resizeEvent(event);
+    // Recalculate pawn position after the layout has adjusted to the new size
+    updatePawnPosition(m_currentPosition);
 }

@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "MilitaryTrack.h"
 #include "AI_Player.h"
+#include "GuildEffects.h"
 #include <iostream>
 #include <optional> 
 #include <vector>
@@ -107,10 +108,18 @@ void Game::setPlayerTypes(bool p1IsAI, bool p2IsAI, AI_Difficulty difficulty)
     std::string n1 = m_player1->getName();
     std::string n2 = m_player2->getName();
 
-    if (p1IsAI) m_player1 = std::make_shared<AI_Player>(n1, 1, difficulty);
+    if (p1IsAI) {
+        auto ai = std::make_shared<AI_Player>(n1, 1, difficulty);
+        if (difficulty == AI_Difficulty::ADAPTIVE) ai->enableTraining(true);
+        m_player1 = ai;
+    }
     else m_player1 = std::make_shared<Player>(n1, 1);
 
-    if (p2IsAI) m_player2 = std::make_shared<AI_Player>(n2, 2, difficulty);
+    if (p2IsAI) {
+        auto ai = std::make_shared<AI_Player>(n2, 2, difficulty);
+        if (difficulty == AI_Difficulty::ADAPTIVE) ai->enableTraining(true);
+        m_player2 = ai;
+    }
     else m_player2 = std::make_shared<Player>(n2, 2);
 
     // Reset pointers
@@ -247,8 +256,8 @@ int Game::calculatePlayerVP(const Player& player) const {
     }
 
     // 7. Guilds
-    // const Player& opponent = (player.getName() == m_player1->getName()) ? *m_player2 : *m_player1;
-    // totalVP += player.getVPFromGuilds(opponent);
+    const Player& opponent = (player.getName() == m_player1->getName()) ? *m_player2 : *m_player1;
+    totalVP += player.getVPFromGuilds(opponent);
 
     return totalVP;
 }
@@ -286,7 +295,36 @@ std::optional<Player> Game::determinateWinner()
 
 	std::cout << "\n--- Rezultatele Finale (Victorie Civila) ---\n";
     std::cout << m_player1->getName() << " Total VP: " << vp1 << "\n";
+    
+    // Print Guild Breakdown for Player 1
+    auto printGuilds = [&](Player& p, Player& opp) {
+        const auto& inv = p.getInventory();
+        if (inv.count(Color::Purple)) {
+            std::cout << "   -> Detalii Ghilde (" << p.getName() << "):\n";
+            for (const auto& card : inv.at(Color::Purple)) {
+                int pts = 0;
+                int id = card->getId();
+                switch (id) {
+                    case 67: pts = GuildEndGameEffects::calculateBuildersGuild(p, opp); break;
+                    case 68: pts = GuildEndGameEffects::calculateMoneylendersGuild(p, opp); break;
+                    case 69: pts = GuildEndGameEffects::calculateScientistsGuild(p, opp); break;
+                    case 70: pts = GuildEndGameEffects::calculateShipownersGuild(p, opp); break;
+                    case 71: pts = GuildEndGameEffects::calculateTradersGuild(p, opp); break;
+                    case 72: pts = GuildEndGameEffects::calculateMagistratesGuild(p, opp); break;
+                    case 73: pts = GuildEndGameEffects::calculateTacticiansGuild(p, opp); break;
+                }
+                std::cout << "      - " << card->getName() << ": " << pts << " VP\n";
+            }
+        } else {
+            std::cout << "   -> " << p.getName() << " nu detine nicio ghilda.\n";
+        }
+    };
+
+    printGuilds(*m_player1, *m_player2);
+
     std::cout << m_player2->getName() << " Total VP: " << vp2 << "\n";
+    printGuilds(*m_player2, *m_player1);
+
     if (vp1 > vp2) {
         std::cout << "\n Câștigătorul este: " << m_player1->getName() << "\n";
         return *m_player1;
@@ -300,7 +338,7 @@ std::optional<Player> Game::determinateWinner()
         int blueVP1 = m_player1->getVPFromBlueCards();
         int blueVP2 = m_player2->getVPFromBlueCards();
 
-        if (blueVP1 > blueVP1) {
+        if (blueVP1 > blueVP2) {
             std::cout << "Jocul s-a terminat la egalitate, dar " << m_player1->getName()
                 << " castiga la tie-breaker (Clădiri Civile - Albastre).\n";
             return *m_player1;

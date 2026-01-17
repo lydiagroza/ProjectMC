@@ -1,6 +1,7 @@
 #include "GameEndDialog.h"
 #include "ui_GameEndDialog.h"
 #include "Player.h"
+#include "GuildEffects.h"
 #include <map>
 
 GameEndDialog::GameEndDialog(Game* game, QWidget *parent) :
@@ -57,7 +58,31 @@ QString GameEndDialog::formatStats(const Player& p, const Player& opp, int total
     stats += QString("🟨 Yellow Cards: %1\n").arg(getCount(Color::Yellow));
     stats += QString("🟫 Brown Cards: %1\n").arg(getCount(Color::Brown));
     stats += QString("⬜ Gray Cards: %1\n").arg(getCount(Color::Gray));
-    // stats += QString("🟪 Guilds VP: %1").arg(p.getVPFromGuilds(opp));
+    
+    // Guild Breakdown
+    const auto& inv = p.getInventory();
+    if (inv.count(Color::Purple)) {
+        int guildCount = inv.at(Color::Purple).size();
+        stats += QString("\n🟪 Guilds (%1):\n").arg(guildCount);
+        
+        for (const auto& card : inv.at(Color::Purple)) {
+            int pts = 0;
+            int id = card->getId();
+            switch (id) {
+                case 67: pts = GuildEndGameEffects::calculateBuildersGuild(p, opp); break;
+                case 68: pts = GuildEndGameEffects::calculateMoneylendersGuild(p, opp); break;
+                case 69: pts = GuildEndGameEffects::calculateScientistsGuild(p, opp); break;
+                case 70: pts = GuildEndGameEffects::calculateShipownersGuild(p, opp); break;
+                case 71: pts = GuildEndGameEffects::calculateTradersGuild(p, opp); break;
+                case 72: pts = GuildEndGameEffects::calculateMagistratesGuild(p, opp); break;
+                case 73: pts = GuildEndGameEffects::calculateTacticiansGuild(p, opp); break;
+                default: pts = 0; break;
+            }
+            stats += QString("   • %1: %2 VP\n").arg(QString::fromStdString(card->getName())).arg(pts);
+        }
+    } else {
+        stats += QString("\n🟪 No Guilds\n");
+    }
 
     return stats;
 }

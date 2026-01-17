@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <QComboBox>
+#include <QLabel> // Added missing include
 
 namespace Ui {
 class NameSelectionWidget;
@@ -28,4 +29,5 @@ private slots:
 private:
     Ui::NameSelectionWidget *ui;
     QComboBox* m_difficultyCombo;
+    QLabel* m_difficultyLabel; // New member variable
 };

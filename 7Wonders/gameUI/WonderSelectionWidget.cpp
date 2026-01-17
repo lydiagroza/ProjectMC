@@ -3,6 +3,8 @@
 #include "CardWidget.h" 
 #include <QDebug> 
 
+#include <QGridLayout> // Add this include
+
 WonderSelectionWidget::WonderSelectionWidget(QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::WonderSelectionWidget)
@@ -21,7 +23,7 @@ void WonderSelectionWidget::setWonders(const std::vector<int>& ids,
                                        const std::vector<QString>& costs,
                                        const std::vector<QString>& effects)
 {
-    // Clear existing layout content (placeholder or old cards)
+    // Clear existing layout content
     QLayoutItem* item;
     while ((item = ui->cardsLayout->takeAt(0)) != nullptr) {
         if (item->widget()) {
@@ -31,28 +33,34 @@ void WonderSelectionWidget::setWonders(const std::vector<int>& ids,
     }
     m_currentCards.clear();
 
-    // Re-populate using the existing layout from UI
+    // Cast the layout to QGridLayout
+    QGridLayout* gridLayout = qobject_cast<QGridLayout*>(ui->cardsLayout);
+    if (!gridLayout) {
+        qWarning("The layout 'cardsLayout' is not a QGridLayout.");
+        return;
+    }
+
+    // Re-populate using the grid layout
     for (int i = 0; i < (int)ids.size(); ++i) {
-        // Use the scroll area's content widget as parent
         CardWidget* card = new CardWidget(ids[i], ui->scrollAreaWidgetContents); 
         
-        card->setFixedSize(300, 150); // Landscape display for Wonders
+        card->setFixedSize(300, 150);
 
         card->setupCard(names[i], colors[i], true, costs[i], effects[i]);
 
-        // Check for wonder image
         QString imgPath = CardWidget::getWonderImagePath(names[i]);
         if (!imgPath.isEmpty()) {
             card->setImage(imgPath);
         }
 
         connect(card, &CardWidget::cardClicked, this, &WonderSelectionWidget::onCardClicked);
-        ui->cardsLayout->addWidget(card);
+
+        // Add to grid
+        int row = i / 2;
+        int col = i % 2;
+        gridLayout->addWidget(card, row, col);
         m_currentCards.append(card);
     }
-    
-    // Add stretch to push cards to the left if few
-    ui->cardsLayout->addStretch();
 }
 
 void WonderSelectionWidget::onCardClicked(int cardId)

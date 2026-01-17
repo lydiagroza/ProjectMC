@@ -81,24 +81,21 @@ font-family: 'Times New Roman', serif;</string>
          </widget>
         </item>
         <item>
-         <layout class="QGridLayout" name="wondersGrid">
-          <property name="spacing">
-           <number>5</number>
+         <widget class="QScrollArea" name="wondersScrollArea">
+          <property name="styleSheet">
+           <string notr="true">background: transparent; border: none;</string>
           </property>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+          <property name="widgetResizable">
+           <bool>true</bool>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <layout class="QGridLayout" name="wondersGrid">
+            <property name="spacing">
+             <number>5</number>
+            </property>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -137,7 +134,7 @@ font-family: 'Times New Roman', serif;</string>
            <set>Qt::AlignCenter</set>
           </property>
           <property name="styleSheet">
-           <string notr="true">color: #A5D6A7; font-weight: bold; font-size: 10px;</string>
+           <string notr="true">color: #FFFFFF; font-weight: bold; font-size: 12px;</string>
           </property>
          </widget>
         </item>

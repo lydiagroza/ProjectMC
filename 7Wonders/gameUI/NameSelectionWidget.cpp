@@ -2,7 +2,7 @@
 #include "ui_NameSelectionWidget.h"
 #include <QGraphicsDropShadowEffect>
 #include <QVBoxLayout>
-#include <QLabel>
+#include <QLabel> // Ensure QLabel header is included
 
 NameSelectionWidget::NameSelectionWidget(QWidget *parent) :
     QWidget(parent),
@@ -54,18 +54,18 @@ NameSelectionWidget::NameSelectionWidget(QWidget *parent) :
     // But since `ui->setupUi` was called, `this->layout()` should be valid.
     
     if (this->layout()) {
-        QLabel* lbl = new QLabel("Select AI Difficulty:", this);
-        lbl->setStyleSheet("color: #F5E6D3; font-weight: bold; font-size: 14px;");
-        lbl->setAlignment(Qt::AlignCenter);
+        m_difficultyLabel = new QLabel("Select AI Difficulty:", this); // Assign to member variable
+        m_difficultyLabel->setStyleSheet("color: #F5E6D3; font-weight: bold; font-size: 14px;");
+        m_difficultyLabel->setAlignment(Qt::AlignCenter);
         
         // Insert before the last item (Start Button usually)
         QVBoxLayout* vLayout = qobject_cast<QVBoxLayout*>(this->layout());
         if (vLayout) {
-            vLayout->insertWidget(vLayout->count() - 1, lbl);
+            vLayout->insertWidget(vLayout->count() - 1, m_difficultyLabel);
             vLayout->insertWidget(vLayout->count() - 1, m_difficultyCombo);
         } else {
             // Fallback
-            this->layout()->addWidget(lbl);
+            this->layout()->addWidget(m_difficultyLabel);
             this->layout()->addWidget(m_difficultyCombo);
         }
     }
@@ -90,6 +90,7 @@ void NameSelectionWidget::setMode(bool p1Enabled, bool p2Enabled)
     // Enable difficulty only if there is at least one AI
     bool hasAI = (!p1Enabled || !p2Enabled);
     m_difficultyCombo->setVisible(hasAI);
+    m_difficultyLabel->setVisible(hasAI); // Control visibility of the label
     // Also hide the label if we could find it, but for now just hiding combo is enough contextually
 }
 

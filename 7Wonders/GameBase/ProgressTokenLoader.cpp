@@ -23,6 +23,11 @@ std::vector<std::function<void(Player&, Player&)>> ProgressTokenLoader::parseEff
                 if (Game::currentGame) Game::currentGame->handleProgressTokenChoice();
             }
         }},
+        {"add_scientific_symbol_law", [](Player& p, Player&) { 
+            if (p.add_ScientificSymbol(Scientific_Symbol::Law)) {
+                if (Game::currentGame) Game::currentGame->handleProgressTokenChoice();
+            }
+        }},
         //aici trebuie cumva apelat la sfarsitul jocului nu in timpul jocului 
         {"victoryPointsPerProgress", [](Player& p, Player&) {p.setMathBonus(true); }},
         {"BlueCardDiscount", [](Player& p, Player&) { p.setBlueCardDiscount(true); }},

@@ -2,7 +2,7 @@ name,id,effects
 AGRICULTURE,	86,"add_coins6";"add_VictoryPoint4"
 ARCHITECTURE,	87,"WondersDiscount"
 ECONOMY,		88,"gainOpponentTradeCost"
-LAW,			89,"add_scientific_symbol_scales"
+LAW,			89,"add_scientific_symbol_law"
 MATHEMATICS,	90,"victoryPointsPerProgress"
 MASONRY,		91,"BlueCardDiscount"
 PHILOSOPHY,		92,"add_VictoryPoint7"

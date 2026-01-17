@@ -913,12 +913,12 @@ void MainWindow::updatePlayerInventories()
     std::cout << "[UI Update] P2 @" << &p2 << " (" << p2.getName() << ") has " << p2.getWonders().size() << " wonders.\n";
 
     if (m_lblProgressP1) {
-        QString name = QString::fromStdString(p2.getName());
+        QString name = QString::fromStdString(p1.getName());
         if (name.length() > 8) name = name.left(6) + "..";
         m_lblProgressP1->setText(name);
     }
     if (m_lblProgressP2) {
-        QString name = QString::fromStdString(p1.getName());
+        QString name = QString::fromStdString(p2.getName());
         if (name.length() > 8) name = name.left(6) + "..";
         m_lblProgressP2->setText(name);
     }

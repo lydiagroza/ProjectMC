@@ -746,7 +746,7 @@ void MainWindow::onCardSelected(int cardId)
 
     bool hasAvailableWonder = false;
     for (const auto& w : p->getWonders()) {
-        if (!w->getIsBuilt()) {
+        if (!w->getIsBuilt() && w->getIsAvailable()) {
              int wCost = p->findTotalCost(*w, *opp);
              if (wCost != GameConstants::IMPOSSIBLE_COST) {
                  hasAvailableWonder = true;
@@ -755,6 +755,12 @@ void MainWindow::onCardSelected(int cardId)
         }
     }
     ui->btnWonder->setEnabled(hasAvailableWonder);
+    
+    if (m_game->getNumberOfWondersBuilt() >= 7) {
+        ui->btnWonder->setText("7 wonders already built");
+    } else {
+        ui->btnWonder->setText("Wonder");
+    }
 }
 
 void MainWindow::onBuildClicked()
@@ -811,7 +817,7 @@ void MainWindow::onWonderClicked()
 
     std::vector<Wonder*> availableWonders;
     for (const auto& w : p->getWonders()) {
-        if (!w->getIsBuilt()) {
+        if (!w->getIsBuilt() && w->getIsAvailable()) {
             availableWonders.push_back(w.get());
         }
     }
@@ -835,6 +841,7 @@ void MainWindow::onWonderClicked()
     if (!selectedWonder) return;
 
     if (p->constructWonder(node->getCard(), *selectedWonder, *opp, m_game->getBoard())) {
+        m_game->notifyWonderBuilt();
         node->updatePlayedStatus(true);
         m_game->getBoard().updateVisibility();
 

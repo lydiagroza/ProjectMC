@@ -97,6 +97,8 @@ public:
     void handleProgressTokenChoice();
     void handleGreatLibraryChoice(); // NEW
     void handleDiscardOpponentCardChoice(Player& opponent, Color cardColor);
+    void notifyWonderBuilt(); // Notification for 7 Wonders Rule
+    int getNumberOfWondersBuilt() const { return m_numberOfWondersBuilt; }
 
     // funcții pentru faza de draft din UI
     const std::vector<std::shared_ptr<Wonder>>& getCurrentDraftSet() const;

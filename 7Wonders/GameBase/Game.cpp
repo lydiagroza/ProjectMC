@@ -144,12 +144,19 @@ void Game::switchTurn()
     std::cout << "[Turn] Switched to " << m_currentPlayer->getName() << " (ptr: " << m_currentPlayer << ")\n";
 }
 
+void Game::notifyWonderBuilt()
+{
+    m_numberOfWondersBuilt++;
+    if (m_numberOfWondersBuilt == 7)
+        handle7WondersRule();
+}
+
 bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
 
     std::vector<Wonder*> availableWonders;
 
     for (const auto& wonderPtr : m_currentPlayer->getWonders()) {
-        if (wonderPtr && !wonderPtr->getIsBuilt()) {
+        if (wonderPtr && !wonderPtr->getIsBuilt() && wonderPtr->getIsAvailable()) {
             availableWonders.push_back(wonderPtr.get());
         }
     }
@@ -190,9 +197,7 @@ bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
 
     if (selectedWonder->getIsBuilt()) {
         std::cout << m_currentPlayer->getName() << " a construit Minunea: " << selectedWonder->getName() << "\n";
-        m_numberOfWondersBuilt++;
-        if (m_numberOfWondersBuilt == 7)
-            handle7WondersRule();
+        notifyWonderBuilt();
         return true;
     }
     return false;

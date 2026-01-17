@@ -712,6 +712,7 @@ void AI_Player::makeDecision(Board& board, Player& opponent, int currentAge) {
                  if (targetWonder && !targetWonder->getIsBuilt()) {
                      if (constructWonder(selectedCard, *targetWonder, opponent, board)) {
                          std::cout << "[AI-ML] Builds Wonder " << targetWonder->getName() << "\n";
+                         if (Game::currentGame) Game::currentGame->notifyWonderBuilt();
                          actionSuccess = true;
                      }
                  }
@@ -767,6 +768,7 @@ void AI_Player::makeDecision(Board& board, Player& opponent, int currentAge) {
                 if (chosenWonder) {
                     if (constructWonder(selectedCard, *chosenWonder, opponent, board)) {
                         std::cout << "[AI] Builds wonder: " << chosenWonder->getName() << "\n";
+                        if (Game::currentGame) Game::currentGame->notifyWonderBuilt();
                         actionTaken = true;
                     }
                 }

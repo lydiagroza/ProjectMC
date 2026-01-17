@@ -64,5 +64,6 @@ public:
 
 	bool isEmpty() const;
 	
+    friend class SaveManager;
 };
 

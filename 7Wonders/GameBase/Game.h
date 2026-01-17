@@ -113,4 +113,6 @@ public:
     void resolveBuildFromDiscard(int chosenCardId);
     void resolveProgressTokenChoice(int tokenId);
     void resolveGreatLibraryChoice(int tokenId); // NEW
+
+    friend class SaveManager;
 };

@@ -57,4 +57,5 @@ public:
 	void removeFromDiscardPile(const std::shared_ptr<CardBase>& card);
 
 	friend std::ostream& operator<<(std::ostream& os, const Board& board);
+    friend class SaveManager;
 };

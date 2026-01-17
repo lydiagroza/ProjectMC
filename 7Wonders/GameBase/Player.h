@@ -179,7 +179,7 @@ public:
 	void addProgressToken(std::shared_ptr<ProgressToken> token);
 	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens();
 
-	
+	friend class SaveManager;
 
 };
 

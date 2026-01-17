@@ -36,5 +36,13 @@ public:
 	void printWonders() const;
 
     std::vector<std::shared_ptr<Wonder>> drawWonders(int count);
+
+    // Getters for serialization
+    const std::vector<std::shared_ptr<CardBase>>& getAllAge1Cards() const { return m_deckAge1; }
+    const std::vector<std::shared_ptr<CardBase>>& getAllAge2Cards() const { return m_deckAge2; }
+    const std::vector<std::shared_ptr<CardBase>>& getAllAge3Cards() const { return m_deckAge3; }
+    const std::vector<std::shared_ptr<CardBase>>& getAllGuilds() const { return m_deckGuilds; }
+    const std::vector<std::shared_ptr<ProgressToken>>& getAllTokens() const { return m_allTokens; }
+    const std::vector<std::shared_ptr<Wonder>>& getAllWonders() const { return m_allWonders; }
 };
 

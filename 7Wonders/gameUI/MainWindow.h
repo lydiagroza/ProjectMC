@@ -33,6 +33,7 @@ private slots:
     void onNamesConfirmed(const QString& p1, const QString& p2, int difficulty = 1);
     void processAITurn();
     void onDiscardedCardsClicked();
+    void onSaveGameClicked();
 
 private:
     Ui::MainWindow *ui;

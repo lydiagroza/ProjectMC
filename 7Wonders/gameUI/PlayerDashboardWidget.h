@@ -4,8 +4,10 @@
 #include <vector>
 #include <map>
 #include <cstdint>
+#include <QPushButton> // Added
 #include "CardBase.h"
 #include "Wonder.h"
+#include "ProgressTokens.h"
 
 namespace Ui {
 class PlayerDashboardWidget;
@@ -27,8 +29,17 @@ public:
                          const std::map<Resource, std::uint8_t>& resources,
                          const std::vector<std::shared_ptr<Wonder>>& wonders,
                          const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& inventory,
-                         int victoryPoints);
+                         int victoryPoints,
+                         const std::vector<std::shared_ptr<ProgressToken>>& tokens = {}); // Updated to receive tokens
+
+private slots:
+    void onEffectsClicked();
 
 private:
     Ui::PlayerDashboardWidget *ui;
+    QPushButton* m_effectsBtn = nullptr;
+
+    // Store data for the popup
+    std::vector<std::shared_ptr<Wonder>> m_activeEffectsWonders;
+    std::vector<std::shared_ptr<ProgressToken>> m_activeEffectsTokens;
 };

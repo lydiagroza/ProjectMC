@@ -2,8 +2,10 @@
 #include <cstdint>
 #include "gameExport.h"
 
-class  GAME_API MilitaryTrack
-{
+class GAME_API MilitaryTrack {
+    friend class SaveManager;
+	int pawnPosition; // 0 = centru, >0 = avantaj Player 1?, <0 = avantaj Player 2?
+	// VERIFICARE: În implementarea ta, cine e P1 și cine e P2 pe track?
 private:
     
 	int8_t m_pawnPosition = 0; 

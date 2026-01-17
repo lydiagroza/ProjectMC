@@ -86,7 +86,9 @@ HEADERS += gameUI/MainWindow.h \
            gameUI/NameSelectionWidget.h \
            gameUI/WonderChoiceDialog.h \
            gameUI/DiscardedCardsDialog.h \
-           gameUI/GameEndDialog.h
+           gameUI/GameEndDialog.h \
+           gameUI/SaveManager.h \
+           gameUI/GameSelectionDialog.h
 
 SOURCES += gameUI/main.cpp \
            gameUI/MainWindow.cpp \
@@ -99,7 +101,8 @@ SOURCES += gameUI/main.cpp \
            gameUI/NameSelectionWidget.cpp \
            gameUI/WonderChoiceDialog.cpp \
            gameUI/DiscardedCardsDialog.cpp \
-           gameUI/GameEndDialog.cpp
+           gameUI/GameEndDialog.cpp \
+           gameUI/SaveManager.cpp
 
 # ========================================
 # UI - fișiere de design .ui (opțional)

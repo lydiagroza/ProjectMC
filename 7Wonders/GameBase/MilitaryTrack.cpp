@@ -9,7 +9,7 @@ int MilitaryTrack::getPawnPosition() const
 void MilitaryTrack::applyShields(int playerId, int shields, int& coinsLostByOpponent)
 {
 	int8_t oldPosition = m_pawnPosition;
-    int direction = (playerId == 1) ? -1 : 1;
+    int direction = (playerId == 1) ? 1 : -1;
 	int temporaryPos = m_pawnPosition+ direction * shields;
 	m_pawnPosition = std::clamp((int8_t)temporaryPos, (int8_t)-MAX_Position, MAX_Position);
 	//ma face sa nu pot depasi pozitia minima sau maixima -> o face sa fie in limitele impuse

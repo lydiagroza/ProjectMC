@@ -15,6 +15,10 @@
 #include "GameConstants.h"
 #include "DiscardedCardsDialog.h"
 #include "GameEndDialog.h"
+#include "SaveManager.h"
+#include "GameSelectionDialog.h"
+#include <QDateTime>
+#include <QInputDialog>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -205,6 +209,16 @@ void MainWindow::rebuildRightPanel()
     // Add Actions Container at the bottom
     ui->actionsContainer->setParent(ui->rightZone);
     rLayout->addWidget(ui->actionsContainer, 0);
+
+    // Save Game Button
+    QPushButton* saveBtn = new QPushButton("Save Game", ui->rightZone);
+    saveBtn->setCursor(Qt::PointingHandCursor);
+    saveBtn->setStyleSheet(
+        "QPushButton { background: #5D4037; color: #F5E6D3; border: 2px solid #8B4513; border-radius: 10px; padding: 5px; font-weight: bold; }"
+        "QPushButton:hover { background: #8D6E63; border-color: #FFD700; }"
+    );
+    connect(saveBtn, &QPushButton::clicked, this, &MainWindow::onSaveGameClicked);
+    rLayout->addWidget(saveBtn, 0, Qt::AlignCenter);
 }
 
 QString MainWindow::getTokenDescription(const QString& tokenName)
@@ -225,6 +239,28 @@ QString MainWindow::getTokenDescription(const QString& tokenName)
     
     qDebug() << "[UI] Warning: No description for token:" << tokenName;
     return "Descriere indisponibilă (" + tokenName + ").";
+}
+
+void MainWindow::onSaveGameClicked()
+{
+    if (!m_game) return;
+
+    bool ok;
+    QString fileName = QInputDialog::getText(this, "Save Game",
+                                         "Save Name:", QLineEdit::Normal,
+                                         "Save_" + QDateTime::currentDateTime().toString("yyyyMMdd_HHmm"), &ok);
+    if (ok && !fileName.isEmpty()) {
+        if (!fileName.endsWith(".7wd")) fileName += ".7wd";
+        
+        QDir dir("saves");
+        if (!dir.exists()) dir.mkpath(".");
+        
+        if (SaveManager::saveGame(m_game, dir.filePath(fileName))) {
+            QMessageBox::information(this, "Success", "Game saved successfully!");
+        } else {
+            QMessageBox::warning(this, "Error", "Failed to save game.");
+        }
+    }
 }
 
 void MainWindow::onProgressInfoClicked()
@@ -374,11 +410,48 @@ void MainWindow::onSplashFinished(SplashScreen::GameMode mode)
     if (mode == SplashScreen::AvAI) {
         onNamesConfirmed("AI Player 1", "AI Player 2", 1); // Default Medium for quick start
     } else {
-        // Player 1 is always human in PvA and PvP
-        // Player 2 is only human in PvP
-        ui->nameSelectionPage->setMode(true, mode == SplashScreen::PvP);
-        ui->stack->setCurrentWidget(ui->nameSelectionPage);
-        ui->statusbar->showMessage("⚔️ Who dares to challenge the ducks? ⚔️");
+        if (mode == SplashScreen::PvP) {
+            GameSelectionDialog dlg(this);
+            if (dlg.exec() == QDialog::Accepted) {
+                if (dlg.isNewGame()) {
+                    // Proceed to name selection
+                    ui->nameSelectionPage->setMode(true, true);
+                    ui->stack->setCurrentWidget(ui->nameSelectionPage);
+                    ui->statusbar->showMessage("⚔️ Who dares to challenge the ducks? ⚔️");
+                } else {
+                    // Load Game
+                    Game* loadedGame = SaveManager::loadGame(dlg.getSelectedFile());
+                    if (loadedGame) {
+                        delete m_game;
+                        m_game = loadedGame;
+                        
+                        // Setup UI for loaded game
+                        ui->opponentDashboard->setVisible(true);
+                        ui->playerDashboard->setVisible(true);
+                        ui->rightZone->setVisible(true);
+                        
+                        // We need to refresh the UI fully
+                        updateGameState(); 
+                        
+                        ui->statusbar->showMessage("⚔️ Game Loaded! ⚔️");
+                    } else {
+                        QMessageBox::critical(this, "Error", "Failed to load game file!");
+                        // Fallback to splash?
+                        ui->stack->setCurrentWidget(ui->splashScreenPage);
+                    }
+                }
+            } else {
+                 // Cancelled -> Back to splash
+                 ui->stack->setCurrentWidget(ui->splashScreenPage);
+            }
+        } else {
+            // Player vs AI (Human vs AI) -> Name Selection
+            // Player 1 is always human in PvA and PvP
+            // Player 2 is only human in PvP
+            ui->nameSelectionPage->setMode(true, false); // P2 is AI
+            ui->stack->setCurrentWidget(ui->nameSelectionPage);
+            ui->statusbar->showMessage("⚔️ Who dares to challenge the ducks? ⚔️");
+        }
     }
 }
 
@@ -874,7 +947,8 @@ void MainWindow::updatePlayerInventories()
         p1.getResources(),
         p1.getWonders(),
         p1.getInventory(),
-        calculateVP(p1, p2)
+        calculateVP(p1, p2),
+        p1.getProgressTokens() // Pass tokens
     );
 
     ui->opponentDashboard->updateDashboard(
@@ -883,7 +957,8 @@ void MainWindow::updatePlayerInventories()
         p2.getResources(),
         p2.getWonders(),
         p2.getInventory(),
-        calculateVP(p2, p1)
+        calculateVP(p2, p1),
+        p2.getProgressTokens() // Pass tokens
     );
 
     ui->militaryTrackWidget->updatePawnPosition(m_game->getBoard().getMilitaryTrack().getPawnPosition());

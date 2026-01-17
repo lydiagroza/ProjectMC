@@ -2,6 +2,9 @@
 #include "ui_PlayerDashboardWidget.h"
 #include "CardWidget.h"
 #include <QGraphicsDropShadowEffect>
+#include <QPushButton>
+#include <QMessageBox>
+#include <QScrollArea>
 
 PlayerDashboardWidget::PlayerDashboardWidget(QWidget* parent)
     : QWidget(parent)
@@ -60,8 +63,13 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
                                          const std::map<Resource, std::uint8_t>& resources,
                                          const std::vector<std::shared_ptr<Wonder>>& wonders,
                                          const std::map<Color, std::vector<std::shared_ptr<CardBase>>>& inventory,
-                                         int victoryPoints)
+                                         int victoryPoints,
+                                         const std::vector<std::shared_ptr<ProgressToken>>& tokens)
 {
+    // Store data for popup
+    m_activeEffectsWonders = wonders;
+    m_activeEffectsTokens = tokens;
+
     // Update Text
     QString icon = (this->styleSheet().contains("#8B0000")) ? "⚔️" : "🏛️";
     
@@ -208,6 +216,28 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
             invLayout->addWidget(cardWidget);
         }
     }
+    
+    // Add Effects Button at the end of inventory
+    m_effectsBtn = new QPushButton("🔮 Active\nEffects");
+    m_effectsBtn->setFixedSize(80, 110); // Match card size
+    m_effectsBtn->setCursor(Qt::PointingHandCursor);
+    m_effectsBtn->setStyleSheet(
+        "QPushButton { "
+        "  background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #7B1FA2, stop:1 #4A148C); "
+        "  color: #E1BEE7; "
+        "  border: 2px solid #8E24AA; "
+        "  border-radius: 8px; "
+        "  font-weight: bold; "
+        "  font-size: 12px; "
+        "}"
+        "QPushButton:hover { "
+        "  background: #8E24AA; "
+        "  color: white; "
+        "}"
+    );
+    connect(m_effectsBtn, &QPushButton::clicked, this, &PlayerDashboardWidget::onEffectsClicked);
+    
+    invLayout->addWidget(m_effectsBtn);
     invLayout->addStretch();
     
     invScroll->setWidget(invContent);
@@ -217,4 +247,69 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
     ui->wondersLayout->addWidget(wonderZone);
     ui->wondersLayout->addWidget(vLine);
     ui->wondersLayout->addWidget(inventoryZone, 1); // Expand to fill rest
+}
+
+// Simple Helper for Token Descriptions (Duplicated from MainWindow, ideally should be static/common)
+static QString getLocalTokenDesc(const QString& tokenName) {
+    QString n = tokenName.toUpper().trimmed();
+    if (n == "AGRICULTURE") return "Agricultură: +6 monede, +4 VP.";
+    if (n == "ARCHITECTURE") return "Arhitectură: Minuni costă -2 resurse.";
+    if (n == "ECONOMY") return "Economie: Iei bani când adversarul face comerț.";
+    if (n == "LAW") return "Lege: +1 Simbol Științific.";
+    if (n == "MASONRY") return "Zidărie: Cărți Albastre costă -2 resurse.";
+    if (n == "MATHEMATICS") return "Matematică: 3 VP per jeton de progres.";
+    if (n == "PHILOSOPHY") return "Filozofie: +7 VP.";
+    if (n == "STRATEGY") return "Strategie: +1 Clădire Militară.";
+    if (n == "THEOLOGY") return "Teologie: Minunile au efect 'Tura Suplimentară'.";
+    if (n == "URBANISM") return "Urbanism: +6 monede. Lanțuri gratuite.";
+    return "Bonus activ.";
+}
+
+void PlayerDashboardWidget::onEffectsClicked()
+{
+    // Build list of effects
+    QStringList effectsHtml;
+
+    // 1. Progress Tokens
+    if (!m_activeEffectsTokens.empty()) {
+        effectsHtml << "<h3 style='color:#66BB6A'>✅ Progress Tokens</h3><ul>";
+        for (const auto& t : m_activeEffectsTokens) {
+             QString name = QString::fromStdString(t->getName());
+             effectsHtml << "<li><b>" + name + ":</b> " + getLocalTokenDesc(name) + "</li>";
+        }
+        effectsHtml << "</ul>";
+    }
+
+    // 2. Built Wonders
+    bool hasBuiltWonder = false;
+    for (const auto& w : m_activeEffectsWonders) {
+        if (w->getIsBuilt()) {
+            if (!hasBuiltWonder) {
+                effectsHtml << "<h3 style='color:#FFCA28'>✨ Built Wonders</h3><ul>";
+                hasBuiltWonder = true;
+            }
+            QString name = QString::fromStdString(w->getName());
+            QString eff = QString::fromStdString(w->getEffectDescription());
+            effectsHtml << "<li><b>" + name + ":</b> " + eff + "</li>";
+        }
+    }
+    if (hasBuiltWonder) effectsHtml << "</ul>";
+
+    // 3. No effects?
+    if (effectsHtml.isEmpty()) {
+        effectsHtml << "<i>No active permanent effects.</i>";
+    }
+
+    // Show Dialog
+    QMessageBox msgBox(this);
+    msgBox.setWindowTitle("Active Effects");
+    msgBox.setTextFormat(Qt::RichText);
+    msgBox.setText(effectsHtml.join(""));
+    msgBox.setStyleSheet(
+        "QMessageBox { background-color: #3E2723; }"
+        "QLabel { color: #F5E6D3; font-size: 14px; }"
+        "QPushButton { background: #5D4037; color: white; padding: 5px 15px; border: 1px solid #8B4513; border-radius: 4px; }"
+        "QPushButton:hover { background: #6D4C41; }"
+    );
+    msgBox.exec();
 }

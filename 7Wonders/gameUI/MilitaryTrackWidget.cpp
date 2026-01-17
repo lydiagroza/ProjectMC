@@ -9,8 +9,14 @@ MilitaryTrackWidget::MilitaryTrackWidget(QWidget* parent)
 {
     ui->setupUi(this);
 
-    // Style is now in .ui file for Designer visibility
-    // No need to set styleSheet for trackContainer here manually unless overriding.
+    // Dark Wood Background for the whole track area
+    ui->trackContainer->setStyleSheet(
+        "#trackContainer { "
+        "  background-color: #3E2723; "
+        "  border: 4px solid #1a100c; "
+        "  border-radius: 8px; "
+        "}"
+    );
 
     createTrack();
 

@@ -174,34 +174,7 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
         {"wood/stone/clay", [](Player& p, Board&, Player&) { p.addResource(Resource::Wood, 1); p.addResource(Resource::Stone, 1); p.addResource(Resource::Clay, 1); }},
         {"add_coins12", [](Player& p, Board&, Player&) { p.addResource(Coin, 12); }},
         {"discardOpponentGrayCard", [](Player&, Board&, Player& o) {
-            Board& board = Game::currentGame->getBoard();
-            const auto& opponentInventory = o.getInventory();
-            std::vector<std::shared_ptr<CardBase>> grayCards;
-            if (opponentInventory.count(Color::Gray)) {
-                grayCards = opponentInventory.at(Color::Gray);
-            }
-
-            if (grayCards.empty()) {
-                std::cout << "Opponent has no gray cards to discard." << std::endl;
-                return;
-            }
-
-            std::cout << "Choose a gray card to discard from your opponent:" << std::endl;
-            for (int i = 0; i < (int)grayCards.size(); ++i) {
-                std::cout << i + 1 << ": " << *grayCards[i] << std::endl;
-            }
-
-            int choice = -1;
-            // UI should provide choice; placeholder here
-            if (choice > 0 && choice <= (int)grayCards.size()) {
-                auto selectedCard = grayCards[choice - 1];
-                o.removeCardFromInventory(selectedCard);
-                board.addCardToDiscardPile(selectedCard);
-                std::cout << "Discarded " << selectedCard->getName() << " from opponent." << std::endl;
-            }
- else {
-  std::cout << "No choice made (UI required) or invalid choice." << std::endl;
-}
+            Game::currentGame->handleDiscardOpponentCardChoice(o, Color::Gray);
 }},
 
 {"buildDiscardedCard", [](Player&, Board&, Player&) {
@@ -224,35 +197,7 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
 }},
 {"add_coins6", [](Player& p, Board&, Player&) { p.addResource(Coin,6); }},
 {"discardOpponentBrownCard", [](Player&, Board&, Player& o) {
-    Board& board = Game::currentGame->getBoard();
-    auto opponentInventory = o.getInventory();
-    std::vector<std::shared_ptr<CardBase>> brownCards;
-    if (opponentInventory.count(Color::Brown)) {
-        brownCards = opponentInventory.at(Color::Brown);
-    }
-
-    if (brownCards.empty()) {
-        std::cout << "Opponent has no brown cards to discard." << std::endl;
-        return;
-    }
-
-    std::cout << "Choose a brown card to discard from your opponent:" << std::endl;
-    for (int i = 0; i < (int)brownCards.size(); ++i) {
-        std::cout << i + 1 << ": " << *brownCards[i] << std::endl;
-    }
-
-    int choice = -1;
-    // UI should provide choice; placeholder here
-
-    if (choice > 0 && choice <= (int)brownCards.size()) {
-        auto selectedCard = brownCards[choice - 1];
-        o.removeCardFromInventory(selectedCard);
-        board.addCardToDiscardPile(selectedCard);
-        std::cout << "Discarded " << selectedCard->getName() << " from opponent." << std::endl;
-    }
-else {
- std::cout << "No choice made (UI required) or invalid choice." << std::endl;
-    }
+    Game::currentGame->handleDiscardOpponentCardChoice(o, Color::Brown);
   }}
 };
 

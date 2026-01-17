@@ -789,6 +789,29 @@ void MainWindow::onWonderClicked()
             }
         }
 
+        // Handle Circus Maximus / Zeus effect
+        if (m_game->isWaitingForOpponentCardDiscard()) {
+            const auto& choices = m_game->getOpponentCardDiscardChoices();
+            if (!choices.empty()) {
+                std::vector<const CardBase*> cardPtrs;
+                for (const auto& c : choices) { cardPtrs.push_back(c.get()); }
+
+                DiscardedCardsDialog dialog(cardPtrs, this);
+                dialog.setWindowTitle("Discard Opponent's Card");
+
+                if (dialog.exec() == QDialog::Accepted) {
+                    int selectedId = dialog.getSelectedCardId();
+                    if (selectedId != -1) {
+                        m_game->resolveDiscardOpponentCard(selectedId);
+                    }
+                }
+                else {
+                    // Player closed dialog without choosing, resolve with no choice.
+                    m_game->resolveDiscardOpponentCard(-1);
+                }
+            }
+        }
+
         if (p->hasExtraTurn()) { 
              p->setHasExtraTurn(false);
              QMessageBox::information(this, "Divine Intervention", "Wonder Grant: Extra Turn!");

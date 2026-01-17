@@ -58,7 +58,12 @@ private:
     bool m_isWaitingForDiscardChoice = false;
     bool m_isWaitingForProgressTokenChoice = false;
     bool m_isWaitingForGreatLibraryChoice = false;
+    bool m_isWaitingForOpponentCardDiscard = false;
+
+    Player* m_targetOpponent = nullptr;
+
     std::vector<std::shared_ptr<CardBase>> m_buildFromDiscardChoices;
+    std::vector<std::shared_ptr<CardBase>> m_opponentCardDiscardChoices;
 
 public:
     Game();
@@ -93,6 +98,7 @@ public:
     void handleBuildFromDiscard();
     void handleProgressTokenChoice();
     void handleGreatLibraryChoice(); // NEW
+    void handleDiscardOpponentCardChoice(Player& opponent, Color cardColor);
 
     // funcții pentru faza de draft din UI
     const std::vector<std::shared_ptr<Wonder>>& getCurrentDraftSet() const;
@@ -108,9 +114,13 @@ public:
     bool isWaitingForDiscardChoice() const;
     bool isWaitingForProgressTokenChoice() const;
     bool isWaitingForGreatLibraryChoice() const; // NEW
-    
+    bool isWaitingForOpponentCardDiscard() const;
+
     const std::vector<std::shared_ptr<CardBase>>& getBuildFromDiscardChoices() const;
+    const std::vector<std::shared_ptr<CardBase>>& getOpponentCardDiscardChoices() const;
+
     void resolveBuildFromDiscard(int chosenCardId);
     void resolveProgressTokenChoice(int tokenId);
     void resolveGreatLibraryChoice(int tokenId); // NEW
+    void resolveDiscardOpponentCard(int chosenCardId);
 };

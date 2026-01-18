@@ -1,0 +1,28 @@
+# Visual Studio
+.vs/
+x64/
+Debug/
+Release/
+*.user
+*.aps
+*.idb
+*.pdb
+*.ilk
+*.obj
+*.tlog
+*.log
+*.ipch
+
+# Qt
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+Makefile*
+.qmake.stash
+object_script.*
+*.pro.user
+*.pro.user.*
+
+# Qt Creator
+.qtcreator/
+build/

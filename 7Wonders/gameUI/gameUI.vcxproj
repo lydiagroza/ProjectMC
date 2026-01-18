@@ -109,9 +109,9 @@
     <ClCompile Include="SaveManager.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="MainWindow_turn.cpp" />
-    <ClCompile Include="qrc_resources.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="resources.qrc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GameBase\GameBase.vcxproj">

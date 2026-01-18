@@ -1,5 +1,6 @@
 #include "MilitaryTrackWidget.h"
 #include "ui_MilitaryTrackWidget.h"
+#include "SoundManager.h"
 #include <QHBoxLayout>
 #include <QGraphicsDropShadowEffect>
 #include <QResizeEvent>
@@ -112,10 +113,13 @@ void MilitaryTrackWidget::createTrack()
 
 void MilitaryTrackWidget::updatePawnPosition(int position)
 {
-    m_currentPosition = position;
-
     // Clamp position to be within -9 and 9
     position = std::max(-9, std::min(9, position));
+
+    if (m_currentPosition != position) {
+        SoundManager::instance().playSword();
+    }
+    m_currentPosition = position;
 
     // Convert game position (-9 to 9) to layout index (0 to 18)
     int index = position + 9;

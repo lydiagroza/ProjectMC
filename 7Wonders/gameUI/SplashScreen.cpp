@@ -1,5 +1,6 @@
 #include "SplashScreen.h"
 #include "ui_SplashScreen.h"
+#include "SoundManager.h"
 #include <QKeyEvent>
 #include <QPainter>
 #include <QTimer>
@@ -24,9 +25,18 @@ SplashScreen::SplashScreen(QWidget* parent)
     subtitleShadow->setOffset(2, 2);
     ui->subtitleLabel->setGraphicsEffect(subtitleShadow);
 
-    connect(ui->btnPvP, &QPushButton::clicked, [this]() { emit gameModeSelected(PvP); });
-    connect(ui->btnPvA, &QPushButton::clicked, [this]() { emit gameModeSelected(PvAI); });
-    connect(ui->btnAvA, &QPushButton::clicked, [this]() { emit gameModeSelected(AvAI); });
+    connect(ui->btnPvP, &QPushButton::clicked, [this]() { 
+        SoundManager::instance().playQuack();
+        emit gameModeSelected(PvP); 
+    });
+    connect(ui->btnPvA, &QPushButton::clicked, [this]() { 
+        SoundManager::instance().playQuack();
+        emit gameModeSelected(PvAI); 
+    });
+    connect(ui->btnAvA, &QPushButton::clicked, [this]() { 
+        SoundManager::instance().playQuack();
+        emit gameModeSelected(AvAI); 
+    });
 
     // Focus to receive keyboard events
     this->setFocusPolicy(Qt::StrongFocus);

@@ -17,6 +17,7 @@
 #include "GameEndDialog.h"
 #include "SaveManager.h"
 #include "GameSelectionDialog.h"
+#include "SoundManager.h"
 #include <QDateTime>
 #include <QInputDialog>
 
@@ -118,6 +119,22 @@ MainWindow::MainWindow(QWidget* parent)
 
     // Ensure the window fills the screen for the best game experience
     this->showMaximized();
+
+    // Audio setup
+    m_player = new QMediaPlayer(this);
+    m_audioOutput = new QAudioOutput(this);
+    m_player->setAudioOutput(m_audioOutput);
+    m_player->setSource(QUrl("qrc:/resources/UI/quack.mp3"));
+    m_audioOutput->setVolume(1.0);
+
+    // Background Music setup
+    m_musicPlayer = new QMediaPlayer(this);
+    m_musicOutput = new QAudioOutput(this);
+    m_musicPlayer->setAudioOutput(m_musicOutput);
+    m_musicPlayer->setSource(QUrl("qrc:/resources/UI/background_music.mp3"));
+    m_musicOutput->setVolume(0.5); // 50% volume for background music
+    m_musicPlayer->setLoops(QMediaPlayer::Infinite);
+    m_musicPlayer->play();
 }
 
 void MainWindow::rebuildRightPanel()
@@ -765,6 +782,8 @@ void MainWindow::onCardSelected(int cardId)
 
 void MainWindow::onBuildClicked()
 {
+    SoundManager::instance().playClick();
+
     if (m_selectedCardId == -1) return;
     CardNode* node = findCardNodeInternal(m_game, m_selectedCardId);
     if (!node) return;
@@ -790,6 +809,8 @@ void MainWindow::onBuildClicked()
 
 void MainWindow::onDiscardClicked()
 {
+    SoundManager::instance().playClick();
+
     if (m_selectedCardId == -1) return;
     CardNode* node = findCardNodeInternal(m_game, m_selectedCardId);
     if (!node) return;
@@ -808,6 +829,8 @@ void MainWindow::onDiscardClicked()
 
 void MainWindow::onWonderClicked()
 {
+    SoundManager::instance().playClick();
+
     if (m_selectedCardId == -1) return;
     CardNode* node = findCardNodeInternal(m_game, m_selectedCardId);
     if (!node) return;
@@ -842,6 +865,10 @@ void MainWindow::onWonderClicked()
 
     if (p->constructWonder(node->getCard(), *selectedWonder, *opp, m_game->getBoard())) {
         m_game->notifyWonderBuilt();
+        if (m_player) {
+            m_player->stop();
+            m_player->play();
+        }
         node->updatePlayedStatus(true);
         m_game->getBoard().updateVisibility();
 

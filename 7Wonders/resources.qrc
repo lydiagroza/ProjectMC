@@ -11,5 +11,10 @@
         <file>UI/papyrus.png</file>
         <file>UI/loom.png</file>
         <file>UI/coin.png</file>
+        <file>UI/quack.mp3</file>
+        <file>UI/background_music.mp3</file>
+        <file>UI/click.mp3</file>
+        <file>UI/sword.mp3</file>
+        <file>UI/victory.mp3</file>
     </qresource>
 </RCC>

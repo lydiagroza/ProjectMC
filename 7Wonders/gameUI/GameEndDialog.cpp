@@ -2,6 +2,7 @@
 #include "ui_GameEndDialog.h"
 #include "Player.h"
 #include "GuildEffects.h"
+#include "SoundManager.h"
 #include <map>
 
 GameEndDialog::GameEndDialog(Game* game, QWidget *parent) :
@@ -11,6 +12,9 @@ GameEndDialog::GameEndDialog(Game* game, QWidget *parent) :
     ui->setupUi(this);
     setupStats(game);
     connect(ui->btnClose, &QPushButton::clicked, this, &QDialog::accept);
+    
+    // Play Victory Sound
+    SoundManager::instance().playVictory();
 }
 
 GameEndDialog::~GameEndDialog()

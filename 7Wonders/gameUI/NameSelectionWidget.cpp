@@ -1,5 +1,6 @@
 #include "NameSelectionWidget.h"
 #include "ui_NameSelectionWidget.h"
+#include "SoundManager.h"
 #include <QGraphicsDropShadowEffect>
 #include <QVBoxLayout>
 #include <QLabel> // Ensure QLabel header is included
@@ -106,6 +107,8 @@ QString NameSelectionWidget::getPlayer2Name() const
 
 void NameSelectionWidget::onStartClicked()
 {
+    SoundManager::instance().playQuack();
+
     QString p1 = getPlayer1Name();
     QString p2 = getPlayer2Name();
 

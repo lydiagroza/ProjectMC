@@ -1,5 +1,6 @@
 #include "BoardWidget.h"
 #include "ui_BoardWidget.h"
+#include "SoundManager.h"
 
 BoardWidget::BoardWidget(QWidget* parent)
     : QWidget(parent)
@@ -80,6 +81,8 @@ void BoardWidget::handleInternalClick(int cardId)
     }
 
     if (senderCard) {
+        SoundManager::instance().playClick();
+
         // Deselectăm vizual celelalte cărți
         for (auto c : m_activeCards) c->setSelected(false);
 

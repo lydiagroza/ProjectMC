@@ -4,6 +4,8 @@
 #include <QFrame>
 #include <QLabel>
 #include <QVBoxLayout> 
+#include <QMediaPlayer>
+#include <QAudioOutput>
 #include "Game.h"
 #include "BoardWidget.h"
 #include "WonderSelectionWidget.h" 
@@ -66,4 +68,10 @@ private:
     // Etichete pentru Secțiunea de Progres
     QLabel* m_lblProgressP1 = nullptr;
     QLabel* m_lblProgressP2 = nullptr;
+
+    QMediaPlayer* m_player = nullptr;
+    QAudioOutput* m_audioOutput = nullptr;
+
+    QMediaPlayer* m_musicPlayer = nullptr;
+    QAudioOutput* m_musicOutput = nullptr;
 };

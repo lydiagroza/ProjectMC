@@ -1,5 +1,5 @@
 # 7 Wonders Duel Project File
-QT += core gui widgets
+QT += core gui widgets multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -88,7 +88,8 @@ HEADERS += gameUI/MainWindow.h \
            gameUI/DiscardedCardsDialog.h \
            gameUI/GameEndDialog.h \
            gameUI/SaveManager.h \
-           gameUI/GameSelectionDialog.h
+           gameUI/GameSelectionDialog.h \
+           gameUI/SoundManager.h
 
 SOURCES += gameUI/main.cpp \
            gameUI/MainWindow.cpp \
@@ -102,7 +103,8 @@ SOURCES += gameUI/main.cpp \
            gameUI/WonderChoiceDialog.cpp \
            gameUI/DiscardedCardsDialog.cpp \
            gameUI/GameEndDialog.cpp \
-           gameUI/SaveManager.cpp
+           gameUI/SaveManager.cpp \
+           gameUI/SoundManager.cpp
 
 # ========================================
 # UI - fișiere de design .ui (opțional)

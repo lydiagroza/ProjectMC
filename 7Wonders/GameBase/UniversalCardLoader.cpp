@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <ranges>
+#include <format>
 #include <iostream>
 
 using namespace std;
@@ -24,7 +26,7 @@ map<Resource, uint8_t> UniversalCardLoader::parseCost(const string& s) {
         item = trim(item);
         if (item.empty()) continue;
 
-        int quantity = 1;
+        auto quantity = 1;
         string resStr;
         if (isdigit(item[0])) {
             quantity = item[0] - '0';
@@ -61,7 +63,7 @@ Color UniversalCardLoader::parseColor(const string& s) {
 optional<Symbol> UniversalCardLoader::parseSymbol(const string& s) {
     if (s.empty()) return nullopt;
     string lower_s = s;
-    std::transform(lower_s.begin(), lower_s.end(), lower_s.begin(),
+    std::ranges::transform(lower_s, lower_s.begin(),
                    [](unsigned char c){ return std::tolower(c); });
 
     static const unordered_map<string, Symbol> symMap = {
@@ -136,7 +138,7 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
             };
         int maxGreen = (int)std::max(countGreen(p), countGreen(o));
             p.addResource(Coin, (uint8_t)maxGreen);
-             cout << p.getName() << " gained " << maxGreen << " coins from Scientists Guild." << endl;
+             cout << format("{} gained {} coins from Scientists Guild.\n", p.getName(), maxGreen);
          }
         },
 

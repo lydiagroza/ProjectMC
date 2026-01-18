@@ -3,6 +3,7 @@
 #include <iomanip>   // Asigură-te că ai acest include
 #include <iostream>
 #include <algorithm> // Pentru std::max
+#include <ranges>
 
 
 // Pyramid functions
@@ -153,7 +154,7 @@ void Board::printDiscardPile(std::ostream& fout) const
 
 void Board::removeFromDiscardPile(const std::shared_ptr<CardBase>& card)
 {
-    auto it = std::find_if(m_discardPile.begin(), m_discardPile.end(),
+    auto it = std::ranges::find_if(m_discardPile,
         [&card](const std::shared_ptr<CardBase>& c) {
             return c->getId() == card->getId();
         });
@@ -205,11 +206,11 @@ void Board::printCardsTree(std::ostream& os) const
     for (size_t r = 0; r < rows.size(); ++r) {
         const auto& row = rows[r];
 
-        size_t block_size = max_text_width + 4;
+        auto block_size = max_text_width + 4;
 
-        double missing_blocks = (double)(max_cards_in_row - row.size()) / 2.0;
+        auto missing_blocks = (double)(max_cards_in_row - row.size()) / 2.0;
 
-        size_t padding = (size_t)(missing_blocks * block_size);
+        auto padding = (size_t)(missing_blocks * block_size);
 
         os << std::string(padding, ' ');
 

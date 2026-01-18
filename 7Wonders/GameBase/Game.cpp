@@ -7,6 +7,8 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <ranges>
+#include <format>
 #include <limits>
 #include "Wonder.h"
 #include "UniversalCardLoader.h"
@@ -141,7 +143,7 @@ void Game::switchTurn()
         m_currentPlayer = m_player1.get();
         m_opponent = m_player2.get();
     }
-    std::cout << "[Turn] Switched to " << m_currentPlayer->getName() << " (ptr: " << m_currentPlayer << ")\n";
+    std::cout << std::format("[Turn] Switched to {} (ptr: {})\n", m_currentPlayer->getName(), static_cast<void*>(m_currentPlayer));
 }
 
 void Game::notifyWonderBuilt()
@@ -186,7 +188,7 @@ bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
         return false;
     }
 
-    Wonder* selectedWonder = availableWonders[index];
+    auto selectedWonder = availableWonders[index];
 
     m_currentPlayer->constructWonder(
         cardUsed,
@@ -546,7 +548,7 @@ bool Game::draftWonder(int wonderId)
 {
     auto& currentDraftSet = (m_draftPhase == 1) ? m_draftSet1 : m_draftSet2;
 
-    auto it = std::find_if(currentDraftSet.begin(), currentDraftSet.end(),
+    auto it = std::ranges::find_if(currentDraftSet,
         [wonderId](const auto& wonderPtr) {
             return wonderPtr->getId() == wonderId;
         });

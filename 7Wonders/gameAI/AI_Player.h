@@ -120,8 +120,9 @@ public:
     void setLearningRate(float lr) { learningRate = lr; }
     void setExplorationRate(float er) { explorationRate = er; }
 
-private:
     float getQValue(const std::string& stateHash, const Action& action) const;
+
+private:
     float getMaxQValue(const std::string& stateHash,
                        const std::vector<Action>& actions) const;
 };
@@ -141,12 +142,14 @@ private:
     bool m_isTraining;
     int m_currentAge; // Tracked pentru GameState
 
-    // Funcții de evaluare HEURISTIC (pentru MEDIUM)
-    int evaluateCard(const std::shared_ptr<CardBase>& card, const Player& opponent) const;
-    int evaluateWonder(const Wonder& wonder) const;
-    int evaluateMilitaryValue(const std::shared_ptr<CardBase>& card) const;
-    int evaluateScienceValue(const std::shared_ptr<CardBase>& card) const;
-    int evaluateEconomyValue(const std::shared_ptr<CardBase>& card) const;
+    // Funcții de evaluare HEURISTIC (pentru MEDIUM) - STATIC pentru a fi folosite de Hint System
+    static int evaluateCardStatic(const Player& me, const std::shared_ptr<CardBase>& card, const Player& opponent, AI_Strategy strategy = AI_Strategy::BALANCED, AI_Difficulty difficulty = AI_Difficulty::MEDIUM);
+    static int evaluateWonderStatic(const Player& me, const Wonder& wonder, AI_Strategy strategy = AI_Strategy::BALANCED);
+    
+    // Funcții de ajutor
+    static int evaluateMilitaryValue(const Player& me, const std::shared_ptr<CardBase>& card);
+    static int evaluateScienceValue(const Player& me, const std::shared_ptr<CardBase>& card);
+    static int evaluateEconomyValue(const Player& me, const std::shared_ptr<CardBase>& card);
 
     // Funcții de decizie HEURISTIC
     std::shared_ptr<CardBase> chooseBestCardHeuristic(
@@ -185,6 +188,9 @@ public:
 
     // Funcția principală de decizie
     void makeDecision(Board& board, Player& opponent, int currentAge);
+
+    // Hint System
+    static std::string getBestMoveHint(const Player& me, const Player& opponent, const Board& board, int currentAge, int selectedCardId = -1);
 
     // Draft wonders
     std::shared_ptr<Wonder> chooseWonderFromDraft(

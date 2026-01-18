@@ -17,7 +17,7 @@ public:
 
         void clearBoard();
 
-            void placeCard(int id, QString name, QString color, bool isFaceUp, int row, int col, int totalCardsInRow, QString cost = "", QString effect = "", QString unlocks = "");
+            void placeCard(int id, QString name, QString color, bool isFaceUp, int row, int col, int totalCardsInRow, int age, QString cost = "", QString effect = "", QString unlocks = "");
 
     
 

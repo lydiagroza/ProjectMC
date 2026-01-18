@@ -13,13 +13,13 @@ EQ            = =
 
 CC            = cl
 CXX           = cl
-DEFINES       = -DUNICODE -D_UNICODE -DWIN32 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -DWIN64 -DGAMEBASE_STATIC -DNDEBUG -DQT_QML_DEBUG -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DUNICODE -D_UNICODE -DWIN32 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -DWIN64 -DGAMEBASE_STATIC -DNDEBUG -DQT_QML_DEBUG -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -nologo -Zc:wchar_t -FS -Zc:strictStrings -O2 -MD -utf-8 -W3 -w44456 -w44457 -w44458 $(DEFINES)
 CXXFLAGS      = -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -permissive- -Zc:__cplusplus -Zc:externConstexpr -O2 -MD -std:c++20 -utf-8 -W3 -w34100 -w34189 -w44456 -w44457 -w44458 -wd4577 -wd4467 -EHsc $(DEFINES)
-INCPATH       = -I..\..\..\7Wonders -I. -I..\..\GameBase -I..\..\gameAI -I..\..\ConsoleGame -I..\..\gameUI -I..\..\UI -IC:\Qt\6.10.1\msvc2022_64\include -IC:\Qt\6.10.1\msvc2022_64\include\QtWidgets -IC:\Qt\6.10.1\msvc2022_64\include\QtGui -IC:\Qt\6.10.1\msvc2022_64\include\QtCore -Irelease -I. -I/include -IC:\Qt\6.10.1\msvc2022_64\mkspecs\win32-msvc 
+INCPATH       = -I..\..\..\7Wonders -I. -I..\..\GameBase -I..\..\gameAI -I..\..\ConsoleGame -I..\..\gameUI -I..\..\UI -IC:\Qt\6.10.1\msvc2022_64\include -IC:\Qt\6.10.1\msvc2022_64\include\QtWidgets -IC:\Qt\6.10.1\msvc2022_64\include\QtMultimedia -IC:\Qt\6.10.1\msvc2022_64\include\QtGui -IC:\Qt\6.10.1\msvc2022_64\include\QtNetwork -IC:\Qt\6.10.1\msvc2022_64\include\QtCore -Irelease -I. -I/include -IC:\Qt\6.10.1\msvc2022_64\mkspecs\win32-msvc 
 LINKER        = link
 LFLAGS        = /NOLOGO /DYNAMICBASE /NXCOMPAT /OPT:REF /OPT:ICF /INCREMENTAL:NO /SUBSYSTEM:WINDOWS "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'"
-LIBS          = C:\Qt\6.10.1\msvc2022_64\lib\Qt6Widgets.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Gui.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Core.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6EntryPoint.lib shell32.lib  
+LIBS          = C:\Qt\6.10.1\msvc2022_64\lib\Qt6Widgets.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Multimedia.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Gui.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Network.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Core.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6EntryPoint.lib shell32.lib  
 QMAKE         = C:\Qt\6.10.1\msvc2022_64\bin\qmake.exe
 DEL_FILE      = del
 CHK_DIR_EXISTS= if not exist
@@ -76,7 +76,10 @@ SOURCES       = ..\..\GameBase\Board.cpp \
 		..\..\gameUI\NameSelectionWidget.cpp \
 		..\..\gameUI\WonderChoiceDialog.cpp \
 		..\..\gameUI\DiscardedCardsDialog.cpp \
-		..\..\gameUI\GameEndDialog.cpp release\qrc_resources.cpp \
+		..\..\gameUI\GameEndDialog.cpp \
+		..\..\gameUI\SaveManager.cpp \
+		..\..\gameUI\SoundManager.cpp \
+		..\..\gameUI\CardInfoPopup.cpp release\qrc_resources.cpp \
 		release\moc_MainWindow.cpp \
 		release\moc_SplashScreen.cpp \
 		release\moc_WonderSelectionWidget.cpp \
@@ -87,7 +90,10 @@ SOURCES       = ..\..\GameBase\Board.cpp \
 		release\moc_NameSelectionWidget.cpp \
 		release\moc_WonderChoiceDialog.cpp \
 		release\moc_DiscardedCardsDialog.cpp \
-		release\moc_GameEndDialog.cpp
+		release\moc_GameEndDialog.cpp \
+		release\moc_GameSelectionDialog.cpp \
+		release\moc_SoundManager.cpp \
+		release\moc_CardInfoPopup.cpp
 OBJECTS       = release\Board.obj \
 		release\CardBase.obj \
 		release\CardNode.obj \
@@ -115,6 +121,9 @@ OBJECTS       = release\Board.obj \
 		release\WonderChoiceDialog.obj \
 		release\DiscardedCardsDialog.obj \
 		release\GameEndDialog.obj \
+		release\SaveManager.obj \
+		release\SoundManager.obj \
+		release\CardInfoPopup.obj \
 		release\qrc_resources.obj \
 		release\moc_MainWindow.obj \
 		release\moc_SplashScreen.obj \
@@ -126,7 +135,10 @@ OBJECTS       = release\Board.obj \
 		release\moc_NameSelectionWidget.obj \
 		release\moc_WonderChoiceDialog.obj \
 		release\moc_DiscardedCardsDialog.obj \
-		release\moc_GameEndDialog.obj
+		release\moc_GameEndDialog.obj \
+		release\moc_GameSelectionDialog.obj \
+		release\moc_SoundManager.obj \
+		release\moc_CardInfoPopup.obj
 
 DIST          =  ..\..\GameBase\Board.h \
 		..\..\GameBase\CardBase.h \
@@ -143,6 +155,7 @@ DIST          =  ..\..\GameBase\Board.h \
 		..\..\GameBase\UniversalCardLoader.h \
 		..\..\GameBase\Wonder.h \
 		..\..\GameBase\GuildEffects.h \
+		..\..\gameUI\CardDescriptions.h \
 		..\..\gameAI\AI_Player.h \
 		..\..\ConsoleGame\testEngine.h \
 		..\..\gameUI\MainWindow.h \
@@ -155,7 +168,12 @@ DIST          =  ..\..\GameBase\Board.h \
 		..\..\gameUI\NameSelectionWidget.h \
 		..\..\gameUI\WonderChoiceDialog.h \
 		..\..\gameUI\DiscardedCardsDialog.h \
-		..\..\gameUI\GameEndDialog.h ..\..\GameBase\Board.cpp \
+		..\..\gameUI\GameEndDialog.h \
+		..\..\gameUI\SaveManager.h \
+		..\..\gameUI\GameSelectionDialog.h \
+		..\..\gameUI\CardDescriptions.h \
+		..\..\gameUI\SoundManager.h \
+		..\..\gameUI\CardInfoPopup.h ..\..\GameBase\Board.cpp \
 		..\..\GameBase\CardBase.cpp \
 		..\..\GameBase\CardNode.cpp \
 		..\..\GameBase\CardsPyramid.cpp \
@@ -181,7 +199,10 @@ DIST          =  ..\..\GameBase\Board.h \
 		..\..\gameUI\NameSelectionWidget.cpp \
 		..\..\gameUI\WonderChoiceDialog.cpp \
 		..\..\gameUI\DiscardedCardsDialog.cpp \
-		..\..\gameUI\GameEndDialog.cpp
+		..\..\gameUI\GameEndDialog.cpp \
+		..\..\gameUI\SaveManager.cpp \
+		..\..\gameUI\SoundManager.cpp \
+		..\..\gameUI\CardInfoPopup.cpp
 QMAKE_TARGET  = 7Wonders
 DESTDIR        = release\ #avoid trailing-slash linebreak
 TARGET         = 7Wonders.exe
@@ -316,10 +337,10 @@ DESTDIR_TARGET = release\7Wonders.exe
 first: all
 all: Makefile.Release  release\7Wonders.exe
 
-release\7Wonders.exe: C:\Qt\6.10.1\msvc2022_64\lib\Qt6Widgets.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Gui.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Core.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6EntryPoint.lib ui_WonderSelectionWidget.h ui_MainWindow.h ui_SplashScreen.h ui_CardWidget.h ui_BoardWidget.h ui_MilitaryTrackWidget.h ui_PlayerDashboardWidget.h ui_NameSelectionWidget.h ui_WonderChoiceDialog.h ui_DiscardedCardsDialog.h ui_GameEndDialog.h $(OBJECTS) 
+release\7Wonders.exe: C:\Qt\6.10.1\msvc2022_64\lib\Qt6Widgets.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Multimedia.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Gui.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Network.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6Core.lib C:\Qt\6.10.1\msvc2022_64\lib\Qt6EntryPoint.lib ui_WonderSelectionWidget.h ui_MainWindow.h ui_SplashScreen.h ui_CardWidget.h ui_BoardWidget.h ui_MilitaryTrackWidget.h ui_PlayerDashboardWidget.h ui_NameSelectionWidget.h ui_WonderChoiceDialog.h ui_DiscardedCardsDialog.h ui_GameEndDialog.h $(OBJECTS) 
 	$(LINKER) $(LFLAGS) /MANIFEST:embed /OUT:$(DESTDIR_TARGET) @<<
-release\Board.obj release\CardBase.obj release\CardNode.obj release\CardsPyramid.obj release\Game.obj release\GameSetup.obj release\MilitaryTrack.obj release\Player.obj release\UniversalCardLoader.obj release\ProgressTokenLoader.obj release\ProgressTokens.obj release\Wonder.obj release\GuildEffects.obj release\AI_Player.obj release\testEngine.obj release\main.obj release\MainWindow.obj release\SplashScreen.obj release\WonderSelectionWidget.obj release\BoardWidget.obj release\MilitaryTrackWidget.obj release\CardWidget.obj release\PlayerDashboardWidget.obj release\NameSelectionWidget.obj release\WonderChoiceDialog.obj release\DiscardedCardsDialog.obj release\GameEndDialog.obj release\qrc_resources.obj release\moc_MainWindow.obj release\moc_SplashScreen.obj release\moc_WonderSelectionWidget.obj release\moc_BoardWidget.obj release\moc_MilitaryTrackWidget.obj release\moc_CardWidget.obj release\moc_PlayerDashboardWidget.obj release\moc_NameSelectionWidget.obj
-release\moc_WonderChoiceDialog.obj release\moc_DiscardedCardsDialog.obj release\moc_GameEndDialog.obj
+release\Board.obj release\CardBase.obj release\CardNode.obj release\CardsPyramid.obj release\Game.obj release\GameSetup.obj release\MilitaryTrack.obj release\Player.obj release\UniversalCardLoader.obj release\ProgressTokenLoader.obj release\ProgressTokens.obj release\Wonder.obj release\GuildEffects.obj release\AI_Player.obj release\testEngine.obj release\main.obj release\MainWindow.obj release\SplashScreen.obj release\WonderSelectionWidget.obj release\BoardWidget.obj release\MilitaryTrackWidget.obj release\CardWidget.obj release\PlayerDashboardWidget.obj release\NameSelectionWidget.obj release\WonderChoiceDialog.obj release\DiscardedCardsDialog.obj release\GameEndDialog.obj release\SaveManager.obj release\SoundManager.obj release\CardInfoPopup.obj release\qrc_resources.obj release\moc_MainWindow.obj release\moc_SplashScreen.obj release\moc_WonderSelectionWidget.obj release\moc_BoardWidget.obj release\moc_MilitaryTrackWidget.obj release\moc_CardWidget.obj
+release\moc_PlayerDashboardWidget.obj release\moc_NameSelectionWidget.obj release\moc_WonderChoiceDialog.obj release\moc_DiscardedCardsDialog.obj release\moc_GameEndDialog.obj release\moc_GameSelectionDialog.obj release\moc_SoundManager.obj release\moc_CardInfoPopup.obj
 $(LIBS)
 <<
 
@@ -329,10 +350,10 @@ qmake: FORCE
 qmake_all: FORCE
 
 dist:
-	$(ZIP) 7Wonders.zip $(SOURCES) $(DIST) ..\..\7Wonders.pro C:\Qt\6.10.1\msvc2022_64\mkspecs\features\spec_pre.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\common\windows-desktop.conf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\win32\windows_vulkan_sdk.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\common\windows-vulkan.conf C:\Qt\6.10.1\msvc2022_64\mkspecs\common\msvc-desktop.conf C:\Qt\6.10.1\msvc2022_64\mkspecs\qconfig.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_ext_freetype.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_ext_libjpeg.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_ext_libpng.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_ext_openxr_loader.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_charts.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_charts_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_chartsqml.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_chartsqml_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_concurrent.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_core.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_core_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_dbus.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_dbus_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_designer.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_designer_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_designercomponents_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_devicediscovery_support_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_entrypoint_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_example_icons_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_examples_asset_downloader_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_fb_support_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_ffmpegmediapluginimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_freetype_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_gui.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_gui_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_harfbuzz_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_help.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_help_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_insighttracker.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_insighttracker_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_insighttrackerqml.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_insighttrackerqml_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_jpeg_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsanimation.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsanimation_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsfolderlistmodel.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsfolderlistmodel_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsplatform.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsplatform_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsqmlmodels.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsqmlmodels_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssettings.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssettings_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssharedimage.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssharedimage_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssynchronizer.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssynchronizer_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labswavefrontmesh.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labswavefrontmesh_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_linguist.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimedia.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimedia_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimediaquick_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimediatestlibprivate_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimediawidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimediawidgets_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_network.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_network_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_opengl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_opengl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_openglwidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_packetprotocol_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdf.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdf_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdfquick.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdfquick_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdfwidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdfwidgets_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_png_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_printsupport.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_printsupport_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qdoccatch_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qdoccatchconversions_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qdoccatchgenerators_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qml.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qml_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlassetdownloader.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlassetdownloader_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlcompiler.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlcompiler_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlcore.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlcore_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmldebug_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmldom_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlformat_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlintegration.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmllocalstorage.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmllocalstorage_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlls_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlmeta.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlmeta_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlmodels.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlmodels_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlnetwork.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlnetwork_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmltest.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmltest_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmltoolingsettings_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmltyperegistrar_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlworkerscript.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlworkerscript_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlxmllistmodel.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlxmllistmodel_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3d.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3d_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dassetimport.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dassetimport_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dassetutils.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dassetutils_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3deffects.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dglslparser_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dhelpers.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dhelpers_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dhelpersimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dhelpersimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3diblbaker.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3diblbaker_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dparticleeffects.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dparticles.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dparticles_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3druntimerender.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3druntimerender_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dspatialaudio_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dutils.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dutils_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dxr.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dxr_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2basic.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2basic_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2basicstyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2basicstyleimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fluentwinui3styleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fluentwinui3styleimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fusion.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fusion_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fusionstyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fusionstyleimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2imagine.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2imagine_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2imaginestyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2impl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2impl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2material.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2material_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2materialstyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2materialstyleimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2universal.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2universal_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2universalstyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2universalstyleimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2windowsstyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrolstestutilsprivate_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2quickimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2quickimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2utils.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2utils_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickeffects.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickeffects_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicklayouts.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicklayouts_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickparticles_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickshapes_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickshapesdesignhelpers_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktemplates2.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktemplates2_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktestutilsprivate_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktimeline.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktimeline_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktimelineblendtrees.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktimelineblendtrees_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickvectorimage.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickvectorimage_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickvectorimagegenerator_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickvectorimagehelpers.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickvectorimagehelpers_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickwidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickwidgets_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_shadertools.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_shadertools_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_spatialaudio.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_spatialaudio_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_sql.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_sql_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_svg.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_svg_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_svgwidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_testinternals_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_testlib.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_testlib_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_tools_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_uiplugin.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_uitools.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_uitools_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginecore.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginecore_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginequick.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginequick_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginequickdelegatesqml.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginewidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginewidgets_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_widgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_widgets_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_xml.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_xml_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_zlib_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\features\qt_functions.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\qt_config.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\win32-msvc\qmake.conf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\spec_post.prf .qmake.stash C:\Qt\6.10.1\msvc2022_64\mkspecs\features\exclusive_builds.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\common\msvc-version.conf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\toolchain.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\default_pre.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\win32\default_pre.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\resolve_config.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\exclusive_builds_post.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\default_post.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\build_pass.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\qml_debug.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\precompile_header.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\warn_on.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\permissions.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\qt.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\resources_functions.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\resources.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\moc.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\win32\opengl.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\uic.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\qmake_use.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\file_copies.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\win32\windows.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\testcase_targets.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\exceptions.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\yacc.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\lex.prf ..\..\7Wonders.pro ..\..\resources.qrc C:\Qt\6.10.1\msvc2022_64\lib\Qt6Widgets.prl C:\Qt\6.10.1\msvc2022_64\lib\Qt6Gui.prl C:\Qt\6.10.1\msvc2022_64\lib\Qt6Core.prl C:\Qt\6.10.1\msvc2022_64\lib\Qt6EntryPoint.prl   ..\..\resources.qrc C:\Qt\6.10.1\msvc2022_64\mkspecs\features\data\dummy.cpp ..\..\GameBase\Board.h ..\..\GameBase\CardBase.h ..\..\GameBase\CardNode.h ..\..\GameBase\CardsPyramid.h ..\..\GameBase\Game.h ..\..\GameBase\GameConstants.h ..\..\GameBase\gameExport.h ..\..\GameBase\GameSetup.h ..\..\GameBase\MilitaryTrack.h ..\..\GameBase\Player.h ..\..\GameBase\ProgressTokenLoader.h ..\..\GameBase\ProgressTokens.h ..\..\GameBase\UniversalCardLoader.h ..\..\GameBase\Wonder.h ..\..\GameBase\GuildEffects.h ..\..\gameAI\AI_Player.h ..\..\ConsoleGame\testEngine.h ..\..\gameUI\MainWindow.h ..\..\gameUI\SplashScreen.h ..\..\gameUI\WonderSelectionWidget.h ..\..\gameUI\BoardWidget.h ..\..\gameUI\MilitaryTrackWidget.h ..\..\gameUI\CardWidget.h ..\..\gameUI\PlayerDashboardWidget.h ..\..\gameUI\NameSelectionWidget.h ..\..\gameUI\WonderChoiceDialog.h ..\..\gameUI\DiscardedCardsDialog.h ..\..\gameUI\GameEndDialog.h  ..\..\GameBase\Board.cpp ..\..\GameBase\CardBase.cpp ..\..\GameBase\CardNode.cpp ..\..\GameBase\CardsPyramid.cpp ..\..\GameBase\Game.cpp ..\..\GameBase\GameSetup.cpp ..\..\GameBase\MilitaryTrack.cpp ..\..\GameBase\Player.cpp ..\..\GameBase\UniversalCardLoader.cpp ..\..\GameBase\ProgressTokenLoader.cpp ..\..\GameBase\ProgressTokens.cpp ..\..\GameBase\Wonder.cpp ..\..\GameBase\GuildEffects.cpp ..\..\gameAI\AI_Player.cpp ..\..\ConsoleGame\testEngine.cpp ..\..\gameUI\main.cpp ..\..\gameUI\MainWindow.cpp ..\..\gameUI\SplashScreen.cpp ..\..\gameUI\WonderSelectionWidget.cpp ..\..\gameUI\BoardWidget.cpp ..\..\gameUI\MilitaryTrackWidget.cpp ..\..\gameUI\CardWidget.cpp ..\..\gameUI\PlayerDashboardWidget.cpp ..\..\gameUI\NameSelectionWidget.cpp ..\..\gameUI\WonderChoiceDialog.cpp ..\..\gameUI\DiscardedCardsDialog.cpp ..\..\gameUI\GameEndDialog.cpp ..\..\UI\WonderSelectionWidget.ui ..\..\UI\MainWindow.ui ..\..\UI\SplashScreen.ui ..\..\UI\CardWidget.ui ..\..\UI\BoardWidget.ui ..\..\UI\MilitaryTrackWidget.ui ..\..\UI\PlayerDashboardWidget.ui ..\..\UI\NameSelectionWidget.ui ..\..\UI\WonderChoiceDialog.ui ..\..\UI\DiscardedCardsDialog.ui ..\..\UI\GameEndDialog.ui    
+	$(ZIP) 7Wonders.zip $(SOURCES) $(DIST) ..\..\7Wonders.pro C:\Qt\6.10.1\msvc2022_64\mkspecs\features\spec_pre.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\common\windows-desktop.conf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\win32\windows_vulkan_sdk.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\common\windows-vulkan.conf C:\Qt\6.10.1\msvc2022_64\mkspecs\common\msvc-desktop.conf C:\Qt\6.10.1\msvc2022_64\mkspecs\qconfig.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_ext_freetype.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_ext_libjpeg.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_ext_libpng.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_ext_openxr_loader.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_charts.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_charts_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_chartsqml.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_chartsqml_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_concurrent.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_core.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_core_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_dbus.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_dbus_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_designer.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_designer_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_designercomponents_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_devicediscovery_support_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_entrypoint_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_example_icons_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_examples_asset_downloader_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_fb_support_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_ffmpegmediapluginimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_freetype_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_gui.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_gui_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_harfbuzz_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_help.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_help_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_insighttracker.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_insighttracker_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_insighttrackerqml.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_insighttrackerqml_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_jpeg_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsanimation.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsanimation_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsfolderlistmodel.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsfolderlistmodel_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsplatform.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsplatform_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsqmlmodels.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labsqmlmodels_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssettings.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssettings_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssharedimage.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssharedimage_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssynchronizer.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labssynchronizer_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labswavefrontmesh.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_labswavefrontmesh_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_linguist.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimedia.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimedia_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimediaquick_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimediatestlibprivate_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimediawidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_multimediawidgets_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_network.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_network_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_opengl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_opengl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_openglwidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_packetprotocol_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdf.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdf_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdfquick.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdfquick_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdfwidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_pdfwidgets_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_png_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_printsupport.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_printsupport_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qdoccatch_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qdoccatchconversions_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qdoccatchgenerators_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qml.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qml_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlassetdownloader.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlassetdownloader_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlcompiler.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlcompiler_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlcore.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlcore_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmldebug_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmldom_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlformat_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlintegration.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmllocalstorage.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmllocalstorage_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlls_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlmeta.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlmeta_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlmodels.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlmodels_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlnetwork.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlnetwork_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmltest.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmltest_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmltoolingsettings_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmltyperegistrar_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlworkerscript.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlworkerscript_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlxmllistmodel.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_qmlxmllistmodel_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3d.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3d_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dassetimport.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dassetimport_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dassetutils.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dassetutils_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3deffects.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dglslparser_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dhelpers.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dhelpers_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dhelpersimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dhelpersimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3diblbaker.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3diblbaker_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dparticleeffects.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dparticles.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dparticles_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3druntimerender.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3druntimerender_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dspatialaudio_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dutils.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dutils_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dxr.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick3dxr_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quick_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2basic.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2basic_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2basicstyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2basicstyleimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fluentwinui3styleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fluentwinui3styleimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fusion.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fusion_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fusionstyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2fusionstyleimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2imagine.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2imagine_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2imaginestyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2impl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2impl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2material.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2material_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2materialstyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2materialstyleimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2universal.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2universal_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2universalstyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2universalstyleimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrols2windowsstyleimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickcontrolstestutilsprivate_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2quickimpl.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2quickimpl_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2utils.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickdialogs2utils_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickeffects.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickeffects_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicklayouts.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicklayouts_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickparticles_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickshapes_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickshapesdesignhelpers_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktemplates2.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktemplates2_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktestutilsprivate_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktimeline.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktimeline_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktimelineblendtrees.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quicktimelineblendtrees_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickvectorimage.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickvectorimage_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickvectorimagegenerator_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickvectorimagehelpers.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickvectorimagehelpers_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickwidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_quickwidgets_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_shadertools.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_shadertools_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_spatialaudio.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_spatialaudio_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_sql.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_sql_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_svg.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_svg_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_svgwidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_testinternals_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_testlib.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_testlib_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_tools_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_uiplugin.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_uitools.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_uitools_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginecore.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginecore_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginequick.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginequick_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginequickdelegatesqml.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginewidgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_webenginewidgets_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_widgets.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_widgets_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_xml.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_xml_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\modules\qt_lib_zlib_private.pri C:\Qt\6.10.1\msvc2022_64\mkspecs\features\qt_functions.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\qt_config.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\win32-msvc\qmake.conf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\spec_post.prf .qmake.stash C:\Qt\6.10.1\msvc2022_64\mkspecs\features\exclusive_builds.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\common\msvc-version.conf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\toolchain.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\default_pre.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\win32\default_pre.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\resolve_config.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\exclusive_builds_post.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\default_post.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\build_pass.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\qml_debug.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\precompile_header.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\warn_on.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\permissions.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\qt.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\resources_functions.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\resources.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\moc.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\win32\opengl.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\uic.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\qmake_use.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\file_copies.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\win32\windows.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\testcase_targets.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\exceptions.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\yacc.prf C:\Qt\6.10.1\msvc2022_64\mkspecs\features\lex.prf ..\..\7Wonders.pro ..\..\resources.qrc C:\Qt\6.10.1\msvc2022_64\lib\Qt6Widgets.prl C:\Qt\6.10.1\msvc2022_64\lib\Qt6Multimedia.prl C:\Qt\6.10.1\msvc2022_64\lib\Qt6Gui.prl C:\Qt\6.10.1\msvc2022_64\lib\Qt6Network.prl C:\Qt\6.10.1\msvc2022_64\lib\Qt6Core.prl C:\Qt\6.10.1\msvc2022_64\lib\Qt6EntryPoint.prl   ..\..\resources.qrc C:\Qt\6.10.1\msvc2022_64\mkspecs\features\data\dummy.cpp ..\..\GameBase\Board.h ..\..\GameBase\CardBase.h ..\..\GameBase\CardNode.h ..\..\GameBase\CardsPyramid.h ..\..\GameBase\Game.h ..\..\GameBase\GameConstants.h ..\..\GameBase\gameExport.h ..\..\GameBase\GameSetup.h ..\..\GameBase\MilitaryTrack.h ..\..\GameBase\Player.h ..\..\GameBase\ProgressTokenLoader.h ..\..\GameBase\ProgressTokens.h ..\..\GameBase\UniversalCardLoader.h ..\..\GameBase\Wonder.h ..\..\GameBase\GuildEffects.h ..\..\gameUI\CardDescriptions.h ..\..\gameAI\AI_Player.h ..\..\ConsoleGame\testEngine.h ..\..\gameUI\MainWindow.h ..\..\gameUI\SplashScreen.h ..\..\gameUI\WonderSelectionWidget.h ..\..\gameUI\BoardWidget.h ..\..\gameUI\MilitaryTrackWidget.h ..\..\gameUI\CardWidget.h ..\..\gameUI\PlayerDashboardWidget.h ..\..\gameUI\NameSelectionWidget.h ..\..\gameUI\WonderChoiceDialog.h ..\..\gameUI\DiscardedCardsDialog.h ..\..\gameUI\GameEndDialog.h ..\..\gameUI\SaveManager.h ..\..\gameUI\GameSelectionDialog.h ..\..\gameUI\CardDescriptions.h ..\..\gameUI\SoundManager.h ..\..\gameUI\CardInfoPopup.h  ..\..\GameBase\Board.cpp ..\..\GameBase\CardBase.cpp ..\..\GameBase\CardNode.cpp ..\..\GameBase\CardsPyramid.cpp ..\..\GameBase\Game.cpp ..\..\GameBase\GameSetup.cpp ..\..\GameBase\MilitaryTrack.cpp ..\..\GameBase\Player.cpp ..\..\GameBase\UniversalCardLoader.cpp ..\..\GameBase\ProgressTokenLoader.cpp ..\..\GameBase\ProgressTokens.cpp ..\..\GameBase\Wonder.cpp ..\..\GameBase\GuildEffects.cpp ..\..\gameAI\AI_Player.cpp ..\..\ConsoleGame\testEngine.cpp ..\..\gameUI\main.cpp ..\..\gameUI\MainWindow.cpp ..\..\gameUI\SplashScreen.cpp ..\..\gameUI\WonderSelectionWidget.cpp ..\..\gameUI\BoardWidget.cpp ..\..\gameUI\MilitaryTrackWidget.cpp ..\..\gameUI\CardWidget.cpp ..\..\gameUI\PlayerDashboardWidget.cpp ..\..\gameUI\NameSelectionWidget.cpp ..\..\gameUI\WonderChoiceDialog.cpp ..\..\gameUI\DiscardedCardsDialog.cpp ..\..\gameUI\GameEndDialog.cpp ..\..\gameUI\SaveManager.cpp ..\..\gameUI\SoundManager.cpp ..\..\gameUI\CardInfoPopup.cpp ..\..\UI\WonderSelectionWidget.ui ..\..\UI\MainWindow.ui ..\..\UI\SplashScreen.ui ..\..\UI\CardWidget.ui ..\..\UI\BoardWidget.ui ..\..\UI\MilitaryTrackWidget.ui ..\..\UI\PlayerDashboardWidget.ui ..\..\UI\NameSelectionWidget.ui ..\..\UI\WonderChoiceDialog.ui ..\..\UI\DiscardedCardsDialog.ui ..\..\UI\GameEndDialog.ui    
 
 clean: compiler_clean 
-	-$(DEL_FILE) release\Board.obj release\CardBase.obj release\CardNode.obj release\CardsPyramid.obj release\Game.obj release\GameSetup.obj release\MilitaryTrack.obj release\Player.obj release\UniversalCardLoader.obj release\ProgressTokenLoader.obj release\ProgressTokens.obj release\Wonder.obj release\GuildEffects.obj release\AI_Player.obj release\testEngine.obj release\main.obj release\MainWindow.obj release\SplashScreen.obj release\WonderSelectionWidget.obj release\BoardWidget.obj release\MilitaryTrackWidget.obj release\CardWidget.obj release\PlayerDashboardWidget.obj release\NameSelectionWidget.obj release\WonderChoiceDialog.obj release\DiscardedCardsDialog.obj release\GameEndDialog.obj release\qrc_resources.obj release\moc_MainWindow.obj release\moc_SplashScreen.obj release\moc_WonderSelectionWidget.obj release\moc_BoardWidget.obj release\moc_MilitaryTrackWidget.obj release\moc_CardWidget.obj release\moc_PlayerDashboardWidget.obj release\moc_NameSelectionWidget.obj release\moc_WonderChoiceDialog.obj release\moc_DiscardedCardsDialog.obj release\moc_GameEndDialog.obj
+	-$(DEL_FILE) release\Board.obj release\CardBase.obj release\CardNode.obj release\CardsPyramid.obj release\Game.obj release\GameSetup.obj release\MilitaryTrack.obj release\Player.obj release\UniversalCardLoader.obj release\ProgressTokenLoader.obj release\ProgressTokens.obj release\Wonder.obj release\GuildEffects.obj release\AI_Player.obj release\testEngine.obj release\main.obj release\MainWindow.obj release\SplashScreen.obj release\WonderSelectionWidget.obj release\BoardWidget.obj release\MilitaryTrackWidget.obj release\CardWidget.obj release\PlayerDashboardWidget.obj release\NameSelectionWidget.obj release\WonderChoiceDialog.obj release\DiscardedCardsDialog.obj release\GameEndDialog.obj release\SaveManager.obj release\SoundManager.obj release\CardInfoPopup.obj release\qrc_resources.obj release\moc_MainWindow.obj release\moc_SplashScreen.obj release\moc_WonderSelectionWidget.obj release\moc_BoardWidget.obj release\moc_MilitaryTrackWidget.obj release\moc_CardWidget.obj release\moc_PlayerDashboardWidget.obj release\moc_NameSelectionWidget.obj release\moc_WonderChoiceDialog.obj release\moc_DiscardedCardsDialog.obj release\moc_GameEndDialog.obj release\moc_GameSelectionDialog.obj release\moc_SoundManager.obj release\moc_CardInfoPopup.obj
 
 distclean: clean 
 	-$(DEL_FILE) .qmake.stash
@@ -355,9 +376,14 @@ compiler_rcc_clean:
 release\qrc_resources.cpp: ..\..\resources.qrc \
 		C:\Qt\6.10.1\msvc2022_64\bin\rcc.exe \
 		..\..\background.jpg \
+		..\..\UI\sword.mp3 \
+		..\..\UI\quack.mp3 \
 		..\..\UI\papyrus.png \
+		..\..\UI\background_music.mp3 \
 		..\..\UI\wood.png \
+		..\..\UI\victory.mp3 \
 		..\..\UI\coin.png \
+		..\..\UI\click.mp3 \
 		..\..\UI\glass.png \
 		..\..\UI\stone.png \
 		..\..\UI\clay.png \
@@ -370,9 +396,9 @@ compiler_moc_predefs_clean:
 release\moc_predefs.h: C:\Qt\6.10.1\msvc2022_64\mkspecs\features\data\dummy.cpp
 	cl -BxC:\Qt\6.10.1\msvc2022_64\bin\qmake.exe -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -permissive- -Zc:__cplusplus -Zc:externConstexpr -O2 -MD -std:c++20 -utf-8 -W3 -w34100 -w34189 -w44456 -w44457 -w44458 -wd4577 -wd4467 -E C:\Qt\6.10.1\msvc2022_64\mkspecs\features\data\dummy.cpp 2>NUL >release\moc_predefs.h
 
-compiler_moc_header_make_all: release\moc_MainWindow.cpp release\moc_SplashScreen.cpp release\moc_WonderSelectionWidget.cpp release\moc_BoardWidget.cpp release\moc_MilitaryTrackWidget.cpp release\moc_CardWidget.cpp release\moc_PlayerDashboardWidget.cpp release\moc_NameSelectionWidget.cpp release\moc_WonderChoiceDialog.cpp release\moc_DiscardedCardsDialog.cpp release\moc_GameEndDialog.cpp
+compiler_moc_header_make_all: release\moc_MainWindow.cpp release\moc_SplashScreen.cpp release\moc_WonderSelectionWidget.cpp release\moc_BoardWidget.cpp release\moc_MilitaryTrackWidget.cpp release\moc_CardWidget.cpp release\moc_PlayerDashboardWidget.cpp release\moc_NameSelectionWidget.cpp release\moc_WonderChoiceDialog.cpp release\moc_DiscardedCardsDialog.cpp release\moc_GameEndDialog.cpp release\moc_GameSelectionDialog.cpp release\moc_SoundManager.cpp release\moc_CardInfoPopup.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) release\moc_MainWindow.cpp release\moc_SplashScreen.cpp release\moc_WonderSelectionWidget.cpp release\moc_BoardWidget.cpp release\moc_MilitaryTrackWidget.cpp release\moc_CardWidget.cpp release\moc_PlayerDashboardWidget.cpp release\moc_NameSelectionWidget.cpp release\moc_WonderChoiceDialog.cpp release\moc_DiscardedCardsDialog.cpp release\moc_GameEndDialog.cpp
+	-$(DEL_FILE) release\moc_MainWindow.cpp release\moc_SplashScreen.cpp release\moc_WonderSelectionWidget.cpp release\moc_BoardWidget.cpp release\moc_MilitaryTrackWidget.cpp release\moc_CardWidget.cpp release\moc_PlayerDashboardWidget.cpp release\moc_NameSelectionWidget.cpp release\moc_WonderChoiceDialog.cpp release\moc_DiscardedCardsDialog.cpp release\moc_GameEndDialog.cpp release\moc_GameSelectionDialog.cpp release\moc_SoundManager.cpp release\moc_CardInfoPopup.cpp
 release\moc_MainWindow.cpp: ..\..\gameUI\MainWindow.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QMainWindow \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qmainwindow.h \
@@ -587,6 +613,15 @@ release\moc_MainWindow.cpp: ..\..\gameUI\MainWindow.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayout.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayoutitem.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgridlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QMediaPlayer \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qmediaplayer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimedia-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QAudioOutput \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudiooutput.h \
 		..\..\GameBase\Game.h \
 		..\..\GameBase\GameSetup.h \
 		..\..\GameBase\Wonder.h \
@@ -605,6 +640,9 @@ release\moc_MainWindow.cpp: ..\..\gameUI\MainWindow.h \
 		..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
 		..\..\gameUI\WonderSelectionWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QString \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QScrollArea \
@@ -629,7 +667,7 @@ release\moc_MainWindow.cpp: ..\..\gameUI\MainWindow.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
-	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\MainWindow.h -o release\moc_MainWindow.cpp
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\MainWindow.h -o release\moc_MainWindow.cpp
 
 release\moc_SplashScreen.cpp: ..\..\gameUI\SplashScreen.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -832,7 +870,7 @@ release\moc_SplashScreen.cpp: ..\..\gameUI\SplashScreen.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
-	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\SplashScreen.h -o release\moc_SplashScreen.cpp
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\SplashScreen.h -o release\moc_SplashScreen.cpp
 
 release\moc_WonderSelectionWidget.cpp: ..\..\gameUI\WonderSelectionWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -1045,7 +1083,7 @@ release\moc_WonderSelectionWidget.cpp: ..\..\gameUI\WonderSelectionWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgridlayout.h \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
-	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\WonderSelectionWidget.h -o release\moc_WonderSelectionWidget.cpp
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\WonderSelectionWidget.h -o release\moc_WonderSelectionWidget.cpp
 
 release\moc_BoardWidget.cpp: ..\..\gameUI\BoardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -1249,9 +1287,12 @@ release\moc_BoardWidget.cpp: ..\..\gameUI\BoardWidget.h \
 		..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
-	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\BoardWidget.h -o release\moc_BoardWidget.cpp
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\BoardWidget.h -o release\moc_BoardWidget.cpp
 
 release\moc_MilitaryTrackWidget.cpp: ..\..\gameUI\MilitaryTrackWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -1465,7 +1506,7 @@ release\moc_MilitaryTrackWidget.cpp: ..\..\gameUI\MilitaryTrackWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QFrame \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
-	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\MilitaryTrackWidget.h -o release\moc_MilitaryTrackWidget.cpp
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\MilitaryTrackWidget.h -o release\moc_MilitaryTrackWidget.cpp
 
 release\moc_CardWidget.cpp: ..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -1668,9 +1709,12 @@ release\moc_CardWidget.cpp: ..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
-	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\CardWidget.h -o release\moc_CardWidget.cpp
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\CardWidget.h -o release\moc_CardWidget.cpp
 
 release\moc_PlayerDashboardWidget.cpp: ..\..\gameUI\PlayerDashboardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -1871,6 +1915,9 @@ release\moc_PlayerDashboardWidget.cpp: ..\..\gameUI\PlayerDashboardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QPushButton \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qpushbutton.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractbutton.h \
 		..\..\GameBase\CardBase.h \
 		..\..\GameBase\Board.h \
 		..\..\GameBase\CardNode.h \
@@ -1881,7 +1928,7 @@ release\moc_PlayerDashboardWidget.cpp: ..\..\gameUI\PlayerDashboardWidget.h \
 		..\..\GameBase\Wonder.h \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
-	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\PlayerDashboardWidget.h -o release\moc_PlayerDashboardWidget.cpp
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\PlayerDashboardWidget.h -o release\moc_PlayerDashboardWidget.cpp
 
 release\moc_NameSelectionWidget.cpp: ..\..\gameUI\NameSelectionWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -2097,9 +2144,13 @@ release\moc_NameSelectionWidget.cpp: ..\..\gameUI\NameSelectionWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qrubberband.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qframe.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QLabel \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlabel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpicture.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextdocument.h \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
-	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\NameSelectionWidget.h -o release\moc_NameSelectionWidget.cpp
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\NameSelectionWidget.h -o release\moc_NameSelectionWidget.cpp
 
 release\moc_WonderChoiceDialog.cpp: ..\..\gameUI\WonderChoiceDialog.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QDialog \
@@ -2311,7 +2362,7 @@ release\moc_WonderChoiceDialog.cpp: ..\..\gameUI\WonderChoiceDialog.h \
 		..\..\GameBase\CardsPyramid.h \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
-	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\WonderChoiceDialog.h -o release\moc_WonderChoiceDialog.cpp
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\WonderChoiceDialog.h -o release\moc_WonderChoiceDialog.cpp
 
 release\moc_DiscardedCardsDialog.cpp: ..\..\gameUI\DiscardedCardsDialog.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QDialog \
@@ -2515,7 +2566,7 @@ release\moc_DiscardedCardsDialog.cpp: ..\..\gameUI\DiscardedCardsDialog.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
-	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\DiscardedCardsDialog.h -o release\moc_DiscardedCardsDialog.cpp
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\DiscardedCardsDialog.h -o release\moc_DiscardedCardsDialog.cpp
 
 release\moc_GameEndDialog.cpp: ..\..\gameUI\GameEndDialog.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QDialog \
@@ -2732,7 +2783,588 @@ release\moc_GameEndDialog.cpp: ..\..\gameUI\GameEndDialog.h \
 		..\..\gameAI\AI_Player.h \
 		release\moc_predefs.h \
 		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
-	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\GameEndDialog.h -o release\moc_GameEndDialog.cpp
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\GameEndDialog.h -o release\moc_GameEndDialog.cpp
+
+release\moc_GameSelectionDialog.cpp: ..\..\gameUI\GameSelectionDialog.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QDialog \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qdialog.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgetsglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtguiglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversionchecks.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfiginclude.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconfig.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcore-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfigmacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationdefinitions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompilerdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qprocessordetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsystemdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationmarkers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtclasshelpermacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtpreprocessorsupport.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qassert.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtnoop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypes.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversion.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypeinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsysinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlogging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qflags.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasicatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic_cxx11.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qgenericatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qyieldcpu.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconstructormacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdarwinhelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qexceptionhandling.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qforeach.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttypetraits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobalstatic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmalloc.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qminmax.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnumeric.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qoverload.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qswap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtenvironmentvariables.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtresource.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttranslation.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qversiontagging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtgui-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtguiexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgets-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgetsexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qwidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qwindowdefs.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnamespace.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstdlibdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcomparehelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtmetamacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionaltools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qwindowdefs_win.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstring.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qchar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearray.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrefcount.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydata.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpair.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydatapointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydataops.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainertools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qxptype_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20functional.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q17memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlatin1stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qanystringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qutf8stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringtokenizer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q23type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringbuilder.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter_base.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qhashfunctions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearraylist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringmatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreevent.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasictimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstracteventdispatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qeventloop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdeadlinetimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetatype.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdatastream.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiodevicebase.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfloat16.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmath.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtformat_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterable.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtaggedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetacontainer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopeguard.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbindingstorage.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmargins.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcheckedint_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q23utility.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20utility.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qaction.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qkeysequence.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qicon.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsize.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpixmap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpaintdevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpoint.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qcolor.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qrgb.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qrgba64.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qshareddata.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qimage.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpixelformat.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtransform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpolygon.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qregion.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qspan.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20iterator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qline.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qvariant.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdebug.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtextstream.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontiguouscache.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsharedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsharedpointer_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qshareddata_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qset.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qhash.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qvarlengtharray.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qalloc.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpalette.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qbrush.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfont.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qendian.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfontmetrics.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfontinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfontvariableaxis.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qsizepolicy.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qcursor.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qbitmap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qevent.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiodevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qurl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qeventpoint.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvector2d.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvectornd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpointingdevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputdevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qscreen.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QList \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QObject \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QRect \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QSize \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QSizeF \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QTransform \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnativeinterface.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qscreen_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreapplication.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfuture.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfutureinterface.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmutex.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtsan_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qresultstore.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfuture_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qthreadpool.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qthread.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrunnable.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qexception.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpromise.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QListWidget \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlistwidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlistview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractitemview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractscrollarea.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qframe.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qitemselectionmodel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyleoption.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvalidator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qregularexpression.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractslider.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstyle.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtabbar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtabwidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qrubberband.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QPushButton \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qpushbutton.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractbutton.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QVBoxLayout \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qboxlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayoutitem.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgridlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QHBoxLayout \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QLabel \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlabel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpicture.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextdocument.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDir \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdir.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdirlisting.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfiledevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdatetime.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcalendar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfile.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfileinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtimezone.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QFileInfoList \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QMessageBox \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qmessagebox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qdialogbuttonbox.h \
+		release\moc_predefs.h \
+		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\GameSelectionDialog.h -o release\moc_GameSelectionDialog.cpp
+
+release\moc_SoundManager.cpp: ..\..\gameUI\SoundManager.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QObject \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnamespace.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversionchecks.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfiginclude.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconfig.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcore-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfigmacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationdefinitions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompilerdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qprocessordetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsystemdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationmarkers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtclasshelpermacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtpreprocessorsupport.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qassert.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtnoop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypes.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversion.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypeinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsysinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlogging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qflags.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasicatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic_cxx11.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qgenericatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qyieldcpu.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconstructormacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdarwinhelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qexceptionhandling.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qforeach.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttypetraits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobalstatic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmalloc.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qminmax.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnumeric.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qoverload.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qswap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtenvironmentvariables.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtresource.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttranslation.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qversiontagging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstdlibdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcomparehelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtmetamacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionaltools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstring.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qchar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearray.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrefcount.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydata.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpair.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydatapointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydataops.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainertools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qxptype_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20functional.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q17memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlatin1stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qanystringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qutf8stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringtokenizer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q23type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringbuilder.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter_base.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qhashfunctions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearraylist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringmatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreevent.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasictimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstracteventdispatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qeventloop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdeadlinetimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetatype.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdatastream.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiodevicebase.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfloat16.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmath.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtformat_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterable.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtaggedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetacontainer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopeguard.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbindingstorage.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QMediaPlayer \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qmediaplayer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qurl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtguiglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtgui-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtguiexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimedia-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QAudioOutput \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudiooutput.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QUrl \
+		release\moc_predefs.h \
+		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\SoundManager.h -o release\moc_SoundManager.cpp
+
+release\moc_CardInfoPopup.cpp: ..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qwidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgetsglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtguiglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversionchecks.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfiginclude.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconfig.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcore-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfigmacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationdefinitions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompilerdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qprocessordetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsystemdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationmarkers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtclasshelpermacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtpreprocessorsupport.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qassert.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtnoop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypes.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversion.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypeinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsysinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlogging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qflags.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasicatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic_cxx11.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qgenericatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qyieldcpu.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconstructormacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdarwinhelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qexceptionhandling.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qforeach.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttypetraits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobalstatic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmalloc.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qminmax.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnumeric.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qoverload.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qswap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtenvironmentvariables.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtresource.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttranslation.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qversiontagging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtgui-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtguiexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgets-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgetsexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qwindowdefs.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnamespace.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstdlibdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcomparehelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtmetamacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionaltools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qwindowdefs_win.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstring.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qchar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearray.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrefcount.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydata.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpair.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydatapointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydataops.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainertools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qxptype_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20functional.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q17memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlatin1stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qanystringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qutf8stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringtokenizer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q23type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringbuilder.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter_base.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qhashfunctions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearraylist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringmatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreevent.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasictimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstracteventdispatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qeventloop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdeadlinetimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetatype.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdatastream.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiodevicebase.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfloat16.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmath.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtformat_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterable.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtaggedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetacontainer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopeguard.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbindingstorage.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmargins.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcheckedint_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q23utility.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20utility.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qaction.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qkeysequence.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qicon.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsize.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpixmap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpaintdevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpoint.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qcolor.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qrgb.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qrgba64.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qshareddata.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qimage.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpixelformat.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtransform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpolygon.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qregion.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qspan.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20iterator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qline.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qvariant.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdebug.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtextstream.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontiguouscache.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsharedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsharedpointer_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qshareddata_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qset.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qhash.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qvarlengtharray.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qalloc.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpalette.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qbrush.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfont.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qendian.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfontmetrics.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfontinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfontvariableaxis.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qsizepolicy.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qcursor.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qbitmap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qevent.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiodevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qurl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qeventpoint.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvector2d.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvectornd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpointingdevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputdevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qscreen.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QList \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QObject \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QRect \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QSize \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QSizeF \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QTransform \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnativeinterface.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qscreen_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreapplication.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfuture.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfutureinterface.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmutex.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtsan_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qresultstore.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfuture_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qthreadpool.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qthread.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrunnable.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qexception.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpromise.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
+		release\moc_predefs.h \
+		C:\Qt\6.10.1\msvc2022_64\bin\moc.exe
+	C:\Qt\6.10.1\msvc2022_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Debug/release/moc_predefs.h -IC:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/GameBase -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameAI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/ConsoleGame -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/gameUI -IC:/Users/Alexandra/Documents/Facultate/ProjectMC/7Wonders/UI -IC:/Qt/6.10.1/msvc2022_64/include -IC:/Qt/6.10.1/msvc2022_64/include/QtWidgets -IC:/Qt/6.10.1/msvc2022_64/include/QtMultimedia -IC:/Qt/6.10.1/msvc2022_64/include/QtGui -IC:/Qt/6.10.1/msvc2022_64/include/QtNetwork -IC:/Qt/6.10.1/msvc2022_64/include/QtCore -I. -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include" -I"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt" -I"C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" ..\..\gameUI\CardInfoPopup.h -o release\moc_CardInfoPopup.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -3152,6 +3784,9 @@ ui_MainWindow.h: ..\..\UI\MainWindow.ui \
 		..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qwidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgetsglobal.h \
@@ -3365,6 +4000,10 @@ ui_MainWindow.h: ..\..\UI\MainWindow.ui \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qrubberband.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qframe.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QLabel \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlabel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpicture.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextdocument.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qwidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgetsglobal.h \
@@ -3980,6 +4619,9 @@ ui_MainWindow.h: ..\..\UI\MainWindow.ui \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QPushButton \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qpushbutton.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractbutton.h \
 		..\..\GameBase\CardBase.h \
 		..\..\GameBase\Board.h \
 		..\..\GameBase\CardNode.h \
@@ -4083,6 +4725,7 @@ release\Game.obj: ..\..\GameBase\Game.cpp ..\..\GameBase\Game.h \
 		..\..\GameBase\Player.h \
 		..\..\GameBase\GameConstants.h \
 		..\..\gameAI\AI_Player.h \
+		..\..\GameBase\GuildEffects.h \
 		..\..\GameBase\UniversalCardLoader.h
 
 release\GameSetup.obj: ..\..\GameBase\GameSetup.cpp ..\..\GameBase\GameSetup.h \
@@ -4423,6 +5066,15 @@ release\main.obj: ..\..\gameUI\main.cpp ..\..\gameUI\MainWindow.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayout.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayoutitem.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgridlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QMediaPlayer \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qmediaplayer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimedia-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QAudioOutput \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudiooutput.h \
 		..\..\GameBase\Game.h \
 		..\..\GameBase\GameSetup.h \
 		..\..\GameBase\Wonder.h \
@@ -4441,6 +5093,9 @@ release\main.obj: ..\..\gameUI\main.cpp ..\..\gameUI\MainWindow.h \
 		..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
 		..\..\gameUI\WonderSelectionWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QString \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QScrollArea \
@@ -4680,6 +5335,15 @@ release\MainWindow.obj: ..\..\gameUI\MainWindow.cpp ..\..\gameUI\MainWindow.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayout.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayoutitem.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgridlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QMediaPlayer \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qmediaplayer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimedia-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QAudioOutput \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudiooutput.h \
 		..\..\GameBase\Game.h \
 		..\..\GameBase\GameSetup.h \
 		..\..\GameBase\Wonder.h \
@@ -4698,6 +5362,9 @@ release\MainWindow.obj: ..\..\gameUI\MainWindow.cpp ..\..\gameUI\MainWindow.h \
 		..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
 		..\..\gameUI\WonderSelectionWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QString \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QScrollArea \
@@ -4725,26 +5392,47 @@ release\MainWindow.obj: ..\..\gameUI\MainWindow.cpp ..\..\gameUI\MainWindow.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QDialog \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qdialog.h \
 		..\..\gameUI\PlayerDashboardWidget.h \
-		..\..\gameUI\DiscardedCardsDialog.h \
-		..\..\gameUI\GameEndDialog.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QPushButton \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qpushbutton.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractbutton.h \
+		..\..\gameUI\DiscardedCardsDialog.h \
+		..\..\gameUI\GameEndDialog.h \
+		..\..\gameUI\SaveManager.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDataStream \
+		..\..\gameUI\GameSelectionDialog.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QListWidget \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlistwidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlistview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractitemview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qitemselectionmodel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDir \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdir.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdirlisting.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfiledevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdatetime.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcalendar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfile.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfileinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtimezone.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QFileInfoList \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QMessageBox \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qmessagebox.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qdialogbuttonbox.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDebug \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QTimer \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtimer.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QStatusBar \
-		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstatusbar.h \
+		..\..\gameUI\SoundManager.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QUrl \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDateTime \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QInputDialog \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qinputdialog.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlineedit.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextcursor.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextformat.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpen.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextoption.h
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextoption.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDebug \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QTimer \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QStatusBar \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qstatusbar.h
 
 release\SplashScreen.obj: ..\..\gameUI\SplashScreen.cpp ..\..\gameUI\SplashScreen.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -4946,6 +5634,17 @@ release\SplashScreen.obj: ..\..\gameUI\SplashScreen.cpp ..\..\gameUI\SplashScree
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
 		ui_SplashScreen.h \
+		..\..\gameUI\SoundManager.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QMediaPlayer \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qmediaplayer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimedia-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QAudioOutput \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudiooutput.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QUrl \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QKeyEvent \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPainter \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpainter.h \
@@ -5169,7 +5868,11 @@ release\WonderSelectionWidget.obj: ..\..\gameUI\WonderSelectionWidget.cpp ..\..\
 		..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDebug
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDebug \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGridLayout
 
 release\BoardWidget.obj: ..\..\gameUI\BoardWidget.cpp ..\..\gameUI\BoardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -5373,7 +6076,21 @@ release\BoardWidget.obj: ..\..\gameUI\BoardWidget.cpp ..\..\gameUI\BoardWidget.h
 		..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
-		ui_BoardWidget.h
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
+		ui_BoardWidget.h \
+		..\..\gameUI\SoundManager.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QMediaPlayer \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qmediaplayer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimedia-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QAudioOutput \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudiooutput.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QUrl
 
 release\MilitaryTrackWidget.obj: ..\..\gameUI\MilitaryTrackWidget.cpp ..\..\gameUI\MilitaryTrackWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -5586,9 +6303,21 @@ release\MilitaryTrackWidget.obj: ..\..\gameUI\MilitaryTrackWidget.cpp ..\..\game
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextdocument.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QFrame \
 		ui_MilitaryTrackWidget.h \
+		..\..\gameUI\SoundManager.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QMediaPlayer \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qmediaplayer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimedia-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QAudioOutput \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudiooutput.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QUrl \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QHBoxLayout \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
-		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QResizeEvent
 
 release\CardWidget.obj: ..\..\gameUI\CardWidget.cpp ..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -5791,7 +6520,13 @@ release\CardWidget.obj: ..\..\gameUI\CardWidget.cpp ..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
 		ui_CardWidget.h \
+		..\..\gameUI\CardDescriptions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QString \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QMap \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QVBoxLayout \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qboxlayout.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayout.h \
@@ -6000,6 +6735,9 @@ release\PlayerDashboardWidget.obj: ..\..\gameUI\PlayerDashboardWidget.cpp ..\..\
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QPushButton \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qpushbutton.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractbutton.h \
 		..\..\GameBase\CardBase.h \
 		..\..\GameBase\Board.h \
 		..\..\GameBase\CardNode.h \
@@ -6011,7 +6749,18 @@ release\PlayerDashboardWidget.obj: ..\..\gameUI\PlayerDashboardWidget.cpp ..\..\
 		ui_PlayerDashboardWidget.h \
 		..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
-		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QMessageBox \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qmessagebox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qdialog.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qdialogbuttonbox.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QScrollArea \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qscrollarea.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qabstractscrollarea.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qframe.h
 
 release\NameSelectionWidget.obj: ..\..\gameUI\NameSelectionWidget.cpp ..\..\gameUI\NameSelectionWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
@@ -6227,18 +6976,29 @@ release\NameSelectionWidget.obj: ..\..\gameUI\NameSelectionWidget.cpp ..\..\game
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qrubberband.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qframe.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QLabel \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlabel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpicture.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextdocument.h \
 		ui_NameSelectionWidget.h \
+		..\..\gameUI\SoundManager.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QMediaPlayer \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qmediaplayer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimedia-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QAudioOutput \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudiooutput.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QUrl \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QVBoxLayout \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qboxlayout.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayout.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayoutitem.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgridlayout.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QLabel \
-		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlabel.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpicture.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextdocument.h
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgridlayout.h
 
 release\WonderChoiceDialog.obj: ..\..\gameUI\WonderChoiceDialog.cpp ..\..\GameBase\Player.h \
 		..\..\GameBase\CardBase.h \
@@ -6454,7 +7214,10 @@ release\WonderChoiceDialog.obj: ..\..\gameUI\WonderChoiceDialog.cpp ..\..\GameBa
 		..\..\gameUI\CardWidget.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
-		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap
 
 release\DiscardedCardsDialog.obj: ..\..\gameUI\DiscardedCardsDialog.cpp ..\..\gameUI\DiscardedCardsDialog.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QDialog \
@@ -6661,6 +7424,9 @@ release\DiscardedCardsDialog.obj: ..\..\gameUI\DiscardedCardsDialog.cpp ..\..\ga
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QGraphicsDropShadowEffect \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgraphicseffect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QEvent \
+		..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
 		..\..\GameBase\CardBase.h \
 		..\..\GameBase\Board.h \
 		..\..\GameBase\CardNode.h \
@@ -6884,7 +7650,505 @@ release\GameEndDialog.obj: ..\..\gameUI\GameEndDialog.cpp ..\..\gameUI\GameEndDi
 		..\..\GameBase\Player.h \
 		..\..\GameBase\GameConstants.h \
 		..\..\gameAI\AI_Player.h \
-		ui_GameEndDialog.h
+		ui_GameEndDialog.h \
+		..\..\GameBase\GuildEffects.h \
+		..\..\gameUI\SoundManager.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QMediaPlayer \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qmediaplayer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimedia-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QAudioOutput \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudiooutput.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QUrl
+
+release\SaveManager.obj: ..\..\gameUI\SaveManager.cpp ..\..\gameUI\SaveManager.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QString \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstring.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qchar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversionchecks.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfiginclude.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconfig.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcore-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfigmacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationdefinitions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompilerdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qprocessordetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsystemdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationmarkers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtclasshelpermacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtpreprocessorsupport.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qassert.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtnoop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypes.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversion.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypeinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsysinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlogging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qflags.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasicatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic_cxx11.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qgenericatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qyieldcpu.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconstructormacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdarwinhelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qexceptionhandling.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qforeach.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttypetraits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobalstatic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmalloc.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qminmax.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnumeric.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qoverload.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qswap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtenvironmentvariables.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtresource.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttranslation.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qversiontagging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstdlibdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcomparehelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearray.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrefcount.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnamespace.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtmetamacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydata.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpair.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydatapointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydataops.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainertools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qxptype_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20functional.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q17memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlatin1stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qanystringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qutf8stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringtokenizer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q23type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringbuilder.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter_base.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDataStream \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdatastream.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiodevicebase.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopedpointer.h \
+		..\..\GameBase\Game.h \
+		..\..\GameBase\GameSetup.h \
+		..\..\GameBase\Wonder.h \
+		..\..\GameBase\CardBase.h \
+		..\..\GameBase\Board.h \
+		..\..\GameBase\CardNode.h \
+		..\..\GameBase\gameExport.h \
+		..\..\GameBase\ProgressTokens.h \
+		..\..\GameBase\MilitaryTrack.h \
+		..\..\GameBase\CardsPyramid.h \
+		..\..\GameBase\Player.h \
+		..\..\GameBase\GameConstants.h \
+		..\..\gameAI\AI_Player.h \
+		..\..\GameBase\UniversalCardLoader.h \
+		..\..\GameBase\ProgressTokenLoader.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QFile \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfile.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfiledevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiodevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionaltools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qhashfunctions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearraylist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringmatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreevent.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasictimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstracteventdispatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qeventloop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdeadlinetimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetatype.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfloat16.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmath.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtformat_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterable.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtaggedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetacontainer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopeguard.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbindingstorage.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qspan.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20iterator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDebug \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdebug.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtextstream.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontiguouscache.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsharedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qshareddata.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsharedpointer_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qshareddata_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qset.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qhash.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qvarlengtharray.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qalloc.h
+
+release\SoundManager.obj: ..\..\gameUI\SoundManager.cpp ..\..\gameUI\SoundManager.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QObject \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnamespace.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversionchecks.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfiginclude.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconfig.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcore-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfigmacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationdefinitions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompilerdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qprocessordetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsystemdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationmarkers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtclasshelpermacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtpreprocessorsupport.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qassert.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtnoop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypes.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversion.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypeinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsysinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlogging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qflags.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasicatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic_cxx11.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qgenericatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qyieldcpu.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconstructormacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdarwinhelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qexceptionhandling.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qforeach.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttypetraits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobalstatic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmalloc.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qminmax.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnumeric.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qoverload.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qswap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtenvironmentvariables.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtresource.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttranslation.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qversiontagging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstdlibdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcomparehelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtmetamacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionaltools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstring.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qchar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearray.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrefcount.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydata.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpair.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydatapointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydataops.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainertools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qxptype_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20functional.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q17memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlatin1stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qanystringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qutf8stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringtokenizer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q23type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringbuilder.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter_base.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qhashfunctions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearraylist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringmatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreevent.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasictimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstracteventdispatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qeventloop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdeadlinetimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetatype.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdatastream.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiodevicebase.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfloat16.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmath.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtformat_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterable.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtaggedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetacontainer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopeguard.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbindingstorage.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QMediaPlayer \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qmediaplayer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qurl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtguiglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtgui-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtguiexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimedia-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtmultimediaexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qtaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudio.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\QAudioOutput \
+		C:\Qt\6.10.1\msvc2022_64\include\QtMultimedia\qaudiooutput.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QUrl
+
+release\CardInfoPopup.obj: ..\..\gameUI\CardInfoPopup.cpp ..\..\gameUI\CardInfoPopup.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QWidget \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qwidget.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgetsglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtguiglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreglobal.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversionchecks.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfiginclude.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconfig.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcore-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtconfigmacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationdefinitions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompilerdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qprocessordetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsystemdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtcoreexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtdeprecationmarkers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtclasshelpermacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtpreprocessorsupport.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qassert.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtnoop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypes.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtversion.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtypeinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsysinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlogging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qflags.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasicatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qatomic_cxx11.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qgenericatomic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qyieldcpu.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qconstructormacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdarwinhelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qexceptionhandling.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qforeach.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttypetraits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qglobalstatic.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmalloc.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qminmax.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnumeric.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qoverload.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qswap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtenvironmentvariables.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtresource.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qttranslation.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qversiontagging.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtgui-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtguiexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgets-config.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qtwidgetsexports.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qwindowdefs.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnamespace.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcompare.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstdlibdetection.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcomparehelpers.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtmetamacros.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobjectdefs_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfunctionaltools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qwindowdefs_win.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstring.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qchar.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearray.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrefcount.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydata.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpair.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydatapointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qarraydataops.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainertools_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qxptype_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20functional.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q17memory.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearrayview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringfwd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlatin1stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qanystringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qutf8stringview.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringtokenizer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q23type_traits.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringbuilder.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringconverter_base.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qhashfunctions.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbytearraylist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringlist.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qalgorithms.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qstringmatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreevent.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbasictimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstracteventdispatcher.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qeventloop.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdeadlinetimer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetatype.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdatastream.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiodevicebase.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfloat16.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmath.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtformat_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiterable.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtaggedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmetacontainer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontainerinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qscopeguard.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qobject_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qbindingstorage.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmargins.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcheckedint_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q23utility.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20utility.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qaction.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qkeysequence.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qicon.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsize.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpixmap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpaintdevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrect.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpoint.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qcolor.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qrgb.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qrgba64.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qshareddata.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qimage.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpixelformat.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtransform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpolygon.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qregion.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qspan.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20iterator.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qline.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qvariant.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdebug.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtextstream.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcontiguouscache.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsharedpointer.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qsharedpointer_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qshareddata_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qset.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qhash.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qvarlengtharray.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qalloc.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpalette.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qbrush.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfont.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qendian.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfontmetrics.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfontinfo.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qfontvariableaxis.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qsizepolicy.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qcursor.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qbitmap.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qevent.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qiodevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qurl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qeventpoint.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvector2d.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qvectornd.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpointingdevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputdevice.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qscreen.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QList \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QObject \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QRect \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QSize \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QSizeF \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QTransform \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qnativeinterface.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qscreen_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreapplication.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcoreapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfuture.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfutureinterface.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qmutex.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtsan_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qresultstore.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfuture_impl.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qthreadpool.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qthread.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qrunnable.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qexception.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpromise.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qinputmethod.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qlocale.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qguiapplication_platform.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPixmap \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QLabel \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlabel.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qframe.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpicture.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextdocument.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QVBoxLayout \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qboxlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qlayoutitem.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qgridlayout.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QPainter \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpainter.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qtextoption.h \
+		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qpen.h
 
 release\qrc_resources.obj: release\qrc_resources.cpp 
 
@@ -6909,6 +8173,12 @@ release\moc_WonderChoiceDialog.obj: release\moc_WonderChoiceDialog.cpp
 release\moc_DiscardedCardsDialog.obj: release\moc_DiscardedCardsDialog.cpp 
 
 release\moc_GameEndDialog.obj: release\moc_GameEndDialog.cpp 
+
+release\moc_GameSelectionDialog.obj: release\moc_GameSelectionDialog.cpp 
+
+release\moc_SoundManager.obj: release\moc_SoundManager.cpp 
+
+release\moc_CardInfoPopup.obj: release\moc_CardInfoPopup.cpp 
 
 ####### Install
 

@@ -1,5 +1,6 @@
 #include "CardWidget.h"
 #include "ui_CardWidget.h"
+#include "CardDescriptions.h"
 #include <QVBoxLayout>
 #include <QFile>
 
@@ -8,9 +9,13 @@ CardWidget::CardWidget(int cardId, QWidget* parent)
     , ui(new Ui::CardWidget)
     , m_cardId(cardId)
     , m_isFaceUp(false)
+    , m_popup(nullptr)
+    , m_cardName("")
+    , m_isWonder(false)
 {
     ui->setupUi(this);
     this->setFixedSize(100, 140);
+    setMouseTracking(true); // Enable mouse tracking for hover events
 
     // Initial font setup
     QFont font = ui->nameLabel->font();
@@ -31,8 +36,44 @@ CardWidget::~CardWidget()
 
 void CardWidget::onButtonClicked()
 {
+    if (m_popup) {
+        m_popup->close();
+        m_popup = nullptr;
+    }
     emit cardClicked(m_cardId);
 }
+
+void CardWidget::enterEvent(QEnterEvent* event)
+{
+    if (!m_isFaceUp || m_isWonder) return;
+
+    if (!m_popup) {
+        m_popup = new CardInfoPopup();
+    }
+
+    QString description = CardDescriptions::getDescription(m_cardName);
+    QPixmap cardImage = this->grab(); // Capture current look
+
+    m_popup->setCardData(m_cardName, description, cardImage);
+
+    // Position the popup to the side of the card
+    QPoint globalPos = this->mapToGlobal(this->rect().topRight());
+    globalPos.setX(globalPos.x() + 5); // Add a small offset
+    m_popup->move(globalPos);
+    m_popup->show();
+
+    QWidget::enterEvent(event);
+}
+
+void CardWidget::leaveEvent(QEvent* event)
+{
+    if (m_popup) {
+        m_popup->close(); // It will be deleted on close
+        m_popup = nullptr;
+    }
+    QWidget::leaveEvent(event);
+}
+
 
 QString getSymbolEmoji(const QString& symbolName) {
     QString lowerSymbolName = symbolName.toLower();
@@ -53,19 +94,30 @@ QString getSymbolEmoji(const QString& symbolName) {
     if (lowerSymbolName == "helmet") return "🪖";
     if (lowerSymbolName == "vase") return "🏺";
     if (lowerSymbolName == "barrel") return "🛢️";
+    if (lowerSymbolName == "mortar") return "🥣";
+    if (lowerSymbolName == "wheel") return "⚙️";
     return "";
 }
 
 void CardWidget::setupCard(const QString& name, const QString& colorCode, bool isFaceUp, const QString& cost, const QString& effect, const QString& unlocks)
 {
     m_isFaceUp = isFaceUp;
+    m_cardName = name;
+
 
     if (m_isFaceUp) {
         ui->nameLabel->setText(name);
         ui->nameLabel->setVisible(true);
         ui->costLabel->setText(cost);
         ui->costLabel->setVisible(!cost.isEmpty());
-        ui->effectLabel->setText(effect);
+        QString finalEffect = effect;
+        if (name.toUpper() == "DISPENSARY") {
+            finalEffect += " " + getSymbolEmoji("mortar");
+        }
+        else if (name.toUpper() == "SCHOOL") {
+            finalEffect += " " + getSymbolEmoji("wheel");
+        }
+        ui->effectLabel->setText(finalEffect);
         ui->effectLabel->setVisible(true);
         
         ui->symbolLabel->setText(getSymbolEmoji(unlocks));
@@ -137,8 +189,10 @@ void CardWidget::setSelected(bool selected)
 
 void CardWidget::setImage(const QString& imagePath)
 {
+    m_isWonder = true;
     QPixmap pixmap(imagePath);
     if (!pixmap.isNull()) {
+        m_cardName = ui->nameLabel->text();
         // Wonder Mode: Image as Background
         
         

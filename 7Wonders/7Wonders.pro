@@ -34,7 +34,8 @@ HEADERS += GameBase/Board.h \
            GameBase/ProgressTokens.h \
            GameBase/UniversalCardLoader.h \
            GameBase/Wonder.h \
-           GameBase/GuildEffects.h
+           GameBase/GuildEffects.h \
+           gameUI/CardDescriptions.h
 
 SOURCES += GameBase/Board.cpp \
            GameBase/CardBase.cpp \
@@ -89,7 +90,9 @@ HEADERS += gameUI/MainWindow.h \
            gameUI/GameEndDialog.h \
            gameUI/SaveManager.h \
            gameUI/GameSelectionDialog.h \
-           gameUI/SoundManager.h
+           gameUI/CardDescriptions.h \
+           gameUI/SoundManager.h \
+           gameUI/CardInfoPopup.h
 
 SOURCES += gameUI/main.cpp \
            gameUI/MainWindow.cpp \
@@ -104,7 +107,8 @@ SOURCES += gameUI/main.cpp \
            gameUI/DiscardedCardsDialog.cpp \
            gameUI/GameEndDialog.cpp \
            gameUI/SaveManager.cpp \
-           gameUI/SoundManager.cpp
+           gameUI/SoundManager.cpp \
+           gameUI/CardInfoPopup.cpp
 
 # ========================================
 # UI - fișiere de design .ui (opțional)

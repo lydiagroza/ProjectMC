@@ -107,7 +107,7 @@ void trainAI(int episodes) {
 }
 
 int main() {
-    trainAI(1000);
+    trainAI(5000);
 
     std::cout << "\nPress Enter to exit...";
     std::cin.ignore();

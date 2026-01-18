@@ -3,6 +3,7 @@
 #include <QStackedWidget>
 #include <QFrame>
 #include <QLabel>
+#include <QPushButton>
 #include <QVBoxLayout> 
 #include <QMediaPlayer>
 #include <QAudioOutput>
@@ -62,12 +63,14 @@ private:
     
     // Slot pentru Butonul de Informații
     void onProgressInfoClicked();
+    void onDuckHintClicked();
 
     void rebuildRightPanel();
 
     // Etichete pentru Secțiunea de Progres
     QLabel* m_lblProgressP1 = nullptr;
     QLabel* m_lblProgressP2 = nullptr;
+    QPushButton* m_duckBtn = nullptr;
 
     QMediaPlayer* m_player = nullptr;
     QAudioOutput* m_audioOutput = nullptr;

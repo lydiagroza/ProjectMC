@@ -209,6 +209,16 @@ void MainWindow::rebuildRightPanel()
     ui->actionsContainer->setParent(ui->rightZone);
     rLayout->addWidget(ui->actionsContainer, 0);
 
+    // Duck Button
+    m_duckBtn = new QPushButton("🦆 Ask Duck", ui->rightZone);
+    m_duckBtn->setCursor(Qt::PointingHandCursor);
+    m_duckBtn->setStyleSheet(
+        "QPushButton { background: #FFD700; color: #2C1810; border: 2px solid #DAA520; border-radius: 15px; padding: 8px; font-weight: bold; font-size: 14px; }"
+        "QPushButton:hover { background: #FFEA00; border-color: #FF8F00; }"
+    );
+    connect(m_duckBtn, &QPushButton::clicked, this, &MainWindow::onDuckHintClicked);
+    rLayout->addWidget(m_duckBtn, 0, Qt::AlignCenter);
+
     // Save Game Button
     QPushButton* saveBtn = new QPushButton("Save Game", ui->rightZone);
     saveBtn->setCursor(Qt::PointingHandCursor);
@@ -512,6 +522,7 @@ void MainWindow::updateGameState()
     else {
         ui->stack->setCurrentWidget(ui->boardWidgetPage);
         renderGame();
+        if (m_duckBtn) m_duckBtn->setVisible(true);
     }
     updatePlayerInventories();
     updateTurnIndicator();
@@ -662,6 +673,8 @@ void MainWindow::updateGameState()
 
 void MainWindow::startWonderDraft()
 {
+    if (m_duckBtn) m_duckBtn->setVisible(false);
+
     const auto& availableWonders = m_game->getCurrentDraftSet();
     if (availableWonders.empty()) {
         updateGameState();
@@ -934,6 +947,51 @@ void MainWindow::onDiscardedCardsClicked()
 
     DiscardedCardsDialog dialog(discardedCards, this);
     dialog.exec();
+}
+
+void MainWindow::onDuckHintClicked()
+{
+    if (m_player) {
+        m_player->stop();
+        m_player->play();
+    }
+    
+    if (!m_game) return;
+    
+    Player* p = m_game->getCurrentPlayer();
+    Player* opp = m_game->getOpponent();
+    
+    QString hint = QString::fromStdString(AI_Player::getBestMoveHint(*p, *opp, m_game->getBoard(), m_game->getCurrentAge(), m_selectedCardId));
+    
+    QMessageBox msgBox(this);
+    msgBox.setWindowTitle("The wise Duck Wizard of the Kingdom");
+    msgBox.setText(hint);
+    msgBox.setStyleSheet(
+        "QMessageBox { "
+        "  background-color: #2C1810; "
+        "  border: 3px solid #DAA520; "
+        "  border-radius: 10px; "
+        "} "
+        "QLabel { "
+        "  color: #F5E6D3; "
+        "  font-family: 'Times New Roman'; "
+        "  font-size: 16px; "
+        "  font-style: italic; "
+        "  padding: 10px; "
+        "} "
+        "QPushButton { "
+        "  background-color: #8B4513; "
+        "  color: #FFD700; "
+        "  border: 2px solid #DAA520; "
+        "  border-radius: 5px; "
+        "  padding: 5px 15px; "
+        "  font-weight: bold; "
+        "} "
+        "QPushButton:hover { "
+        "  background-color: #A0522D; "
+        "}"
+    );
+    msgBox.exec();
 }
 
 void MainWindow::updatePlayerInventories()

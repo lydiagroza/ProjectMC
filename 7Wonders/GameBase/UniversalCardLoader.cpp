@@ -101,10 +101,22 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
         {"add_scientific_symbol_sun_dial", [](Player& p, Board&, Player&) { if (p.add_ScientificSymbol(Scientific_Symbol::Sun_Dial)) { Game::currentGame->handleProgressTokenChoice(); } }},
         {"add_scientific_symbol_wheel", [](Player& p, Board&, Player&) { if (p.add_ScientificSymbol(Scientific_Symbol::Wheel)) { Game::currentGame->handleProgressTokenChoice(); } }},
         {"coin2Wonder", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)(2 * p.getWonders().size())); }},
-        {"coin2Brown", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)(2 * p.getInventory().at(Color::Brown).size())); }},
-        {"coin1Yellow", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)p.getInventory().at(Color::Yellow).size()); }},
-        {"coin3Gray", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)(3 * p.getInventory().at(Color::Gray).size())); }},
-        {"coin1Red", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, (uint8_t)p.getInventory().at(Color::Red).size()); }},
+        {"coin2Brown", [](Player& p, Board&, Player&) { 
+            size_t count = p.getInventory().count(Color::Brown) ? p.getInventory().at(Color::Brown).size() : 0;
+            p.addResource(Resource::Coin, (uint8_t)(2 * count)); 
+        }},
+        {"coin1Yellow", [](Player& p, Board&, Player&) { 
+            size_t count = p.getInventory().count(Color::Yellow) ? p.getInventory().at(Color::Yellow).size() : 0;
+            p.addResource(Resource::Coin, (uint8_t)count); 
+        }},
+        {"coin3Gray", [](Player& p, Board&, Player&) { 
+            size_t count = p.getInventory().count(Color::Gray) ? p.getInventory().at(Color::Gray).size() : 0;
+            p.addResource(Resource::Coin, (uint8_t)(3 * count)); 
+        }},
+        {"coin1Red", [](Player& p, Board&, Player&) { 
+            size_t count = p.getInventory().count(Color::Red) ? p.getInventory().at(Color::Red).size() : 0;
+            p.addResource(Resource::Coin, (uint8_t)count); 
+        }},
         {"sale_stone1", [](Player& p, Board&, Player&) { p.set_discountedResource(Stone); }},
         {"sale_wood1", [](Player& p, Board&, Player&) { p.set_discountedResource(Wood); }},
         {"sale_clay1", [](Player& p, Board&, Player&) { p.set_discountedResource(Clay); }},

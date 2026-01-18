@@ -34,7 +34,8 @@ HEADERS += GameBase/Board.h \
            GameBase/ProgressTokens.h \
            GameBase/UniversalCardLoader.h \
            GameBase/Wonder.h \
-           GameBase/GuildEffects.h
+           GameBase/GuildEffects.h \
+           gameUI/CardDescriptions.h
 
 SOURCES += GameBase/Board.cpp \
            GameBase/CardBase.cpp \
@@ -95,7 +96,6 @@ HEADERS += gameUI/MainWindow.h \
 
 SOURCES += gameUI/main.cpp \
            gameUI/MainWindow.cpp \
-           gameUI/MainWindow_turn.cpp \
            gameUI/SplashScreen.cpp \
            gameUI/WonderSelectionWidget.cpp \
            gameUI/BoardWidget.cpp \
@@ -133,4 +133,4 @@ FORMS += UI/WonderSelectionWidget.ui \
 # ========================================
 # Resurse
 # ========================================
-RESOURCES += gameUI/resources.qrc
+RESOURCES += resources.qrc

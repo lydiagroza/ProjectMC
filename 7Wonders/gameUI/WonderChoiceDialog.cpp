@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "../../GameBase/Player.h"
 #include "WonderChoiceDialog.h"
 #include "ui_WonderChoiceDialog.h"
 #include "CardWidget.h"

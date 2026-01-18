@@ -1090,6 +1090,30 @@ void MainWindow::updatePlayerInventories()
     addPlayerTokenSlots(p2, m_p2ProgressLayout);
 }
 
+void MainWindow::updateTurnIndicator()
+{
+    if (!m_game) return;
+    bool isPlayer1Turn = (m_game->getCurrentPlayer()->getName() == m_game->getPlayer1().getName());
+    
+    ui->turnIndicator->setText("🦆");
+    
+    QString borderColor = isPlayer1Turn ? "#1565C0" : "#8B0000"; 
+    ui->turnIndicator->setStyleSheet(
+        QString("background-color: #FFD700; border: 5px solid %1; border-radius: 30px; font-size: 30px;").arg(borderColor)
+    );
+
+    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->turnContainer->layout());
+    if (layout) {
+        layout->removeWidget(ui->turnIndicator);
+        
+        if (isPlayer1Turn) {
+            layout->addWidget(ui->turnIndicator, 0, Qt::AlignBottom | Qt::AlignHCenter);
+        } else {
+            layout->insertWidget(0, ui->turnIndicator, 0, Qt::AlignTop | Qt::AlignHCenter);
+        }
+    }
+}
+
 QString MainWindow::getColorHex(Color c)
 {
     switch (c) {

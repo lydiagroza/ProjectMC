@@ -1,7 +1,6 @@
 ﻿#include "GameSetup.h"
 #include "UniversalCardLoader.h"
 #include "ProgressTokenLoader.h"
-#include "CardBase.h"
 #include <iostream>
 #include <random>
 #include <chrono>

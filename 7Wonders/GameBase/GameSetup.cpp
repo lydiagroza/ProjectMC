@@ -10,13 +10,12 @@
 namespace fs = std::filesystem;
 
 static std::string resolvePath(const std::string& filename) {
-    // Listă de directoare de verificat
     std::vector<std::string> searchPaths = {
-        "GameBase/",             // Din rădăcina proiectului
-        "../GameBase/",          // De la un nivel mai jos (e.g. directorul build)
-        "../../GameBase/",       // De la două nivele mai jos (e.g. x64/Debug)
-        "../../../GameBase/",    // Caz extrem
-        "./"                     // Directorul curent
+        "GameBase/",
+        "../GameBase/",
+        "../../GameBase/",
+        "../../../GameBase/",
+        "./"
     };
 
     for (const auto& prefix : searchPaths) {
@@ -29,7 +28,7 @@ static std::string resolvePath(const std::string& filename) {
 
     std::cerr << "[ResourceLoader] CRITICAL: Could not find " << filename << "!" << std::endl;
     std::cout << "Current working directory: " << fs::current_path() << std::endl;
-    return filename; // Eșuăm grațios returnând originalul
+    return filename;
 }
 
 GameSetup::GameSetup(Board& board) : m_board(board) 
@@ -68,7 +67,7 @@ void GameSetup::prepareTokens()
     for (size_t i = 0; i < m_allTokens.size(); ++i) {
         if (i < 5) {
             selectedTokens.push_back(m_allTokens[i]);
-        } else if (i < 8) { // Stocăm următoarele 3 ca eliminate (țintă pentru Marea Bibliotecă)
+        } else if (i < 8) {
             removedTokens.push_back(m_allTokens[i]);
         }
     }
@@ -82,17 +81,17 @@ void GameSetup::prepareDecks()
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine e(seed);
 
-    //era 1
+    //age 1
     std::shuffle(m_deckAge1.begin(), m_deckAge1.end(), e);
     if (m_deckAge1.size() > 20) 
         m_deckAge1.resize(20); 
 
-    //era 2
+    //age 2
     std::shuffle(m_deckAge2.begin(), m_deckAge2.end(), e);
     if (m_deckAge2.size() > 20)
         m_deckAge2.resize(20);
 
-    //era 3
+    //age 3
     std::shuffle(m_deckGuilds.begin(), m_deckGuilds.end(), e);
     if (m_deckGuilds.size() > 3)
         m_deckGuilds.resize(3);
@@ -101,7 +100,7 @@ void GameSetup::prepareDecks()
     if (m_deckAge3.size() > 20) 
         m_deckAge3.resize(20);
 
-	//amestecăm și minunile
+	//shuffle wonders
     std::shuffle(m_allWonders.begin(), m_allWonders.end(), e);
 
 }
@@ -163,7 +162,7 @@ std::vector<std::shared_ptr<Wonder>> GameSetup::drawWonders(int count)
         m_allWonders.begin(),
         m_allWonders.begin() + actualCount);
 
-    // le ștergem din pachetul cu toate
+    // remove them from the all wonders deck
     m_allWonders.erase(m_allWonders.begin(), m_allWonders.begin() + actualCount);
 
     return selectedWonders;

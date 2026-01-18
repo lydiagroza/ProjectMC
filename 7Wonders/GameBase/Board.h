@@ -22,7 +22,7 @@ private:
 public:
 	Board() = default;
 
-	// Funcții piramidă de cărți
+	// Card pyramid functions
 	void setupCards(int era, std::vector<std::shared_ptr<CardBase>>& deck);
 	CardNode* getNodeAt(int row, int index);
 	void updateVisibility();
@@ -31,25 +31,25 @@ public:
 	void printChildrenList() const;
 	const CardsPyramid& getPyramid() const;
 
-	// Funcții pistă militară
+	// Military track functions
 	 MilitaryTrack& getMilitaryTrack();
 	const  MilitaryTrack& getMilitaryTrack() const;
 
 
-	// Funcții jetoane de progres
+	// Progress token functions
 	void setAvailableProgressTokens(const std::vector<std::shared_ptr<ProgressToken>>& tokens);
 	std::vector<std::shared_ptr<ProgressToken>> getAvailableProgressTokens() const;
 	void removeAvailableProgressToken(std::shared_ptr<ProgressToken> token);
 	void printTokens(std::ostream& fout = std::cout) const;
 	
-    // Jetoane eliminate/puse deoparte (pentru Marea Bibliotecă)
+    // Removed/set aside tokens (for the Great Library)
     void setRemovedProgressTokens(const std::vector<std::shared_ptr<ProgressToken>>& tokens);
     const std::vector<std::shared_ptr<ProgressToken>>& getRemovedProgressTokens() const;
     void removeRemovedProgressToken(std::shared_ptr<ProgressToken> token);
 
 	void printMilitaryTrack(std::ostream& fout = std::cout) const;
 
-	// Funcții teanc de decartare
+	// Discard pile functions
 	void addCardToDiscardPile(std::shared_ptr<CardBase> card);
 	const std::vector<std::shared_ptr<CardBase>>& getDiscardPile() const;
 	void removeCardFromDiscardPile(std::shared_ptr<CardBase> card);

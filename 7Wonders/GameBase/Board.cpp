@@ -1,11 +1,9 @@
 ﻿#include "Board.h"
 #include "CardBase.h"
-#include <iomanip>   // Asigură-te că ai acest include
+#include <iomanip>
 #include <iostream>
-#include <algorithm> // Pentru std::max
+#include <algorithm>
 
-
-// Pyramid functions
 
 void Board::setupCards(int era, std::vector<std::shared_ptr<CardBase>>& deck) {
     m_pyramid.build(era, deck);
@@ -46,10 +44,9 @@ void Board::removeAvailableProgressToken(std::shared_ptr<ProgressToken> token)
 	}
 }
 
-// Removed Progress Tokens
 void Board::setRemovedProgressTokens(const std::vector<std::shared_ptr<ProgressToken>>& tokens)
 {
-    m_removedProgressTokens = tokens; // Assuming m_removedProgressTokens is defined in header now
+    m_removedProgressTokens = tokens;
 }
 
 const std::vector<std::shared_ptr<ProgressToken>>& Board::getRemovedProgressTokens() const
@@ -79,7 +76,7 @@ void Board::printTokens(std::ostream& os) const
 
     for (const auto& tokenPtr : m_availableProgressTokens) {
         if (tokenPtr) {
-            os << *tokenPtr << "\n"; // Use the stream operator
+            os << *tokenPtr << "\n";
         }
     }
     os << std::endl;
@@ -141,7 +138,7 @@ void Board::printDiscardPile(std::ostream& fout) const
 {
 	fout << "\n=== Discard Pile ===\n";
     if(m_discardPile.empty()) {
-        fout << "Nu exista carti in discard pile.\n";
+        fout << "No cards in discard pile.\n";
         return;
     }
     std::cout << "[ ";
@@ -179,7 +176,7 @@ void Board::printCardsTree(std::ostream& os) const
     const auto& rows = m_pyramid.getRows();
 
     if (rows.empty()) {
-        os << "Piramida este goala.\n";
+        os << "The pyramid is empty.\n";
         return;
     }
 
@@ -200,7 +197,7 @@ void Board::printCardsTree(std::ostream& os) const
         if (row.size() > max_cards_in_row) max_cards_in_row = row.size();
     }
 
-    os << "\n===== STRUCTURA PIRAMIDEI =====\n\n";
+    os << "\n===== PYRAMID STRUCTURE =====\n\n";
 
     for (size_t r = 0; r < rows.size(); ++r) {
         const auto& row = rows[r];
@@ -243,7 +240,7 @@ void Board::printCardsTree(std::ostream& os) const
 
 void Board::printChildrenList() const {
     const auto& rows = m_pyramid.getRows();
-    std::cout << "\n--- DEBUG: Relatii Blocare ---\n";
+    std::cout << "\n--- DEBUG: Blocking Relationships ---\n";
 
     for (const auto& row : rows) {
         for (const auto& nodePtr : row) {
@@ -253,11 +250,11 @@ void Board::printChildrenList() const {
             std::cout << "-> " << node->getCard()->getName();
 
             const auto& children = node->getChildren();
-            if (children.empty()) std::cout << " [LIBER]\n";
+            if (children.empty()) std::cout << " [FREE]\n";
             else {
-                std::cout << " [BLOCAT DE]: ";
+                std::cout << " [BLOCKED BY]: ";
                 for (const auto* child : children) {
-                    if (!child->isPlayed()) // Aratam doar copiii care inca sunt pe masa
+                    if (!child->isPlayed())
                         std::cout << child->getCard()->getName() << ", ";
                 }
                 std::cout << "\n";

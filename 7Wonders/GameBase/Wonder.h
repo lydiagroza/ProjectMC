@@ -16,7 +16,7 @@ class GAME_API Wonder {
     bool m_isBuilt;
     std::string m_effectDescription;
     std::vector<std::function<void(Player&, Board&, Player&)>> m_effects;
-    std::optional<Symbol> m_symbol; // Adaugă membrul pentru simbol
+    std::optional<Symbol> m_symbol; // Add member for symbol
     bool m_isAvailable; // Add m_isAvailable member
 
 public:

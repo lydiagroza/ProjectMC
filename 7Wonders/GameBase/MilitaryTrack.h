@@ -4,8 +4,8 @@
 
 class GAME_API MilitaryTrack {
     friend class SaveManager;
-	int pawnPosition; // 0 = centru, >0 = avantaj Player 1?, <0 = avantaj Player 2?
-	// VERIFICARE: În implementarea ta, cine e P1 și cine e P2 pe track?
+	int pawnPosition; // 0 = center, >0 = Player 1 advantage?, <0 = Player 2 advantage?
+	// CHECK: In your implementation, who is P1 and who is P2 on the track?
 private:
     
 	int8_t m_pawnPosition = 0; 

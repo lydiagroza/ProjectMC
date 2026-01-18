@@ -197,30 +197,30 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
     ui->invLayout->addStretch();
 }
 
-// Funcție ajutătoare simplă pentru descrierile jetoanelor (Duplicat din MainWindow, ar trebui să fie static/comun)
+// Simple helper function for token descriptions (Duplicated from MainWindow, should be static/common)
 static QString getLocalTokenDesc(const QString& tokenName) {
     QString n = tokenName.toUpper().trimmed();
-    if (n == "AGRICULTURE") return "Agricultură: +6 monede, +4 VP.";
-    if (n == "ARCHITECTURE") return "Arhitectură: Minuni costă -2 resurse.";
-    if (n == "ECONOMY") return "Economie: Iei bani când adversarul face comerț.";
-    if (n == "LAW") return "Lege: +1 Simbol Științific.";
-    if (n == "MASONRY") return "Zidărie: Cărți Albastre costă -2 resurse.";
-    if (n == "MATHEMATICS") return "Matematică: 3 VP per jeton de progres.";
-    if (n == "PHILOSOPHY") return "Filozofie: +7 VP.";
-    if (n == "STRATEGY") return "Strategie: +1 Clădire Militară.";
-    if (n == "THEOLOGY") return "Teologie: Minunile au efect 'Tura Suplimentară'.";
-    if (n == "URBANISM") return "Urbanism: +6 monede. Lanțuri gratuite.";
-    return "Bonus activ.";
+    if (n == "AGRICULTURE") return "Agriculture: +6 coins, +4 VP.";
+    if (n == "ARCHITECTURE") return "Architecture: Wonders cost -2 resources.";
+    if (n == "ECONOMY") return "Economy: Gain money when opponent trades.";
+    if (n == "LAW") return "Law: +1 Scientific Symbol.";
+    if (n == "MASONRY") return "Masonry: Blue cards cost -2 resources.";
+    if (n == "MATHEMATICS") return "Mathematics: 3 VP per progress token.";
+    if (n == "PHILOSOPHY") return "Philosophy: +7 VP.";
+    if (n == "STRATEGY") return "Strategy: +1 Military Building.";
+    if (n == "THEOLOGY") return "Theology: Wonders have 'Extra Turn' effect.";
+    if (n == "URBANISM") return "Urbanism: +6 coins. Free chains.";
+    return "Active bonus.";
 }
 
 void PlayerDashboardWidget::onEffectsClicked()
 {
-    // Construiește lista de efecte
+    // Build the list of effects
     QStringList effectsHtml;
 
-    // 1. Jetoane de Progres
+    // 1. Progress Tokens
     if (!m_activeEffectsTokens.empty()) {
-        effectsHtml << "<h3 style='color:#66BB6A'>✅ Jetoane de Progres</h3><ul>";
+        effectsHtml << "<h3 style='color:#66BB6A'>✅ Progress Tokens</h3><ul>";
         for (const auto& t : m_activeEffectsTokens) {
              QString name = QString::fromStdString(t->getName());
              effectsHtml << "<li><b>" + name + ":</b> " + getLocalTokenDesc(name) + "</li>";
@@ -228,12 +228,12 @@ void PlayerDashboardWidget::onEffectsClicked()
         effectsHtml << "</ul>";
     }
 
-    // 2. Minuni Construite
+    // 2. Built Wonders
     bool hasBuiltWonder = false;
     for (const auto& w : m_activeEffectsWonders) {
         if (w->getIsBuilt()) {
             if (!hasBuiltWonder) {
-                effectsHtml << "<h3 style='color:#FFCA28'>✨ Minuni Construite</h3><ul>";
+                effectsHtml << "<h3 style='color:#FFCA28'>✨ Built Wonders</h3><ul>";
                 hasBuiltWonder = true;
             }
             QString name = QString::fromStdString(w->getName());
@@ -243,14 +243,14 @@ void PlayerDashboardWidget::onEffectsClicked()
     }
     if (hasBuiltWonder) effectsHtml << "</ul>";
 
-    // 3. Fără efecte?
+    // 3. No effects?
     if (effectsHtml.isEmpty()) {
-        effectsHtml << "<i>Niciun efect permanent activ.</i>";
+        effectsHtml << "<i>No permanent effects active.</i>";
     }
 
-    // Afișează Dialog
+    // Display Dialog
     QMessageBox msgBox(this);
-    msgBox.setWindowTitle("Efecte Active");
+    msgBox.setWindowTitle("Active Effects");
     msgBox.setTextFormat(Qt::RichText);
     msgBox.setText(effectsHtml.join(""));
     msgBox.setStyleSheet(

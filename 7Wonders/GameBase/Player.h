@@ -21,14 +21,14 @@ class GAME_API Player {
 private:
 	unsigned int m_Id:2;
 	std::string m_name;
-	std::map<Resource, std::uint8_t> m_Resources; // Toate resursele
-	std::map<Points, std::uint8_t>m_pointsScore; // Toate punctele
-	std::bitset<5>m_discountedResource; // resurse reduse din cărți galbene
+	std::map<Resource, std::uint8_t> m_Resources; // All resources
+	std::map<Points, std::uint8_t>m_pointsScore; // All points
+	std::bitset<5>m_discountedResource; // discounted resources from yellow cards
 	std::vector<std::bitset<5>>m_choiceResources; 
-	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // toate cărțile
-	std::vector<std::shared_ptr<Wonder>> m_Wonders; // toate minunile
-	std::unordered_map<Scientific_Symbol, int> m_scientificSymbols; // toate simbolurile științifice
-	std::unordered_set<Symbol>m_chainSymbols; // toate simbolurile de lanț acumulate
+	std::map<Color, std::vector<std::shared_ptr<CardBase>>>m_Inventory; // all cards
+	std::vector<std::shared_ptr<Wonder>> m_Wonders; // all wonders
+	std::unordered_map<Scientific_Symbol, int> m_scientificSymbols; // all scientific symbols
+	std::unordered_set<Symbol>m_chainSymbols; // all accumulated chain symbols
 	enum PlayerFlags {
 		ExtraTurn = 0,
 		WonderDiscount = 1,
@@ -79,7 +79,7 @@ public:
 	const std::vector<std::shared_ptr<ProgressToken>>& getProgressTokens() const;
 
 
-	// VP pentru determinarea câștigătorului
+	// VP for determining the winner
 	int getVPFromMilitaryTokens() const;
 	int getVPFromBlueCards() const;
 	int getVPFromGuilds(const Player& opponent) const;
@@ -87,17 +87,17 @@ public:
 	void addChoiceResources(std::vector<Resource> choices);
 
 	void set_discountedResource(Resource r);
-	Player(const std::string& playerName,int id); // constructor
+	Player(const std::string& playerName,int id);
 	Player(const std::string& name);
-    virtual ~Player() = default; // Adăugat pentru polimorfism
-	//Gestioneaza monede
+    virtual ~Player() = default; // Added for polymorphism
+	// Manages coins
 	bool decreaseCoins(std::uint8_t amount); //
-	//Gestioneaza resursele
+	// Manages resources
 	void addResource(Resource r, std::uint8_t amount);//
 	void removeResource(Resource r, std::uint8_t amount);
-	//Gestioneaza punctele de victorie
+	// Manages victory points
 	void add_Points(Points p, std::uint8_t amount);//
-	//Gestioneaza simbolurile
+	// Manages symbols
 	bool add_ScientificSymbol(Scientific_Symbol symbol);//
 	int getUniqueScientificSymbolsCount() const;
 	void add_ChainSymbol(Symbol symbol);//
@@ -109,10 +109,10 @@ public:
 
 	template<typename T>
 	std::uint8_t findTotalCost(const T& buildable, const Player& opponent) const {
-		// Verific? dac? buildable are chain symbol ?i dac? �l avem (doar pentru CardBase)
+		// Checks if the buildable has a chain symbol and if we have it (only for CardBase)
 				if constexpr (std::is_same_v<T, CardBase>) {
 			if (buildable.m_symbol.has_value() && m_chainSymbols.count(buildable.m_symbol.value())) {
-				return 0; // Costul este 0 (Gratuit prin chain)
+				return 0; // Cost is 0 (Free via chain)
 			}
 		}
 
@@ -138,20 +138,20 @@ public:
 		return GameConstants::IMPOSSIBLE_COST;
 	}
 	
-	//Actiuni de joc
+	// Game actions
 
 	bool buyCard(std::shared_ptr<CardBase> card,  Player& opponent,  Board& board);
 
 	void discardCard(std::shared_ptr<CardBase> c, Board& board);
 	bool constructWonder(std::shared_ptr<CardBase> cardUsed, Wonder& wonderToBuild, Player& opponent, Board& board);
-	//chestii pentru gestionare inventar
+	//inventory management stuff
 	void addCardToInventory(std::shared_ptr<CardBase> card);
 	bool removeCardFromInventory(std::shared_ptr<CardBase> card);
 
 	void addWonders(const std::shared_ptr<Wonder>& wonder);
 	
 
-	// Efecte Jetoane de Progres
+	// Progress Token Effects
 	inline bool hasExtraTurn() const { return m_flags.test(ExtraTurn); }
 	inline void setHasExtraTurn(bool v) { m_flags.set(ExtraTurn, v); }
 
@@ -182,4 +182,3 @@ public:
 	friend class SaveManager;
 
 };
-

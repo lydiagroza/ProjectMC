@@ -54,20 +54,20 @@ private:
     void updateGameState();
     void startWonderDraft();
 
-    // Layout-uri noi pentru Panoul Dreapta
+    // New layouts for the Right Panel
     QVBoxLayout* m_p1ProgressLayout = nullptr;
     QVBoxLayout* m_p2ProgressLayout = nullptr;
     
-    // Funcție ajutătoare pentru descrierea jetoanelor
+    // Helper function for token descriptions
     QString getTokenDescription(const QString& tokenName);
     
-    // Slot pentru Butonul de Informații
+    // Slot for the Info Button
     void onProgressInfoClicked();
     void onDuckHintClicked();
 
     void rebuildRightPanel();
 
-    // Etichete pentru Secțiunea de Progres
+    // Labels for the Progress Section
     QLabel* m_lblProgressP1 = nullptr;
     QLabel* m_lblProgressP2 = nullptr;
     QPushButton* m_duckBtn = nullptr;

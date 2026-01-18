@@ -9,7 +9,7 @@ using namespace std;
 
 // --- UTILITARE ---
 string UniversalCardLoader::trim(string s) {
-    s.erase(remove(s.begin(), s.end(), '"'), s.end()); // Elimină ghilimelele
+    s.erase(remove(s.begin(), s.end(), '"'), s.end()); // Remove quotes
     s.erase(0, s.find_first_not_of(" \t\r\n"));
     s.erase(s.find_last_not_of(" \t\r\n") + 1);
     return s;
@@ -83,7 +83,7 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
     string token;
 
     static const std::unordered_map<std::string, std::function<void(Player&, Board&, Player&)>> effectMap = {
-        //Efectele pentru cele 3 age-uri
+        //Effects for the 3 ages
          {"add_resource_wood", [](Player& p, Board&, Player&) { p.addResource(Resource::Wood, 1); }},
         {"add_resource_coin4", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, 4); }},
         {"add_resource_coin6", [](Player& p, Board&, Player&) { p.addResource(Resource::Coin, 6); }},
@@ -129,7 +129,7 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
         p.addChoiceResources(choices);
         }},
 
-        //Efecte pentru guilds
+        //Effects for guilds
          {"coins_per_green", [](Player& p, Board&, Player& o) {
             auto countGreen = [](const Player& player) {
              return player.getInventory().count(Color::Green) ? player.getInventory().at(Color::Green).size() : 0;
@@ -183,7 +183,7 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
          << " coins from Tacticians Guild." << endl;
      }},
 
-        //Efecte Wonders
+        //Wonder Effects
         {"add_coins3", [](Player& p, Board&, Player&) { p.addResource(Coin,3); }},
         {"decreaseCoins3", [](Player&, Board&, Player& o) { o.decreaseCoins(3); }},
         {"replayTurn", [](Player& p, Board&, Player&) { p.setHasExtraTurn(true); std::cout << "\n[EFECT] " << p.getName() << " a castigat o tura extra!\n"; }},
@@ -194,13 +194,13 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
 }},
 
 {"buildDiscardedCard", [](Player&, Board&, Player&) {
-            // Verificăm dacă există o instanță de joc activă
+            // Check if an active game instance exists
             if (Game::currentGame) {
-                // Apelăm funcția pe care ai scris-o deja în clasa Game
+                // Call the function you already wrote in the Game class
                 Game::currentGame->handleBuildFromDiscard();
             }
          else {
-          std::cerr << "[Eroare] Instanta Game nu a fost gasita pentru efectul Mausoleum!" << std::endl;
+          std::cerr << "[Error] Game instance not found for Mausoleum effect!" << std::endl;
       }
   }},
 
@@ -453,9 +453,9 @@ vector<shared_ptr<CardBase>> UniversalCardLoader::loadAgeCards(const string& fil
 
 vector<shared_ptr<CardBase>> UniversalCardLoader::loadGuilds(const string& filename) {
 
-    // Gildele au structura: name,id,cost,symbol,unlocks,effects
+    // Guilds have the structure: name,id,cost,symbol,unlocks,effects
 
-    // Sunt mereu mov (Purple)
+    // They are always purple
 
     vector<shared_ptr<CardBase>> guilds;
 

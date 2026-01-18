@@ -9,7 +9,7 @@
 
 namespace fs = std::filesystem;
 
-// --- AI TRAINING LOOP ---
+
 void trainAI(int episodes) {
     std::cout << "=== STARTING AI TRAINING (" << episodes << " episodes) ===\n";
     auto startTime = std::chrono::high_resolution_clock::now();
@@ -17,7 +17,7 @@ void trainAI(int episodes) {
     int p1Wins = 0;
     int p2Wins = 0;
     
-    // Stats for the last played game
+
     int lastVP1 = 0;
     int lastVP2 = 0;
     std::string lastWinner = "Draw";
@@ -25,7 +25,7 @@ void trainAI(int episodes) {
     for (int i = 0; i < episodes; ++i) {
         Game game;
         
-        // 1. Setup AI vs AI (Adaptive/Hard for training)
+
         game.setPlayerTypes(true, true, AI_Difficulty::ADAPTIVE); 
         game.initialize();
 
@@ -35,7 +35,7 @@ void trainAI(int episodes) {
         if (p1) p1->enableTraining(true);
         if (p2) p2->enableTraining(true);
 
-        // 2. Draft Phase Simulation
+
         while (game.getDraftPhase() > 0 && !game.getCurrentDraftSet().empty()) {
             AI_Player* currentAI = dynamic_cast<AI_Player*>(game.getCurrentPlayer());
             if (currentAI) {
@@ -48,7 +48,7 @@ void trainAI(int episodes) {
             }
         }
 
-        // 3. Gameplay Loop
+
         while (!game.isGameOver()) {
             AI_Player* currentAI = dynamic_cast<AI_Player*>(game.getCurrentPlayer());
             Player* opponent = game.getOpponent();
@@ -68,7 +68,7 @@ void trainAI(int episodes) {
             }
         }
 
-        // 4. End Game & Reward
+
         lastVP1 = game.calculatePlayerVP(game.getPlayer1());
         lastVP2 = game.calculatePlayerVP(game.getPlayer2());
         bool p1Won = (lastVP1 > lastVP2); 
@@ -103,7 +103,7 @@ void trainAI(int episodes) {
     std::cout << "Player 2 VP: " << lastVP2 << "\n";
 
     fs::path modelPath = fs::absolute("ai_model.txt");
-    std::cout << "\n[System] AI Model saved to: " << modelPath.string() << "\n";
+    std::cout << "\nAI Model saved to: " << modelPath.string() << "\n";
 }
 
 int main() {

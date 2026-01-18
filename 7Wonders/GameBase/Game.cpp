@@ -29,7 +29,6 @@ Game::Game()
 
 void Game::handleProgressTokenChoice()
 {
-    // Check if there are tokens to choose from
     if (m_board.getAvailableProgressTokens().empty()) {
         return;
     }
@@ -122,7 +121,6 @@ void Game::setPlayerTypes(bool p1IsAI, bool p2IsAI, AI_Difficulty difficulty)
     }
     else m_player2 = std::make_shared<Player>(n2, 2);
 
-    // Reset pointers
     m_currentPlayer = m_player1.get();
     m_opponent = m_player2.get();
 }
@@ -162,27 +160,27 @@ bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
     }
 
     if (availableWonders.empty()) {
-        std::cout << "Eroare: Nu ai Minuni neconstruite disponibile pentru a construi.\n";
+        std::cout << "Error: You have no available unbuilt Wonders to build.\n";
         return false;
     }
 
-    std::cout << "\n--- Minuni Neconstruite Disponibile ---\n";
+    std::cout << "\n--- Available Unbuilt Wonders ---\n";
     for (size_t i = 0; i < availableWonders.size(); ++i)
         std::cout << "[" << i + 1 << "] "<< availableWonders[i]->getName()<< "\n";
    
-    std::cout << "Alege numarul Minunii pe care vrei sa o construiesti: ";
+    std::cout << "Choose the number of the Wonder you want to build: ";
     int choice;
     if (!(std::cin >> choice)) {
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "Alegere invalida. Te rog introdu un numar.\n";
+        std::cout << "Invalid choice. Please enter a number.\n";
         return false;
     }
 
     size_t index = choice - 1;
 
     if (index >= availableWonders.size()) {
-        std::cout << "Alegere invalida. Incearca din nou.\n";
+        std::cout << "Invalid choice. Try again.\n";
         return false;
     }
 
@@ -196,7 +194,7 @@ bool Game::handleWonderConstruction(std::shared_ptr<CardBase> cardUsed) {
     );
 
     if (selectedWonder->getIsBuilt()) {
-        std::cout << m_currentPlayer->getName() << " a construit Minunea: " << selectedWonder->getName() << "\n";
+        std::cout << m_currentPlayer->getName() << " has built the Wonder: " << selectedWonder->getName() << "\n";
         notifyWonderBuilt();
         return true;
     }
@@ -221,7 +219,7 @@ void Game::handle7WondersRule()
     }
 
     if (lastRemainingWonder != nullptr) {
-        std::cout<< lastRemainingWonder->getName() << "' este scoasa din joc (returnata la cutie).\n";
+        std::cout<< lastRemainingWonder->getName() << "' is removed from the game (returned to the box).\n";
         lastRemainingWonder->returnToBox();
     }
 }
@@ -231,31 +229,23 @@ int Game::calculatePlayerVP(const Player& player) const {
     int totalVP = 0;
     int playerId = (player.getName() == m_player1->getName()) ? 1 : 2;
     
-    // 1. Coins
     totalVP += player.getCoins() / 3;
     
-    // 2. Military Track
     totalVP += m_board.getMilitaryTrack().getVictoryPointsForPlayer(playerId);
     
-    // 3. Military Tokens
     totalVP += player.getVPFromMilitaryTokens();
 
-    // 4. Blue Cards (Civilian Buildings)
     totalVP += player.getVPFromBlueCards();
 
-    // 5. Green Cards (Scientific) - handled via Progress Tokens usually, but cards themselves have VPs sometimes?
     if (player.getPoints().count(Points::Victory)) {
         totalVP += player.getPoints().at(Points::Victory);
     }
 
-    // 6. Wonders
     for (const auto& wonder : player.getWonders()) {
         if (wonder->getIsBuilt()) {
-            // Wonder VPs are usually added to Points::Victory or handled here
         }
     }
 
-    // 7. Guilds
     const Player& opponent = (player.getName() == m_player1->getName()) ? *m_player2 : *m_player1;
     totalVP += player.getVPFromGuilds(opponent);
 
@@ -264,43 +254,39 @@ int Game::calculatePlayerVP(const Player& player) const {
 
 std::optional<Player> Game::determinateWinner()
 {
-    // 1. Check for Military Supremacy
     int militaryPosition = m_board.getMilitaryTrack().getPawnPosition();
     if (militaryPosition >= MILITARY_VICTORY_THRESHOLD) {
-        std::cout << "\n--- Victorie Militara! ---\n";
-        std::cout << "Castigatorul este: " << m_player2->getName() << "\n";
+        std::cout << "\n--- Military Victory! ---\n";
+        std::cout << "The winner is: " << m_player2->getName() << "\n";
         return *m_player2;
     }
     if (militaryPosition <= -MILITARY_VICTORY_THRESHOLD) {
-        std::cout << "\n--- Victorie Militara! ---\n";
-        std::cout << "Castigatorul este: " << m_player1->getName() << "\n";
+        std::cout << "\n--- Military Victory! ---\n";
+        std::cout << "The winner is: " << m_player1->getName() << "\n";
         return *m_player1;
     }
 
-    // 2. Check for Scientific Supremacy
     if (m_player1->getNrOfScientificSymbols() >= SCIENCE_VICTORY_THRESHOLD) {
-        std::cout << "\n--- Victorie Stiintifica! ---\n";
-        std::cout << "Castigatorul este: " << m_player1->getName() << "\n";
+        std::cout << "\n--- Scientific Victory! ---\n";
+        std::cout << "The winner is: " << m_player1->getName() << "\n";
         return *m_player1;
     }
     if (m_player2->getNrOfScientificSymbols() >= SCIENCE_VICTORY_THRESHOLD) {
-        std::cout << "\n--- Victorie Stiintifica! ---\n";
-        std::cout << "Castigatorul este: " << m_player2->getName() << "\n";
+        std::cout << "\n--- Scientific Victory! ---\n";
+        std::cout << "The winner is: " << m_player2->getName() << "\n";
         return *m_player2;
     }
 
-    // 3. If no instant winner, calculate Civilian (VP) victory
     int vp1 = calculatePlayerVP(*m_player1);
     int vp2 = calculatePlayerVP(*m_player2);
 
-	std::cout << "\n--- Rezultatele Finale (Victorie Civila) ---\n";
+	std::cout << "\n--- Final Results (Civilian Victory) ---\n";
     std::cout << m_player1->getName() << " Total VP: " << vp1 << "\n";
     
-    // Print Guild Breakdown for Player 1
     auto printGuilds = [&](Player& p, Player& opp) {
         const auto& inv = p.getInventory();
         if (inv.count(Color::Purple)) {
-            std::cout << "   -> Detalii Ghilde (" << p.getName() << "):\n";
+            std::cout << "   -> Guild Details (" << p.getName() << "):\n";
             for (const auto& card : inv.at(Color::Purple)) {
                 int pts = 0;
                 int id = card->getId();
@@ -316,7 +302,7 @@ std::optional<Player> Game::determinateWinner()
                 std::cout << "      - " << card->getName() << ": " << pts << " VP\n";
             }
         } else {
-            std::cout << "   -> " << p.getName() << " nu detine nicio ghilda.\n";
+            std::cout << "   -> " << p.getName() << " has no guilds.\n";
         }
     };
 
@@ -326,40 +312,39 @@ std::optional<Player> Game::determinateWinner()
     printGuilds(*m_player2, *m_player1);
 
     if (vp1 > vp2) {
-        std::cout << "\n Câștigătorul este: " << m_player1->getName() << "\n";
+        std::cout << "\n The winner is: " << m_player1->getName() << "\n";
         return *m_player1;
     }
     else if (vp2 > vp1) {
-        std::cout << "\n Câștigătorul este: " << m_player2->getName() << "\n";
+        std::cout << "\n The winner is: " << m_player2->getName() << "\n";
         return *m_player2;
     }
     else {
-        // Tie-breaker: Blue cards VP
         int blueVP1 = m_player1->getVPFromBlueCards();
         int blueVP2 = m_player2->getVPFromBlueCards();
 
         if (blueVP1 > blueVP2) {
-            std::cout << "Jocul s-a terminat la egalitate, dar " << m_player1->getName()
-                << " castiga la tie-breaker (Clădiri Civile - Albastre).\n";
+            std::cout << "The game ended in a tie, but " << m_player1->getName()
+                << " wins on the tie-breaker (Civilian Buildings - Blue).\n";
             return *m_player1;
         }
         else if (blueVP2 > blueVP1) {
-            std::cout << "Jocul s-a terminat la egalitate, dar " << m_player2->getName()
-                << " castiga la tie-breaker (Clădiri Civile - Albastre).\n";
+            std::cout << "The game ended in a tie, but " << m_player2->getName()
+                << " wins on the tie-breaker (Civilian Buildings - Blue).\n";
             return *m_player2;
         }
         else {
-            std::cout << "Jocul s-a terminat la egalitate perfectă. Este remiză.\n";
-            return std::nullopt; // Return an empty optional for a draw
+            std::cout << "The game ended in a perfect tie. It's a draw.\n";
+            return std::nullopt;
         }
     }
 }
 
 void Game::handlePlayerAction()
 {
-    std::cout << "\n>>> ESTE RANDUL LUI: " << m_currentPlayer->getName() << "\n";
-    std::cout << "Resurse (Bani): " << (int)m_currentPlayer->getCoins() << "\n";
-    std::cout << "Introdu ID-ul cartii de jos pe care vrei sa o iei: ";
+    std::cout << "\n>>> IT'S YOUR TURN: " << m_currentPlayer->getName() << "\n";
+    std::cout << "Resources (Coins): " << (int)m_currentPlayer->getCoins() << "\n";
+    std::cout << "Enter the ID of the card you want to take: ";
 
     int cardId;
     while (!(std::cin >> cardId)) {
@@ -369,7 +354,7 @@ void Game::handlePlayerAction()
         }
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "Te rog introdu un numar valid: ";
+        std::cout << "Please enter a valid number: ";
     }
 
     CardNode* selectedNode = nullptr;
@@ -384,23 +369,23 @@ void Game::handlePlayerAction()
     }
 
     if (!selectedNode) {
-        std::cout << "Eroare: Nu exista carte cu ID-ul " << cardId << "! Incearca iar.\n";
+        std::cout << "Error: There is no card with ID " << cardId << "! Try again.\n";
         handlePlayerAction();
         return;
     }
     if (selectedNode->isPlayed()) {
-        std::cout << "Eroare: Cartea a fost deja luata! Incearca iar.\n";
+        std::cout << "Error: The card has already been taken! Try again.\n";
         handlePlayerAction();
         return;
     }
     if (!selectedNode->isPlayable()) {
-        std::cout << "Eroare: Cartea este blocata de altele! Incearca iar.\n";
+        std::cout << "Error: The card is blocked by others! Try again.\n";
         handlePlayerAction();
         return;
     }
 
-    std::cout << "Ai ales: " << selectedNode->getCard()->getName() << "\n";
-    std::cout << "Ce faci? [1]=Cumpara, [2]=Vinde, [3]=Construieste minune: ";
+    std::cout << "You chose: " << selectedNode->getCard()->getName() << "\n";
+    std::cout << "What do you do? [1]=Buy, [2]=Sell, [3]=Build Wonder: ";
     int action;
     std::cin >> action;
 
@@ -411,7 +396,7 @@ void Game::handlePlayerAction()
     }
     else if (action == 2) {
         m_currentPlayer->discardCard(selectedNode->getCard(), m_board);
-        std::cout << "Carte vanduta pentru bani.\n";
+        std::cout << "Card sold for money.\n";
         success = true;
     }
     else if (action == 3)
@@ -421,7 +406,7 @@ void Game::handlePlayerAction()
             selectedNode->updatePlayedStatus(true);
     }
     else {
-        std::cout << "Actiune invalida.\n";
+        std::cout << "Invalid action.\n";
         handlePlayerAction();
         return;
     }
@@ -433,30 +418,30 @@ void Game::handlePlayerAction()
             switchTurn();
         }
         else {
-            std::cout << "Ai primit o tura extra! Mai joci o data.\n";
+            std::cout << "You received an extra turn! You play again.\n";
             m_currentPlayer->setHasExtraTurn(false);
         }
     }
     else {
-        std::cout << "Actiunea a esuat. Incearca altceva.\n";
+        std::cout << "The action failed. Try something else.\n";
         handlePlayerAction();
     }
 }
 
 void Game::printGameState() const {
     std::cout << "\n============================================\n";
-    std::cout << "               STAREA JOCULUI (Age " << m_currentAge << ")      \n";
+    std::cout << "               GAME STATE (Age " << m_currentAge << ")      \n";
     std::cout << "============================================\n";
 
     std::cout << "[P1] " << m_player1->getName()
-        << " | Bani: " << (int)m_player1->getCoins()
-        << " | Minuni: " << m_player1->getWonders().size() << "\n";
+        << " | Coins: " << (int)m_player1->getCoins()
+        << " | Wonders: " << m_player1->getWonders().size() << "\n";
 
     std::cout << "[P2] " << m_player2->getName()
-        << " | Bani: " << (int)m_player2->getCoins()
-        << " | Minuni: " << m_player2->getWonders().size() << "\n";
+        << " | Coins: " << (int)m_player2->getCoins()
+        << " | Wonders: " << m_player2->getWonders().size() << "\n";
 
-    std::cout << "\n--- Pista Militara ---\n";
+    std::cout << "\n--- Military Track ---\n";
     m_board.printMilitaryTrack();
 
     m_board.printCardsTree(std::cout);
@@ -503,8 +488,6 @@ void Game::initialize()
     m_player1->addResource(Coin,7);
     m_player2->addResource(Coin, 7);
     m_board.updateVisibility();
-
-    // --- END TEMPORARY TEST CODE ---
 }
 
 bool Game::checkForInstantWin() {
@@ -569,7 +552,6 @@ bool Game::draftWonder(int wonderId)
     if (currentDraftSet.empty()) {
         m_draftPhase++; 
         if (m_draftPhase == 2) {
-            // Phase 2 starts with Player 2
             m_currentPlayer = m_player2.get();
             m_opponent = m_player1.get();
             std::cout << "[Draft] Phase 2 Started. First player: " << m_currentPlayer->getName() << "\n";
@@ -627,13 +609,11 @@ void Game::resolveBuildFromDiscard(int chosenCardId)
     }
 
     if (chosenCard) {
-        // Build the card for free
         m_currentPlayer->addCardToInventory(chosenCard);
         chosenCard->applyEffect(*m_currentPlayer, m_board, *m_opponent);
         m_board.removeCardFromDiscardPile(chosenCard);
     }
 
-    // Reset state
     m_isWaitingForDiscardChoice = false;
     m_buildFromDiscardChoices.clear();
 }
@@ -664,13 +644,11 @@ void Game::handleDiscardOpponentCardChoice(Player& opponent, Color cardColor)
     }
 
     if (m_opponentCardDiscardChoices.empty()) {
-        // No cards of that color, so the effect does nothing.
         return;
     }
 
     m_targetOpponent = &opponent;
     m_isWaitingForOpponentCardDiscard = true;
-    // The UI will now detect this state and show the dialog.
 }
 
 void Game::resolveDiscardOpponentCard(int chosenCardId)
@@ -693,11 +671,7 @@ void Game::resolveDiscardOpponentCard(int chosenCardId)
         std::cout << "[Effect] " << m_currentPlayer->getName() << " discarded " << chosenCard->getName() << " from " << m_targetOpponent->getName() << "." << std::endl;
     }
 
-    // Reset state
     m_isWaitingForOpponentCardDiscard = false;
     m_opponentCardDiscardChoices.clear();
     m_targetOpponent = nullptr;
-
-    // After resolving, we might need to re-trigger a UI update or continue the game flow.
-    // For now, we assume the main game loop will handle it.
 }

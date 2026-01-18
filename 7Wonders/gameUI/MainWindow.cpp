@@ -34,7 +34,6 @@
 #include <QStackedWidget>
 #include <QInputDialog>
 
-// Helper to find node (Only defined once here)
 static CardNode* findCardNodeInternal(Game* game, int cardId) {
     if (!game) return nullptr;
     const auto& rows = game->getBoard().getPyramid().getRows();
@@ -60,7 +59,6 @@ MainWindow::MainWindow(QWidget* parent)
     qDebug() << "PlayerDashboard Ptr:" << ui->playerDashboard << " Y:" << ui->playerDashboard->y();
     qDebug() << "OpponentDashboard Ptr:" << ui->opponentDashboard << " Y:" << ui->opponentDashboard->y();
 
-    // Apply Shadows for Right Panel items
     QGraphicsDropShadowEffect* titleShadow = new QGraphicsDropShadowEffect();
     titleShadow->setBlurRadius(6);
     titleShadow->setColor(QColor(0, 0, 0, 200));
@@ -73,21 +71,17 @@ MainWindow::MainWindow(QWidget* parent)
     tokShadow->setOffset(1, 1);
     ui->lblTok->setGraphicsEffect(tokShadow);
 
-    // Apply style to BoardWidget
     ui->boardWidgetPage->setStyleSheet(
         "background: transparent; "
         "border: 4px solid #8B4513; "
         "border-radius: 15px;"
     );
 
-    // Initialize Dashboard Themes
     ui->opponentDashboard->setTheme(true);
     ui->playerDashboard->setTheme(false);
 
-    // Connect Signals
     connect(ui->boardWidgetPage, &BoardWidget::cardClicked, this, &MainWindow::onCardSelected);
     
-    // Action Buttons
     connect(ui->btnBuild, &QPushButton::clicked, this, &MainWindow::onBuildClicked);
     connect(ui->btnDiscard, &QPushButton::clicked, this, &MainWindow::onDiscardClicked);
     connect(ui->btnWonder, &QPushButton::clicked, this, &MainWindow::onWonderClicked);
@@ -99,40 +93,33 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->statusbar->showMessage("⚔️ Welcome to 7 Wonders Duel! ⚔️");
 
-    // Hide zones initially
     ui->opponentDashboard->setVisible(false);
     ui->playerDashboard->setVisible(false);
     ui->rightZone->setVisible(false);
     ui->btnDiscardedCards->setVisible(false);
     ui->turnContainer->setVisible(false);
 
-    // Initial button state
     ui->btnBuild->setEnabled(false);
     ui->btnDiscard->setEnabled(false);
     ui->btnWonder->setEnabled(false);
 
-    // Start at Splash Screen
     ui->stack->setCurrentIndex(0);
 
-    // Rebuild the right panel layout programmatically
     rebuildRightPanel();
 
-    // Ensure the window fills the screen for the best game experience
     this->showMaximized();
 
-    // Audio setup
     m_player = new QMediaPlayer(this);
     m_audioOutput = new QAudioOutput(this);
     m_player->setAudioOutput(m_audioOutput);
     m_player->setSource(QUrl("qrc:/resources/UI/quack.mp3"));
     m_audioOutput->setVolume(1.0);
 
-    // Background Music setup
     m_musicPlayer = new QMediaPlayer(this);
     m_musicOutput = new QAudioOutput(this);
     m_musicPlayer->setAudioOutput(m_musicOutput);
     m_musicPlayer->setSource(QUrl("qrc:/resources/UI/background_music.mp3"));
-    m_musicOutput->setVolume(0.5); // 50% volume for background music
+    m_musicOutput->setVolume(0.5);
     m_musicPlayer->setLoops(QMediaPlayer::Infinite);
     m_musicPlayer->play();
 }
@@ -209,7 +196,6 @@ void MainWindow::rebuildRightPanel()
     ui->actionsContainer->setParent(ui->rightZone);
     rLayout->addWidget(ui->actionsContainer, 0);
 
-    // Duck Button
     m_duckBtn = new QPushButton("🦆 Ask Duck", ui->rightZone);
     m_duckBtn->setCursor(Qt::PointingHandCursor);
     m_duckBtn->setStyleSheet(
@@ -219,7 +205,6 @@ void MainWindow::rebuildRightPanel()
     connect(m_duckBtn, &QPushButton::clicked, this, &MainWindow::onDuckHintClicked);
     rLayout->addWidget(m_duckBtn, 0, Qt::AlignCenter);
 
-    // Save Game Button
     QPushButton* saveBtn = new QPushButton("Save Game", ui->rightZone);
     saveBtn->setCursor(Qt::PointingHandCursor);
     saveBtn->setStyleSheet(
@@ -234,20 +219,19 @@ QString MainWindow::getTokenDescription(const QString& tokenName)
 {
     QString upperName = tokenName.toUpper().trimmed();
     
-    // Romanian translations and descriptions
-    if (upperName == "AGRICULTURE") return "Agricultură: Câștigi 6 monede și 4 puncte de victorie.";
-    if (upperName == "ARCHITECTURE") return "Arhitectură: Construirea minunilor costă cu 2 resurse mai puțin.";
-    if (upperName == "ECONOMY") return "Economie: Câștigi bani când adversarul face comerț.";
-    if (upperName == "LAW") return "Lege: Acest jeton valorează un simbol științific.";
-    if (upperName == "MASONRY") return "Zidărie: Construirea cărților albastre costă cu 2 resurse mai puțin.";
-    if (upperName == "MATHEMATICS") return "Matematică: 3 puncte de victorie pentru fiecare jeton de progres (inclusiv acesta).";
-    if (upperName == "PHILOSOPHY") return "Filozofie: Câștigi 7 puncte de victorie.";
-    if (upperName == "STRATEGY") return "Strategie: Câștigi o clădire militară suplimentară.";
-    if (upperName == "THEOLOGY") return "Teologie: Minunile tale primesc efectul de 'Tura Suplimentară'.";
-    if (upperName == "URBANISM") return "Urbanism: Primești 6 monede. Construirea lanțurilor este gratuită (chiar dacă nu ai simbolul).";
+    if (upperName == "AGRICULTURE") return "Agriculture: Gain 6 coins and 4 victory points.";
+    if (upperName == "ARCHITECTURE") return "Architecture: Building wonders costs 2 fewer resources.";
+    if (upperName == "ECONOMY") return "Economy: Gain money when your opponent trades.";
+    if (upperName == "LAW") return "Law: This token is worth one scientific symbol.";
+    if (upperName == "MASONRY") return "Masonry: Building blue cards costs 2 fewer resources.";
+    if (upperName == "MATHEMATICS") return "Mathematics: 3 victory points for each progress token (including this one).";
+    if (upperName == "PHILOSOPHY") return "Philosophy: Gain 7 victory points.";
+    if (upperName == "STRATEGY") return "Strategy: Gain an extra military building.";
+    if (upperName == "THEOLOGY") return "Theology: Your wonders get the 'Extra Turn' effect.";
+    if (upperName == "URBANISM") return "Urbanism: Gain 6 coins. Building chains is free (even if you don't have the symbol).";
     
     qDebug() << "[UI] Warning: No description for token:" << tokenName;
-    return "Descriere indisponibilă (" + tokenName + ").";
+    return "Description unavailable (" + tokenName + ").";
 }
 
 void MainWindow::onSaveGameClicked()
@@ -275,19 +259,19 @@ void MainWindow::onSaveGameClicked()
 void MainWindow::onProgressInfoClicked()
 {
     QDialog dialog(this);
-    dialog.setWindowTitle("Jetoane de Progres");
+    dialog.setWindowTitle("Progress Tokens");
     dialog.setStyleSheet("background: #3E2723; color: #F5E6D3; font-family: 'Times New Roman';");
     dialog.setMinimumSize(500, 600);
 
     QVBoxLayout* mainLayout = new QVBoxLayout(&dialog);
-    QLabel* title = new QLabel("Jetoane de Progres Disponibile", &dialog);
+    QLabel* title = new QLabel("Available Progress Tokens", &dialog);
     title->setStyleSheet("font-size: 22px; font-weight: bold; color: #FFD700; margin-bottom: 15px;");
     title->setAlignment(Qt::AlignCenter);
     mainLayout->addWidget(title);
 
     QScrollArea* scroll = new QScrollArea(&dialog);
     scroll->setWidgetResizable(true);
-    scroll->setStyleSheet("background: transparent; border: none;"); // Clean scroll area
+    scroll->setStyleSheet("background: transparent; border: none;");
     
     QWidget* container = new QWidget();
     container->setStyleSheet("background: transparent;");
@@ -295,10 +279,8 @@ void MainWindow::onProgressInfoClicked()
     gridLayout->setSpacing(20);
     gridLayout->setContentsMargins(20, 20, 20, 20);
 
-    // Use available tokens from the board
     const auto& availableTokens = m_game->getBoard().getAvailableProgressTokens();
     
-            // Helper to get symbol (Abbreviated for compatibility)
             auto getTokenSymbol = [](const QString& name) -> QString {
                 QString n = name.toUpper().trimmed();
                 if (n == "AGRICULTURE") return "Ag";
@@ -314,21 +296,20 @@ void MainWindow::onProgressInfoClicked()
                 return "??";
             };    
         if (availableTokens.empty()) {
-            QLabel* emptyLbl = new QLabel("Nu mai sunt jetoane disponibile.");
+            QLabel* emptyLbl = new QLabel("No more tokens available.");
             emptyLbl->setStyleSheet("font-size: 16px; color: #BBB;");
             emptyLbl->setAlignment(Qt::AlignCenter);
             gridLayout->addWidget(emptyLbl, 0, 0);
         } else {
             int row = 0;
             int col = 0;
-            int maxCols = 2; // 2 columns for large icons
+            int maxCols = 2;
     
             for (const auto& tokenPtr : availableTokens) {
                 QString name = QString::fromStdString(tokenPtr->getName());
                 
-                // Create a clickable widget for each token
                 QPushButton* tokenBtn = new QPushButton();
-                tokenBtn->setFixedSize(140, 160); // Large card-like button
+                tokenBtn->setFixedSize(140, 160);
                 tokenBtn->setCursor(Qt::PointingHandCursor);
                 tokenBtn->setStyleSheet(
                     "QPushButton { "
@@ -345,7 +326,6 @@ void MainWindow::onProgressInfoClicked()
                 QVBoxLayout* btnLayout = new QVBoxLayout(tokenBtn);
                 btnLayout->setContentsMargins(10, 10, 10, 10);
                 
-                // 1. Large Green Coin
                 QLabel* coin = new QLabel(getTokenSymbol(name));
                 coin->setFixedSize(80, 80);
                 coin->setAlignment(Qt::AlignCenter);
@@ -354,13 +334,12 @@ void MainWindow::onProgressInfoClicked()
                     "  background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #A5D6A7, stop:1 #1B5E20); "
                     "  color: #FFFFFF; "
                     "  border: 4px solid #2E7D32; "
-                    "  border-radius: 40px; " // Circle
+                    "  border-radius: 40px; "
                     "  font-family: 'Arial', sans-serif; "
-                    "  font-size: 32px; font-weight: bold;" // Smaller font for text to fit
+                    "  font-size: 32px; font-weight: bold;"
                     "  background-color: transparent;"
                     "}"
                 );
-                // 2. Name Label
             QLabel* nameLbl = new QLabel(name);
             nameLbl->setWordWrap(true);
             nameLbl->setAlignment(Qt::AlignCenter);
@@ -369,10 +348,9 @@ void MainWindow::onProgressInfoClicked()
             btnLayout->addWidget(coin, 0, Qt::AlignCenter);
             btnLayout->addWidget(nameLbl, 0, Qt::AlignCenter);
 
-            // Connect click
             connect(tokenBtn, &QPushButton::clicked, this, [this, name]() {
                 QMessageBox msgBox;
-                msgBox.setWindowTitle("Detalii Jeton");
+                msgBox.setWindowTitle("Token Details");
                 msgBox.setText("<h2 style='color:#FFD700'>" + name + "</h2>");
                 msgBox.setInformativeText("<span style='font-size:14px; color:#F5E6D3'>" + getTokenDescription(name) + "</span>");
                 msgBox.setStyleSheet("QMessageBox { background: #3E2723; } QLabel { color: #F5E6D3; } QPushButton { color: #2C1810; background: #FFD700; }");
@@ -393,7 +371,7 @@ void MainWindow::onProgressInfoClicked()
     scroll->setWidget(container);
     mainLayout->addWidget(scroll);
 
-    QPushButton* closeBtn = new QPushButton("Închide", &dialog);
+    QPushButton* closeBtn = new QPushButton("Close", &dialog);
     closeBtn->setCursor(Qt::PointingHandCursor);
     closeBtn->setStyleSheet(
         "QPushButton { "
@@ -417,49 +395,40 @@ void MainWindow::onSplashFinished(SplashScreen::GameMode mode)
 {
     m_gameMode = mode;
     if (mode == SplashScreen::AvAI) {
-        onNamesConfirmed("AI Player 1", "AI Player 2", 1); // Default Medium for quick start
+        onNamesConfirmed("AI Player 1", "AI Player 2", 1);
     } else {
         if (mode == SplashScreen::PvP) {
             GameSelectionDialog dlg(this);
             if (dlg.exec() == QDialog::Accepted) {
                 if (dlg.isNewGame()) {
-                    // Proceed to name selection
                     ui->nameSelectionPage->setMode(true, true);
                     ui->stack->setCurrentWidget(ui->nameSelectionPage);
                     ui->statusbar->showMessage("⚔️ Who dares to challenge the ducks? ⚔️");
                 } else {
-                    // Load Game
                     Game* loadedGame = SaveManager::loadGame(dlg.getSelectedFile());
                     if (loadedGame) {
                         delete m_game;
                         m_game = loadedGame;
                         
-                        // Setup UI for loaded game
                         ui->opponentDashboard->setVisible(true);
                         ui->playerDashboard->setVisible(true);
                         ui->rightZone->setVisible(true);
                         ui->btnDiscardedCards->setVisible(true);
                         ui->turnContainer->setVisible(true);
                         
-                        // We need to refresh the UI fully
                         updateGameState(); 
                         
                         ui->statusbar->showMessage("⚔️ Game Loaded! ⚔️");
                     } else {
                         QMessageBox::critical(this, "Error", "Failed to load game file!");
-                        // Fallback to splash?
                         ui->stack->setCurrentWidget(ui->splashScreenPage);
                     }
                 }
             } else {
-                 // Cancelled -> Back to splash
                  ui->stack->setCurrentWidget(ui->splashScreenPage);
             }
         } else {
-            // Player vs AI (Human vs AI) -> Name Selection
-            // Player 1 is always human in PvA and PvP
-            // Player 2 is only human in PvP
-            ui->nameSelectionPage->setMode(true, false); // P2 is AI
+            ui->nameSelectionPage->setMode(true, false);
             ui->stack->setCurrentWidget(ui->nameSelectionPage);
             ui->statusbar->showMessage("⚔️ Who dares to challenge the ducks? ⚔️");
         }
@@ -495,7 +464,6 @@ void MainWindow::processAITurn()
 
     ai->makeDecision(m_game->getBoard(), *m_game->getOpponent(), m_game->getCurrentAge());
 
-    // After AI move, refresh game state
     if (!ai->hasExtraTurn()) {
         m_game->switchTurn();
     } else {
@@ -527,12 +495,10 @@ void MainWindow::updateGameState()
     updatePlayerInventories();
     updateTurnIndicator();
 
-    // Check for INSTANT WIN (Military or Science)
     if (m_game->checkForInstantWin()) {
         GameEndDialog dialog(m_game, this);
         dialog.exec();
         
-        // Return to main menu (Splash Screen)
         ui->stack->setCurrentWidget(ui->splashScreenPage);
         ui->opponentDashboard->setVisible(false);
         ui->playerDashboard->setVisible(false);
@@ -542,10 +508,8 @@ void MainWindow::updateGameState()
         return; 
     }
 
-    // Check for Progress Token Choice (Pair of Science symbols)
     if (m_game->isWaitingForProgressTokenChoice()) {
         auto available = m_game->getBoard().getAvailableProgressTokens();
-        // ... (existing logic)
         if (!available.empty()) {
             AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
             if (ai) {
@@ -557,11 +521,11 @@ void MainWindow::updateGameState()
                 }
             } else {
                 QDialog dialog(this);
-                dialog.setWindowTitle("Alege un Jeton de Progres");
+                dialog.setWindowTitle("Choose a Progress Token");
                 dialog.setStyleSheet("background: #3E2723; color: #F5E6D3; font-family: 'Times New Roman';");
                 QVBoxLayout* layout = new QVBoxLayout(&dialog);
                 
-                QLabel* lbl = new QLabel("Ai obținut o pereche! Alege un jeton:", &dialog);
+                QLabel* lbl = new QLabel("You got a pair! Choose a token:", &dialog);
                 lbl->setStyleSheet("font-size: 16px; font-weight: bold; color: #FFD700;");
                 layout->addWidget(lbl);
 
@@ -579,33 +543,31 @@ void MainWindow::updateGameState()
                 
                 if (dialog.exec() == QDialog::Accepted && chosenId != -1) {
                     m_game->resolveProgressTokenChoice(chosenId);
-                    updatePlayerInventories(); // Refresh UI to show new token
+                    updatePlayerInventories();
                 }
             }
         }
     }
 
-    // Check for Great Library Choice (Token from Box)
     if (m_game->isWaitingForGreatLibraryChoice()) {
         auto removed = m_game->getBoard().getRemovedProgressTokens();
         if (!removed.empty()) {
-            // Check AI
             AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
             if (ai) {
-                auto chosen = ai->chooseProgressToken(removed); // Reuse logic
+                auto chosen = ai->chooseProgressToken(removed);
                 if (chosen) {
                     m_game->resolveGreatLibraryChoice(chosen->getId());
-                    updatePlayerInventories(); // Refresh UI
+                    updatePlayerInventories();
                     QTimer::singleShot(500, this, &MainWindow::updateGameState);
                     return;
                 }
             } else {
                 QDialog dialog(this);
-                dialog.setWindowTitle("Marea Bibliotecă");
+                dialog.setWindowTitle("The Great Library");
                 dialog.setStyleSheet("background: #3E2723; color: #F5E6D3; font-family: 'Times New Roman';");
                 QVBoxLayout* layout = new QVBoxLayout(&dialog);
                 
-                QLabel* lbl = new QLabel("Marea Bibliotecă: Alege un jeton din cutie:", &dialog);
+                QLabel* lbl = new QLabel("The Great Library: Choose a token from the box:", &dialog);
                 lbl->setStyleSheet("font-size: 16px; font-weight: bold; color: #FFD700;");
                 layout->addWidget(lbl);
 
@@ -623,16 +585,14 @@ void MainWindow::updateGameState()
                 
                 if (dialog.exec() == QDialog::Accepted && chosenId != -1) {
                     m_game->resolveGreatLibraryChoice(chosenId);
-                    updatePlayerInventories(); // Refresh UI
+                    updatePlayerInventories();
                 }
             }
         } else {
-             // If empty, force resolve to clear flag
              m_game->resolveGreatLibraryChoice(-1);
         }
     }
     
-    // Check for end of age
     if (m_game->isEndOfAge()) {
         QMessageBox::information(this, "Age Complete", "The current age has ended!");
         m_game->startNextAge();
@@ -645,14 +605,12 @@ void MainWindow::updateGameState()
         renderGame();
     }
 
-    // Reset selection state
     m_selectedCardId = -1;
     ui->lblCost->setText("Cost: -");
     ui->btnBuild->setEnabled(false);
     ui->btnDiscard->setEnabled(false);
     ui->btnWonder->setEnabled(false);
     
-    // Check for game over (natural end)
     if (m_game->isGameOver()) {
         GameEndDialog dialog(m_game, this);
         dialog.exec();
@@ -662,7 +620,6 @@ void MainWindow::updateGameState()
         return;
     }
 
-    // Check for AI Turn (only if NOT in draft phase)
     if (m_draftPhase == 0 || m_game->getCurrentDraftSet().empty()) {
         AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
         if (ai) {
@@ -717,7 +674,6 @@ void MainWindow::startWonderDraft()
     QString currentPlayerName = QString::fromStdString(m_game->getCurrentPlayer()->getName());
     ui->statusbar->showMessage("⚔️ " + currentPlayerName + " must choose a wonder! ⚔️", 5000);
 
-    // AI Check
     AI_Player* ai = dynamic_cast<AI_Player*>(m_game->getCurrentPlayer());
     if (ai) {
         ui->wonderSelectionPage->setEnabled(false);
@@ -899,7 +855,6 @@ void MainWindow::onWonderClicked()
             }
         }
 
-        // Handle Circus Maximus / Zeus effect
         if (m_game->isWaitingForOpponentCardDiscard()) {
             const auto& choices = m_game->getOpponentCardDiscardChoices();
             if (!choices.empty()) {
@@ -916,7 +871,6 @@ void MainWindow::onWonderClicked()
                     }
                 }
                 else {
-                    // Player closed dialog without choosing, resolve with no choice.
                     m_game->resolveDiscardOpponentCard(-1);
                 }
             }
@@ -956,7 +910,7 @@ void MainWindow::onDuckHintClicked()
         m_player->play();
     }
     
-    if (!m_game) return;
+    if (!m_game) return; 
     
     Player* p = m_game->getCurrentPlayer();
     Player* opp = m_game->getOpponent();
@@ -1023,7 +977,6 @@ void MainWindow::updatePlayerInventories()
         
         for (const auto& w : p.getWonders()) {
             if (w->getIsBuilt()) {
-                 // Wonder VP logic handled internally or via Points
             }
         }
         
@@ -1051,12 +1004,11 @@ void MainWindow::updatePlayerInventories()
         p2.getWonders(),
         p2.getInventory(),
         calculateVP(p2, p1),
-        p2.getProgressTokens() // Pass tokens
+        p2.getProgressTokens()
     );
 
     ui->militaryTrackWidget->updatePawnPosition(m_game->getBoard().getMilitaryTrack().getPawnPosition());
 
-    // Helper to clear layout
     auto clearLayout = [](QLayout* layout) {
         if (!layout) return;
         QLayoutItem* item;
@@ -1069,26 +1021,20 @@ void MainWindow::updatePlayerInventories()
     clearLayout(m_p1ProgressLayout);
     clearLayout(m_p2ProgressLayout);
 
-    // Using Grid Layouts for slots might be better, or just HBox with fixed spacing
-    // Since m_p1ProgressLayout is QVBoxLayout in current rebuildRightPanel logic, 
-    // we should add a horizontal container inside it for the slots.
     
     auto addPlayerTokenSlots = [this](const Player& p, QVBoxLayout* parentLayout) {
         if (!parentLayout) return;
         
-        // Container for slots
         QWidget* slotContainer = new QWidget();
-        slotContainer->setFixedWidth(50); // Force width
+        slotContainer->setFixedWidth(50);
         slotContainer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
 
-        // Use Grid Layout for compact vertical arrangement (e.g. 2 columns)
         QGridLayout* slotLayout = new QGridLayout(slotContainer);
         slotLayout->setContentsMargins(0, 0, 0, 0);
         slotLayout->setSpacing(5);
         
         const auto& ownedTokens = p.getProgressTokens();
         
-        // Helper for symbols (Ensure consistent with popup)
         auto getTokenSymbol = [](const QString& name) -> QString {
             QString n = name.toUpper().trimmed();
             if (n == "AGRICULTURE") return "Ag";
@@ -1104,14 +1050,12 @@ void MainWindow::updatePlayerInventories()
             return "??";
         };
 
-        // Render slots (Total 5 slots usually)
         for (int i = 0; i < 5; ++i) {
             QLabel* tokenLabel = new QLabel(this);
             tokenLabel->setFixedSize(36, 36); 
             tokenLabel->setAlignment(Qt::AlignCenter);
             
             if (i < (int)ownedTokens.size()) {
-                // Active Token: Green Coin with Symbol
                 QString name = QString::fromStdString(ownedTokens[i]->getName());
                 tokenLabel->setText(getTokenSymbol(name));
                 tokenLabel->setStyleSheet(
@@ -1126,7 +1070,6 @@ void MainWindow::updatePlayerInventories()
                 );
                 tokenLabel->setToolTip(name + ": " + getTokenDescription(name));
             } else {
-                // Empty Slot: Dashed Brown Circle
                 tokenLabel->setStyleSheet(
                     "QLabel { "
                     "  background: transparent; "
@@ -1136,7 +1079,6 @@ void MainWindow::updatePlayerInventories()
                 );
             }
             
-            // Arrange in 1 column (vertical)
             slotLayout->addWidget(tokenLabel, i, 0, Qt::AlignCenter); 
         }
         
@@ -1153,27 +1095,20 @@ void MainWindow::updateTurnIndicator()
     if (!m_game) return;
     bool isPlayer1Turn = (m_game->getCurrentPlayer()->getName() == m_game->getPlayer1().getName());
     
-    // 1. Update Text (Duck only)
     ui->turnIndicator->setText("🦆");
     
-    // 2. Update Style (Border Color)
     QString borderColor = isPlayer1Turn ? "#1565C0" : "#8B0000"; 
     ui->turnIndicator->setStyleSheet(
         QString("background-color: #FFD700; border: 5px solid %1; border-radius: 30px; font-size: 30px;").arg(borderColor)
     );
 
-    // 3. Move Indicator (Top vs Bottom)
-    // Access the layout of turnContainer
     QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->turnContainer->layout());
     if (layout) {
-        // Remove from current position
         layout->removeWidget(ui->turnIndicator);
         
         if (isPlayer1Turn) {
-            // Player 1 (Bottom) -> Add to bottom
             layout->addWidget(ui->turnIndicator, 0, Qt::AlignBottom | Qt::AlignHCenter);
         } else {
-            // Player 2 (Top) -> Insert at top
             layout->insertWidget(0, ui->turnIndicator, 0, Qt::AlignTop | Qt::AlignHCenter);
         }
     }
@@ -1200,26 +1135,18 @@ void MainWindow::renderGame()
     Board& boardData = m_game->getBoard();
     const auto& rows = boardData.getPyramid().getRows();
     
-    // Dynamic Scaling Calculation
-    // Estimate total height required
-    // Base Height per row interaction: 140 - 80 = 60px effective height per row + last row 140.
     int numRows = static_cast<int>(rows.size());
-    // Approximate calculation: (Rows-1)*60 + 140
-    // Age 3 might have more rows or different structure.
-    // Let's check available height in boardWidgetPage
     int availableHeight = ui->boardWidgetPage->height();
-    if (availableHeight == 0) availableHeight = 600; // Fallback
+    if (availableHeight == 0) availableHeight = 600;
     
-    double estimatedHeight = (numRows - 1) * 60 + 140 + 60; // +60 padding
+    double estimatedHeight = (numRows - 1) * 60 + 140 + 60;
     
     double scale = 1.0;
     if (estimatedHeight > availableHeight) {
         scale = (double)availableHeight / estimatedHeight;
-        // Clamp scale to not be too tiny
         if (scale < 0.6) scale = 0.6; 
     }
     
-    // If it's Age 3 specifically, maybe force a bit smaller just in case if layout is wide
     if (m_game->getCurrentAge() == 3) {
          if (scale > 0.8) scale = 0.8;
     }

@@ -32,7 +32,7 @@ std::vector<std::function<void(Player&, Player&)>> ProgressTokenLoader::parseEff
         {"victoryPointsPerProgress", [](Player& p, Player&) {p.setMathBonus(true); }},
         {"BlueCardDiscount", [](Player& p, Player&) { p.setBlueCardDiscount(true); }},
         {"add_VictoryPoint7", [](Player& p, Player&) { p.add_Points(Points::Victory, 7); }},
-        /* aici la MilitaryPoints trebuie sa vedem cum facem, daca returnam cumva nr de carti spre board sau le adaugam undeva*/
+        /* here for MilitaryPoints we need to see how we do it, if we somehow return the number of cards to the board or add them somewhere */
         {"add_MilitaryPoint1PerRedCard", [](Player& p, Player&) { p.setExtraMilitary(true); }},
         {"WondersGetReplayTurn", [](Player& p, Player&) { p.setTheologyBonus(true); }},
         {"add_coins4PerFreeCard", [](Player& p, Player&) {
@@ -60,7 +60,7 @@ std::vector<std::shared_ptr<ProgressToken>> ProgressTokenLoader::loadProgressTok
     vector<shared_ptr<ProgressToken>> tokens;
     ifstream file(filename);
     if (!file.is_open()) {
-        cerr << "Eroare, nu s-a putut deschide fisierul " << filename << endl;
+        cerr << "Error, could not open file " << filename << endl;
         return tokens;
     }
 

@@ -39,19 +39,19 @@ private:
     bool handleWonderConstruction(std::shared_ptr<CardBase> cardUsed);
     void handle7WondersRule();
 
-    // Funcții ajutătoare pentru determinarea câștigătorului
+    // Helper functions for determining the winner
     int calculatePurpleGuilds(const Player& p) const;
     int getBuiltWondersCount(const Player& player) const;
     int getCategoryCount(const Player& player, Color color) const;
 
-    // Gestionare ere
+    // Age management
     void determinateWhoStartsNextAge();
 
-    // Gestionare ture
+    // Turn management
     void processTurnTransition();
     CardNode* findNodeById(int cardId) const;
 
-    // Gestionare fază de draft
+    // Draft phase management
     std::vector<std::shared_ptr<Wonder>> m_draftSet1;
     std::vector<std::shared_ptr<Wonder>> m_draftSet2;
     int m_draftPhase = 0; // 0 = pre-draft, 1 = draft 1, 2 = draft 2
@@ -100,7 +100,7 @@ public:
     void notifyWonderBuilt(); // Notification for 7 Wonders Rule
     int getNumberOfWondersBuilt() const { return m_numberOfWondersBuilt; }
 
-    // funcții pentru faza de draft din UI
+    // functions for the draft phase from the UI
     const std::vector<std::shared_ptr<Wonder>>& getCurrentDraftSet() const;
     bool draftWonder(int wonderId);
     Player* getCurrentPlayer();

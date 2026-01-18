@@ -10,7 +10,7 @@
 
 class UniversalCardLoader {
 public:
-    // Metode publice pentru a fi apelate în GameSetup
+    // Public methods to be called in GameSetup
     static std::vector<std::shared_ptr<CardBase>> loadAgeCards(const std::string& filename);
     static std::vector<std::shared_ptr<CardBase>> loadGuilds(const std::string& filename);
     static std::vector<std::shared_ptr<Wonder>> loadWonders(const std::string& filename);
@@ -22,6 +22,6 @@ private:
     static std::optional<Symbol> parseSymbol(const std::string& s);
     static std::string translateEffect(const std::string& raw);
 
-    // Funcția care "traduce" string-urile de efect în logică de cod
+    // Function that "translates" effect strings into code logic
     static std::vector<std::function<void(Player&, Board&, Player&)>> parseEffects(const std::string& s);
 };

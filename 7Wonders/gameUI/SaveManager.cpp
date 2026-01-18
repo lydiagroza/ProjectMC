@@ -28,7 +28,7 @@ static std::string resolvePath(const std::string& filename) {
 SaveManager::GameRegistry SaveManager::buildRegistry() {
     GameRegistry reg;
     
-    // Load Cards
+    //Load Cards
     auto age1 = UniversalCardLoader::loadAgeCards(resolvePath("AgeI.csv"));
     auto age2 = UniversalCardLoader::loadAgeCards(resolvePath("AgeII.csv"));
     auto age3 = UniversalCardLoader::loadAgeCards(resolvePath("AgeIII.csv"));
@@ -44,13 +44,13 @@ SaveManager::GameRegistry SaveManager::buildRegistry() {
     addToReg(age3);
     addToReg(guilds);
 
-    // Load Wonders
+    //Load Wonders
     auto wonders = UniversalCardLoader::loadWonders(resolvePath("Wonders.csv"));
     for(auto& w : wonders) {
         if(w) reg.wonders[w->getId()] = w;
     }
 
-    // Load Tokens
+    //Load Tokens
     auto tokens = ProgressTokenLoader::loadProgressTokens(resolvePath("ProgressTokens.csv"));
     for(auto& t : tokens) {
         if(t) reg.tokens[t->getId()] = t;
@@ -354,15 +354,12 @@ void SaveManager::deserializeBoard(QDataStream& in, Board& b, const GameRegistry
         if(reg.tokens.count(id)) b.m_removedProgressTokens.push_back(reg.tokens.at(id));
     }
 
-    // Pyramid Structure
     qint32 numRows;
     in >> numRows;
 
-    // Build Dummy Structure
-    std::vector<std::shared_ptr<CardBase>> dummyDeck(30, nullptr); // Enough for any age
+    std::vector<std::shared_ptr<CardBase>> dummyDeck(30, nullptr); 
     b.m_pyramid.build(age, dummyDeck);
 
-    // Overwrite with real data
     const auto& rows = b.getPyramid().getRows();
     
     if((size_t)numRows != rows.size()) {

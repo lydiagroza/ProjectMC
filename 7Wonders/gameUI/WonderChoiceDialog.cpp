@@ -41,17 +41,13 @@ void WonderChoiceDialog::setWonders(const std::vector<Wonder*>& wonders, Player*
         } else {
             costStr = "Cost: " + QString::number(cost);
         }
-
-        // Format raw cost for display logic if needed, but here we just show total coins needed
-        // To be nicer, we could show the resource cost. 
-        // For now, let's just use the name and effect.
         
         QString effect = QString::fromStdString(w->getEffectDescription());
         QString name = QString::fromStdString(w->getName());
         
         cw->setupCard(name, "#DAA520", true, costStr, effect); 
 
-        // Check for wonder image
+        //Check for wonder image
         QString imgPath = CardWidget::getWonderImagePath(w->getName().c_str());
         if (!imgPath.isEmpty()) {
             cw->setImage(imgPath);
@@ -72,5 +68,5 @@ void WonderChoiceDialog::setWonders(const std::vector<Wonder*>& wonders, Player*
 void WonderChoiceDialog::onCardClicked(int cardId)
 {
     m_selectedWonderId = cardId;
-    accept(); // Close dialog with Accepted result
+    accept();
 }

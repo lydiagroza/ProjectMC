@@ -11,24 +11,20 @@ MilitaryTrackWidget::MilitaryTrackWidget(QWidget* parent)
 {
     ui->setupUi(this);
 
-    // Style is now in .ui file for Designer visibility
-    // No need to set styleSheet for trackContainer here manually unless overriding.
-
     createTrack();
 
-    // Create the pawn
+    //Create the pawn
     m_pawn = new QLabel(ui->trackContainer);
-    m_pawn->setFixedSize(30, 30); // Slightly larger
-    m_pawn->setText("🗡️"); // Classical dagger/sword
+    m_pawn->setFixedSize(30, 30); 
+    m_pawn->setText("🗡️"); 
     m_pawn->setAlignment(Qt::AlignCenter);
     m_pawn->setStyleSheet(
         "background: qradialgradient(cx:0.5, cy:0.5, radius: 0.5, fx:0.5, fy:0.5, stop:0 #CFD8DC, stop:1 #90A4AE);" // Silver/Steel look
         "border: 2px solid #455A64;"
-        "border-radius: 15px;" // Circle
+        "border-radius: 15px;"
         "font-size: 18px;"
     );
     
-    // Add shadow to pawn for depth
     QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
     shadow->setBlurRadius(10);
     shadow->setColor(QColor(0, 0, 0, 200));
@@ -36,9 +32,7 @@ MilitaryTrackWidget::MilitaryTrackWidget(QWidget* parent)
     m_pawn->setGraphicsEffect(shadow);
 
     m_pawn->show();
-    m_pawn->raise(); // Ensure on top
-
-    // Set initial position
+    m_pawn->raise(); 
     updatePawnPosition(0);
 }
 
@@ -49,11 +43,9 @@ MilitaryTrackWidget::~MilitaryTrackWidget()
 
 void MilitaryTrackWidget::createTrack()
 {
-    // Access the layout already defined in .ui
     QVBoxLayout* trackLayout = qobject_cast<QVBoxLayout*>(ui->trackContainer->layout());
     if (!trackLayout) return;
 
-    // Clear any design-time placeholders
     QLayoutItem* item;
     while ((item = trackLayout->takeAt(0)) != nullptr) {
         if (item->widget()) {
@@ -70,35 +62,28 @@ void MilitaryTrackWidget::createTrack()
         segment->setMinimumHeight(m_segmentHeight);
         segment->setFrameShape(QFrame::StyledPanel);
         
-        // Base Style (Ancient Stone / Parchment)
+    
         QString baseStyle = 
             "border: 1px solid #3E2723; "
             "margin-left: 5px; margin-right: 5px; "
             "border-radius: 3px; "; 
 
         if (position == 0) {
-            // Neutral Center (Gold/Brass)
             baseStyle += "background: qlinear-gradient(x1:0, y1:0, x2:1, y2:0, stop:0 #F9A825, stop:0.5 #FDD835, stop:1 #F9A825); border: 2px solid #FFD700;"; 
         } 
         else if (abs(position) == 9) {
-             // Victory Zone (Deep Red Velvet)
             baseStyle += "background: qlinear-gradient(x1:0, y1:0, x2:1, y2:0, stop:0 #B71C1C, stop:0.5 #D32F2F, stop:1 #B71C1C); border: 2px solid #FFD700;";
         }
         else if (abs(position) >= 6) {
-             // Danger Zone (Dark Stone/Red tint)
              baseStyle += "background: #8D6E63;";
         }
         else if (abs(position) >= 3) {
-             // Medium (Worn Stone)
              baseStyle += "background: #A1887F;";
         }
         else {
-             // Low (Light Stone)
              baseStyle += "background: #D7CCC8;";
         }
 
-        // Add markings for Token Loss (2 and 5)
-        // Symmetric thresholds: Between 2 and 3, and between 5 and 6.
         if (position == 2 || position == 5) {
             baseStyle += "border-top: 2px dashed #8B0000;";
         } else if (position == -2 || position == -5) {
@@ -113,7 +98,6 @@ void MilitaryTrackWidget::createTrack()
 
 void MilitaryTrackWidget::updatePawnPosition(int position)
 {
-    // Clamp position to be within -9 and 9
     position = std::max(-9, std::min(9, position));
 
     if (m_currentPosition != position) {
@@ -121,21 +105,14 @@ void MilitaryTrackWidget::updatePawnPosition(int position)
     }
     m_currentPosition = position;
 
-    // Convert game position (-9 to 9) to layout index (0 to 18)
     int index = position + 9;
-
-    // The layout is reversed, so we calculate from the bottom
-    // We target the center of the segment
     
     QFrame* targetSegment = m_trackSegments[index];
     int targetY = 0;
     
     if (targetSegment && targetSegment->height() > 0) {
-        // Use actual widget position relative to trackContainer
-        // targetSegment->y() is relative to ui->trackContainer because it's in the layout
         targetY = targetSegment->y() + (targetSegment->height() / 2) - (m_pawn->height() / 2);
     } else {
-        // Fallback calculation
         int layoutIndex = m_totalSegments - 1 - index;
         targetY = (layoutIndex * m_segmentHeight) + (m_segmentHeight/2) - (m_pawn->height()/2);
     }
@@ -148,6 +125,5 @@ void MilitaryTrackWidget::updatePawnPosition(int position)
 void MilitaryTrackWidget::resizeEvent(QResizeEvent* event)
 {
     QWidget::resizeEvent(event);
-    // Recalculate pawn position after the layout has adjusted to the new size
     updatePawnPosition(m_currentPosition);
 }

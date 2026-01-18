@@ -17,9 +17,6 @@ class MilitaryTrackWidget : public QWidget
 public:
     explicit MilitaryTrackWidget(QWidget* parent = nullptr);
     ~MilitaryTrackWidget();
-
-    // Updates the pawn's position on the track.
-    // Position ranges from -9 (Player 2 max) to +9 (Player 1 max).
     void updatePawnPosition(int position);
 
 protected:

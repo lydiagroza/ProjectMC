@@ -3,7 +3,7 @@
 #include "SoundManager.h"
 #include <QGraphicsDropShadowEffect>
 #include <QVBoxLayout>
-#include <QLabel> // Ensure QLabel header is included
+#include <QLabel> 
 
 NameSelectionWidget::NameSelectionWidget(QWidget *parent) :
     QWidget(parent),
@@ -24,10 +24,6 @@ NameSelectionWidget::NameSelectionWidget(QWidget *parent) :
     ui->inputP1->setText("Player 1");
     ui->inputP2->setText("Player 2");
 
-    // Add Difficulty Selector programmatically
-    // We try to find a suitable layout or create one in the placeholder area
-    // Assuming the main layout is vertical, we insert it before the Start button.
-    
     m_difficultyCombo = new QComboBox(this);
     m_difficultyCombo->addItem("Easy (Random)", 0);
     m_difficultyCombo->addItem("Medium (Heuristic)", 1);
@@ -47,25 +43,18 @@ NameSelectionWidget::NameSelectionWidget(QWidget *parent) :
         "}"
         "QComboBox::drop-down { border: 0px; }"
     );
-
-    // Find the layout where inputs are
-    // Based on standard UI patterns, there is likely a layout holding inputs.
-    // We will add a label and the combo to the central layout.
-    // If we can't find it easily by name, we iterate.
-    // But since `ui->setupUi` was called, `this->layout()` should be valid.
     
     if (this->layout()) {
-        m_difficultyLabel = new QLabel("Select AI Difficulty:", this); // Assign to member variable
+        m_difficultyLabel = new QLabel("Select AI Difficulty:", this); 
         m_difficultyLabel->setStyleSheet("color: #F5E6D3; font-weight: bold; font-size: 14px;");
         m_difficultyLabel->setAlignment(Qt::AlignCenter);
         
-        // Insert before the last item (Start Button usually)
+    
         QVBoxLayout* vLayout = qobject_cast<QVBoxLayout*>(this->layout());
         if (vLayout) {
             vLayout->insertWidget(vLayout->count() - 1, m_difficultyLabel);
             vLayout->insertWidget(vLayout->count() - 1, m_difficultyCombo);
         } else {
-            // Fallback
             this->layout()->addWidget(m_difficultyLabel);
             this->layout()->addWidget(m_difficultyCombo);
         }
@@ -91,8 +80,7 @@ void NameSelectionWidget::setMode(bool p1Enabled, bool p2Enabled)
     // Enable difficulty only if there is at least one AI
     bool hasAI = (!p1Enabled || !p2Enabled);
     m_difficultyCombo->setVisible(hasAI);
-    m_difficultyLabel->setVisible(hasAI); // Control visibility of the label
-    // Also hide the label if we could find it, but for now just hiding combo is enough contextually
+    m_difficultyLabel->setVisible(hasAI); 
 }
 
 QString NameSelectionWidget::getPlayer1Name() const

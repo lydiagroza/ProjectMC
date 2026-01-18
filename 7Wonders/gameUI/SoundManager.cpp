@@ -9,7 +9,7 @@ SoundManager& SoundManager::instance()
 SoundManager::SoundManager()
     : QObject(nullptr)
 {
-    // Setup Quack Player
+    //Setup Quack Player
     m_quackPlayer = new QMediaPlayer(this);
     m_quackOutput = new QAudioOutput(this);
     m_quackPlayer->setAudioOutput(m_quackOutput);
@@ -17,13 +17,10 @@ SoundManager::SoundManager()
     m_quackPlayer->setSource(QUrl("qrc:/resources/UI/quack.mp3"));
 
     // Setup Click Player
-    // Using QMediaPlayer for click as well to support MP3/WAV broadly
     m_clickPlayer = new QMediaPlayer(this);
     m_clickOutput = new QAudioOutput(this);
     m_clickPlayer->setAudioOutput(m_clickOutput);
     m_clickOutput->setVolume(0.8);
-    // Assuming the user adds click.mp3 or click.wav. 
-    // We try click.mp3 first, but it can be changed.
     m_clickPlayer->setSource(QUrl("qrc:/resources/UI/click.mp3"));
 
     // Setup Sword Player
@@ -43,7 +40,6 @@ SoundManager::SoundManager()
 
 SoundManager::~SoundManager()
 {
-    // Children are deleted automatically by QObject parent
 }
 
 void SoundManager::playQuack()

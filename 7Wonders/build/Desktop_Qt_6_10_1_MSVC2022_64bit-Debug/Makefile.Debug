@@ -5128,34 +5128,7 @@ debug\main.obj: ..\..\gameUI\main.cpp ..\..\gameUI\MainWindow.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qrubberband.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qabstractitemmodel.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QApplication \
-		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qapplication.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QFile \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfile.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfiledevice.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDebug \
-		C:\Qt\6.10.1\msvc2022_64\include\QtGui\QImageReader \
-		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qimagereader.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtGui\qimageiohandler.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qplugin.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qpointer.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qjsonobject.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qjsonvalue.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcborvalue.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcborcommon.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdatetime.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qcalendar.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\quuid.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qjsondocument.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qjsonparseerror.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\q20algorithm.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfactoryinterface.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDir \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdir.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdirlisting.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qfileinfo.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qtimezone.h \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\QDirIterator \
-		C:\Qt\6.10.1\msvc2022_64\include\QtCore\qdiriterator.h
+		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\qapplication.h
 
 debug\MainWindow.obj: ..\..\gameUI\MainWindow.cpp ..\..\gameUI\MainWindow.h \
 		C:\Qt\6.10.1\msvc2022_64\include\QtWidgets\QMainWindow \

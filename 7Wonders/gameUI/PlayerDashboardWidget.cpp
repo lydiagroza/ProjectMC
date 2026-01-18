@@ -12,7 +12,6 @@ PlayerDashboardWidget::PlayerDashboardWidget(QWidget* parent)
 {
     ui->setupUi(this);
 
-    // Initial default style (generic)
     this->setStyleSheet(
         "QWidget#PlayerDashboardWidget { "
         "  border: 3px solid #8B4513; "
@@ -20,8 +19,6 @@ PlayerDashboardWidget::PlayerDashboardWidget(QWidget* parent)
         "  background: #2C1810; "
         "}"
     );
-
-    // Shadow for text
     QGraphicsDropShadowEffect* textShadow = new QGraphicsDropShadowEffect();
     textShadow->setBlurRadius(8);
     textShadow->setColor(QColor(0, 0, 0, 180));
@@ -66,11 +63,9 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
                                          int victoryPoints,
                                          const std::vector<std::shared_ptr<ProgressToken>>& tokens)
 {
-    // Store data for popup
     m_activeEffectsWonders = wonders;
     m_activeEffectsTokens = tokens;
 
-    // Update Text
     QString icon = (this->styleSheet().contains("#8B0000")) ? "⚔️" : "🏛️";
     
     auto getResCount = [&](Resource r) {
@@ -197,7 +192,6 @@ void PlayerDashboardWidget::updateDashboard(const std::string& name, int coins,
     ui->invLayout->addStretch();
 }
 
-// Simple helper function for token descriptions (Duplicated from MainWindow, should be static/common)
 static QString getLocalTokenDesc(const QString& tokenName) {
     QString n = tokenName.toUpper().trimmed();
     if (n == "AGRICULTURE") return "Agriculture: +6 coins, +4 VP.";
@@ -215,10 +209,9 @@ static QString getLocalTokenDesc(const QString& tokenName) {
 
 void PlayerDashboardWidget::onEffectsClicked()
 {
-    // Build the list of effects
     QStringList effectsHtml;
 
-    // 1. Progress Tokens
+    //Progress Tokens
     if (!m_activeEffectsTokens.empty()) {
         effectsHtml << "<h3 style='color:#66BB6A'>✅ Progress Tokens</h3><ul>";
         for (const auto& t : m_activeEffectsTokens) {
@@ -228,7 +221,7 @@ void PlayerDashboardWidget::onEffectsClicked()
         effectsHtml << "</ul>";
     }
 
-    // 2. Built Wonders
+    //Built Wonders
     bool hasBuiltWonder = false;
     for (const auto& w : m_activeEffectsWonders) {
         if (w->getIsBuilt()) {
@@ -243,12 +236,12 @@ void PlayerDashboardWidget::onEffectsClicked()
     }
     if (hasBuiltWonder) effectsHtml << "</ul>";
 
-    // 3. No effects?
+    //No effects
     if (effectsHtml.isEmpty()) {
         effectsHtml << "<i>No permanent effects active.</i>";
     }
 
-    // Display Dialog
+    //Display Dialog
     QMessageBox msgBox(this);
     msgBox.setWindowTitle("Active Effects");
     msgBox.setTextFormat(Qt::RichText);

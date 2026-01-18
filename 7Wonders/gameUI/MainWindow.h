@@ -54,20 +54,19 @@ private:
     void updateGameState();
     void startWonderDraft();
 
-    // New layouts for the Right Panel
     QVBoxLayout* m_p1ProgressLayout = nullptr;
     QVBoxLayout* m_p2ProgressLayout = nullptr;
     
-    // Helper function for token descriptions
+    //Helper function for token descriptions
     QString getTokenDescription(const QString& tokenName);
     
-    // Slot for the Info Button
+    //Slot for the Info Button
     void onProgressInfoClicked();
     void onDuckHintClicked();
 
     void rebuildRightPanel();
 
-    // Labels for the Progress Section
+    //Labels for the Progress Section
     QLabel* m_lblProgressP1 = nullptr;
     QLabel* m_lblProgressP2 = nullptr;
     QPushButton* m_duckBtn = nullptr;

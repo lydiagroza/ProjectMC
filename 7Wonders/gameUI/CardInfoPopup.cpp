@@ -13,7 +13,6 @@ CardInfoPopup::CardInfoPopup(QWidget* parent)
     m_descriptionLabel = new QLabel(this);
     m_cardPreview = new QLabel(this);
 
-    // --- Styling ---
     m_titleLabel->setStyleSheet(
         "QLabel { "
         "  color: #E0E0E0; "
@@ -33,9 +32,9 @@ CardInfoPopup::CardInfoPopup(QWidget* parent)
     m_descriptionLabel->setWordWrap(true);
 
     m_cardPreview->setScaledContents(true);
-    m_cardPreview->setFixedSize(150, 210); // Slightly larger preview
+    m_cardPreview->setFixedSize(150, 210); 
 
-    // --- Layout ---
+  
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setContentsMargins(10, 10, 10, 10);
     layout->setSpacing(5);
@@ -44,7 +43,7 @@ CardInfoPopup::CardInfoPopup(QWidget* parent)
     layout->addWidget(m_descriptionLabel);
 
     setLayout(layout);
-    setFixedSize(220, 320); // Adjusted size
+    setFixedSize(220, 320); 
 }
 
 void CardInfoPopup::setCardData(const QString& title, const QString& description, const QPixmap& cardImage)

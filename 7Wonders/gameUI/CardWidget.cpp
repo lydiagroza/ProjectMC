@@ -15,15 +15,11 @@ CardWidget::CardWidget(int cardId, QWidget* parent)
 {
     ui->setupUi(this);
     this->setFixedSize(100, 140);
-    setMouseTracking(true); // Enable mouse tracking for hover events
-
-    // Initial font setup
+    setMouseTracking(true); 
     QFont font = ui->nameLabel->font();
     font.setBold(true);
-    font.setPointSize(7); // Reduced to fit better
+    font.setPointSize(7); 
     ui->nameLabel->setFont(font);
-
-    // Ensure overlay button is transparent
     ui->overlayButton->setStyleSheet("background-color: transparent; border: none;");
 
     connect(ui->overlayButton, &QPushButton::clicked, this, &CardWidget::onButtonClicked);
@@ -52,13 +48,12 @@ void CardWidget::enterEvent(QEnterEvent* event)
     }
 
     QString description = CardDescriptions::getDescription(m_cardName);
-    QPixmap cardImage = this->grab(); // Capture current look
+    QPixmap cardImage = this->grab(); 
 
     m_popup->setCardData(m_cardName, description, cardImage);
 
-    // Position the popup to the side of the card
     QPoint globalPos = this->mapToGlobal(this->rect().topRight());
-    globalPos.setX(globalPos.x() + 5); // Add a small offset
+    globalPos.setX(globalPos.x() + 5);
     m_popup->move(globalPos);
     m_popup->show();
 
@@ -68,7 +63,7 @@ void CardWidget::enterEvent(QEnterEvent* event)
 void CardWidget::leaveEvent(QEvent* event)
 {
     if (m_popup) {
-        m_popup->close(); // It will be deleted on close
+        m_popup->close();
         m_popup = nullptr;
     }
     QWidget::leaveEvent(event);
@@ -135,7 +130,6 @@ void CardWidget::setupCard(const QString& name, const QString& colorCode, bool i
         ui->cardFrame->setStyleSheet(borderStyle);
         ui->overlayButton->setEnabled(true);
         
-        // Add shadow
         QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
         shadow->setBlurRadius(6);
         shadow->setColor(QColor(0, 0, 0, 120));
@@ -169,12 +163,9 @@ void CardWidget::setSelected(bool selected)
 
     QString currentStyle = ui->cardFrame->styleSheet();
     if (selected) {
-        // Replace border color
-        // Note: This is a bit brittle string replacement, but works for the set style
         if (currentStyle.contains("border: 2px solid #333")) {
             currentStyle.replace("border: 2px solid #333", "border: 4px solid #f1c40f");
         } else {
-             // Fallback
              currentStyle += "QFrame#cardFrame { border: 4px solid #f1c40f; }";
         }
         ui->cardFrame->setStyleSheet(currentStyle);
@@ -193,11 +184,7 @@ void CardWidget::setImage(const QString& imagePath)
     QPixmap pixmap(imagePath);
     if (!pixmap.isNull()) {
         m_cardName = ui->nameLabel->text();
-        // Wonder Mode: Image as Background
-        
-        
-
-        // Apply image to the frame background
+  
         QString style = QString(
             "QFrame#cardFrame { "
             "  border-image: url(%1) 0 0 0 0 stretch stretch; "
@@ -207,19 +194,16 @@ void CardWidget::setImage(const QString& imagePath)
         ).arg(imagePath);
         ui->cardFrame->setStyleSheet(style);
 
-        // Fix Layout Order: Title First, then Cost
+     
         QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->cardFrame->layout());
         if (layout) {
             layout->setAlignment(Qt::AlignTop);
-            // Move nameLabel to top (index 0)
             layout->removeWidget(ui->nameLabel);
             layout->insertWidget(0, ui->nameLabel);
-            // Move costLabel to second (index 1)
             layout->removeWidget(ui->costLabel);
             layout->insertWidget(1, ui->costLabel);
         }
 
-        // --- Antique Style ---
         QString baseStyle = "QLabel { "
                             "  background-color: transparent; "
                             "  color: black; "
@@ -227,7 +211,6 @@ void CardWidget::setImage(const QString& imagePath)
                             "  font-weight: bold; "
                             "}";
 
-        // Title: Top Center, Larger, Prominent White
         ui->nameLabel->setStyleSheet("QLabel { "
                                      "  background-color: transparent; "
                                      "  color: white; "
@@ -237,8 +220,6 @@ void CardWidget::setImage(const QString& imagePath)
                                      "}");
         ui->nameLabel->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 
-        // Info: Left, slightly smaller, Black
-        // No padding needed now as it's structurally below title
         QString infoStyle = "QLabel { "
                             "  background-color: transparent; "
                             "  color: black; "
@@ -253,14 +234,12 @@ void CardWidget::setImage(const QString& imagePath)
         ui->effectLabel->setStyleSheet(infoStyle);
         ui->effectLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
-        // Dark shadow for White Title
         QGraphicsDropShadowEffect* titleShadow = new QGraphicsDropShadowEffect();
         titleShadow->setColor(QColor(0, 0, 0, 255));
         titleShadow->setBlurRadius(4);
         titleShadow->setOffset(1, 1);
         ui->nameLabel->setGraphicsEffect(titleShadow);
 
-        // White glow for Black Info labels
         auto addWhiteGlow = [](QWidget* w) {
             QGraphicsDropShadowEffect* glow = new QGraphicsDropShadowEffect();
             glow->setColor(QColor(255, 255, 255, 220));
@@ -272,10 +251,9 @@ void CardWidget::setImage(const QString& imagePath)
         addWhiteGlow(ui->costLabel);
         addWhiteGlow(ui->effectLabel);
 
-        // Ensure they are visible
         ui->nameLabel->setVisible(true);
         ui->costLabel->setVisible(!ui->costLabel->text().isEmpty());
-        ui->effectLabel->setVisible(true); // Now visible for wonders too!
+        ui->effectLabel->setVisible(true); 
 
     }
 }
@@ -284,18 +262,15 @@ QString CardWidget::getWonderImagePath(const QString& wonderName)
 {
     QString normalized = wonderName.simplified().remove(' ').toUpper();
     
-    // Fix typo in filename if necessary
     if (normalized == "THEPYRAMIDS") normalized = "THEPIRAMIDS";
     if (normalized == "HANGINGGARDENS") normalized = "HANGINGGARDEN";
     if (normalized == "THEHANGINGGARDENS") normalized = "HANGINGGARDEN";
     if (normalized == "THEHANGINGGARDEN") normalized = "HANGINGGARDEN";
     if (normalized == "THETEMPLEOFARTEMIS") normalized = "THEGREATTEMPLEOFARTEMIS";
     if (normalized == "TEMPLEOFARTEMIS") normalized = "THEGREATTEMPLEOFARTEMIS";
-    if (normalized == "THEAPPIANWAY") normalized = "THEAPIANWAY"; // Handle filename typo (one P)
+    if (normalized == "THEAPPIANWAY") normalized = "THEAPIANWAY"; 
     if (normalized == "APPIANWAY") normalized = "THEAPIANWAY";
     
-    // Try to find the file in the "UI" folder relative to current working directory
-    // (Usually project root when running from IDE)
     QString filename = normalized + ".png";
     QStringList searchPaths = {
         "UI/" + filename,           // Project root

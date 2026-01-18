@@ -2,14 +2,13 @@
 
 Acest proiect reprezintă implementarea jocului de societate **7 Wonders Duel**, realizat în cadrul cursului de Informatică Aplicată. Aplicația include atât logica de bază a jocului (Game Engine), cât și o interfață grafică (GUI) realizată în Qt, alături de un oponent AI.
 
-## 👥 Echipa
+## Echipa
 
 **Studenți:**
 * lydiagroza
 * Alexandra
 * ale0050
 * laurinho
-* Lauu
 
 **Mentori Coordonatori:**
 * Andrei Rozmarin (@offuru)
@@ -18,7 +17,7 @@ Acest proiect reprezintă implementarea jocului de societate **7 Wonders Duel**,
 
 ---
 
-## 🛠️ Detalii Tehnice
+## Detalii Tehnice
 
 ### Tehnologii Utilizate
 * **Limbaj:** C++ (Standard C++17 / C++20)
@@ -38,7 +37,7 @@ Proiectul respectă cerințele de utilizare a funcționalităților moderne ale 
 
 ---
 
-## 🚀 Instrucțiuni de Compilare și Rulare
+## Instrucțiuni de Compilare și Rulare
 
 ### Cerințe Preliminare
 * Visual Studio 2022 (cu extensia Qt Tools) SAU Qt Creator.
@@ -61,13 +60,13 @@ Proiectul respectă cerințele de utilizare a funcționalităților moderne ale 
 
 4. **Rulare:**
    * Setați `gameUI` ca "Startup Project" pentru a lansa interfața grafică.
-   * Setați `ConsoleGame` ca "Startup Project" pentru versiunea text.
+   * Setați `ConsoleGame` ca "Startup Project" pentru versiunea in terminal.
 
 ---
 
 ## 🎥 Video Demo
 
-Prezentarea funcționalității proiectului și a elementelor de cod poate fi vizionată în fișierul video atașat în repository (urmează a fi adăugat înainte de deadline).
+Prezentarea funcționalității proiectului și a elementelor de cod poate fi vizionată în fișierul video atașat în repository
 
 ---
 

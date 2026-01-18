@@ -34,7 +34,7 @@ public:
 
     std::vector<std::shared_ptr<Wonder>> drawWonders(int count);
 
-    // Getteri pentru serializare
+    // Getters for serialization
     const std::vector<std::shared_ptr<CardBase>>& getAllAge1Cards() const { return m_deckAge1; }
     const std::vector<std::shared_ptr<CardBase>>& getAllAge2Cards() const { return m_deckAge2; }
     const std::vector<std::shared_ptr<CardBase>>& getAllAge3Cards() const { return m_deckAge3; }

@@ -13,10 +13,10 @@
 #include <limits>
 #include <fstream>
 
-// ... (GameState, Action, QLearningAgent remain exactly as before) ...
-// Copying only the relevant part for space, but I will ensure the full file is correct.
 
-// [KEEPING PREVIOUS GameState/Action/QLearningAgent IMPLEMENTATIONS]
+
+
+
 
 std::string GameState::toHash() const {
     std::ostringstream oss;
@@ -191,9 +191,7 @@ void QLearningAgent::loadModel(const std::string& filename) {
     file.close();
 }
 
-// ============================================================================ 
-// AI_Player Implementation (Refactored)
-// ============================================================================ 
+
 
 AI_Player::AI_Player(const std::string& name, int id, AI_Difficulty difficulty, AI_Strategy strategy)
     : Player(name, id), m_difficulty(difficulty), m_strategy(strategy), m_isTraining(false), m_currentAge(1)
@@ -209,7 +207,7 @@ AI_Player::AI_Player(const std::string& name, int id, AI_Difficulty difficulty, 
         case 2: m_strategy = AI_Strategy::ECONOMY; break;
         default: m_strategy = AI_Strategy::BALANCED; break;
         }
-        std::cout << "[AI] " << name << " adopted strategy: " << (int)m_strategy << "\n";
+
     }
     if (m_difficulty == AI_Difficulty::HARD || m_difficulty == AI_Difficulty::ADAPTIVE) {
         m_learningAgent = std::make_unique<QLearningAgent>();
@@ -573,9 +571,7 @@ void AI_Player::saveModel(const std::string& filename) const { if (m_learningAge
 void AI_Player::loadModel(const std::string& filename) { if (m_learningAgent) m_learningAgent->loadModel(filename); }
 
 
-// ============================================================================ 
-// HINT SYSTEM IMPLEMENTATION (AI POWERED)
-// ============================================================================ 
+
 
 std::string AI_Player::getBestMoveHint(const Player& me, const Player& opponent, const Board& board, int currentAge, int selectedCardId) {
     std::vector<std::shared_ptr<CardBase>> playableCards;

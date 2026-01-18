@@ -14,10 +14,10 @@ class CardBase;
 class Wonder;
 
 enum class AI_Difficulty {
-    EASY,    // Decizii random
-    MEDIUM,  // Strategie heuristică
-    HARD,    // Q-Learning (ML)
-    ADAPTIVE // Se antrenează în timp real
+    EASY,    // Random decisions
+    MEDIUM,  // Heuristic strategy
+    HARD,
+    ADAPTIVE // Trains in real time
 };
 
 enum class AI_Strategy {
@@ -27,9 +27,9 @@ enum class AI_Strategy {
     BALANCED
 };
 
-// Starea jocului pentru ML
+// Game state for ML
 struct GameState {
-    // Resurse proprii
+    // Own resources
     int myCoins;
     int myWoodCount;
     int myClayCount;
@@ -37,7 +37,7 @@ struct GameState {
     int myGlassCount;
     int myPapyrusCount;
 
-    // Puncte și progres
+    // Points and progress
     int myMilitaryPosition;
     int myScienceSymbols;
     int myBlueCardCount;
@@ -45,29 +45,29 @@ struct GameState {
     int myGreenCardCount;
     int myYellowCardCount;
 
-    // Resurse oponent
+    // Opponent resources
     int oppCoins;
     int oppMilitaryPosition;
     int oppScienceSymbols;
 
-    // Starea jocului
+    // Game state
     int currentAge;
     int remainingCards;
 
-    // Hash pentru Q-Table
+    // Hash for Q-Table
     std::string toHash() const;
 
-    // Extrage starea din joc
+    // Extract state from game
     static GameState extract(const Player& me, const Player& opponent, const Board& board, int age);
 };
 
-// Acțiune posibilă
+// Possible action
 struct Action {
     enum Type { BUY_CARD, BUILD_WONDER, DISCARD_CARD };
 
     Type type;
     uint16_t cardId;
-    uint16_t wonderId; // doar pentru BUILD_WONDER
+    uint16_t wonderId; // only for BUILD_WONDER
 
     std::string toString() const;
 
@@ -97,26 +97,26 @@ private:
 public:
     QLearningAgent();
 
-    // Alege acțiunea optimă (sau explorează)
+    // Select optimal action (or explore)
     Action selectAction(const GameState& state,
                         const std::vector<Action>& possibleActions,
                         bool explore = true);
 
-    // Update Q-value după o acțiune
+    // Update Q-value after an action
     void updateQValue(const GameState& state,
                       const Action& action,
                       float reward,
                       const GameState& nextState,
                       const std::vector<Action>& nextActions);
 
-    // După terminarea jocului
+    // After game ends
     void endEpisode(bool won, int finalScore);
 
-    // Persistență
+    // Persistence
     void saveModel(const std::string& filename) const;
     void loadModel(const std::string& filename);
 
-    // Ajustare parametri
+    // Parameter adjustment
     void setLearningRate(float lr) { learningRate = lr; }
     void setExplorationRate(float er) { explorationRate = er; }
 
@@ -133,31 +133,31 @@ private:
     AI_Strategy m_strategy;
     std::mt19937 m_rng;
 
-    // ML Agent (doar pentru HARD și ADAPTIVE)
+    // ML Agent (only for HARD and ADAPTIVE)
     std::unique_ptr<QLearningAgent> m_learningAgent;
 
-    // Tracking pentru antrenament
+    // Tracking for training
     GameState m_lastState;
     Action m_lastAction;
     bool m_isTraining;
     int m_currentAge; // Tracked pentru GameState
 
-    // Funcții de evaluare HEURISTIC (pentru MEDIUM) - STATIC pentru a fi folosite de Hint System
+    // HEURISTIC evaluation functions (for MEDIUM) - STATIC to be used by the Hint System
     static int evaluateCardStatic(const Player& me, const std::shared_ptr<CardBase>& card, const Player& opponent, AI_Strategy strategy = AI_Strategy::BALANCED, AI_Difficulty difficulty = AI_Difficulty::MEDIUM);
     static int evaluateWonderStatic(const Player& me, const Wonder& wonder, AI_Strategy strategy = AI_Strategy::BALANCED);
     
-    // Funcții de ajutor
+    // Helper functions
     static int evaluateMilitaryValue(const Player& me, const std::shared_ptr<CardBase>& card);
     static int evaluateScienceValue(const Player& me, const std::shared_ptr<CardBase>& card);
     static int evaluateEconomyValue(const Player& me, const std::shared_ptr<CardBase>& card);
 
-    // Funcții de decizie HEURISTIC
+    // HEURISTIC decision functions
     std::shared_ptr<CardBase> chooseBestCardHeuristic(
         const std::vector<std::shared_ptr<CardBase>>& availableCards,
         const Player& opponent,
         const Board& board);
 
-    // Funcții de decizie ML
+    // ML decision functions
     std::shared_ptr<CardBase> chooseBestCardML(
         const std::vector<std::shared_ptr<CardBase>>& availableCards,
         Player& opponent,
@@ -165,17 +165,17 @@ private:
 
     Wonder* chooseBestWonder(const std::vector<Wonder*>& availableWonders);
 
-    // Funcții helper
+    // Helper functions
     bool shouldBuyCard(const std::shared_ptr<CardBase>& card, const Player& opponent);
     bool shouldConstructWonder(const std::shared_ptr<CardBase>& card, const Player& opponent);
     std::vector<std::shared_ptr<CardBase>> getPlayableCards(const Board& board) const;
 
-    // Conversie între cărți și acțiuni
+    // Conversion between cards and actions
     std::vector<Action> getPossibleActions(
         const std::vector<std::shared_ptr<CardBase>>& playableCards,
         const Player& opponent) const;
 
-    // Calculează reward
+    // Calculate reward
     float calculateReward(const GameState& oldState,
                           const GameState& newState,
                           const Action& action) const;
@@ -186,7 +186,7 @@ public:
               AI_Difficulty difficulty = AI_Difficulty::MEDIUM,
               AI_Strategy strategy = AI_Strategy::BALANCED);
 
-    // Funcția principală de decizie
+    // Main decision function
     void makeDecision(Board& board, Player& opponent, int currentAge);
 
     // Hint System
@@ -200,7 +200,7 @@ public:
     std::shared_ptr<ProgressToken> chooseProgressToken(
         const std::vector<std::shared_ptr<ProgressToken>>& availableTokens);
 
-    // Notificare sfârșitul jocului (pentru training)
+    // Game end notification (for training)
     void onGameEnd(bool won, int finalScore);
 
     // Training mode

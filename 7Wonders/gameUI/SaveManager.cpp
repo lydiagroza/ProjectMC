@@ -366,7 +366,7 @@ void SaveManager::deserializeBoard(QDataStream& in, Board& b, const GameRegistry
     const auto& rows = b.getPyramid().getRows();
     
     if((size_t)numRows != rows.size()) {
-        qDebug() << "SaveManager: Pyramid mismatch! Saved rows:" << numRows << " Actual:" << rows.size();
+
         return; 
     }
 

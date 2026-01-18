@@ -9,7 +9,7 @@
 class Player;
 
 namespace GuildEndGameEffects {
-    // Calculăm VP pentru fiecare tip de ghildă conform regulamentului 7 Wonders Duel
+    // Calculate VP for each guild type according to 7 Wonders Duel rules
     int calculateBuildersGuild(const Player& p1, const Player& p2);
     int calculateMoneylendersGuild(const Player& p1, const Player& p2);
     int calculateScientistsGuild(const Player& p1, const Player& p2);
@@ -18,6 +18,6 @@ namespace GuildEndGameEffects {
     int calculateTacticiansGuild(const Player& p1, const Player& p2);
     int calculateShipownersGuild(const Player& p1, const Player& p2);
 
-    // Funcție utilitară pentru a procesa toate ghildele unui jucător la final
+    // Utility function to process all guilds of a player at the end
     int calculateTotalGuildVP(const Player& owner, const Player& opponent);
 }

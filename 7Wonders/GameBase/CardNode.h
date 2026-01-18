@@ -13,8 +13,8 @@ enum class Face {
 class GAME_API CardNode
 {
 private:
-	std::shared_ptr<CardBase> m_card; //sa fie shared pointer
-	//unique pointer -> numai el poate sterge din heap
+	std::shared_ptr<CardBase> m_card; //should be a shared pointer
+	//unique pointer -> only he can delete from the heap
 	std::vector	<CardNode*> m_children;
 	bool m_played;
 	Face m_face;

@@ -26,7 +26,7 @@ std::uint8_t Wonder::getCostForResource(Resource r) const {
     }
     return 0;
 }
-// În Wonder.cpp
+// In Wonder.cpp
 void Wonder::addEffect(std::function<void(Player&, Board&, Player&)> e) {
     m_effects.push_back(e);
 }

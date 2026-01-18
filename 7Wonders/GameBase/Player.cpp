@@ -35,7 +35,7 @@ unsigned int Player::getId() const
     return m_Id;
 }
 
-//Functie de get pentru numele playerului
+//Getter function for player name
 std::string Player::getName()const {
     return m_name;
 }
@@ -74,7 +74,7 @@ const std::vector<std::shared_ptr<ProgressToken>>& Player::getProgressTokens() c
 }
 
 int Player::getUniqueScientificSymbolsCount() const {
-    // Pentru victoria prin Supremație Științifică (6 simboluri DIFERITE)
+    // For Scientific Supremacy victory (6 DIFFERENT symbols)
     return static_cast<int>(m_scientificSymbols.size());
 }
 
@@ -113,7 +113,7 @@ int Player::getVPFromBlueCards() const {
 
 
 
-//Functii pentru  gestionarea monedelor
+// Functions for managing coins
 bool Player::decreaseCoins(std::uint8_t amount) {
     if (m_Resources[Coin] >= amount) {
         m_Resources[Coin] -= amount;
@@ -146,7 +146,7 @@ void Player::removeResource(Resource r, std::uint8_t amount) {
     }
 }
 
-//Functii pentru puncte si simboluri
+// Functions for points and symbols
 void Player::add_Points(Points p, std::uint8_t amount)
 {
     m_pointsScore[p] += amount;
@@ -224,7 +224,7 @@ Resource Player::findResourceDiscountFromIndex(int index) const {
 }
 
 
-//Functie pentru a afla costul unei singure resurse de care jucatorul are nevoie  
+// Function to find the cost of a single resource that the player needs  
 std::uint8_t Player::findUnitTradeCost(Resource r, const Player& opponent) const {
 
     int index = getResourceDiscountIndex(r);
@@ -240,14 +240,14 @@ std::uint8_t Player::findUnitTradeCost(Resource r, const Player& opponent) const
 
 
 
-//Functie care returneaza un map cu resursele lipsa pentru o carte 
+// Function that returns a map with missing resources for a card 
 std::map<Resource, std::uint8_t> Player::MissingResources(
     const std::map<Resource, std::uint8_t>& requiredResources,
     const Player& opponent) const {
 
     std::map<Resource, std::uint8_t> missingResources;
 
-    // Calculăm resursele lipsă (NESCHIMBAT)
+    // Calculate missing resources (UNCHANGED)
     for (const auto& [res, reqAmount] : requiredResources) {
         if (res == Resource::Coin) continue;
 
@@ -258,25 +258,25 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
         }
     }
 
-    // Use bitset instead of map<string, vector>
+
     for (const auto& flexibleSet : m_choiceResources) {
-        // Each bitset represents a set of options
+    
 
         Resource bestResourceToCover = Resource::Coin;
         std::uint8_t maxCost = 0;
 
-        // Iterate through the 5 bits (0=Wood, 1=Clay, 2=Stone, 3=Glass, 4=Papyrus)
+    
         for (int i = 0; i < 5; ++i) {
             if (flexibleSet[i] == 0) continue; // Bit = 0 -> resource not available
 
-            // Convert index -> Resource
+
             Resource resToCover = findResourceDiscountFromIndex(i);
 
-            // Check if we need this resource
+
             if (missingResources.count(resToCover) && missingResources.at(resToCover) > 0) {
                 std::uint8_t currentCost = this->findUnitTradeCost(resToCover, opponent);
 
-                // Choose the most expensive resource
+
                 if (currentCost > maxCost) {
                     maxCost = currentCost;
                     bestResourceToCover = resToCover;
@@ -284,7 +284,7 @@ std::map<Resource, std::uint8_t> Player::MissingResources(
             }
         }
 
-        // If an optimal allocation was found
+
         if (bestResourceToCover != Resource::Coin) {
             missingResources.at(bestResourceToCover)--;
 

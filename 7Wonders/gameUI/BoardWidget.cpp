@@ -7,7 +7,7 @@ BoardWidget::BoardWidget(QWidget* parent)
     , ui(new Ui::BoardWidget)
 {
     ui->setupUi(this);
-    // Mărime minimă să încapă piramida
+    // Minimum size to fit the pyramid
     this->setMinimumSize(800, 600);
 }
 
@@ -34,7 +34,7 @@ void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, 
         ui->placeholderLabel->setVisible(false);
     }
 
-    // 1. Instanțiem widget-ul
+    // 1. Instantiate the widget
     CardWidget* newCard = new CardWidget(id, this);
     newCard->setupCard(name, color, isFaceUp, cost, effect, unlocks);
     
@@ -46,15 +46,15 @@ void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, 
 
     newCard->setFixedSize(scaledWidth, scaledHeight);
 
-    // 2. Conectăm semnalul
+    // 2. Connect the signal
     connect(newCard, &CardWidget::cardClicked, this, &BoardWidget::handleInternalClick);
 
-    // 3. Matematică pentru poziționare
-    // Centrul widget-ului părinte
+    // 3. Mathematics for positioning
+    // Center of the parent widget
     int centerX = this->width() / 2;
     int startY = 30 * m_scaleFactor;
 
-    // Coordonatele finale
+    // Final coordinates
     int posX;
     int posY = startY + row * (scaledHeight - scaledOverlap);
 
@@ -117,13 +117,13 @@ void BoardWidget::handleInternalClick(int cardId)
     if (senderCard) {
         SoundManager::instance().playClick();
 
-        // Deselectăm vizual celelalte cărți
+        // Visually deselect other cards
         for (auto c : m_activeCards) c->setSelected(false);
 
-        // Selectăm cartea curentă
+        // Select the current card
         senderCard->setSelected(true);
 
-        // Anunțăm MainWindow
+        // Notify MainWindow
         emit cardClicked(cardId);
     }
 }

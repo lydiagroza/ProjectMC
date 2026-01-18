@@ -12,7 +12,21 @@ class Player;
 class Board;
 
 
-// Enumuri 
+#include <iostream>
+#include <map>
+#include <string>
+#include<vector>
+#include <optional>
+#pragma once
+#include <cstdint>
+#include <functional>
+#include "Board.h"
+#include "gameExport.h"
+class Player;
+class Board;
+
+
+// Enums
   enum  Resource : std::uint8_t {
         Wood, Clay, Stone, Glass, Papyrus, Coin
     };
@@ -27,22 +41,22 @@ class Board;
   enum  Points : std::uint8_t {
         Victory, Military,BlueCards
 	};
-  enum Scientific_Symbol : std::uint8_t {
+  enum  Scientific_Symbol : std::uint8_t {
 	  Sun_Dial, Wheel, Ink, Mortar,Gyroscope,Scales,Law
   };
   enum class GuildType : uint16_t {
       None = 0,
-      Traders = 61,      // Merchants Guild
-      Craftsmens = 62,   // Builders Guild
-      Philosophers = 63, // Magicians Guild
-      Spies = 64,        // Tacticians Guild
-      Shipowners = 65    // Shipowners Guild
+      Traders = 61,
+      Craftsmens = 62,
+      Philosophers = 63,
+      Spies = 64,
+      Shipowners = 65
   };
 
   class GAME_API CardBase {
   public:
 
-      //Variabile 
+      //Variables
       std::string m_name;
       std::uint16_t m_id : 16;
       Color m_color : 3;
@@ -56,7 +70,7 @@ class Board;
 
 
 
-      //Constructori 
+      //Constructors
       CardBase();
       CardBase(std::string name, std::uint16_t id, Color color,
           const std::map<Resource, std::uint8_t>& cost,
@@ -82,14 +96,14 @@ class Board;
           return 0;
       }
 
-      //Fct pt efecte 
+      //Effect functions
       void applyEffect( Player& player,  Board &board, Player& opponenent)const;
       void addEffect(std::function<void(Player&,Board&,Player &)> e);
       void setDestroy(std::optional<std::function<void(Player&,Board&, Player &) >> e);
       void destroy(Player& player, Board& board, Player& opponent);
     };
 
-  // Operatori , fuctii to_String
+  // Operators, to_String functions
     std::ostream& operator<<(std::ostream& os, const CardBase& card);
     std::string to_string(Resource r);
     std::string to_string(Color c);

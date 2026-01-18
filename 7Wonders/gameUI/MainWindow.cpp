@@ -1289,6 +1289,6 @@ void MainWindow::renderGame()
                 if(cardPtr->getUnlocks().has_value()){
                     unlocks_string = QString::fromStdString(to_string(cardPtr->getUnlocks().value()));
                 }
-                ui->boardWidgetPage->placeCard(id, name, getColorHex(col), isFaceUp, static_cast<int>(r), static_cast<int>(c), cardsInRow, cost, effect, unlocks_string);
+                ui->boardWidgetPage->placeCard(id, name, getColorHex(col), isFaceUp, static_cast<int>(r), static_cast<int>(c), cardsInRow, m_game->getCurrentAge(), cost, effect, unlocks_string);
             }
         }}

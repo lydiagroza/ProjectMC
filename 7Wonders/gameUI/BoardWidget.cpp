@@ -27,7 +27,7 @@ void BoardWidget::clearBoard()
     if(ui->placeholderLabel) ui->placeholderLabel->setVisible(true);
 }
 
-void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, int row, int col, int totalCardsInRow, QString cost, QString effect, QString unlocks)
+void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, int row, int col, int totalCardsInRow, int age, QString cost, QString effect, QString unlocks)
 {
     // Hide placeholder on first card placement
     if (ui->placeholderLabel && ui->placeholderLabel->isVisible()) {
@@ -54,15 +54,49 @@ void BoardWidget::placeCard(int id, QString name, QString color, bool isFaceUp, 
     int centerX = this->width() / 2;
     int startY = 30 * m_scaleFactor;
 
-    // Calculăm lățimea totală a rândului curent pentru centrare
-    double rowTotalWidth = totalCardsInRow * scaledWidth + (totalCardsInRow - 1) * scaledSpacing;
-
-    // Punctul de start X (stânga rândului)
-    double startX = centerX - (rowTotalWidth / 2.0);
-
     // Coordonatele finale
-    int posX = startX + col * (scaledWidth + scaledSpacing);
+    int posX;
     int posY = startY + row * (scaledHeight - scaledOverlap);
+
+    if (age == 3 && totalCardsInRow == 2) {
+        if (row == 3) {
+            // Age III: row 3 (2 cards), located between two 4-card rows.
+            // Position relative to the row above (row 2, 4 cards).
+            double rowTotalWidth_above = 4 * scaledWidth + (4 - 1) * scaledSpacing;
+            double startX_above = centerX - (rowTotalWidth_above / 2.0);
+
+            if (col == 0) { // First card of the row
+                // Place between the first and second cards of the row above.
+                posX = startX_above + 0.5 * (scaledWidth + scaledSpacing);
+            } else { // Second card (col == 1)
+                // Place between the third and fourth cards of the row above.
+                posX = startX_above + 2.5 * (scaledWidth + scaledSpacing);
+            }
+        } else if (row == 6) {
+             // Age III: row 6 (2 cards), located below a 3-card row.
+             // Position relative to the row above (row 5, 3 cards).
+            double rowTotalWidth_above = 3 * scaledWidth + (3 - 1) * scaledSpacing;
+            double startX_above = centerX - (rowTotalWidth_above / 2.0);
+            if (col == 0) {
+                // Place between the first and second cards of the row above.
+                posX = startX_above + 0.5 * (scaledWidth + scaledSpacing);
+            } else { // Second card (col == 1)
+                // Place between the second and third cards of the row above.
+                posX = startX_above + 1.5 * (scaledWidth + scaledSpacing);
+            }
+        }
+        else {
+            // Default centering for any other 2-card rows (e.g., row 0 in Age III).
+            double rowTotalWidth = totalCardsInRow * scaledWidth + (totalCardsInRow - 1) * scaledSpacing;
+            double startX = centerX - (rowTotalWidth / 2.0);
+            posX = startX + col * (scaledWidth + scaledSpacing);
+        }
+    } else {
+        // Default centering for all other rows.
+        double rowTotalWidth = totalCardsInRow * scaledWidth + (totalCardsInRow - 1) * scaledSpacing;
+        double startX = centerX - (rowTotalWidth / 2.0);
+        posX = startX + col * (scaledWidth + scaledSpacing);
+    }
 
     newCard->move(posX, posY);
     newCard->show();

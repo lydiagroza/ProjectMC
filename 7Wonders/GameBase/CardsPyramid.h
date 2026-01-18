@@ -19,11 +19,10 @@ class GAME_API CardsPyramid
 
 	//parent-child links for age 1
 	std::vector<std::vector<std::vector<int>>> m_ageChildIndexes1 = {
-	{ {0,1}, {1,2} },                // Row 0 -> Row 1 (2 cards)
-	{ {0,1}, {1,2}, {2,3} },         // Row 1 -> Row 2 (3 cards)
-	{ {0,1}, {1,2}, {2,3}, {3,4} },  // Row 2 -> Row 3 (4 cards)
-	{ {0,1}, {1,2}, {2,3}, {3,4}, {4,5} } // Row 3 -> Row 4 (5 cards)
-	// Row 4 (6 cards) has no children
+	{ {0,1}, {1,2} },               
+	{ {0,1}, {1,2}, {2,3} },         
+	{ {0,1}, {1,2}, {2,3}, {3,4} },  
+	{ {0,1}, {1,2}, {2,3}, {3,4}, {4,5} }
 	};
 
 	//parent-child links for age 2

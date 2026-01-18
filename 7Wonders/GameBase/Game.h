@@ -33,23 +33,10 @@ private:
     bool m_gameOver;
     int m_numberOfWondersBuilt = 0;
 
-    void printActionMenu() const;
     void draftWondersPhase();
 
     bool handleWonderConstruction(std::shared_ptr<CardBase> cardUsed);
     void handle7WondersRule();
-
-    // Helper functions for determining the winner
-    int calculatePurpleGuilds(const Player& p) const;
-    int getBuiltWondersCount(const Player& player) const;
-    int getCategoryCount(const Player& player, Color color) const;
-
-    // Age management
-    void determinateWhoStartsNextAge();
-
-    // Turn management
-    void processTurnTransition();
-    CardNode* findNodeById(int cardId) const;
 
     // Draft phase management
     std::vector<std::shared_ptr<Wonder>> m_draftSet1;
@@ -95,9 +82,9 @@ public:
 
     void handleBuildFromDiscard();
     void handleProgressTokenChoice();
-    void handleGreatLibraryChoice(); // NEW
+    void handleGreatLibraryChoice(); 
     void handleDiscardOpponentCardChoice(Player& opponent, Color cardColor);
-    void notifyWonderBuilt(); // Notification for 7 Wonders Rule
+    void notifyWonderBuilt(); 
     int getNumberOfWondersBuilt() const { return m_numberOfWondersBuilt; }
 
     // functions for the draft phase from the UI
@@ -113,7 +100,7 @@ public:
 
     bool isWaitingForDiscardChoice() const;
     bool isWaitingForProgressTokenChoice() const;
-    bool isWaitingForGreatLibraryChoice() const; // NEW
+    bool isWaitingForGreatLibraryChoice() const; 
     bool isWaitingForOpponentCardDiscard() const;
 
     const std::vector<std::shared_ptr<CardBase>>& getBuildFromDiscardChoices() const;
@@ -121,7 +108,7 @@ public:
 
     void resolveBuildFromDiscard(int chosenCardId);
     void resolveProgressTokenChoice(int tokenId);
-    void resolveGreatLibraryChoice(int tokenId); // NEW
+    void resolveGreatLibraryChoice(int tokenId);
     void resolveDiscardOpponentCard(int chosenCardId);
 
     friend class SaveManager;

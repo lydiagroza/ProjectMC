@@ -16,15 +16,12 @@ class GAME_API Wonder {
     bool m_isBuilt;
     std::string m_effectDescription;
     std::vector<std::function<void(Player&, Board&, Player&)>> m_effects;
-    std::optional<Symbol> m_symbol; // Add member for symbol
-    bool m_isAvailable; // Add m_isAvailable member
+    std::optional<Symbol> m_symbol; 
+    bool m_isAvailable;
 
 public:
     Wonder(std::string name, std::uint16_t id, const std::map<Resource, std::uint8_t>& cost, std::optional<Symbol> symbol = std::nullopt)
         : m_name(std::move(name)), m_id(id), m_cost(cost), m_isBuilt(false), m_symbol(symbol), m_isAvailable(true) {}
-
-    /* static std::map<Resource, uint8_t> parseCost(const std::string& s);
-     static std::vector<std::function<void(Player&, Player&)>> parseEffects(const std::string& s);*/
 
     const std::string& getName() const;
     const std::string& getEffectDescription() const { return m_effectDescription; }

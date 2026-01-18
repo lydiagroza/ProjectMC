@@ -28,11 +28,9 @@ std::vector<std::function<void(Player&, Player&)>> ProgressTokenLoader::parseEff
                 if (Game::currentGame) Game::currentGame->handleProgressTokenChoice();
             }
         }},
-        //aici trebuie cumva apelat la sfarsitul jocului nu in timpul jocului 
         {"victoryPointsPerProgress", [](Player& p, Player&) {p.setMathBonus(true); }},
         {"BlueCardDiscount", [](Player& p, Player&) { p.setBlueCardDiscount(true); }},
         {"add_VictoryPoint7", [](Player& p, Player&) { p.add_Points(Points::Victory, 7); }},
-        /* here for MilitaryPoints we need to see how we do it, if we somehow return the number of cards to the board or add them somewhere */
         {"add_MilitaryPoint1PerRedCard", [](Player& p, Player&) { p.setExtraMilitary(true); }},
         {"WondersGetReplayTurn", [](Player& p, Player&) { p.setTheologyBonus(true); }},
         {"add_coins4PerFreeCard", [](Player& p, Player&) {

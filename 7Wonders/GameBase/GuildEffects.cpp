@@ -16,7 +16,7 @@ namespace GuildEndGameEffects {
         return 0;
     }
 
-    int calculateBuildersGuild(const Player& p1, const Player& p2) {
+    GAME_API int calculateBuildersGuild(const Player& p1, const Player& p2) {
         auto countWonders = [](const Player& p) {
             int count = 0;
             for (const auto& w : p.getWonders()) {
@@ -31,7 +31,7 @@ namespace GuildEndGameEffects {
         return res;
     }
 
-    int calculateMoneylendersGuild(const Player& p1, const Player& p2) {
+    GAME_API int calculateMoneylendersGuild(const Player& p1, const Player& p2) {
         int coins1 = p1.getCoins();
         int coins2 = p2.getCoins();
         int res = std::max(coins1, coins2) / 3;
@@ -39,7 +39,7 @@ namespace GuildEndGameEffects {
         return res;
     }
 
-    int calculateScientistsGuild(const Player& p1, const Player& p2) {
+    GAME_API int calculateScientistsGuild(const Player& p1, const Player& p2) {
         int c1 = countCardsByColor(p1, Color::Green);
         int c2 = countCardsByColor(p2, Color::Green);
         int res = std::max(c1, c2);
@@ -47,7 +47,7 @@ namespace GuildEndGameEffects {
         return res;
     }
 
-    int calculateShipownersGuild(const Player& p1, const Player& p2) {
+    GAME_API int calculateShipownersGuild(const Player& p1, const Player& p2) {
         auto countBrownGray = [](const Player& p) {
             return countCardsByColor(p, Color::Brown) + countCardsByColor(p, Color::Gray);
         };
@@ -58,7 +58,7 @@ namespace GuildEndGameEffects {
         return res;
     }
 
-    int calculateTradersGuild(const Player& p1, const Player& p2) {
+    GAME_API int calculateTradersGuild(const Player& p1, const Player& p2) {
         int c1 = countCardsByColor(p1, Color::Yellow);
         int c2 = countCardsByColor(p2, Color::Yellow);
         int res = std::max(c1, c2);
@@ -66,7 +66,7 @@ namespace GuildEndGameEffects {
         return res;
     }
 
-    int calculateMagistratesGuild(const Player& p1, const Player& p2) {
+    GAME_API int calculateMagistratesGuild(const Player& p1, const Player& p2) {
         int c1 = countCardsByColor(p1, Color::Blue);
         int c2 = countCardsByColor(p2, Color::Blue);
         int res = std::max(c1, c2);
@@ -74,7 +74,7 @@ namespace GuildEndGameEffects {
         return res;
     }
 
-    int calculateTacticiansGuild(const Player& p1, const Player& p2) {
+    GAME_API int calculateTacticiansGuild(const Player& p1, const Player& p2) {
         int c1 = countCardsByColor(p1, Color::Red);
         int c2 = countCardsByColor(p2, Color::Red);
         int res = std::max(c1, c2);
@@ -82,7 +82,7 @@ namespace GuildEndGameEffects {
         return res;
     }
 
-    int calculateTotalGuildVP(const Player& owner, const Player& opponent) {
+    GAME_API int calculateTotalGuildVP(const Player& owner, const Player& opponent) {
         int total = 0;
         const auto& inventory = owner.getInventory();
         

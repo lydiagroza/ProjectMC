@@ -1,7 +1,7 @@
 #include "DiscardedCardsDialog.h"
 #include "ui_DiscardedCardsDialog.h"
+#include "CardBase.h"
 #include "CardWidget.h"
-#include "GameBase/CardBase.h"
 #include <QString>
 #include <QStringList>
 

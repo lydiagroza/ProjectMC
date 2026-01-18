@@ -1,3 +1,8 @@
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
+#include "Game.h"
+#include "Player.h"
+
 void MainWindow::updateTurnIndicator()
 {
     if (!m_game) return;

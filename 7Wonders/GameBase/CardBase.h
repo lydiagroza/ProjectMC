@@ -103,9 +103,9 @@ class Board;
       void destroy(Player& player, Board& board, Player& opponent);
     };
 
-  // Operators, to_String functions
-    std::ostream& operator<<(std::ostream& os, const CardBase& card);
-    std::string to_string(Resource r);
-    std::string to_string(Color c);
-    std::string to_string(Symbol s);
+    // Operators, to_String functions
+    GAME_API std::string to_string(Resource r);
+    GAME_API std::string to_string(Color c);
+    GAME_API std::string to_string(Symbol s);
+    GAME_API std::ostream& operator<<(std::ostream& os, const CardBase& card);
  

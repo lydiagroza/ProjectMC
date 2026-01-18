@@ -1,5 +1,6 @@
 #pragma once
-#include "Player.h"
+#include <Player.h>
+#include "../GameBase/gameExport.h"
 #include <memory>
 #include <vector>
 #include <random>
@@ -127,7 +128,7 @@ private:
                        const std::vector<Action>& actions) const;
 };
 
-class AI_Player : public Player {
+class GAME_API AI_Player : public Player {
 private:
     AI_Difficulty m_difficulty;
     AI_Strategy m_strategy;

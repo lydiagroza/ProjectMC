@@ -8,7 +8,9 @@
 #include <map>
 #include <functional>
 
-class UniversalCardLoader {
+#include "gameExport.h"
+
+class GAME_API UniversalCardLoader {
 public:
     // Public methods to be called in GameSetup
     static std::vector<std::shared_ptr<CardBase>> loadAgeCards(const std::string& filename);

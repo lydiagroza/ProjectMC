@@ -14,7 +14,6 @@ const std::string& Wonder::getName() const {
 }
 uint16_t Wonder::getId() const { return m_id; }
 const std::map<Resource, uint8_t>& Wonder::getCost() const { return m_cost; }
-// Wonder.cpp
 const std::vector<std::function<void(Player&, Board&, Player&)>>& Wonder::getEffects() const {
     return m_effects;
 }
@@ -26,7 +25,6 @@ std::uint8_t Wonder::getCostForResource(Resource r) const {
     }
     return 0;
 }
-// In Wonder.cpp
 void Wonder::addEffect(std::function<void(Player&, Board&, Player&)> e) {
     m_effects.push_back(e);
 }

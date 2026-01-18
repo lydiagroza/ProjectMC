@@ -4,8 +4,7 @@
 
 class GAME_API MilitaryTrack {
     friend class SaveManager;
-	int pawnPosition; // 0 = center, >0 = Player 1 advantage?, <0 = Player 2 advantage?
-	// CHECK: In your implementation, who is P1 and who is P2 on the track?
+	int pawnPosition; 
 private:
     
 	int8_t m_pawnPosition = 0; 
@@ -14,7 +13,6 @@ private:
 	bool m_removedTokens[4] = { false, false, false, false };
 	// player 1 token 5, player 1 token 2, player 2 token 2, player 2 token 5
 
-    //maybe le pun in gameconstants ??
     static constexpr int TIER_1_POS = 2;
     static constexpr int TIER_1_REWARD = 2;
 

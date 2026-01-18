@@ -339,7 +339,7 @@ Makefile: ..\..\7Wonders.pro C:\Qt\6.10.1\msvc2022_64\mkspecs\win32-msvc\qmake.c
 		C:\Qt\6.10.1\msvc2022_64\lib\Qt6Core.prl \
 		C:\Qt\6.10.1\msvc2022_64\lib\Qt6EntryPoint.prl \
 		C:\Qt\6.10.1\msvc2022_64\mkspecs\features\build_pass.prf \
-		..\..\resources.qrc \
+		..\..\gameUI\resources.qrc \
 		C:\Qt\6.10.1\msvc2022_64\lib\Qt6Widgetsd.prl \
 		C:\Qt\6.10.1\msvc2022_64\lib\Qt6Multimediad.prl \
 		C:\Qt\6.10.1\msvc2022_64\lib\Qt6Guid.prl \
@@ -602,7 +602,7 @@ C:\Qt\6.10.1\msvc2022_64\lib\Qt6Network.prl:
 C:\Qt\6.10.1\msvc2022_64\lib\Qt6Core.prl:
 C:\Qt\6.10.1\msvc2022_64\lib\Qt6EntryPoint.prl:
 C:\Qt\6.10.1\msvc2022_64\mkspecs\features\build_pass.prf:
-..\..\resources.qrc:
+..\..\gameUI\resources.qrc:
 C:\Qt\6.10.1\msvc2022_64\lib\Qt6Widgetsd.prl:
 C:\Qt\6.10.1\msvc2022_64\lib\Qt6Multimediad.prl:
 C:\Qt\6.10.1\msvc2022_64\lib\Qt6Guid.prl:

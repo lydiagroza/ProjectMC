@@ -22,14 +22,6 @@ Player::Player(const std::string& playerName, int id)
 {
 }
 
-// Add this constructor implementation
-Player::Player(const std::string& name)
-    : m_name(name)
-{
-    m_Resources[Resource::Coin] = 0; // Initialize starting coins to 7
-    // You can add any other initialization logic here if needed
-}
-
 unsigned int Player::getId() const
 {
     return m_Id;

@@ -198,7 +198,6 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
 {"buildDiscardedCard", [](Player&, Board&, Player&) {
             // Check if an active game instance exists
             if (Game::currentGame) {
-                // Call the function you already wrote in the Game class
                 Game::currentGame->handleBuildFromDiscard();
             }
          else {
@@ -241,30 +240,20 @@ vector<function<void(Player&, Board&, Player&)>> UniversalCardLoader::parseEffec
     return effects;
 }
 
-// --- TRANSLATION ---
+//translating effects for description
 
 string UniversalCardLoader::translateEffect(const string& raw) {
 
     if (raw.empty()) return "";
-
-    
-
     stringstream ss(raw);
-
     string token;
-
     vector<string> results;
-
-
 
     while (getline(ss, token, ';')) {
 
         token = trim(token);
-
-        if (token.empty()) continue;
-
-
-
+        if (token.empty())
+            continue;
         string trans = token;
 
         if (token == "add_resource_wood") trans = "🌲 +1 Wood";
@@ -350,11 +339,7 @@ string UniversalCardLoader::translateEffect(const string& raw) {
         results.push_back(trans);
 
     }
-
-
-
     string finalStr;
-
     for (size_t i = 0; i < results.size(); ++i) {
 
         finalStr += results[i];
@@ -362,14 +347,13 @@ string UniversalCardLoader::translateEffect(const string& raw) {
         if (i < results.size() - 1) finalStr += " | ";
 
     }
-
     return finalStr;
 
 }
 
 
 
-// --- LOADING ---
+//loading
 
 vector<shared_ptr<CardBase>> UniversalCardLoader::loadAgeCards(const string& filename) {
 
@@ -386,63 +370,23 @@ vector<shared_ptr<CardBase>> UniversalCardLoader::loadAgeCards(const string& fil
     while (getline(file, line)) {
 
         if (line.empty()) continue;
-
         stringstream ss(line);
-
         string name, id, color, cost, sym, unl, eff, dis;
-
         getline(ss, name, ','); getline(ss, id, ','); getline(ss, color, ',');
-
         getline(ss, cost, ','); getline(ss, sym, ','); getline(ss, unl, ',');
-
         getline(ss, eff, ','); getline(ss, dis, '\n');
-
-
-
                 auto card = make_shared<CardBase>(trim(name), (uint16_t)stoi(trim(id)), parseColor(trim(color)), parseCost(trim(cost)), parseSymbol(trim(sym)), parseSymbol(trim(unl)));
-
-
-
                 card->m_effectDescription = translateEffect(trim(eff));
-
-
-
-                for (auto& ef : parseEffects(trim(eff))) card->addEffect(ef);
-
-
-
-        
-
-
-
-                if (card->getUnlocks().has_value()) {
-
-
-
+                for (auto& ef : parseEffects(trim(eff))) 
+                    card->addEffect(ef);
+                if (card->getUnlocks().has_value()) 
+                {
                     Symbol unlock_symbol = card->getUnlocks().value();
-
-
-
                     card->addEffect([unlock_symbol](Player& p, Board&, Player&) {
-
-
-
                         p.add_ChainSymbol(unlock_symbol);
-
-
-
                     });
 
-
-
                 }
-
-
-
-        
-
-
-
                 cards.push_back(card);
 
     }

@@ -1,6 +1,6 @@
 # 7 Wonders Duel - Proiect C++
 
-Acest proiect reprezintă implementarea jocului de societate **7 Wonders Duel**, realizat în cadrul cursului de Informatică Aplicată. Aplicația include atât logica de bază a jocului (Game Engine), cât și o interfață grafică (GUI) realizată în Qt, alături de un oponent AI.
+Acest proiect reprezintă implementarea jocului de societate **7 Wonders Duel**. Aplicația include atât logica de bază a jocului (Game Engine), cât și o interfață grafică (GUI) realizată în Qt, alături de un oponent AI.
 
 ## Echipa
 
